@@ -5,7 +5,7 @@ Provides ways to interacts with internet using `httpx`
 import httpx
 from httpx import Response
 from typing import Dict
-from moviebox_api.models import MovieboxAppInfo
+from moviebox_api.models import MovieboxAppInfor
 from moviebox_api.utils import process_api_response
 
 request_headers = {
@@ -47,7 +47,7 @@ class Session:
         self.moviebox_app_info = self._fetch_app_info()
 
     async def get(
-        self, url: str, params: Dict = {}, extract_data: bool = False, **kwargs
+        self, url: str, params: Dict = {}, **kwargs
     ) -> Response:
         """Makes a http get request without server cookies from previous requests.
         It's relevant because some requests with expired cookies won't go through
@@ -56,7 +56,6 @@ class Session:
         Args:
             url (str): Resource link.
             params (Dict, optional): Request params. Defaults to {}.
-            extract_data(bool, optional): Exract data field from the API response. Defaults to False.
 
         Returns:
             Response: Httpx response object

@@ -2,6 +2,11 @@
 
 This folder stores data discovered during reconnaisance phase.
 
+# Important
+
+subjectType : 1 = Movie
+subjectType: 1 = Series
+
 ## Everyone's searching
 
 url : https://moviebox.ng/wefeed-h5-bff/web/subject/everyone-search
