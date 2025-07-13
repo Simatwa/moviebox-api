@@ -2,7 +2,6 @@
 
 This folder stores data discovered during reconnaisance phase.
 
-
 ## Everyone's searching
 
 url : https://moviebox.ng/wefeed-h5-bff/web/subject/everyone-search
@@ -108,3 +107,33 @@ url : https://moviebox.ng/movies/titanic-m7a9yt0abq6?id=5390197429792821032&scen
 
 response : [specific-movie-not-found](specific-movie-not-found.html)
 
+## Hot Movies/TV
+
+- *Normally available after clicking specific movies*
+
+url : https://moviebox.ng/wefeed-h5-bff/web/subject/search-rank
+response : [hot-movies](hot-movies.json)
+
+## Recommended/ For You
+
+url : https://moviebox.ng/wefeed-h5-bff/web/subject/detail-rec?subjectId=2518237873669820192&page=1&perPage=24
+
+response : [for-you](for-you.json)
+
+
+# Download Movie
+
+url : https://moviebox.ng/wefeed-h5-bff/web/subject/download?subjectId=2518237873669820192&se=0&ep=0
+
+response: [download](download.json)
+response will include movie files and subtitles.
+
+> [!NOTE]
+> Requires [cookies](cookies.json)
+
+# Download subtitle
+
+url : https://cacdn.hakunaymatata.com/subtitle/7236b889e074d8df23ccdf132372e9d9.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9zdWJ0aXRsZS8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzUzMDEzOTA1fX19XX0_&Signature=2CeE19p-HGmwgpivFR5fZeH3gC~llQ-4N~G4VI3rVphBvRcvjaEzyqogZjEXv8izKDNQ4n-qHhOwhxp4U-NTmO56iLgR11z7icygZC2PX5~Saf7rmb8BZj5~yqcCLj5f4VyyJeJY7amttrZcqgwxk9kSAv6vuIPM1Eq2ebQLggiVS4k8zOID3w9ITPUEspRltl-P8kI9MNHhwsXiuXy~HGzK2Lx0Fa9Y0XgQcAm2K-nwnOKpLPDm~JpiaFmllSGRTG0s0aD4mbha3smA9yBUKd~13PS02EhIgYAa8A8S0eIInMWqMBIQMtjbvCoLIoR-xcn5vBa1rF~OEf76DrhYsg__&Key-Pair-Id=KMHN1LQ1HEUPL
+
+> [!IMPORTANT]
+> Do not include cookies
