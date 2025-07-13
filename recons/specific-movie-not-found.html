@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html class="pc-html" data-capo="" dir="ltr" lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+  <title>
+   Titanic - Moviebox Official
+  </title>
+  <link href="https://firebase.googleapis.com" rel="preconnect" samesite="none"/>
+  <link href="https://pacdn.aoneroom.com" rel="preconnect" samesite="none"/>
+  <style type="text/css">
+   @media screen and (min-width: 801px) { .h5-page { display: none; } } @media screen and (max-width: 800px) { .pc-page{ display: none; } }
+  </style>
+  <style>
+   *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji!important;margin:0;outline:none;padding:0;-webkit-tap-highlight-color:transparent}html{-moz-text-size-adjust:100%;text-size-adjust:100%;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;color-scheme:dark}body,html{overflow-x:hidden;width:100%;-webkit-overflow-scrolling:touch;background:#fff;font-size:.12rem}body{overflow-y:auto;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-webkit-user-drag:none;-ms-content-zooming:none;touch-action:manipulation;word-wrap:break-word;-moz-text-size-adjust:none;text-size-adjust:none;-webkit-user-select:text;-moz-user-select:text;user-select:text;-webkit-text-size-adjust:none;font-family:system-ui,-apple-system,Arial,sans-serif}#__nuxt{animation:fadeIn .4s ease-in}@keyframes fadeIn{0%{filter:blur(1rem);opacity:0}to{filter:blur(0);opacity:1}}.mx-auto{margin-left:auto!important;margin-right:auto!important}.absolute{position:absolute!important}.flx-ce-ce{justify-content:center}.flx-ce-ce,.flx-ce-sta{align-items:center;display:flex}.flx-ce-sta{justify-content:flex-start}.flx-ce-sta-stretch{align-items:stretch}.flx-ce-sta-stretch,.flx-sta-sta{display:flex;justify-content:flex-start}.flx-sta-ce,.flx-sta-sta{align-items:flex-start}.flx-sta-ce{display:flex;justify-content:center}.flx-ce-end{align-items:center}.flx-ce-end,.flx-end-end{display:flex;justify-content:flex-end}.flx-end-end{align-items:flex-end}.flx-ce-even{align-items:center;display:flex;flex-wrap:wrap;justify-content:space-evenly}.flx-ce-bet,.flx-ce-wrap-bet{align-items:center;display:flex;justify-content:space-between}.flx-ce-wrap-bet{flex-wrap:wrap}.flx-ce-wrap-start{align-items:center}.flx-ce-wrap-start,.flx-wrap-start{display:flex;flex-wrap:wrap;justify-content:flex-start}.flx-sta-bet,.flx-start{align-items:flex-start;display:flex}.flx-sta-bet{justify-content:space-between}.flx-end-ce{justify-content:center}.flx-end-ce,.flx-end-sta{align-items:flex-end;display:flex}.flx-end-sta,.flx-stretch-start{justify-content:flex-start}.flx-stretch-start{align-items:stretch;display:flex}.flx-clm,.flx-clm-sta{display:flex;flex-direction:column}.flx-clm-sta{align-items:flex-start}.flx-clm-start{align-items:flex-start}.flx-clm-bet,.flx-clm-start{display:flex;flex-direction:column}.flx-clm-bet{justify-content:space-between}.flx-clm-ce{align-items:center}.flx-clm-ce,.flx-clm-end{display:flex;flex-direction:column}.flx-clm-end{align-items:flex-end}.flx-clm-star-ce{align-items:flex-start}.flx-clm-ce-ce,.flx-clm-star-ce{display:flex;flex-direction:column;justify-content:center}.flx-clm-ce-ce{align-items:center}.flx-clm-ce-sta{justify-content:flex-start}.flx-clm-ce-end,.flx-clm-ce-sta{align-items:center;display:flex;flex-direction:column}.flx-clm-ce-end{justify-content:flex-end}.flx-clm-ce-bet{align-items:flex-start;display:flex;flex-direction:column;justify-content:center}.flx-clm-ce-bw{justify-content:space-between}.flx-clm-ce-ar,.flx-clm-ce-bw{align-items:center;display:flex;flex-direction:column}.flx-clm-ce-ar{justify-content:space-around}.flx-clm-sta-sta{justify-content:flex-start}.flx-clm-sta-bet,.flx-clm-sta-sta{align-items:flex-start;display:flex;flex-direction:column}.flx-clm-sta-bet{justify-content:space-between}.pointer{cursor:pointer}.re-right-line,.relative{position:relative}.re-right-line:after{border-right:.6px solid #ddd;content:" ";display:block;height:100%;position:absolute;right:0;top:0;transform:scaleX(.5)}.re-after-line{position:relative}.re-after-line:after{border-bottom:.006rem solid #ddd;bottom:0;content:" ";display:block;left:0;position:absolute;transform:scaleY(.5);width:100%}.re-before-line{position:relative}.re-before-line:after{border-bottom:.006rem solid #ddd;content:" ";display:block;left:0;position:absolute;top:0;transform:scaleY(.5);width:100%}.ellipsis{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-break:break-all}.bt-arr{color:#ff5abf;font-size:.14rem;font-weight:500;line-height:.16rem;padding:.28rem 0}.bt-arr img{height:.16rem;width:.16rem}.origin-width{height:1px;left:0;position:absolute;top:0;visibility:hidden;width:328px}.pot{cursor:pointer}.w-100{width:100%}.h-100{height:100%}.txt-cot{font-family:system-ui,-apple-system,Arial,sans-serif}video{-o-object-fit:cover;object-fit:cover}input{-webkit-user-select:auto}input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration,input[type=search]::-webkit-search-results-button,input[type=search]::-webkit-search-results-decoration{display:none}input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}@media screen and (max-width:800px){html{font-size:27.7777777778vw!important}}.art-notice-inner{display:none!important}.line-1{-webkit-line-clamp:1;line-clamp:1}.line-1,.line-2{display:-webkit-box;overflow:hidden;text-overflow:ellipsis;word-break:break-word;-webkit-box-orient:vertical}.line-2{-webkit-line-clamp:2;line-clamp:2}.shrink-0{flex-shrink:0}
+  </style>
+  <style>
+   :root{--deg-76:76deg;--deg-78:78deg;--deg-83:83deg;--deg-85:85deg;--deg-90:90deg;--deg-91:91deg;--deg-95:95deg;--deg-135:135deg;--deg-225:225deg;--deg-270:270deg;--x--100:-100%;--x--50:-50%;--x-50:50%;--x-100:100%;--direction:ltr}html[dir=rtl]{--deg-76:284deg;--deg-78:282deg;--deg-83:277deg;--deg-85:275deg;--deg-90:270deg;--deg-91:269deg;--deg-95:265deg;--deg-135:225deg;--deg-225:135deg;--deg-270:900deg;--x--100:100%;--x--50:50%;--x-50:-50%;--x-100:-100%;--direction:rtl}
+  </style>
+  <style>
+   .page-enter-active,.page-leave-active{transition:all .4s}.page-enter-from,.page-leave-to{filter:blur(1rem);opacity:0}[dir=rtl] .rtl-image{transform:scaleX(-1)!important}[dir=rtl] .rtl-left-image{transform:scaleX(1)!important}
+  </style>
+  <style>
+   .lay-default[data-v-afb8d8ce]{min-height:100%}
+  </style>
+  <style>
+   .hidden{height:.01rem;left:-99.99rem;position:fixed;top:-99.99rem;visibility:hidden;width:.01rem}.web-subject-page{box-sizing:border-box;width:100%}#__nuxt,body,html{background:#101114!important;width:100%!important}.not-pc{display:none!important}.is-h5{display:block}
+  </style>
+  <style>
+   .pc[data-v-61b7bb3d]{width:100%}.pc-section[data-v-61b7bb3d]{margin-block-start:0!important;max-width:1619px;width:100%}.pc-content-box[data-v-61b7bb3d]{display:flex;height:100%;height:calc(100vh - 70px);margin:0 auto;padding:12px 0 0}.pc-content-box .left-slider[data-v-61b7bb3d]{padding:0 12px 12px}.pc-content-box .right-content[data-v-61b7bb3d]{overflow-y:auto;padding:0 50px;width:100%;-webkit-tap-highlight-color:transparent;scrollbar-width:none;-ms-overflow-style:none}.pc-content-box .right-content[data-v-61b7bb3d]::-webkit-scrollbar{display:none}.pc-content-box .pc-has-slider-box-right[data-v-61b7bb3d]{padding-block-end:0;padding-block-start:0;padding-inline-end:20px;padding-inline-start:12px}.pc-section-left[data-v-61b7bb3d]{padding-block-end:0;padding-block-start:0;padding-inline-end:32px;padding-inline-start:0;width:calc(100% - 304px)}.cideo-com[data-v-61b7bb3d]{width:100%!important}.pc-side[data-v-61b7bb3d]{width:304px}@media screen and (max-width:1000px){.pc-section-left[data-v-61b7bb3d]{width:100%}.pc-side[data-v-61b7bb3d]{display:none}}.pc-main[data-v-61b7bb3d]{margin-block-start:24px;width:100%}.pc-sub-nav[data-v-61b7bb3d]{margin-block-end:24px}.pc-sub-nav .pc-sub-home[data-v-61b7bb3d]{color:hsla(0,0%,100%,.6);font-family:Roboto;font-size:14px;font-style:normal;font-weight:400;line-height:22px}.pc-sub-nav .pc-sub-home[data-v-61b7bb3d]:hover{text-decoration:underline}.pc-sub-nav .pc-nav-title[data-v-61b7bb3d]{color:#fff;font-family:Roboto;font-size:14px;font-style:normal;font-weight:400;line-height:22px}.pc-sub-nav img[data-v-61b7bb3d]{height:16px;margin:0 4px;width:16px}.pc-ads-middle[data-v-61b7bb3d]{width:100%}
+  </style>
+  <style>
+   .pc-header[data-v-07c13f54]{border-block-end:1px solid hsla(0,0%,100%,.1);padding:10px 0;width:100%;z-index:9}.pc-header-color[data-v-07c13f54]{background:#101114!important}.pc-header-inner[data-v-07c13f54]{padding:0 24px;width:100%}.head-left[data-v-07c13f54]{flex-grow:1}.pc-logo-icon[data-v-07c13f54]{height:36px;margin-inline-end:4px;width:32px}.logo-cot[data-v-07c13f54]{text-decoration:none}.pc-logo-txt[data-v-07c13f54]{color:#fff;font-family:Roboto;font-size:20px;font-style:normal;font-weight:700;line-height:24px}.pc-input-box[data-v-07c13f54]{background:hsla(0,0%,100%,.2);border-radius:8px;height:40px;margin-inline-start:28px;max-width:800px!important;padding:16px;position:relative;width:100%}.focus[data-v-07c13f54]{border:.01rem solid hsla(0,0%,100%,.6)}.pc-search-icon[data-v-07c13f54]{height:16px;width:16px}.pc-search-input[data-v-07c13f54]{background:none;border:1px solid transparent;color:hsla(0,0%,100%,.6);flex-grow:1;font-family:Roboto;font-size:14px;font-style:normal;font-weight:400;line-height:normal;margin-inline-start:10px;outline:none}.pc-download-cot[data-v-07c13f54]{background:hsla(0,0%,100%,.2);border-radius:30px;height:32px;margin-inline-start:16px;padding:0 12px;position:relative}.pc-download-cot .pc-download[data-v-07c13f54]{display:block}.pc-download-cot .pc-downloadhover[data-v-07c13f54]{display:none}.pc-download-cot .pc-history[data-v-07c13f54]{display:block}.pc-download-cot .pc-history-hover[data-v-07c13f54],.pc-download-cot:hover .pc-download[data-v-07c13f54]{display:none}.pc-download-cot:hover .pc-downloadhover[data-v-07c13f54],.pc-download-cot:hover .pc-history-hover[data-v-07c13f54]{display:block}.pc-download-cot:hover .pc-history[data-v-07c13f54]{display:none}.pc-download-icon[data-v-07c13f54]{cursor:pointer;height:20px;width:20px}.pc-download-tip[data-v-07c13f54]{color:hsla(0,0%,100%,.8);font-family:Roboto;font-size:14px;font-style:normal;font-weight:500;line-height:normal;margin-inline-start:4px;text-align:center}.pc-delete-icon[data-v-07c13f54]{height:14px;width:14px}.pc-history-content[data-v-07c13f54]{background:#28292e;box-shadow:0 4px 32px 0 rgba(0,0,0,.7);width:312px}.pc-download-content[data-v-07c13f54],.pc-history-content[data-v-07c13f54]{border-radius:8px;display:block;inset-block-start:40px;inset-inline-end:0;padding-block-end:16px;position:absolute;z-index:10}.pc-download-content[data-v-07c13f54]{background:none!important;padding-block-end:0!important;width:360px}.hid[data-v-07c13f54]{display:none}.pc-left-icon[data-v-07c13f54]{align-items:center;display:flex}.pc-left-icon .slide-nav-icon-box[data-v-07c13f54]{cursor:pointer;height:32px;margin-inline-end:16px;width:32px}.pc-left-icon .slide-nav-icon-box .slide-nav-icon[data-v-07c13f54]{height:100%;width:100%}.download-header[data-v-07c13f54]{background:linear-gradient(var(--deg-95),#2166e5 3.79%,#1dd171 50%)}.download-header .pc-download-tip[data-v-07c13f54]{color:#fff}
+  </style>
+  <style>
+   input::-webkit-input-placeholder{color:hsla(0,0%,100%,.6)!important}
+  </style>
+  <style>
+   .pc-card[data-v-75649d99]{background:linear-gradient(var(--deg-95),rgba(33,102,229,.4) 3.79%,rgba(29,209,113,.4) 50%),#28292e;border-radius:8px;box-shadow:0 20px 40px 0 #000;padding:20px 15px;position:relative;width:100%}.pc-context[data-v-75649d99]{border-block-end:1px solid hsla(0,0%,100%,.1);margin-block-end:12px;width:100%}.pc-d-title[data-v-75649d99]{color:#fff;font-family:Roboto;font-size:20px;font-style:normal;font-weight:500;line-height:22px}.pc-title[data-v-75649d99]{margin-block-end:24px;width:100%}.pc-more span[data-v-75649d99]{color:hsla(0,0%,100%,.6);font-family:Roboto;font-size:16px;font-style:normal;font-weight:500;line-height:20px;text-align:end}.pc-more img[data-v-75649d99]{height:16px;width:16px}.pc-clm[data-v-75649d99],.pc-clm-box[data-v-75649d99]{margin-block-end:17px}.pc-clm[data-v-75649d99]{font-size:14px}.pc-clm img[data-v-75649d99]{height:20px;margin-inline-end:8px;width:20px}.pc-clm span[data-v-75649d99]{color:hsla(0,0%,100%,.8);font-size:16px;font-weight:400}.pc-clm span[data-v-75649d99],.pc-scan-txt[data-v-75649d99]{font-family:Roboto;font-style:normal;line-height:normal}.pc-scan-txt[data-v-75649d99]{color:#fff;font-size:12px;font-weight:500;margin-block-end:12px}.pc-qr[data-v-75649d99]{width:100%}.pc-qr img[data-v-75649d99]{width:168px}.bold[data-v-75649d99]{font-weight:700}
+  </style>
+  <style>
+   .pc-cotain[data-v-83ecaccc]{font-size:24px;height:100%;width:100%}.pc-video-page[data-v-83ecaccc]{align-items:stretch;display:flex;max-width:1619px;width:100%}.pc-video-content[data-v-83ecaccc]{aspect-ratio:16/9;flex-grow:1;position:relative}.pc-video-inner[data-v-83ecaccc]{inset-block-start:0;inset-inline-start:0;position:relative;position:absolute}.pc-video[data-v-83ecaccc],.pc-video-inner[data-v-83ecaccc]{height:100%;width:100%;z-index:1}.pc-cover-img[data-v-83ecaccc],.pc-video[data-v-83ecaccc]{position:relative}.pc-cover-img[data-v-83ecaccc]{height:100%;width:100%}.video-cover[data-v-83ecaccc]{inset-block-start:0;inset-inline-start:0;position:absolute;z-index:9}.pc-fixed-box[data-v-83ecaccc]{position:relative;width:25.33%!important}.pc-resource-box[data-v-83ecaccc]{background:#28292e;border-end-end-radius:8px;border-end-start-radius:0;border-start-end-radius:8px;border-start-start-radius:0;inset-block-end:0;inset-block-start:0;inset-inline-end:0;inset-inline-start:0;overflow:auto;position:absolute;width:100%}.pc-video-resources[data-v-83ecaccc]{color:#fff;font-family:Roboto;font-size:18px;font-style:normal;font-weight:700;line-height:normal;margin-block-end:4px}.pc-video-resource-from .pc-video-split[data-v-83ecaccc]{background:hsla(0,0%,100%,.1);display:inline-block;height:10px;margin-inline-end:8px;margin-inline-start:8px;width:1px}.pc-video-resource-from .pc-video-res-tip[data-v-83ecaccc]{color:hsla(0,0%,100%,.6);font-family:Roboto;font-size:12px;font-style:normal;font-weight:400;line-height:22px}.pc-movie-video-re-name[data-v-83ecaccc]{background:#10552e;border-radius:4px;height:48px;margin-block-start:12px;padding:0 12px}.pc-movie-video-re-name span[data-v-83ecaccc]{color:#10a84d;font-family:Roboto;font-size:14px;font-style:normal;font-weight:500;line-height:normal}.pc-movie-video-re-name img[data-v-83ecaccc]{height:16px;margin-inline-start:4px;width:16px}.pc-tv-box[data-v-83ecaccc]{flex-grow:1}.pc-tv-box-inner[data-v-83ecaccc]{height:100%;overflow:auto;width:100%}.pc-resource-top[data-v-83ecaccc]{padding:16px 16px 0}.pc-feedback-tip[data-v-83ecaccc]{background:#1c1e21;height:44px;padding:7px 16px;width:100%}.pc-tip-txt[data-v-83ecaccc]{color:hsla(0,0%,100%,.8);font-family:Roboto;font-size:14px;font-style:normal;font-weight:400;line-height:normal}.pc-feed-bt[data-v-83ecaccc]{margin-inline-start:16px}.pc-feed-bt img[data-v-83ecaccc]{height:20px;width:20px}.pc-feed-bt div[data-v-83ecaccc]{color:#fff;font-family:Roboto;font-size:14px;font-style:normal;font-weight:700;line-height:normal;margin-inline-start:4px}.pc-muted-tip[data-v-83ecaccc]{inset-inline-start:32px;position:absolute;z-index:10}.pc-tv-arr-box[data-v-83ecaccc]{background:#404040;border-end-end-radius:4px;border-end-start-radius:0;border-start-end-radius:4px;border-start-start-radius:0;cursor:pointer;height:60px;inset-block-start:50%;inset-inline-end:-12px;position:absolute;transform:translateY(-50%);width:12px}.pc-tv-arr-box img[data-v-83ecaccc]{height:24px;width:24px}.limit-height[data-v-83ecaccc]{max-height:740px!important}.arr-rotate[data-v-83ecaccc]{transform:rotate(180deg)}@media screen and (min-width:1200px){.pc-fixed-box[data-v-83ecaccc]{max-width:390px;width:25.33%!important}}
+  </style>
+  <style>
+   .pc-playerr[data-v-049a276b]{z-index:9}.pc-limited-bg[data-v-049a276b],.pc-playerr[data-v-049a276b]{height:100%;inset-block-start:0;inset-inline-start:0;position:absolute;width:100%}.pc-playerr-content[data-v-049a276b]{position:relative;width:450px;z-index:5}.pc-playerr-title[data-v-049a276b]{color:#fff;font-size:20px;font-style:normal;font-weight:700;line-height:normal;margin-block-end:32px}.pc-item[data-v-049a276b]{flex-shrink:1;word-wrap:break-word}.pc-item-head[data-v-049a276b]{font-size:16px;font-weight:700;margin-block-end:12px}.pc-icon-phone[data-v-049a276b]{margin-inline-end:4px;width:28px}.pc-option-txt[data-v-049a276b]{color:hsla(0,0%,100%,.8);font-size:14px;font-style:normal;font-weight:400;line-height:22px}.pc-line[data-v-049a276b]{background:hsla(0,0%,100%,.4);flex-shrink:0;height:72px;margin:0 12px;width:1px}.pc-qr-wrap[data-v-049a276b]{width:92px}.pc-qr-canvas[data-v-049a276b]{width:100%}
+  </style>
+  <style>
+   .pc-info-left[data-v-fae94e03]{margin-inline-end:16px;min-width:120px;width:calc(100% - 416px)}.pc-title[data-v-fae94e03]{color:#fff;font-family:Roboto;font-size:20px;font-style:normal;font-weight:700;line-height:24px}.pc-line[data-v-fae94e03]{background:hsla(0,0%,100%,.1);height:42px;margin:0 8px;width:1px}.pc-rate .pc-score[data-v-fae94e03]{color:#fff;font-family:Roboto;font-feature-settings:"liga" off,"clig" off;font-size:20px;font-style:normal;font-weight:700;line-height:24px;text-align:center;width:96px}.pc-time[data-v-fae94e03]{margin-block-start:8px}.pc-desc[data-v-fae94e03],.pc-time[data-v-fae94e03]{color:hsla(0,0%,100%,.8);font-family:Roboto;font-size:14px;font-style:normal;font-weight:400;line-height:22px}.pc-desc[data-v-fae94e03]{display:-webkit-box;margin:16px 0;overflow:hidden;text-overflow:ellipsis;white-space:normal;width:100%;line-clamp:4;-webkit-line-clamp:4;-webkit-box-orient:vertical}.pc-download-btn[data-v-fae94e03]{align-items:center;background:hsla(0,0%,100%,.2);border-radius:8px;cursor:pointer;display:flex;flex-shrink:0;height:48px;justify-content:center;margin-inline-end:16px;padding:8px 0;width:208px}.pc-download-btn span[data-v-fae94e03]{color:#fff;font-family:Roboto;font-size:14px;font-style:normal;font-weight:700;line-height:24px;margin-inline-start:8px}.pc-masker[data-v-fae94e03]{background:rgba(0,0,0,.6);height:100%;inset-block-start:0;inset-inline-start:0;position:fixed;width:100%;z-index:9}.pc-download-option[data-v-fae94e03]{animation:slideInFromBottom-fae94e03 .3s ease-in-out forwards;background:#28292e;border-radius:24px;overflow:hidden;padding-block-end:20px;width:480px}.pc-cot[data-v-fae94e03]{max-height:401px;overflow:auto}.pc-options[data-v-fae94e03]{background:linear-gradient(180deg,rgba(7,184,81,.16),rgba(7,184,78,0));height:72px;padding:0 20px}.pc-options div[data-v-fae94e03]{color:#fff;font-family:Roboto;font-size:20px;font-style:normal;font-weight:500;line-height:22px}.pc-options img[data-v-fae94e03]{cursor:pointer;height:24px;width:24px}.pc-download-tip-tit[data-v-fae94e03]{color:hsla(0,0%,100%,.8);font-size:12px!important;line-height:normal}.pc-download-tip-tit[data-v-fae94e03],.pc-quality[data-v-fae94e03]{font-family:Roboto;font-style:normal;font-weight:400}.pc-quality[data-v-fae94e03]{color:#fff;font-size:16px;line-height:22px;margin-block-end:8px;padding:0 20px}.pc-quality-list[data-v-fae94e03]{margin-block-end:24px}.pc-quality-list[data-v-fae94e03],.pc-quality-list-sub[data-v-fae94e03]{flex-wrap:wrap;padding:0 20px}.pc-itm[data-v-fae94e03]{background:hsla(0,0%,100%,.1);border:1px solid transparent;border-radius:8px;height:60px;margin-block-end:8px;margin-inline-end:16px;width:98px}.pc-itm[data-v-fae94e03]:hover{background:rgba(16,168,77,.1)!important;border:1px solid #10a84d;color:#10a84d!important}.pc-itm:hover .pc-gb[data-v-fae94e03],.pc-itm:hover .pc-resolution[data-v-fae94e03],.pc-itm:hover .pc-select-sub[data-v-fae94e03]{color:#10a84d}.pc-itm[data-v-fae94e03]:last-child{margin-inline-end:0}.pc-resolution[data-v-fae94e03]{color:#fff;font-size:18px;font-weight:500;text-align:center}.pc-gb[data-v-fae94e03],.pc-resolution[data-v-fae94e03]{font-family:Roboto;font-style:normal;line-height:normal}.pc-gb[data-v-fae94e03]{color:hsla(0,0%,100%,.8);font-size:14px;font-weight:400}.pc-select-sub[data-v-fae94e03]{background:hsla(0,0%,100%,.1);border:1px solid transparent;border-radius:8px;color:#fff;font-family:Roboto;font-size:18px;font-style:normal;font-weight:500;height:60px;line-height:normal;margin-block-end:8px;margin-inline-end:16px;padding:0 24px}.pc-select-sub[data-v-fae94e03]:hover{border:1px solid #10a84d;color:#10a84d}.pc-down-limited-tip[data-v-fae94e03]{background:#383a40;border-radius:8px;inset-block-start:80px;inset-inline-start:50%;opacity:.9;padding:9px 16px;position:fixed;transform:translateX(var(--x--50));z-index:9}.pc-down-limited-tip img[data-v-fae94e03]{height:20px;margin-inline-end:8px;width:20px}.pc-down-limited-tip div[data-v-fae94e03]{color:#fff;font-family:PingFang SC;font-size:16px;font-style:normal;font-weight:400;line-height:normal}.pc-info-tab[data-v-fae94e03]{margin-block-end:15px}.pc-sub-lan[data-v-fae94e03]{align-items:flex-start;margin-block-end:12px;width:100%}.pc-sub-lan img[data-v-fae94e03]{height:16px;margin-inline-end:4px;width:16px}.pc-sub-lan span[data-v-fae94e03]{color:hsla(0,0%,100%,.6);font-family:Roboto;font-size:14px;font-style:normal;font-weight:400;line-height:16px;word-break:break-all}.pc-info-right[data-v-fae94e03]{min-width:400px;overflow:hidden;width:400px}@keyframes slideInFromBottom-fae94e03{0%{transform:translateY(3rem)}to{transform:translateY(0)}}@media screen and (max-width:1000px){.pc-rate .pc-score[data-v-fae94e03]{width:auto}}@media screen and (max-width:900px){.pc-info-left[data-v-fae94e03]{margin-inline-end:6px}.pc-info-right[data-v-fae94e03]{min-width:auto;width:auto}.pc-download-btn[data-v-fae94e03]{width:174px}.pc-line[data-v-fae94e03]{margin:0 4px}.pc-options div[data-v-fae94e03],.pc-rate .pc-score[data-v-fae94e03],.pc-title[data-v-fae94e03]{font-size:16px}.pc-resolution[data-v-fae94e03],.pc-select-sub[data-v-fae94e03]{font-size:14px}.pc-desc[data-v-fae94e03],.pc-down-limited-tip div[data-v-fae94e03],.pc-download-btn span[data-v-fae94e03],.pc-gb[data-v-fae94e03],.pc-quality[data-v-fae94e03],.pc-sub-lan span[data-v-fae94e03],.pc-time[data-v-fae94e03]{font-size:12px}}@media screen and (max-width:780px){.pc-download-btn[data-v-fae94e03]{width:150px}}
+  </style>
+  <style>
+   .pc-foryou-title[data-v-bc3924d1]{color:#fff;font-family:Roboto;font-size:18px;font-style:normal;font-weight:700;line-height:24px;margin-block-end:12px}.pc-staff[data-v-bc3924d1]{position:relative;width:100%}.pc-starr-box[data-v-bc3924d1]{margin-block-end:24px;overflow-x:scroll;width:100%}.pc-starr-item[data-v-bc3924d1]{margin-inline-end:16px}.pc-starring-img[data-v-bc3924d1]{aspect-ratio:100/132.69;background:#242323;border-radius:8px;overflow:hidden;position:relative;width:100%}.img-cover[data-v-bc3924d1]{inset-block-start:0;inset-inline-start:0;position:absolute}.img-cover[data-v-bc3924d1],.pc-img[data-v-bc3924d1]{height:100%;width:100%}.pc-img[data-v-bc3924d1]{-o-object-fit:cover;object-fit:cover;z-index:1}.pc-starring-name[data-v-bc3924d1]{color:#fff;margin-block-start:8px;word-break:break-all}.pc-starring-director[data-v-bc3924d1],.pc-starring-name[data-v-bc3924d1]{font-family:Roboto;font-size:14px;font-style:normal;font-weight:400;line-height:22px;text-align:center}.pc-starring-director[data-v-bc3924d1]{color:hsla(0,0%,100%,.6)}.pc-arrow-box[data-v-bc3924d1]{background:rgba(0,0,0,.5);border:1px solid #fff;border-radius:50%;height:40px;min-width:40px;width:40px}.pc-arrow-box img[data-v-bc3924d1]{height:20px;width:20px}.pc-s-right[data-v-bc3924d1]{inset-inline-end:0;transform:translate3d(var(--x-50),-50%,0)}.pc-s-left[data-v-bc3924d1],.pc-s-right[data-v-bc3924d1]{inset-block-start:40%;position:absolute;z-index:2}.pc-s-left[data-v-bc3924d1]{inset-inline-start:0;transform:translate3d(var(--x--50),-50%,0)}.pc-s-left img[data-v-bc3924d1]{transform:rotate(180deg)}@media screen and (max-width:1100px){.pc-starr-item[data-v-bc3924d1]{min-width:calc(20% - 12.8px);width:calc(20% - 12.8px)}}@media screen and (min-width:1101px) and (max-width:1300px){.pc-starr-item[data-v-bc3924d1]{min-width:calc(16.67% - 14px);width:calc(16.67% - 14px)}}@media screen and (min-width:1301px){.pc-starr-item[data-v-bc3924d1]{min-width:calc(12.5% - 14px);width:calc(12.5% - 14px)}}@media screen and (min-width:1501px){.pc-starr-item[data-v-bc3924d1]{min-width:calc(9.09% - 14px);width:calc(9.09% - 14px)}}
+  </style>
+  <style>
+   .pc-foryou-title{color:#fff;font-family:Roboto;font-size:18px;font-style:normal;font-weight:700;line-height:24px;margin-block-end:12px}.pc-load-more{align-items:center;background:hsla(0,0%,100%,.1);border-radius:8px;cursor:pointer;display:flex;gap:4px;height:40px;justify-content:center;padding:12px 0;width:430px}.pc-load-more img{height:16px;margin-inline-end:4px;width:16px}.pc-load-more div{color:#fff;font-family:Roboto;font-size:14px;font-style:normal;font-weight:500;line-height:normal}.load-more{animation:iconRot 1.5s linear infinite forwards}@keyframes iconRot{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}
+  </style>
+  <style>
+   .ig-movie[data-v-118e84db]{position:relative;text-decoration:none}.ig-img-box[data-v-118e84db]{aspect-ratio:100/140.13;background:#2d2c2c;border-radius:8px;margin-block-end:8px;overflow:hidden;position:relative;width:100%}.cover-mask[data-v-118e84db],.pc-fy-img-cot[data-v-118e84db]{height:100%;width:100%}.cover-mask[data-v-118e84db]{background:rgba(0,0,0,.2);display:none;inset-block-start:0;inset-inline-start:0;position:absolute;z-index:2}.ig-img-box:hover .cover-mask[data-v-118e84db]{display:block!important}.ig-rate-box[data-v-118e84db]{background:linear-gradient(180deg,transparent,rgba(0,0,0,.5));border-end-end-radius:8px;border-end-start-radius:8px;border-start-end-radius:0;border-start-start-radius:0;height:48px;inset-block-end:0;inset-inline-start:0;padding-block-end:8px;position:absolute;width:100%;z-index:1}.ig-rate[data-v-118e84db]{color:#ffda6b;font-family:Roboto;font-size:18px;font-style:normal;font-weight:700;line-height:22px;padding-inline-end:8px;text-align:end;text-shadow:0 1px 1px rgba(0,0,0,.3)}.tit-box[data-v-118e84db]{display:-webkit-box;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%}.ig-title[data-v-118e84db]{color:#fff;cursor:pointer;font-family:Roboto;font-size:14px;font-style:normal;font-weight:500;line-height:16px;width:100%}.ig-title[data-v-118e84db]:hover{text-decoration:underline}.ig-movie[data-v-118e84db]:last-child{margin-inline-end:0!important}.pc-movie-list[data-v-118e84db]{flex-wrap:wrap;gap:16px 16px;margin-block-end:16px;width:100%}.scroll[data-v-118e84db]{overflow-x:scroll;scrollbar-width:none;width:100%;-ms-overflow-style:none}.pc-corner[data-v-118e84db]{height:42px;inset-block-start:4px;inset-inline-start:4px;padding-block-start:4px;position:absolute;width:32px;z-index:1}.pc-ranking-bg[data-v-118e84db]{inset-block-start:0;inset-inline-start:0;position:absolute;z-index:-1}.pc-ranking-top[data-v-118e84db]{color:#fff;font-family:Roboto;font-size:12px;font-style:normal;font-weight:700;line-height:14px;text-shadow:0 .5px 0 var(--Color-Black-20,rgba(0,0,0,.2))}.pc-ranking-line[data-v-118e84db]{background:hsla(0,0%,100%,.5);height:1px;width:24px}.pc-ranking-num[data-v-118e84db]{color:#fff;font-family:Roboto;font-size:14px;font-style:normal;font-weight:700;line-height:16px;text-align:center;text-shadow:0 .5px 0 rgba(0,0,0,.2)}@media screen and (max-width:1100px){.ig-movie[data-v-118e84db]{min-width:calc(20% - 12.8px);width:calc(20% - 12.8px)}}@media screen and (min-width:1101px) and (max-width:1300px){.ig-movie[data-v-118e84db]{min-width:calc(16.67% - 14px);width:calc(16.67% - 14px)}}@media screen and (min-width:1301px){.ig-movie[data-v-118e84db]{min-width:calc(12.5% - 14px);width:calc(12.5% - 14px)}}
+  </style>
+  <style>
+   .pc-side-list[data-v-ee97da7a]{border:1px solid hsla(0,0%,100%,.1);border-radius:8px;margin-block-end:24px;overflow:hidden}.pc-detail-side-title[data-v-ee97da7a]{background:linear-gradient(180deg,rgba(7,184,81,.16),rgba(7,184,78,0));color:#fff;font-family:Roboto;font-size:16px;font-style:normal;font-weight:500;line-height:normal;padding:16px}.pc-list-item[data-v-ee97da7a]{margin-block-end:12px;padding:0 16px}.pc-img-cot[data-v-ee97da7a],.pc-side-list-cover[data-v-ee97da7a]{height:56px;min-width:40px;overflow:hidden;width:40px}.pc-side-list-cover[data-v-ee97da7a]{border-radius:4px;margin-inline-end:8px;position:relative}.pc-side-list-cover:hover .cover-mask[data-v-ee97da7a]{background:rgba(0,0,0,.2);height:100%;width:100%;z-index:3}.pc-side-list-cover:hover .cover-mask[data-v-ee97da7a],.pc-side-num[data-v-ee97da7a]{inset-block-start:0;inset-inline-start:0;position:absolute}.pc-side-num[data-v-ee97da7a]{background:#383a40;border-end-end-radius:4px;border-end-start-radius:0;border-start-end-radius:0;border-start-start-radius:4px;color:#fff;font-family:Roboto;font-size:12px;font-weight:700;height:16px;line-height:normal;width:16px;z-index:1}.first-bg[data-v-ee97da7a]{background:#cc3129}.second-bg[data-v-ee97da7a]{background:#f08028}.third-bg[data-v-ee97da7a]{background:#d9a404}.pc-side-rate[data-v-ee97da7a]{color:#ffda6b;font-size:10px;font-weight:700;height:20px;inset-block-end:0;inset-inline-start:0;line-height:normal;position:absolute;text-align:end;text-shadow:0 1px 1px rgba(0,0,0,.3);width:100%;z-index:1}.pc-movie-title[data-v-ee97da7a],.pc-side-rate[data-v-ee97da7a]{font-family:Roboto;font-style:normal}.pc-movie-title[data-v-ee97da7a]{color:#fff;cursor:pointer;display:-webkit-box;font-size:14px;font-weight:500;line-height:16px;margin-block-end:4px;overflow:hidden;text-overflow:ellipsis;line-clamp:2;-webkit-line-clamp:2;-webkit-box-orient:vertical}.pc-movie-title[data-v-ee97da7a]:hover{text-decoration:underline}.pc-movie-lan[data-v-ee97da7a]{color:hsla(0,0%,100%,.6);cursor:pointer;font-family:Roboto;font-size:12px;font-style:normal;font-weight:400;line-height:normal}
+  </style>
+  <style>
+   .pc-footer[data-v-8671f737]{padding:24px 0;width:100%}.pc-footer-inner[data-v-8671f737]{align-items:flex-start!important;width:100%}.pc-footer-desc[data-v-8671f737]{color:hsla(0,0%,100%,.8);font-family:Roboto;font-size:12px;font-style:normal;font-weight:400;line-height:20px;text-align:justify}.pc-line[data-v-8671f737]{background:hsla(0,0%,100%,.1);height:1px;margin:32px 0;width:100%}.report-content-text[data-v-8671f737]{cursor:pointer}.report-content-text[data-v-8671f737]:active,.report-content-text[data-v-8671f737]:hover{color:#fff}.pc-backlink[data-v-8671f737]{font-size:12px;width:100%}.pc-backlink .pc-link[data-v-8671f737]{margin-inline-end:10px}.pc-backlink .pc-link span[data-v-8671f737]{margin-inline-end:5px}.pc-backlink .pc-link a[data-v-8671f737]{color:hsla(0,0%,100%,.8);margin-inline-start:20px;text-decoration:none}
+  </style>
+  <style>
+   .pc-pwa-tip[data-v-95e7dc91]{background:#383a40;border-radius:8px;height:120px;inset-block-end:52px;inset-inline-start:50px;padding:16px;position:fixed;width:396px;z-index:9}.pc-icon[data-v-95e7dc91]{background:hsla(0,0%,100%,.2);border-radius:50%;height:48px;margin-inline-end:12px;min-width:48px;overflow:hidden;width:48px}.pc-icon img[data-v-95e7dc91]{height:32px;width:32px}.pc-tit[data-v-95e7dc91]{position:relative;width:100%}.pc-close[data-v-95e7dc91]{height:20px;inset-block-start:0;inset-inline-end:0;position:absolute;width:20px}.pc-pwa-tit[data-v-95e7dc91]{color:#fff;font-size:20px;font-weight:800;margin-block-end:8px}.pc-pwa-tit[data-v-95e7dc91],.pc-pwa-txt[data-v-95e7dc91]{font-family:Roboto;font-style:normal;line-height:normal}.pc-pwa-txt[data-v-95e7dc91]{color:hsla(0,0%,100%,.8);font-size:16px;font-weight:400}
+  </style>
+  <style>
+   .pc-mask[data-v-cf9d6e3b]{background:rgba(0,0,0,.6);height:100%;inset-block-start:0;inset-inline-start:0;position:absolute;width:100%;z-index:10}.pc-box[data-v-cf9d6e3b]{background:linear-gradient(var(--deg-95),rgba(33,102,229,.4) 3.79%,rgba(29,209,113,.4) 50%),#28292e;border-radius:8px;box-shadow:0 20px 40px 0 #000;overflow:hidden;padding:16px;width:360px}.pc-title[data-v-cf9d6e3b]{color:#fff;font-family:Roboto;font-size:20px;font-style:normal;font-weight:500;line-height:22px;position:relative;text-align:center;width:100%}.pc-title img[data-v-cf9d6e3b]{height:20px;inset-block-start:0;inset-inline-end:0;position:absolute;width:20px}.pc-desc[data-v-cf9d6e3b]{color:hsla(0,0%,100%,.8);font-family:Roboto;font-size:16px;font-style:normal;font-weight:400;line-height:normal;margin:24px 0 16px;text-align:center}.pc-desc span[data-v-cf9d6e3b]{font-weight:700}.pc-line[data-v-cf9d6e3b]{background:hsla(0,0%,100%,.1);height:1px;width:100%}.pc-qr span[data-v-cf9d6e3b]{margin:12px 0 8px}.pc-btn span[data-v-cf9d6e3b],.pc-qr span[data-v-cf9d6e3b]{color:#fff;font-family:Inter;font-size:12px;font-style:normal;font-weight:500;line-height:normal;text-align:center}.pc-btn span[data-v-cf9d6e3b]{margin:16px 0 8px}.pc-btn img[data-v-cf9d6e3b]{height:48px;width:170px}.btn-img[data-v-cf9d6e3b]:hover{background:hsla(0,0%,100%,.1)}
+  </style>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/entry.BbOw-97N.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/PageNotFound.CSglubR0.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/subjectH5.BqxdR9Iy.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/SlideNav.NDhWEWHq.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/index.DbIupMjn.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/clip.CQY2J2kO.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/allImg.DvKT39P8.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/footer.D5So5rBv.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/head.DBtZJeYQ.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/localesBtn.ev5OxBX4.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/index.iGsiMr_r.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/footer.TTKm1vqt.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/downloadBtn.BJx6DZ3P.css" rel="stylesheet"/>
+  <link crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/bottomNav.9d7lWjHc.css" rel="stylesheet"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/DtovRKn5.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/adiOuWNm.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/DtFtEmlB.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/DlAUqK2U.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/JNxDn-jw.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/CrAoW8Yy.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/COym3-R6.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/DpQA05AO.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/Dh4FHC8P.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/BwHytCVX.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/DWddmWq7.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/64udgyt0.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/BNyPH0ZE.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/B_HYICW5.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/DC5hBLOP.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/BUywZoB1.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/BkijaWuO.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/DRnqEFqG.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/CTE9kVqy.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/Diy8B7Pq.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/BUkMBrXV.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/CRjG7NVz.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/DZwNmG9J.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/BmsdeWJ2.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/BoOAatLA.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/gkPYXf5G.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/CkC461sm.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/B00wVEIv.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/C5uQ6hsT.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/B1O3RBQO.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/C-te_uTy.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/CeluCGgU.js" rel="modulepreload"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/B2d_WKrs.js" rel="modulepreload"/>
+  <link href="https://www.googleagmanger.com" rel="dns-prefetch" samesite="none"/>
+  <link href="https://h5.aoneroom.com" rel="dns-prefetch" samesite="none"/>
+  <link href="https://h5-static.aoneroom.com" rel="dns-prefetch" samesite="none"/>
+  <link href="https://fecdn.trasre.com" rel="dns-prefetch" samesite="none"/>
+  <link href="https://dsu-h5-a.sparkle0.com" rel="dns-prefetch" samesite="none"/>
+  <link href="https://dsu-h5-a.shallspark.com" rel="dns-prefetch" samesite="none"/>
+  <link as="script" crossorigin="" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/B9K5rw8f.js" rel="prefetch"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/video-re-play.B_aAIgLA.webp" rel="prefetch" type="image/webp"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/pc-ranking-2.g9Xk4j8p.svg" rel="prefetch" type="image/svg+xml"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/download-apk-app.CYQQdL00.png" rel="prefetch" type="image/png"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/novel-hot.D_FY4Np1.gif" rel="prefetch" type="image/gif"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/x.min.D3ggbSnd.svg" rel="prefetch" type="image/svg+xml"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/x-light.min.Bd_2qZiG.svg" rel="prefetch" type="image/svg+xml"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/qr-logo.C4FQ4H7K.png" rel="prefetch" type="image/png"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/apk-download.BsXVshUu.svg" rel="prefetch" type="image/svg+xml"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/web-logo.apJjVir2.svg" rel="prefetch" type="image/svg+xml"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/loading.BsTGHhBz.gif" rel="prefetch" type="image/gif"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/loading-green-light.duPoTdIQ.webp" rel="prefetch" type="image/webp"/>
+  <link as="image" href="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/load-more.B0Oq9HN7.svg" rel="prefetch" type="image/svg+xml"/>
+  <meta content="2gts73yyij19" name="saashub-verification"/>
+  <script>
+   window.onResumeWebView = function () { }
+  </script>
+  <link data-hid="7fcee50" href="https://moviebox.ng/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=/movie/detail" hreflang="en" rel="alternate"/>
+  <link data-hid="ca05cf1" href="https://moviebox.ng/ar/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=/movie/detail" hreflang="ar" rel="alternate"/>
+  <link data-hid="484de76" href="https://moviebox.ng/fr/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=/movie/detail" hreflang="fr" rel="alternate"/>
+  <link data-hid="7e3fa1b" href="https://moviebox.ng/id/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=/movie/detail" hreflang="id" rel="alternate"/>
+  <link data-hid="696202c" href="https://moviebox.ng/hi/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=/movie/detail" hreflang="hi" rel="alternate"/>
+  <link data-hid="65e144e" href="https://moviebox.ng/ur/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=/movie/detail" hreflang="ur" rel="alternate"/>
+  <link data-hid="3d9549" href="https://moviebox.ng/fil/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=/movie/detail" hreflang="fil" rel="alternate"/>
+  <link data-hid="6527e7a" href="https://moviebox.ng/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=/movie/detail" hreflang="x-default" rel="alternate"/>
+  <meta content="en" property="og:locale"/>
+  <meta content="ar" property="og:locale:alternate"/>
+  <meta content="fr" property="og:locale:alternate"/>
+  <meta content="id" property="og:locale:alternate"/>
+  <meta content="hi" property="og:locale:alternate"/>
+  <meta content="ur" property="og:locale:alternate"/>
+  <meta content="fil" property="og:locale:alternate"/>
+  <link href="/manifest.webmanifest" rel="manifest"/>
+  <meta content="#11161f" name="theme-color"/>
+  <meta content="A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic. all in Moviebox Official" name="description"/>
+  <meta content="https://pacdn.aoneroom.com/image/2024/04/15/1a9adcc771aabea000d673a69b7c1a38.jpg" name="image"/>
+  <meta content="/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=%2Fmovie%2Fdetail" name="url"/>
+  <meta content="https://macdn.aoneroom.com/media/vone/2024/04/15/47285b4091257ef599a2dc2fb894aad0-sd.mp4" name="video"/>
+  <meta content="Titanic - Moviebox Official" name="title"/>
+  <meta content="iceberg,sailor's death,love affair,mass death,sunken ship,drowning,titanic,sea captain,nude modeling,lifeboat" name="keywords"/>
+  <meta content="MovieBox" property="og:site_name"/>
+  <meta content="video" property="og:type"/>
+  <meta content="Titanic - Moviebox Official" property="og:title"/>
+  <meta content="A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic. all in Moviebox Official" property="og:description"/>
+  <meta content="https://pacdn.aoneroom.com/image/2024/04/15/1a9adcc771aabea000d673a69b7c1a38.jpg" property="og:image"/>
+  <meta content="2015" property="og:image:width"/>
+  <meta content="3000" property="og:image:height"/>
+  <meta content="/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=%2Fmovie%2Fdetail" property="og:url"/>
+  <meta content="https://macdn.aoneroom.com/media/vone/2024/04/15/47285b4091257ef599a2dc2fb894aad0-sd.mp4" property="og:video:url"/>
+  <meta content="iceberg,sailor's death,love affair,mass death,sunken ship,drowning,titanic,sea captain,nude modeling,lifeboat" property="og:keywords"/>
+  <meta content="summary_large_image" property="twitter:card"/>
+  <meta content="MovieBox" property="twitter:site"/>
+  <meta content="Titanic - Moviebox Official" property="twitter:title"/>
+  <meta content="A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic. all in Moviebox Official" property="twitter:description"/>
+  <meta content="https://pacdn.aoneroom.com/image/2024/04/15/1a9adcc771aabea000d673a69b7c1a38.jpg" property="twitter:image"/>
+  <meta content="2015" property="twitter:width"/>
+  <meta content="3000" property="twitter:height"/>
+  <meta content="https://macdn.aoneroom.com/media/vone/2024/04/15/47285b4091257ef599a2dc2fb894aad0-sd.mp4" property="twitter:video"/>
+  <meta content="/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=%2Fmovie%2Fdetail" property="twitter:url"/>
+  <meta content="iceberg,sailor's death,love affair,mass death,sunken ship,drowning,titanic,sea captain,nude modeling,lifeboat" property="twitter:keywords"/>
+  <link href="/favicon.ico" rel="icon" type="image/x-icon"/>
+  <link href="https://moviebox.ng/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=%2Fmovie%2Fdetail" rel="canonical"/>
+  <link href="https://moviebox.ng/movies/titanic-m7a9yt0abq6?id=5390197429792821032&amp;scene&amp;page_from=search_detail&amp;type=%2Fmovie%2Fdetail" media="only screen and (max-width: 640px)" rel="alternate"/>
+  <script crossorigin="" src="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/DtovRKn5.js" type="module">
+  </script>
+ </head>
+ <body>
+  <div id="__nuxt">
+   <div class="lay-default" data-v-afb8d8ce="">
+    <!--[-->
+    <!-- -->
+    <div class="web-subject-page">
+     <div class="ig pc-page">
+      <div class="pc" data-v-61b7bb3d="">
+       <header class="pc-header flx-ce-ce" data-v-07c13f54="" data-v-61b7bb3d="">
+        <div class="pc-header-inner flx-ce-bet" data-v-07c13f54="">
+         <div class="flx-ce-sta head-left" data-v-07c13f54="">
+          <div class="pc-left-icon" data-v-07c13f54="">
+           <div class="slide-nav-icon-box" data-v-07c13f54="">
+            <img alt="moviebox header nav" class="slide-nav-icon" data-v-07c13f54="" src="data:image/svg+xml,%3csvg%20width='32'%20height='32'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M2%208a1%201%200%20011-1h20a1%201%200%20110%202H3a1%201%200%2001-1-1zm0%208a1%201%200%20011-1h20a1%201%200%20110%202H3a1%201%200%2001-1-1zm1%207a1%201%200%20100%202h20a1%201%200%20100-2H3z'%20fill='%23fff'%20fill-opacity='.8'/%3e%3c/svg%3e"/>
+           </div>
+           <a class="flx-ce-sta pot logo-cot" data-v-07c13f54="" href="https://moviebox.ng" rel="follow">
+            <img alt="moviebox official logo" class="pc-logo-icon pot" data-v-07c13f54="" src="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/web-logo.apJjVir2.svg"/>
+            <h2 class="pc-logo-txt pot" data-v-07c13f54="">
+             MovieBox
+            </h2>
+           </a>
+          </div>
+          <div class="pc-input-box flx-ce-sta pot" data-v-07c13f54="">
+           <img alt="moviebox search icon" class="pc-search-icon" data-v-07c13f54="" src="data:image/svg+xml,%3csvg%20width='15'%20height='15'%20viewBox='0%200%2015%2015'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Search'%3e%3ccircle%20id='Ellipse_739'%20cx='6.84394'%20cy='6.84394'%20r='5.99237'%20stroke='white'%20stroke-opacity='0.6'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20id='Line_181'%20d='M11.0117%2011.3232L13.3611%2013.6665'%20stroke='white'%20stroke-opacity='0.6'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/svg%3e"/>
+           <input class="pc-search-input" data-v-07c13f54="" placeholder="Search movies/ TV Shows" type="text"/>
+           <!-- -->
+           <!-- -->
+           <!-- -->
+          </div>
+         </div>
+         <div class="flx-ce-sta" data-v-07c13f54="">
+          <div class="pc-download-cot flx-ce-ce pointer download-header" data-v-07c13f54="">
+           <img alt="Moviebox Download App" class="pc-download-icon pc-download" data-v-07c13f54="" src="data:image/svg+xml,%3csvg%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='&amp;%23228;&amp;%23184;&amp;%23139;&amp;%23232;&amp;%23189;&amp;%23189;app%20(2)'%3e%3cpath%20id='Vector'%20d='M17.3996%2025.7999C17.3996%2025.9838%2017.3634%2026.1658%2017.293%2026.3357C17.2227%2026.5055%2017.1196%2026.6598%2016.9896%2026.7899C16.8596%2026.9199%2016.7052%2027.023%2016.5354%2027.0933C16.3655%2027.1637%2016.1835%2027.1999%2015.9996%2027.1999C15.8158%2027.1999%2015.6337%2027.1637%2015.4639%2027.0933C15.294%2027.023%2015.1397%2026.9199%2015.0097%2026.7899C14.8797%2026.6598%2014.7765%2026.5055%2014.7062%2026.3357C14.6358%2026.1658%2014.5996%2025.9838%2014.5996%2025.7999C14.5996%2025.4286%2014.7471%2025.0725%2015.0097%2024.81C15.2722%2024.5474%2015.6283%2024.3999%2015.9996%2024.3999C16.3709%2024.3999%2016.727%2024.5474%2016.9896%2024.81C17.2521%2025.0725%2017.3996%2025.4286%2017.3996%2025.7999Z'%20fill='white'%20fill-opacity='0.8'/%3e%3cpath%20id='Union'%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M8.5%204H23.5C24.0523%204%2024.5%204.44772%2024.5%205V21.5H7.5V5C7.5%204.44772%207.94772%204%208.5%204ZM5.5%2022.5V5C5.5%203.34315%206.84315%202%208.5%202H23.5C25.1569%202%2026.5%203.34315%2026.5%205V22.5V27C26.5%2028.6569%2025.1569%2030%2023.5%2030H8.5C6.84315%2030%205.5%2028.6569%205.5%2027V22.5ZM24.5%2023.5V27C24.5%2027.5523%2024.0523%2028%2023.5%2028H8.5C7.94772%2028%207.5%2027.5523%207.5%2027V23.5H24.5Z'%20fill='white'%20fill-opacity='0.8'/%3e%3cpath%20id='Union_2'%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M17%209C17%208.44772%2016.5523%208%2016%208C15.4477%208%2015%208.44772%2015%209V13.8258L13.1508%2012.2407C12.7315%2011.8813%2012.1002%2011.9299%2011.7408%2012.3492C11.3813%2012.7685%2011.4299%2013.3998%2011.8492%2013.7593L15.345%2016.7556C15.5205%2016.9079%2015.7495%2017%2016%2017C16.2506%2017%2016.4796%2016.9079%2016.6551%2016.7556L20.1508%2013.7593C20.5701%2013.3998%2020.6187%2012.7685%2020.2593%2012.3492C19.8999%2011.9299%2019.2686%2011.8813%2018.8492%2012.2407L17%2013.8258V9Z'%20fill='white'%20fill-opacity='0.8'/%3e%3c/g%3e%3c/svg%3e"/>
+           <img alt="Moviebox Download App" class="pc-download-icon pc-downloadhover" data-v-07c13f54="" src="data:image/svg+xml,%3csvg%20width='32'%20height='32'%20viewBox='0%200%2032%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='&amp;%23228;&amp;%23184;&amp;%23139;&amp;%23232;&amp;%23189;&amp;%23189;app%20(2)'%3e%3cpath%20id='Vector'%20d='M17.3996%2025.7999C17.3996%2025.9838%2017.3634%2026.1658%2017.293%2026.3357C17.2227%2026.5055%2017.1196%2026.6598%2016.9896%2026.7899C16.8596%2026.9199%2016.7052%2027.023%2016.5354%2027.0933C16.3655%2027.1637%2016.1835%2027.1999%2015.9996%2027.1999C15.8158%2027.1999%2015.6337%2027.1637%2015.4639%2027.0933C15.294%2027.023%2015.1397%2026.9199%2015.0097%2026.7899C14.8797%2026.6598%2014.7765%2026.5055%2014.7062%2026.3357C14.6358%2026.1658%2014.5996%2025.9838%2014.5996%2025.7999C14.5996%2025.4286%2014.7471%2025.0725%2015.0097%2024.81C15.2722%2024.5474%2015.6283%2024.3999%2015.9996%2024.3999C16.3709%2024.3999%2016.727%2024.5474%2016.9896%2024.81C17.2521%2025.0725%2017.3996%2025.4286%2017.3996%2025.7999Z'%20fill='white'/%3e%3cpath%20id='Union'%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M8.5%204H23.5C24.0523%204%2024.5%204.44772%2024.5%205V21.5H7.5V5C7.5%204.44772%207.94772%204%208.5%204ZM5.5%2022.5V5C5.5%203.34315%206.84315%202%208.5%202H23.5C25.1569%202%2026.5%203.34315%2026.5%205V22.5V27C26.5%2028.6569%2025.1569%2030%2023.5%2030H8.5C6.84315%2030%205.5%2028.6569%205.5%2027V22.5ZM24.5%2023.5V27C24.5%2027.5523%2024.0523%2028%2023.5%2028H8.5C7.94772%2028%207.5%2027.5523%207.5%2027V23.5H24.5Z'%20fill='white'/%3e%3cpath%20id='Union_2'%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M17%209C17%208.44772%2016.5523%208%2016%208C15.4477%208%2015%208.44772%2015%209V13.8258L13.1508%2012.2407C12.7315%2011.8813%2012.1002%2011.9299%2011.7408%2012.3492C11.3813%2012.7685%2011.4299%2013.3998%2011.8492%2013.7593L15.345%2016.7556C15.5205%2016.9079%2015.7495%2017%2016%2017C16.2506%2017%2016.4796%2016.9079%2016.6551%2016.7556L20.1508%2013.7593C20.5701%2013.3998%2020.6187%2012.7685%2020.2593%2012.3492C19.8999%2011.9299%2019.2686%2011.8813%2018.8492%2012.2407L17%2013.8258V9Z'%20fill='white'/%3e%3c/g%3e%3c/svg%3e"/>
+           <div class="pc-download-tip flx-ce-ce" data-v-07c13f54="">
+            Download App
+           </div>
+           <div class="hid pc-download-content pc-history-content" data-v-07c13f54="">
+            <div class="pc-card flx-clm-sta" data-v-07c13f54="" data-v-75649d99="">
+             <div class="flx-clm-sta pc-context" data-v-75649d99="">
+              <div class="flx-ce-bet pc-title" data-v-75649d99="">
+               <div class="pc-d-title" data-v-75649d99="">
+                Download App
+               </div>
+               <div class="flx-ce-sta pc-more pointer" data-v-75649d99="">
+                <span data-v-75649d99="">
+                 View more
+                </span>
+                <img alt="moviebox home light arrow" class="rtl-image" data-v-75649d99="" src="data:image/svg+xml,%3csvg%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Icon/Light/Arrow-right'%3e%3cg%20id='Icon/Light/Arrow-right_2'%3e%3cpath%20id='Stroke%201'%20d='M5.66699%203.33366L10.3337%208.00033L5.66699%2012.667'%20stroke='white'%20stroke-opacity='0.6'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"/>
+               </div>
+              </div>
+              <div class="flx-clm-sta pc-clm-box" data-v-75649d99="">
+               <div class="flx-ce-sta pc-clm" data-v-75649d99="">
+                <img alt="moviebox download" data-v-75649d99="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAANjSURBVHgB7VY9UBNBFH7vkogCyh1jA6PO0aTxh1BY5ygsLBiwtMJCGTtAbaj8GWecQZRrpdHWCjKWFlzGVofY0niDCoUmHIQxQib7fJtc4Iw5EiZ3I0W+mZ3dZN9++93bt28fQBtt/F+g3wQRxbk77TOdR8RVaAKt8mAdQoO7h4eQVrHBbYE3eAf1hRlB8GAN6YhLehQ8YHIrDB6oI1B+RR+3PLcFbn7u7+d2Dyrekcc0HAYP1JDGuX102wg0ANvc9NjHg+apQvGMvbGyDo2x6rM2KJ4yFDjmaAtsFW2BrcIrMO8Zx6Ex+n3WBsVTRrQ6kG8i5yFpIK/6BI93wD9NyI0n3PGG9z0Nimefz/vDfT/n4Gh4XPuOBsUDUL9YkNlfflUfHI68S2rVmwyK59iXW220ilCPWL+7oUPk9yT2bI2RtukI7UdG0Zw0dGYt+/qMDU0gtIpav/MtwXPLcOqXSmoOQMuB6M0RajkkOe52MuWLgZj+euXFEjQjMMhKeGBi/Qug0OnMNrG4NKg5h7RsErSsJoVCR8G7tx2JRm/YF59nGgkMpBLWb38fVSKwRNEiUNfOtD17ydyfe//MEL3ZBMVKo0BgyG0rQnBLEWLIHjJtL1fUIy4OBznrpd/RufjE9t3c35ci5dq/YlIhgwiBYkWCzq433oX2tRmLO9lMfWVKFQC3SMF5AlJLCkzy/9Ne+zAqanksBoskiBbT9qMBx4+AveWsDZkmfyDHovQkjtXaBF7NlG8uYILFIcREqpk1/EEOy8NyH7bACLhxdWKPfxQyza1CQ3qQEP+xD1xgqSSSEBFIsV3HfnrVamR/bmVKilMri0UawhbIjpDHy94TVjP2ioKDKA+Zyt63QhfIjCrF9ghOFtRmzPmyj5EMQIDPtSmmQneAQCphTi0p6NhF6igYFxYWJ/XF175CZZpB4vjjZZxu0vVsAq+omdHEE7vj0FFU+bUwhbJjnv/wxMJuJ6VElYx9ec6qmgoFx6vbR1Gx6m0USkWtzy4noHt7Uag5HXs3QWg/5ZFjZUN0+Fgt3k16NummF3ttcH6goUBXZCCVcFno21dj4uxmEnqyBsRKCUKqhJtMyuWwkyEI/MTRMMdfpimBHqGBVsIcb3opohg8TKIgFgsqb55icWa9y9FGUPgDe/fdh5yTEt0AAAAASUVORK5CYII="/>
+                <div data-v-75649d99="">
+                 Explore more exciting
+                 <!--[-->
+                 <span class="bold" data-v-75649d99="">
+                  Features &amp; Content
+                 </span>
+                 <!--]-->
+                </div>
+               </div>
+               <div class="flx-ce-sta pc-clm" data-v-75649d99="">
+                <img alt="moviebox download" data-v-75649d99="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAPNSURBVHgB7Vi/b9NAFH7npIBQDWFMJaQgpCAmWuUPaLq3UjuWpRsVG6Ew0w5IDBTasRlggu6kO2ZgQVQtbHTBA4rX0CAh0drHe/E5uTjx+ew6REL9otPF9vPd5/fz7gDO8Z+DwYjBOZ/Crigujxhj7QSvj4YgkjKxWxbNDD0+wraLRBs6Y2VOEMmVsduEntaisI/tUZxGMyUozPkGelojEhb4WiNUReuaHNtqUrOfhWAD22fRliNkTGzrktwa/AvgRAvSpPc05HckeTNKzoDsMC96B01W15CvD3l3AHlQoPTx6bR74XglN8m27dvPbFCjInoLNIAfsY+ac8D3x1uQhqB3wl/BRZhxT/7QZS1KTgRHgCbooykIFlMRRFxjjFNfiJGTo9AEfcTKqn2QecDp53lqMT9NOOKyAhoQWi+LyyNIQ5AjQYYSzNCKJUv0FZxch+T8kHcHoJ7Z4DZpED/XgnjsQs/U6yG/7AOlJOyCVLRPAQNpUDpYL5QOHkzrylNylnJbQ+TGKel5JZSk36s+hMBu3v++6F7+/RKutjlcaTFu/kTXPW6xifacvVRrBYLXv64t4gwvyPDdCQFaeY/P2TNbLYkEaSacqAPNmqF7VOYi/Y+Qdw1jFhgvAbj+lBS16HsY36Q5q/sl3KvikxtYvTnjFNu8U8hPISSHSVrkNyJZHEKMQCbdQNnYlJSHCW8bfQ39jRWIIM6Ojsm+2As1SxY0PL7lGijgYcoxGNDP4/zwx8yWFR5ULKUaIlgqEkEitJdkcaBczZQ+PZ52L7krOdfbRjPaMAaoKwnLv0Yj3nFznWCvwRigJMi5V+i4GvVjgrrUGZ0yp5uog6U+BQalDvo/CYMBQv73C3x/bMdGMSgJEjtSpKciRUFQhf6VsjbwfSJMJPfAT9pNfYLMs9HEJXzJguHEKJVo1V4FTDFGRYxLROsBUSXBHJwuYVopYQQfhshRqXoS8RrlwG/gm7EN/SudgFBR9GUYdAGq0VRxKIk3E2+aRGl6J90iAvTVFqTY94rxKgEx6RGNdTcNwR1pINLWqk5F0BybLPMQelrdSLQnEVEqf2Vm5AiiAu1Kt2aTbppkf2lmSU6CJf0vn2VXl2Rpn3ZcJxFBobHu0glNXoXssSD9d9JoUPaR51EnCEkhThzolEHeCjTSRDGZ4C30Vw2K5uAchrTsxKUbqSwGlSic8OkEbDPV4ZHIXTsQX9qciPtx73XI0Z8znW5Jm5/ENTgCZIW6vInK5PhNWjlT6ZL3uyoEe2laKFBp/DAsbY3sCFj42NBUNKL8OR78BQ4cwgfr2O4CAAAAAElFTkSuQmCC"/>
+                <div data-v-75649d99="">
+                 Invite your friends &amp; collect big
+                 <!--[-->
+                 <span class="bold" data-v-75649d99="">
+                  Rewards
+                 </span>
+                 <!--]-->
+                </div>
+               </div>
+               <div class="flx-ce-sta pc-clm" data-v-75649d99="">
+                <img alt="moviebox download" data-v-75649d99="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAQ1SURBVHgB7VdNbBNHFH6zBtLYa2qprSqsYkxRfWiFksjqtSzKlZZy66UikfqjHiqhilvViqrXInKoVNU9kJ4i9QJUlXpBsSP151BSQJVakSaw/BkhAjJxbCsonsd7u7Nm7dh41oxQDnz2aEa7s/O+/d68N28BnuHJIGAAZI/95UBiZRTs+vMyvgrW9sqce+iTUtucf446UkpHgkQLLGFZVsnd+00pqq1IBLNHrqTE1topTNSI4CogNe7B5nHNtRK1SbDvg7SaJ5GmIyAKEPQHGgIPT8eactIdm6ro2twCUbAOJ3GrtY8NkkXhvZ5A8H9ylxTNIt0A/4bPyGPHPBmI7zZjIkWj/bomtRXMfnDdEUOyiPGqpxgkatPk5qs0TpGSB6llPVXtGjFr8roV4jeNKCsWiN3E+3AgJUrcf2NsqqRjV1tB2kMO4jo7jISwpt2j45Mt8qe+m0KB58l+yhcO3BiRcMdOuMGcnReOsI4THkkLRuhSScsuaENUWG9WAEC23aEAcSHW/JHdrWacoX3mtluyQCmIluW5WQvaCtLGv8DqeQpaOJE9fpZcff+qtOsI8RUhsDoi/Q3IEo9kLn52LIhgUm4XXTuM6k3p2pyu3UhRvPvTy0XwIrjqRTDaq0SuKtBW48SqEMN1Uot1wuAxBIBWJNP10zdGpw7p2tygIC2Qpy5HLdl579rd9V8/P3Nt9LfySkq5U3AvQI3BVzBEzovkYDgS31n9NvP+nxk88VEXLhR9MEdxXw5fFB3k+MFuD7dhdvFe8o/yHRu2rQEMPQCk/lxjMXl+fTEp4nVgIm/ar1a9yRIhGRtu7h1+pTG+/fUq9EeBSBY2ECRyaep+hgHx9dLZHT8sl9Iw3IAPX3yr/EX64C0YHB8TyXkehF28LzReAM00EGCpcfcAuTvNb7y0docX/wWiwQF/a4HqNxAM77lSWGYdZIpfpUUCDvAJU6z9Nx/1ebVvc51cIuTBPrCCHAmcJgcqQnosaxDCJ8j5DwzBpILGSIUR3oPhFOCEc5kOJv6dyc82Lnrj8eQb+Wk/ZUWBA124hAkuhMY5eLRhtbAn/sKO2Ya/9/YMvcTJPg2Do3UUtlys8k6kyOuEEEa8XAifJlvaDYgCuZbzF+dEh1pe3ZpXrSeW6suUYnzV/l+7rZMH89C+fonaQpCguxJUJJn9DBFNhhfol9cyv3+Zhufwba6h56qX/u43Xx2r4fVnus0znGbaCwUTMEvQL+jRZMoxmAelV3exizfrSSJU26QniQf0vja5zAdDMHvUGaP1CNE+3B+LYOOZZWm43AqVXOaWNQTJOd58QWMyzbS027xRrE4Rk1H8uCCJVB/+tHwud+nBzTJze23by7n38Hi/etDpYasNPd9UfcB/D08H73R+sAfo6WIT9aEmCr3IeTygD9QHPdeHSTALduuG+u8ZTOMhJOWxbHga9+kAAAAASUVORK5CYII="/>
+                <div data-v-75649d99="">
+                 Join events &amp; get exciting
+                 <!--[-->
+                 <span class="bold" data-v-75649d99="">
+                  Rewards
+                 </span>
+                 <!--]-->
+                </div>
+               </div>
+              </div>
+             </div>
+             <div class="flx-ce-bet pc-qr" data-v-75649d99="">
+              <div class="flx-clm-sta pointer" data-v-75649d99="">
+               <div class="pc-scan-txt" data-v-75649d99="">
+                Scan QR code to download or
+               </div>
+               <img alt="moviebox apk download" data-v-75649d99="" src="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/apk-download.BsXVshUu.svg"/>
+              </div>
+              <span data-v-75649d99="">
+              </span>
+             </div>
+            </div>
+           </div>
+          </div>
+          <span data-v-07c13f54="">
+          </span>
+         </div>
+        </div>
+       </header>
+       <div class="pc-content-box" data-v-61b7bb3d="">
+        <!-- -->
+        <div class="right-content flx-clm-sta-ce" data-v-61b7bb3d="" style="width:calc(100% - 0px);">
+         <section class="mx-auto pc-section flx-clm-sta" data-v-61b7bb3d="">
+          <div class="flx-ce-sta pc-sub-nav" data-v-61b7bb3d="">
+           <div class="pc-sub-home pointer" data-v-61b7bb3d="">
+            Home
+           </div>
+           <img alt="Moviebox home arrow" class="rtl-image" data-v-61b7bb3d="" src="data:image/svg+xml,%3csvg%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Icon/Light/Arrow-right'%3e%3cg%20id='Icon/Light/Arrow-right_2'%3e%3cpath%20id='Stroke%201'%20d='M5.66699%203.33366L10.3337%208.00033L5.66699%2012.667'%20stroke='white'%20stroke-opacity='0.6'%20stroke-width='1.5'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"/>
+           <h1 class="pc-nav-title" data-v-61b7bb3d="">
+            Titanic
+           </h1>
+          </div>
+          <div class="pc-video-page" data-v-61b7bb3d="" data-v-83ecaccc="">
+           <div class="limit-height pc-video-content flx-clm-sta" data-v-83ecaccc="">
+            <div class="pc-video" data-v-83ecaccc="">
+             <!-- -->
+             <!-- -->
+            </div>
+            <div class="video-cover pc-cover-img" data-v-83ecaccc="">
+             <div class="pc-playerr flx-ce-ce" data-v-049a276b="" data-v-83ecaccc="">
+              <img alt="pc-limited-bg" class="pc-limited-bg" data-v-049a276b="" src="https://h5-static.aoneroom.com/oneroomProject/assets/pc-limited-bg.png?x-oss-process=image/resize%2Cw_50"/>
+              <div class="pc-playerr-content" data-v-049a276b="">
+               <div class="pc-playerr-title" data-v-049a276b="">
+                This content is not available on the website. Please download our Android app to access it.
+               </div>
+               <div class="flx-ce-bet" data-v-049a276b="">
+                <div class="pc-item" data-v-049a276b="">
+                 <div class="pc-item-head flx-ce-sta" data-v-049a276b="">
+                  <img alt="icon-phone" class="pc-icon-phone" data-v-049a276b="" src="data:image/svg+xml,%3csvg%20width='28'%20height='28'%20viewBox='0%200%2028%2028'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Group%2037125'%3e%3cg%20id='Group%2037122'%3e%3cpath%20id='Vector%20(Stroke)'%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M8.42873%205.61901C8.21404%205.61901%208.00814%205.7043%207.85633%205.85611C7.70451%206.00792%207.61923%206.21382%207.61923%206.42852V8.04753C7.61923%208.49461%207.2568%208.85704%206.80972%208.85704C6.36264%208.85704%206.00021%208.49461%206.00021%208.04753V6.42852C6.00021%205.78444%206.25607%205.16673%206.71151%204.7113C7.16695%204.25586%207.78465%204%208.42873%204H10.0477C10.4948%204%2010.8573%204.36243%2010.8573%204.80951C10.8573%205.25658%2010.4948%205.61901%2010.0477%205.61901H8.42873ZM15.7143%204.80951C15.7143%204.36243%2016.0767%204%2016.5238%204H18.1428C18.7869%204%2019.4046%204.25586%2019.86%204.7113C20.3155%205.16673%2020.5713%205.78444%2020.5713%206.42852V8.04753C20.5713%208.49461%2020.2089%208.85704%2019.7618%208.85704C19.3147%208.85704%2018.9523%208.49461%2018.9523%208.04753V6.42852C18.9523%206.21382%2018.867%206.00792%2018.7152%205.85611C18.5634%205.7043%2018.3575%205.61901%2018.1428%205.61901H16.5238C16.0767%205.61901%2015.7143%205.25658%2015.7143%204.80951ZM6.80972%2013.7141C7.2568%2013.7141%207.61923%2014.0765%207.61923%2014.5236V16.1426C7.61923%2016.3573%207.70451%2016.5632%207.85633%2016.715C8.00814%2016.8668%208.21404%2016.9521%208.42873%2016.9521H10.0477C10.4948%2016.9521%2010.8573%2017.3145%2010.8573%2017.7616C10.8573%2018.2087%2010.4948%2018.5711%2010.0477%2018.5711H8.42873C7.78465%2018.5711%207.16695%2018.3153%206.71151%2017.8598C6.25607%2017.4044%206.00021%2016.7867%206.00021%2016.1426V14.5236C6.00021%2014.0765%206.36264%2013.7141%206.80972%2013.7141Z'%20fill='white'/%3e%3cpath%20id='Subtract'%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M12.6524%2012.7576C12.6524%2011.653%2013.5478%2010.7576%2014.6524%2010.7576H21C22.1046%2010.7576%2023%2011.653%2023%2012.7576V22.0617C23%2023.1662%2022.1046%2024.0617%2021%2024.0617H14.6524C13.5478%2024.0617%2012.6524%2023.1662%2012.6524%2022.0617V12.7576ZM14.1306%2013.2358C14.1306%2012.6835%2014.5783%2012.2358%2015.1306%2012.2358H20.5218C21.0741%2012.2358%2021.5218%2012.6835%2021.5218%2013.2358V20.1052C21.5218%2020.6575%2021.0741%2021.1052%2020.5218%2021.1052H15.1306C14.5783%2021.1052%2014.1306%2020.6575%2014.1306%2020.1052V13.2358ZM17.8262%2023.3225C18.2344%2023.3225%2018.5653%2022.9916%2018.5653%2022.5834C18.5653%2022.1752%2018.2344%2021.8443%2017.8262%2021.8443C17.418%2021.8443%2017.0871%2022.1752%2017.0871%2022.5834C17.0871%2022.9916%2017.418%2023.3225%2017.8262%2023.3225Z'%20fill='white'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"/>
+                  <div data-v-049a276b="">
+                   Download MovieBox
+                  </div>
+                 </div>
+                 <div data-v-049a276b="">
+                  <div class="pc-option-txt" data-v-049a276b="">
+                   1. Scan the QR code with your Android device
+                  </div>
+                  <div class="pc-option-txt" data-v-049a276b="">
+                   2. Experience our service in mobile device
+                  </div>
+                 </div>
+                </div>
+                <div class="pc-line" data-v-049a276b="">
+                </div>
+                <div class="pc-qr-wrap" data-v-049a276b="">
+                 <svg class="pc-qr-canvas" data-v-049a276b="" height="100" shape-rendering="crispEdges" viewbox="0 0 47 47" width="100" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                   <!-- -->
+                  </defs>
+                  <rect fill="#fff" height="100%" width="100%">
+                  </rect>
+                  <path d="M3 3h7v1H3zM11 3h1v1H11zM13 3h1v1H13zM16 3h2v1H16zM21 3h2v1H21zM24 3h1v1H24zM26 3h1v1H26zM28 3h4v1H28zM33 3h3v1H33zM37,3 h7v1H37zM3 4h1v1H3zM9 4h1v1H9zM11 4h1v1H11zM14 4h1v1H14zM18 4h3v1H18zM22 4h4v1H22zM28 4h3v1H28zM33 4h1v1H33zM35 4h1v1H35zM37 4h1v1H37zM43,4 h1v1H43zM3 5h1v1H3zM5 5h3v1H5zM9 5h1v1H9zM11 5h1v1H11zM13 5h1v1H13zM16 5h1v1H16zM18 5h3v1H18zM24 5h1v1H24zM26 5h1v1H26zM28 5h1v1H28zM34 5h1v1H34zM37 5h1v1H37zM39 5h3v1H39zM43,5 h1v1H43zM3 6h1v1H3zM5 6h3v1H5zM9 6h1v1H9zM12 6h1v1H12zM14 6h1v1H14zM18 6h3v1H18zM27 6h1v1H27zM29 6h3v1H29zM33 6h1v1H33zM37 6h1v1H37zM39 6h3v1H39zM43,6 h1v1H43zM3 7h1v1H3zM5 7h3v1H5zM9 7h1v1H9zM14 7h5v1H14zM20 7h1v1H20zM22 7h3v1H22zM27 7h1v1H27zM32 7h1v1H32zM34 7h2v1H34zM37 7h1v1H37zM39 7h3v1H39zM43,7 h1v1H43zM3 8h1v1H3zM9 8h1v1H9zM11 8h1v1H11zM13 8h4v1H13zM18 8h3v1H18zM23 8h4v1H23zM28 8h1v1H28zM30 8h1v1H30zM35 8h1v1H35zM37 8h1v1H37zM43,8 h1v1H43zM3 9h7v1H3zM11 9h1v1H11zM13 9h1v1H13zM15 9h1v1H15zM17 9h1v1H17zM19 9h1v1H19zM21 9h1v1H21zM23 9h1v1H23zM25 9h1v1H25zM27 9h1v1H27zM29 9h1v1H29zM31 9h1v1H31zM33 9h1v1H33zM35 9h1v1H35zM37,9 h7v1H37zM11 10h1v1H11zM17 10h3v1H17zM21 10h2v1H21zM24 10h1v1H24zM26 10h1v1H26zM28 10h4v1H28zM34 10h2v1H34zM5 11h3v1H5zM9 11h1v1H9zM11 11h4v1H11zM16 11h1v1H16zM19 11h1v1H19zM22 11h1v1H22zM24 11h2v1H24zM28 11h3v1H28zM32 11h1v1H32zM36 11h3v1H36zM41,11 h3v1H41zM3 12h1v1H3zM5 12h1v1H5zM12 12h1v1H12zM16 12h1v1H16zM18 12h1v1H18zM21 12h1v1H21zM24 12h1v1H24zM27 12h1v1H27zM29 12h1v1H29zM31 12h9v1H31zM41 12h1v1H41zM43,12 h1v1H43zM3 13h4v1H3zM8 13h3v1H8zM13 13h3v1H13zM17 13h1v1H17zM19 13h2v1H19zM22 13h2v1H22zM26 13h1v1H26zM28 13h1v1H28zM30 13h3v1H30zM35 13h2v1H35zM38 13h1v1H38zM3 14h2v1H3zM7 14h2v1H7zM11 14h1v1H11zM14 14h1v1H14zM17 14h3v1H17zM21 14h1v1H21zM23 14h1v1H23zM25 14h1v1H25zM29 14h3v1H29zM33 14h3v1H33zM39 14h2v1H39zM3 15h1v1H3zM6 15h1v1H6zM9 15h2v1H9zM12 15h5v1H12zM18 15h1v1H18zM21 15h4v1H21zM26 15h3v1H26zM30 15h3v1H30zM34 15h1v1H34zM36 15h1v1H36zM40,15 h4v1H40zM3 16h2v1H3zM6 16h2v1H6zM10 16h1v1H10zM14 16h4v1H14zM19 16h2v1H19zM23 16h3v1H23zM28 16h3v1H28zM33 16h1v1H33zM35 16h1v1H35zM39 16h1v1H39zM41 16h1v1H41zM43,16 h1v1H43zM4 17h3v1H4zM9 17h2v1H9zM14 17h1v1H14zM18 17h1v1H18zM20 17h3v1H20zM26 17h3v1H26zM30 17h2v1H30zM34 17h1v1H34zM36 17h1v1H36zM38 17h1v1H38zM3 18h1v1H3zM5 18h1v1H5zM7 18h1v1H7zM12 18h5v1H12zM18 18h1v1H18zM22 18h9v1H22zM34 18h2v1H34zM37 18h3v1H37zM4 19h2v1H4zM8 19h2v1H8zM12 19h1v1H12zM15 19h6v1H15zM23 19h2v1H23zM26 19h1v1H26zM28 19h3v1H28zM32 19h3v1H32zM36 19h1v1H36zM38 19h1v1H38zM41 19h1v1H41zM6 20h2v1H6zM10 20h1v1H10zM15 20h1v1H15zM17 20h1v1H17zM22 20h1v1H22zM24 20h1v1H24zM27 20h1v1H27zM29 20h1v1H29zM31 20h2v1H31zM34 20h2v1H34zM37 20h4v1H37zM43,20 h1v1H43zM4 21h1v1H4zM8 21h2v1H8zM11 21h1v1H11zM14 21h3v1H14zM19 21h3v1H19zM23 21h10v1H23zM37 21h1v1H37zM39 21h1v1H39zM4 22h1v1H4zM10 22h1v1H10zM12 22h1v1H12zM15 22h1v1H15zM17 22h2v1H17zM20 22h1v1H20zM23 22h1v1H23zM25 22h2v1H25zM30 22h5v1H30zM37 22h1v1H37zM39 22h2v1H39zM43,22 h1v1H43zM3 23h1v1H3zM6 23h4v1H6zM13 23h1v1H13zM17 23h2v1H17zM21 23h2v1H21zM27 23h4v1H27zM35 23h1v1H35zM39 23h1v1H39zM41 23h1v1H41zM43,23 h1v1H43zM7 24h1v1H7zM10 24h4v1H10zM18 24h2v1H18zM23 24h2v1H23zM28 24h1v1H28zM31 24h8v1H31zM40 24h1v1H40zM42,24 h2v1H42zM3 25h2v1H3zM6 25h2v1H6zM9 25h1v1H9zM15 25h1v1H15zM17 25h4v1H17zM22 25h6v1H22zM29 25h4v1H29zM35 25h1v1H35zM37 25h1v1H37zM4 26h3v1H4zM8 26h1v1H8zM11 26h2v1H11zM15 26h3v1H15zM20 26h2v1H20zM24 26h1v1H24zM26 26h1v1H26zM30 26h1v1H30zM34 26h2v1H34zM37 26h2v1H37zM40 26h1v1H40zM43,26 h1v1H43zM3 27h1v1H3zM5 27h1v1H5zM7 27h4v1H7zM12 27h1v1H12zM14 27h4v1H14zM19 27h2v1H19zM25 27h3v1H25zM29 27h2v1H29zM32 27h1v1H32zM34 27h1v1H34zM38 27h1v1H38zM41 27h1v1H41zM43,27 h1v1H43zM3 28h1v1H3zM7 28h2v1H7zM18 28h1v1H18zM20 28h2v1H20zM23 28h3v1H23zM27 28h2v1H27zM31 28h2v1H31zM34 28h1v1H34zM37 28h4v1H37zM42,28 h2v1H42zM3 29h1v1H3zM7 29h1v1H7zM9 29h2v1H9zM15 29h3v1H15zM19 29h4v1H19zM27 29h1v1H27zM30 29h2v1H30zM35 29h1v1H35zM37 29h2v1H37zM5 30h2v1H5zM11 30h3v1H11zM16 30h1v1H16zM18 30h1v1H18zM20 30h2v1H20zM23 30h4v1H23zM28 30h3v1H28zM33 30h6v1H33zM40 30h1v1H40zM43,30 h1v1H43zM3 31h4v1H3zM9 31h2v1H9zM12 31h2v1H12zM17 31h1v1H17zM19 31h2v1H19zM22 31h2v1H22zM25 31h2v1H25zM28 31h1v1H28zM32 31h1v1H32zM34 31h2v1H34zM37 31h1v1H37zM40 31h3v1H40zM3 32h4v1H3zM10 32h2v1H10zM13 32h1v1H13zM15 32h1v1H15zM17 32h2v1H17zM24 32h2v1H24zM28 32h1v1H28zM30 32h4v1H30zM36 32h1v1H36zM38 32h4v1H38zM43,32 h1v1H43zM3 33h1v1H3zM8 33h2v1H8zM11 33h1v1H11zM16 33h4v1H16zM21 33h1v1H21zM26 33h2v1H26zM29 33h1v1H29zM35 33h3v1H35zM41 33h1v1H41zM3 34h1v1H3zM7 34h2v1H7zM11 34h2v1H11zM15 34h1v1H15zM17 34h5v1H17zM24 34h1v1H24zM28 34h2v1H28zM31 34h1v1H31zM36 34h3v1H36zM40 34h1v1H40zM43,34 h1v1H43zM3 35h1v1H3zM5 35h2v1H5zM8 35h2v1H8zM12 35h2v1H12zM16 35h1v1H16zM18 35h2v1H18zM22 35h1v1H22zM29 35h1v1H29zM32 35h1v1H32zM35 35h5v1H35zM41 35h1v1H41zM43,35 h1v1H43zM11 36h2v1H11zM14 36h3v1H14zM18 36h2v1H18zM23 36h2v1H23zM29 36h1v1H29zM31 36h1v1H31zM34 36h2v1H34zM39,36 h5v1H39zM3 37h7v1H3zM12 37h2v1H12zM15 37h2v1H15zM19 37h1v1H19zM21 37h1v1H21zM27 37h1v1H27zM29 37h3v1H29zM33 37h3v1H33zM37 37h1v1H37zM39 37h2v1H39zM3 38h1v1H3zM9 38h1v1H9zM13 38h2v1H13zM18 38h1v1H18zM20 38h5v1H20zM26 38h4v1H26zM31 38h1v1H31zM34 38h2v1H34zM39 38h2v1H39zM42,38 h2v1H42zM3 39h1v1H3zM5 39h3v1H5zM9 39h1v1H9zM11 39h1v1H11zM15 39h1v1H15zM17 39h1v1H17zM21 39h1v1H21zM24 39h4v1H24zM30 39h1v1H30zM33 39h1v1H33zM35 39h6v1H35zM42 39h1v1H42zM3 40h1v1H3zM5 40h3v1H5zM9 40h1v1H9zM11 40h3v1H11zM15 40h1v1H15zM19 40h6v1H19zM27 40h1v1H27zM31 40h1v1H31zM34 40h1v1H34zM36 40h1v1H36zM38 40h1v1H38zM40 40h1v1H40zM42,40 h2v1H42zM3 41h1v1H3zM5 41h3v1H5zM9 41h1v1H9zM11 41h1v1H11zM13 41h2v1H13zM16 41h1v1H16zM18 41h1v1H18zM21 41h2v1H21zM27 41h1v1H27zM30 41h3v1H30zM34 41h1v1H34zM36 41h5v1H36zM42 41h1v1H42zM3 42h1v1H3zM9 42h1v1H9zM12 42h1v1H12zM14 42h1v1H14zM16 42h1v1H16zM18 42h3v1H18zM23 42h5v1H23zM31 42h1v1H31zM33 42h1v1H33zM35 42h1v1H35zM39 42h1v1H39zM42 42h1v1H42zM3 43h7v1H3zM12 43h2v1H12zM16 43h2v1H16zM19 43h5v1H19zM26 43h4v1H26zM32 43h1v1H32zM34 43h1v1H34zM36 43h1v1H36zM38 43h2v1H38z" fill="#000">
+                  </path>
+                  <!-- -->
+                 </svg>
+                </div>
+               </div>
+              </div>
+             </div>
+            </div>
+            <div class="flx-ce-bet pc-feedback-tip pointer" data-v-83ecaccc="">
+             <div class="pc-tip-txt" data-v-83ecaccc="">
+              Find any content infringes on your rights, please contact us.
+             </div>
+             <div class="flx-ce-sta pc-feed-bt" data-v-83ecaccc="">
+              <img alt="Moviebox report" data-v-83ecaccc="" src="data:image/svg+xml,%3csvg%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Icon/report'%3e%3cpath%20id='Rectangle%202808'%20d='M1.66667%204.66667C1.66667%203.19391%202.86058%202%204.33334%202H11.6667C13.1394%202%2014.3333%203.19391%2014.3333%204.66667V10.1905C14.3333%2011.6632%2013.1394%2012.8571%2011.6667%2012.8571H9.9L8.00001%2014.6667L6.10001%2012.8571H4.33334C2.86058%2012.8571%201.66667%2011.6632%201.66667%2010.1905V4.66667Z'%20stroke='white'%20stroke-width='1.2'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20id='Vector%20402'%20d='M8%204.66663V7.99996'%20stroke='white'%20stroke-width='1.2'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3ccircle%20id='Ellipse%2045'%20cx='7.99999'%20cy='10.3333'%20r='0.666667'%20fill='white'/%3e%3c/g%3e%3c/svg%3e"/>
+              <div data-v-83ecaccc="">
+               Report
+              </div>
+             </div>
+            </div>
+           </div>
+           <div class="pc-fixed-box" data-v-83ecaccc="">
+            <div class="pc-resource-box flx-clm-sta" data-v-83ecaccc="">
+             <div class="flx-clm-sta pc-resource-top w-100" data-v-83ecaccc="">
+              <div class="pc-video-resources" data-v-83ecaccc="">
+               Resources
+              </div>
+              <div class="pc-video-resource-from" data-v-83ecaccc="">
+               <span class="pc-video-res-tip" data-v-83ecaccc="">
+                Source: fzmovies.net
+               </span>
+               <!-- -->
+               <!-- -->
+              </div>
+              <!-- -->
+             </div>
+             <span data-v-83ecaccc="">
+             </span>
+            </div>
+           </div>
+           <!-- -->
+          </div>
+          <!-- -->
+          <div class="flx-sta-sta w-100 pc-main" data-v-61b7bb3d="">
+           <div class="pc-section-left flx-clm-sta" data-v-61b7bb3d="">
+            <!--[-->
+            <div class="flx-sta-sta pc-info w-100" data-v-fae94e03="">
+             <div class="flx-clm-sta pc-info-left" data-v-fae94e03="">
+              <div class="flx-ce-bet pc-title-contain w-100" data-v-fae94e03="">
+               <div class="flx-clm-sta" data-v-fae94e03="">
+                <h2 class="pc-title" data-v-fae94e03="">
+                 Titanic
+                </h2>
+                <div class="pc-time" data-v-fae94e03="">
+                 1997-12-19
+                 <span data-v-fae94e03="">
+                  / 3 h 14 m
+                 </span>
+                </div>
+               </div>
+               <div class="pc-rate flx-ce-ce" data-v-fae94e03="">
+                <div class="pc-line" data-v-fae94e03="">
+                </div>
+                <div class="pc-score flx-ce-ce" data-v-fae94e03="">
+                 7.9
+                </div>
+               </div>
+              </div>
+              <div class="pc-desc" data-v-fae94e03="">
+               A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.
+              </div>
+              <div class="flx-ce-sta pc-info-tab" data-v-fae94e03="">
+               <div class="flx-ce-ce pc-download-btn" data-v-fae94e03="">
+                <img alt="Moviebox download" data-v-fae94e03="" src="data:image/svg+xml,%3csvg%20width='25'%20height='24'%20viewBox='0%200%2025%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='icon/download'%3e%3cmask%20id='mask0_5732_19260'%20style='mask-type:alpha'%20maskUnits='userSpaceOnUse'%20x='0'%20y='0'%20width='25'%20height='24'%3e%3crect%20id='Rectangle%2071'%20x='0.5'%20width='24'%20height='24'%20fill='%23D9D9D9'/%3e%3c/mask%3e%3cg%20mask='url(%23mask0_5732_19260)'%3e%3cpath%20id='Vector%2011'%20d='M12.5%203V15M12.5%2015L6.5%209M12.5%2015L18.5%209'%20stroke='white'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20id='Vector%2012'%20d='M4.5%2020H20.5'%20stroke='white'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"/>
+                <span data-v-fae94e03="">
+                 Download This Video
+                </span>
+               </div>
+               <div class="flx-ce-ce pc-download-btn tst-copy-btn" data-v-fae94e03="">
+                <img alt="Moviebox share" data-v-fae94e03="" src="data:image/svg+xml,%3csvg%20width='25'%20height='24'%20viewBox='0%200%2025%2024'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Icon/Light/Share-white'%3e%3cg%20id='Upload'%3e%3cpath%20id='Stroke%201'%20d='M7.88948%208.98403H6.95648C4.92148%208.98403%203.27148%2010.634%203.27148%2012.669V17.544C3.27148%2019.578%204.92148%2021.228%206.95648%2021.228H18.0865C20.1215%2021.228%2021.7715%2019.578%2021.7715%2017.544V12.659C21.7715%2010.63%2020.1265%208.98403%2018.0975%208.98403L17.1545%208.98403'%20stroke='white'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20id='Stroke%203'%20d='M12.5215%202.19044V14.2314'%20stroke='white'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3cpath%20id='Stroke%205'%20d='M9.60645%205.11865L12.5214%202.19065L15.4374%205.11865'%20stroke='white'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"/>
+                <span data-v-fae94e03="">
+                 Share
+                </span>
+               </div>
+              </div>
+             </div>
+             <div class="flx-clm-sta pc-info-right" data-v-fae94e03="">
+              <div class="flx-ce-sta pc-sub-lan" data-v-fae94e03="">
+               <img alt="movie icon" data-v-fae94e03="" src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='12'%20height='12'%20viewBox='0%200%2012%2012'%20fill='none'%3e%3cpath%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M10.5455%2010.0909H8.86545C10.1539%209.18545%2011%207.69091%2011%206C11%203.24303%208.75697%201%206%201C3.24303%201%201%203.24303%201%206C1%208.75697%203.24303%2011%206%2011C6.01212%2011%206.02303%2010.9982%206.03515%2010.9982C6.03818%2010.9982%206.04061%2011%206.04364%2011H10.5455C10.7964%2011%2011%2010.7964%2011%2010.5455C11%2010.2945%2010.7964%2010.0909%2010.5455%2010.0909ZM6.00006%202.9697C5.49824%202.9697%205.09097%203.37697%205.09097%203.87879C5.09097%204.38061%205.49824%204.78788%206.00006%204.78788C6.50188%204.78788%206.90915%204.38061%206.90915%203.87879C6.90915%203.37697%206.50188%202.9697%206.00006%202.9697ZM6.00006%207.09333C5.49824%207.09333%205.09097%207.50061%205.09097%208.00242C5.09097%208.50424%205.49824%208.91152%206.00006%208.91152C6.50188%208.91152%206.90915%208.50424%206.90915%208.00242C6.90915%207.50061%206.50188%207.09333%206.00006%207.09333ZM8.06188%205.03152C7.56006%205.03152%207.15279%205.43879%207.15279%205.94061C7.15279%206.44242%207.56006%206.8497%208.06188%206.8497C8.5637%206.8497%208.97097%206.44242%208.97097%205.94061C8.97097%205.43879%208.5637%205.03152%208.06188%205.03152ZM3.93824%205.03152C3.43642%205.03152%203.02915%205.43879%203.02915%205.94061C3.02915%206.44242%203.43642%206.8497%203.93824%206.8497C4.44006%206.8497%204.84733%206.44242%204.84733%205.94061C4.84733%205.43879%204.44006%205.03152%203.93824%205.03152Z'%20fill='%239BA0A8'/%3e%3c/svg%3e"/>
+               <span data-v-fae94e03="">
+                United States / Drama / Romance
+               </span>
+              </div>
+              <div class="flx-sta-sta pc-sub-lan" data-v-fae94e03="">
+               <img alt="movies subtitles" data-v-fae94e03="" src="data:image/svg+xml,%3csvg%20width='14'%20height='12'%20viewBox='0%200%2014%2012'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='&amp;%23229;&amp;%23189;&amp;%23162;&amp;%23231;&amp;%23138;&amp;%23182;&amp;%23231;&amp;%23187;&amp;%23147;&amp;%23229;&amp;%23144;&amp;%23136;%202'%3e%3cpath%20id='&amp;%23229;&amp;%23189;&amp;%23162;&amp;%23231;&amp;%23138;&amp;%23182;&amp;%23231;&amp;%23187;&amp;%23147;&amp;%23229;&amp;%23144;&amp;%23136;'%20fill-rule='evenodd'%20clip-rule='evenodd'%20d='M0.333984%202.66667C0.333984%201.19391%201.52789%200%203.00065%200H11.0007C12.4734%200%2013.6673%201.19391%2013.6673%202.66667V9.33333C13.6673%2010.8061%2012.4734%2012%2011.0007%2012H3.00065C1.52789%2012%200.333984%2010.8061%200.333984%209.33333V2.66667ZM2.33398%206.66667C2.33398%206.29848%202.63246%206%203.00065%206H7.00065C7.36884%206%207.66732%206.29848%207.66732%206.66667C7.66732%207.03486%207.36884%207.33333%207.00065%207.33333H3.00065C2.63246%207.33333%202.33398%207.03486%202.33398%206.66667ZM9.66732%206C9.29913%206%209.00065%206.29848%209.00065%206.66667C9.00065%207.03486%209.29913%207.33333%209.66732%207.33333H11.0007C11.3688%207.33333%2011.6673%207.03486%2011.6673%206.66667C11.6673%206.29848%2011.3688%206%2011.0007%206H9.66732ZM6.33398%209.33333C6.33398%208.96514%206.63246%208.66667%207.00065%208.66667H11.0007C11.3688%208.66667%2011.6673%208.96514%2011.6673%209.33333C11.6673%209.70152%2011.3688%2010%2011.0007%2010H7.00065C6.63246%2010%206.33398%209.70152%206.33398%209.33333ZM3.00065%208.66667C2.63246%208.66667%202.33398%208.96514%202.33398%209.33333C2.33398%209.70152%202.63246%2010%203.00065%2010H4.33398C4.70217%2010%205.00065%209.70152%205.00065%209.33333C5.00065%208.96514%204.70217%208.66667%204.33398%208.66667H3.00065Z'%20fill='white'%20fill-opacity='0.6'/%3e%3c/g%3e%3c/svg%3e"/>
+               <span data-v-fae94e03="">
+                Subtitles: English,Español,Filipino,Français,Indonesian,Kiswahili,Malay,Português,Türkçe,tiếng Việt,Русский,اَلْعَرَبِيَّةُ,اُردُو,فارسی,هَرْشٜن هَوْس,বাংলা,ਪੰਜਾਬੀ,ภาษาไทย,中文
+               </span>
+              </div>
+             </div>
+            </div>
+            <!-- -->
+            <!-- -->
+            <!--]-->
+            <div class="pc-staff" data-v-61b7bb3d="" data-v-bc3924d1="">
+             <div class="pc-foryou-title" data-v-bc3924d1="">
+              Top Cast(18)
+             </div>
+             <div class="pc-arrow-box flx-ce-ce pc-s-right pointer" data-v-bc3924d1="">
+              <img alt="moviebox arrow right" class="rtl-image" data-v-bc3924d1="" src="data:image/svg+xml,%3csvg%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Icon/Light/Arrow-right'%3e%3cg%20id='Icon/Light/Arrow-right_2'%3e%3cpath%20id='Stroke%201'%20d='M7.08325%204.16669L12.9166%2010L7.08325%2015.8334'%20stroke='white'%20stroke-width='1.875'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"/>
+             </div>
+             <!-- -->
+             <div class="flx-sta-sta pc-starr-box" data-v-bc3924d1="">
+              <div class="pc-arrow-box flx-ce-ce pc-s-right pointer" data-v-bc3924d1="">
+               <img alt="moviebox arrow" class="rtl-image" data-v-bc3924d1="" src="data:image/svg+xml,%3csvg%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='Icon/Light/Arrow-right'%3e%3cg%20id='Icon/Light/Arrow-right_2'%3e%3cpath%20id='Stroke%201'%20d='M7.08325%204.16669L12.9166%2010L7.08325%2015.8334'%20stroke='white'%20stroke-width='1.875'%20stroke-linecap='round'%20stroke-linejoin='round'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"/>
+              </div>
+              <!-- -->
+              <!--[-->
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/e7916198945e22e16380068fdf323388.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Leonardo DiCaprio
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Jack Dawson
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/96e874673520c13e8b4232132bbd3f4f.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Kate Winslet
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Rose Dewitt Bukater
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2023/11/21/cd179cffad95efa97922f18ceb6beae5.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Billy Zane
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Cal Hockley
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/24e18e744df67ae5621b6a790f3b6f44.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Kathy Bates
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Molly Brown
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2024/04/15/ac7c017b8603a12ae43528292f54d9a9.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Frances Fisher
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Ruth Dewitt Bukater
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/33c443299b53c03c2d6ddba5e7f0dea7.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Gloria Stuart
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Old Rose
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/bdfca2b56c16c2ec0612faf3d915c745.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Bill Paxton
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Brock Lovett
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/04fc231121bcd0e72c3bccdb1771800e.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Bernard Hill
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Captain Smith
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2024/04/12/36c1721988060a78bae1d2e201cc486c.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                David Warner
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Spicer Lovejoy
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/67f9c3eeccb36e1139a76fc43b5e40ae.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Victor Garber
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Thomas Andrews
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/64ad423c3d8df3665a167c8e47afc31a.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Jonathan Hyde
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Bruce Ismay
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/f6a78e19e260d9a48ff86f2fb71db59e.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Suzy Amis
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Lizzy Calvert
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2023/11/16/ca36fd298598960e8994d7e3660ba54e.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Lewis Abernathy
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Lewis Bodine
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2023/11/16/9d03932f443614066ba4b9e23750af59.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Nicholas Cascone
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Bobby Buell
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2023/11/16/4c134941223f441e4a5a120bf13bec12.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Anatoly M. Sagalevitch
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Anatoly Milkailavich
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/878784fa22c7d4d13dbd34eff34fcc54-s.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Danny Nucci
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Fabrizio
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/06e5bf3447d5d146f1345eded2424b37.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Jason Barry
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                Tommy Ryan
+               </div>
+              </div>
+              <div class="flx-clm-ce-sta pc-starr-item pointer" data-v-bc3924d1="">
+               <div class="pc-starring-img flx-ce-ce" data-v-bc3924d1="">
+                <div class="img-cover" data-v-bc3924d1="">
+                 <img alt="moviebox starr" class="pc-img" data-v-bc3924d1="" src="https://pacdn.aoneroom.com/image/2022/09/02/67c4d5546b2a7ca58035758547ee5b1b.jpg?x-oss-process=image/resize%2Cw_200"/>
+                </div>
+               </div>
+               <div class="pc-starring-name" data-v-bc3924d1="">
+                Ewan Stewart
+               </div>
+               <div class="pc-starring-director" data-v-bc3924d1="">
+                1st Officer Murdoch
+               </div>
+              </div>
+              <!--]-->
+             </div>
+            </div>
+            <!--[-->
+            <div class="pc-foryou-title w-100">
+             For You
+            </div>
+            <div class="pc-foryou-list">
+             <div class="flx-ce-sta pc-movie-list pc-movie-list" data-v-118e84db="">
+              <!--[-->
+              <!--]-->
+             </div>
+            </div>
+            <div id="pcforyouMovieCard">
+            </div>
+            <div class="flx-ce-ce w-100">
+             <div class="flx-ce-ce pc-load-more">
+              <img alt="moviebox load more" class="" src="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/load-more.B0Oq9HN7.svg"/>
+              <div class="pc-load-txt">
+               See more
+              </div>
+             </div>
+            </div>
+            <!--]-->
+           </div>
+           <div class="pc-side" data-v-61b7bb3d="">
+            <!--[-->
+            <div class="pc-side-list flx-clm-sta-sta" data-v-ee97da7a="">
+             <div class="pc-detail-side-title w-100" data-v-ee97da7a="">
+              Hot movies
+             </div>
+             <!--[-->
+             <!--]-->
+            </div>
+            <div class="pc-side-list flx-clm-sta-sta" data-v-ee97da7a="">
+             <div class="pc-detail-side-title w-100" data-v-ee97da7a="">
+              Hot TV/Series
+             </div>
+             <!--[-->
+             <!--]-->
+            </div>
+            <!--]-->
+           </div>
+          </div>
+         </section>
+         <footer class="flx-ce-ce pc-footer" data-v-61b7bb3d="" data-v-8671f737="">
+          <div class="pc-footer-inner flx-clm-ce" data-v-8671f737="">
+           <div class="pc-line" data-v-8671f737="">
+           </div>
+           <div class="pc-footer-desc" data-v-8671f737="">
+            Disclaimer: All videos and pictures on MovieBox are from the Internet, and their copyrights belong to the original creators. We only provide webpage services and do not store, record, or upload any content.
+           </div>
+           <div class="flx-ce-sta pc-backlink" data-v-8671f737="">
+            <div class="flx-ce-sta pc-link" data-v-8671f737="">
+             Backlink:
+             <!--[-->
+             <a data-v-8671f737="" href="https://novelhubapp.com?utm_source=MB_Website" rel="follow" target="_blank">
+              novelHub
+             </a>
+             <a data-v-8671f737="" href="https://moviebox.ph?utm_source=MB_Website" rel="follow" target="_blank">
+              free movies
+             </a>
+             <a data-v-8671f737="" href="https://netnaija.video?utm_source=MB_Website" rel="follow" target="_blank">
+              netnaija movies
+             </a>
+             <!--]-->
+            </div>
+           </div>
+          </div>
+          <!-- -->
+         </footer>
+        </div>
+       </div>
+       <!-- -->
+       <!-- -->
+      </div>
+     </div>
+     <!-- -->
+    </div>
+    <!--]-->
+   </div>
+  </div>
+  <div id="teleports">
+  </div>
+  <script data-nuxt-data="nuxt-app" data-ssr="true" id="__NUXT_DATA__" type="application/json">
+   [["ShallowReactive",1],{"data":2,"state":4,"once":176,"_errors":177,"serverRendered":10,"path":179},["ShallowReactive",3],{},["Reactive",5],{"$snuxt-i18n-meta":6,"$sresData":7,"$sutmSource":15,"$sshowNotFound":170,"$slandscape":15,"$swindowinnerWidth":134,"$sdata":171,"$sdevicePc":10,"$sdetailShowSliderNav":170,"$spcShowSliderNav":10,"$spcVideoFlag":170},{},{"forYou":8,"hot":9,"isForbid":10,"metadata":11,"pubParam":18,"referer":15,"resource":21,"shareParam":9,"stars":23,"subject":133,"url":17,"watchTimeLimit":169},[],null,true,{"description":12,"image":13,"keyWords":14,"referer":15,"title":16,"url":17},"A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.","https://pacdn.aoneroom.com/image/2024/04/15/1a9adcc771aabea000d673a69b7c1a38.jpg","iceberg,sailor's death,love affair,mass death,sunken ship,drowning,titanic,sea captain,nude modeling,lifeboat","","Titanic","moviebox.ng/movies/titanic-m7a9yt0abq6?id=5390197429792821032&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",{"isNewUser":10,"lang":19,"referer":15,"uid":20,"url":17},"en","8256362749152970112",{"seasons":22,"source":15,"uploadBy":15},[],[24,31,37,43,49,55,61,67,73,79,85,91,97,103,109,115,121,127],{"avatarUrl":25,"character":26,"detailPath":27,"name":28,"staffId":29,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/e7916198945e22e16380068fdf323388.jpg","Jack Dawson","leonardo-dicaprio-IoJ6Eh7TvJ5","Leonardo DiCaprio","4812628369768599328",1,{"avatarUrl":32,"character":33,"detailPath":34,"name":35,"staffId":36,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/96e874673520c13e8b4232132bbd3f4f.jpg","Rose Dewitt Bukater","kate-winslet-kcfQmgVriv3","Kate Winslet","2941576238643171000",{"avatarUrl":38,"character":39,"detailPath":40,"name":41,"staffId":42,"staffType":30},"https://pacdn.aoneroom.com/image/2023/11/21/cd179cffad95efa97922f18ceb6beae5.jpg","Cal Hockley","billy-zane-A6WUbHUHeX6","Billy Zane","5837695712728860304",{"avatarUrl":44,"character":45,"detailPath":46,"name":47,"staffId":48,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/24e18e744df67ae5621b6a790f3b6f44.jpg","Molly Brown","kathy-bates-O9Op2tZu9r","Kathy Bates","367575537555492640",{"avatarUrl":50,"character":51,"detailPath":52,"name":53,"staffId":54,"staffType":30},"https://pacdn.aoneroom.com/image/2024/04/15/ac7c017b8603a12ae43528292f54d9a9.jpg","Ruth Dewitt Bukater","frances-fisher-smEx3Xe3gP2","Frances Fisher","2372495001436782808",{"avatarUrl":56,"character":57,"detailPath":58,"name":59,"staffId":60,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/33c443299b53c03c2d6ddba5e7f0dea7.jpg","Old Rose","gloria-stuart-cGIAi035YD2","Gloria Stuart","2219663292124516136",{"avatarUrl":62,"character":63,"detailPath":64,"name":65,"staffId":66,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/bdfca2b56c16c2ec0612faf3d915c745.jpg","Brock Lovett","bill-paxton-qZuwmSBPsG1","Bill Paxton","1414152277525417656",{"avatarUrl":68,"character":69,"detailPath":70,"name":71,"staffId":72,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/04fc231121bcd0e72c3bccdb1771800e.jpg","Captain Smith","bernard-hill-iLfTyjqfAO1","Bernard Hill","1524068255929880248",{"avatarUrl":74,"character":75,"detailPath":76,"name":77,"staffId":78,"staffType":30},"https://pacdn.aoneroom.com/image/2024/04/12/36c1721988060a78bae1d2e201cc486c.jpg","Spicer Lovejoy","david-warner-MKZT4OUA6M","David Warner","651220199672268432",{"avatarUrl":80,"character":81,"detailPath":82,"name":83,"staffId":84,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/67f9c3eeccb36e1139a76fc43b5e40ae.jpg","Thomas Andrews","victor-garber-IcdPT29EQW8","Victor Garber","7511041010563960608",{"avatarUrl":86,"character":87,"detailPath":88,"name":89,"staffId":90,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/64ad423c3d8df3665a167c8e47afc31a.jpg","Bruce Ismay","jonathan-hyde-Wb9JKXmRlc","Jonathan Hyde","167218130694065952",{"avatarUrl":92,"character":93,"detailPath":94,"name":95,"staffId":96,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/f6a78e19e260d9a48ff86f2fb71db59e.jpg","Lizzy Calvert","suzy-amis-codkphPbC99","Suzy Amis","7683866646264827680",{"avatarUrl":98,"character":99,"detailPath":100,"name":101,"staffId":102,"staffType":30},"https://pacdn.aoneroom.com/image/2023/11/16/ca36fd298598960e8994d7e3660ba54e.jpg","Lewis Bodine","lewis-abernathy-0G5BzvrED88","Lewis Abernathy","6831349310551379752",{"avatarUrl":104,"character":105,"detailPath":106,"name":107,"staffId":108,"staffType":30},"https://pacdn.aoneroom.com/image/2023/11/16/9d03932f443614066ba4b9e23750af59.jpg","Bobby Buell","nicholas-cascone-Aoxy7jn5BZ9","Nicholas Cascone","8387554088040419000",{"avatarUrl":110,"character":111,"detailPath":112,"name":113,"staffId":114,"staffType":30},"https://pacdn.aoneroom.com/image/2023/11/16/4c134941223f441e4a5a120bf13bec12.jpg","Anatoly Milkailavich","anatoly-m-sagalevitch-Whwyi035YD2","Anatoly M. Sagalevitch","2219663292123991848",{"avatarUrl":116,"character":117,"detailPath":118,"name":119,"staffId":120,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/878784fa22c7d4d13dbd34eff34fcc54-s.jpg","Fabrizio","danny-nucci-OrlaiqG4J09","Danny Nucci","7563536093722595104",{"avatarUrl":122,"character":123,"detailPath":124,"name":125,"staffId":126,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/06e5bf3447d5d146f1345eded2424b37.jpg","Tommy Ryan","jason-barry-s4VCi035YD2","Jason Barry","2219663292125040424",{"avatarUrl":128,"character":129,"detailPath":130,"name":131,"staffId":132,"staffType":30},"https://pacdn.aoneroom.com/image/2022/09/02/67c4d5546b2a7ca58035758547ee5b1b.jpg","1st Officer Murdoch","ewan-stewart-4qaW5kNKPI8","Ewan Stewart","7321326876260978360",{"appointmentCnt":134,"appointmentDate":15,"corner":15,"countryName":135,"cover":136,"description":12,"detailPath":145,"duration":146,"genre":147,"hasResource":10,"imdbRatingValue":148,"ops":15,"releaseDate":149,"staffList":150,"subjectId":151,"subjectType":30,"subtitles":152,"title":16,"trailer":153},0,"United States",{"avgHueDark":137,"avgHueLight":138,"blurHash":139,"format":140,"gif":9,"height":141,"id":142,"size":143,"thumbnail":15,"url":13,"width":144},"#665b54","#7b6d66","eWGbP8WA%g%Mbc^jt7oet7Rk4mt7IURjWVIVWBoga|t7kXWVt7t7ae","jpg",3000,"0",658291,2015,"titanic-m7a9yt0abq6",11640,"Drama,Romance","7.9","1997-12-19",[],"5390197429792821032","English,Español,Filipino,Français,Indonesian,Kiswahili,Malay,Português,Türkçe,tiếng Việt,Русский,اَلْعَرَبِيَّةُ,اُردُو,فارسی,هَرْشٜن هَوْس,বাংলা,ਪੰਜਾਬੀ,ภาษาไทย,中文",{"cover":154,"videoAddress":162},{"avgHueDark":155,"avgHueLight":155,"blurHash":156,"format":157,"gif":9,"height":158,"id":142,"size":159,"thumbnail":15,"url":160,"width":161},"#444037","eKB3sRR+0L-o^*xuM|M{xttQ4:ae-oNGIVR*tQt7RjRjM{ofoJkCf+","webp",480,14470,"https://pacdn.aoneroom.com/image/2024/04/15/3a948cfa90be1e5b9b484a59ff85d82e.webp",854,{"bitrate":134,"definition":15,"duration":163,"fps":134,"height":164,"size":165,"type":134,"url":166,"videoId":167,"width":168},96,476,4047239,"https://macdn.aoneroom.com/media/vone/2024/04/15/47285b4091257ef599a2dc2fb894aad0-sd.mp4","5736725038804469272",848,5,false,{"curSe":134,"curEp":134,"limited":170,"limitedCode":15,"freeNum":172,"url":15,"name":15,"subtitle":173,"duration":134,"progress":134,"dashReady":170,"supportHevc":170,"isSafari":170,"cookieUrl":15,"getSubUrl":15,"playStatus":174,"subjectType":30,"subjectId":151,"epList":175,"showPlayerErrCard":170,"pcShowPwa":170},4,"1",200,[],["Set"],["ShallowReactive",178],{},"/movies/titanic-m7a9yt0abq6?id=5390197429792821032&scene&page_from=search_detail&type=%2Fmovie%2Fdetail"]
+  </script>
+  <script>
+   window.__NUXT__={};window.__NUXT__.config={public:{VITE_PACK_ENV:"prod",VITE_IMG_HOST:"https://h5-static.aoneroom.com",VITE_SITE_HOST:"https://h5.aoneroom.com",i18n:{baseUrl:"https://moviebox.ng/",defaultLocale:"en",defaultDirection:"ltr",strategy:"prefix_and_default",lazy:true,rootRedirect:"",routesNameSeparator:"___",defaultLocaleRouteNameSuffix:"default",skipSettingLocaleOnNavigate:false,differentDomains:false,trailingSlash:false,locales:[{code:"en",iso:"en-US",name:"English",language:"en",dir:"ltr",files:["/workspace/git-code/code/wefeed-share-h5/v202507111832500po/i18n/locales/en.json"]},{code:"ar",iso:"ar-SA",name:"العربية",language:"ar",dir:"rtl",files:["/workspace/git-code/code/wefeed-share-h5/v202507111832500po/i18n/locales/ar.json"]},{code:"fr",iso:"fr-FR",name:"Français",language:"fr",dir:"ltr",files:["/workspace/git-code/code/wefeed-share-h5/v202507111832500po/i18n/locales/fr.json"]},{code:"id",iso:"id-ID",name:"Bahasa Indonesia",language:"id",dir:"ltr",files:["/workspace/git-code/code/wefeed-share-h5/v202507111832500po/i18n/locales/id.json"]},{code:"hi",iso:"hi-IN",name:"हिन्दी",language:"hi",dir:"ltr",files:["/workspace/git-code/code/wefeed-share-h5/v202507111832500po/i18n/locales/hi.json"]},{code:"ur",iso:"ur-PK",name:"اردو",language:"ur",dir:"rtl",files:["/workspace/git-code/code/wefeed-share-h5/v202507111832500po/i18n/locales/ur.json"]},{code:"fil",iso:"fil-PH",name:"Filipino",language:"fil",dir:"ltr",files:["/workspace/git-code/code/wefeed-share-h5/v202507111832500po/i18n/locales/fil.json"]}],detectBrowserLanguage:{alwaysRedirect:false,cookieCrossOrigin:false,cookieDomain:"",cookieKey:"i18n_lang",cookieSecure:false,fallbackLocale:"",redirectOn:"root",useCookie:true},experimental:{localeDetector:"",switchLocalePathLinkSSR:false,autoImportTranslationFunctions:false,typedPages:true,typedOptionsAndMessages:false,generatedLocaleFilePathFormat:"absolute",alternateLinkCanonicalQueries:false},multiDomainLocales:false}},app:{baseURL:"/",buildId:"50440ab6-e30a-4b9a-ad04-a4493aa23c79",buildAssetsDir:"/_nuxt/",cdnURL:"https://h5-static.aoneroom.com/oneroomStatic/public/"}}
+  </script>
+ </body>
+</html>

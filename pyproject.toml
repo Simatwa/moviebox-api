@@ -1,0 +1,17 @@
+[project]
+name = "moviebox-api"
+version = "0.1.0"
+description = "Search and download movies, tv series, their subtitles & cover photos etc."
+readme = "README.md"
+authors = [
+    { name = "smartwa", email = "smartwacaleb@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+moviebox-api = "moviebox_api:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
