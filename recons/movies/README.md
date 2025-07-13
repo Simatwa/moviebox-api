@@ -51,8 +51,13 @@ COOKIES :
 account	4127635014202933448|0|H5|1752399419|
 i18n_lang	en
 ```
-
 response : [home.json](home.json)
+
+## Assign Cookies
+
+url : https://moviebox.ng/wefeed-h5-bff/app/get-latest-app-pkgs?app_name=moviebox
+
+response: [assign-cookies](assign-cookies.json)
 
 ## Trending 
 

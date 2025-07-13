@@ -7,7 +7,11 @@ authors = [
     { name = "smartwa", email = "smartwacaleb@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "bs4>=0.0.2",
+    "httpx>=0.28.1",
+    "pydantic>=2.11.7",
+]
 
 [project.scripts]
 moviebox-api = "moviebox_api:main"
