@@ -8,7 +8,7 @@ across the package
 from bs4 import BeautifulSoup as bts
 from os import path
 import typing as t
-from typing import Dict, Union
+from typing import Dict
 from moviebox_api.exceptions import UnsuccessfulResponse
 
 mirror_hosts = ("httpx://moviebox.ng",)

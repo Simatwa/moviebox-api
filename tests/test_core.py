@@ -1,6 +1,6 @@
 """
 Automated tests for moviebox_api.core module
-    """
+"""
 
 import unittest
 from moviebox_api.requests import Session
