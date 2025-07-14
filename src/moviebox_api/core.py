@@ -1,6 +1,7 @@
 """ 
 Main module for the package
 """
+
 from moviebox_api.requests import Session
 from moviebox_api.utils import assert_instance
 from moviebox_api._bases import BaseContentProvider
@@ -21,7 +22,7 @@ class Homepage(BaseContentProvider):
         """
         assert_instance(session, Session, "session")
         self.session = session
-        self.__content: Dict = self._update_data()
+        self.__content: Dict = self._update_content()
 
     def _update_content(self) -> Dict:
         """Fetch home page contents and update it.
@@ -33,8 +34,8 @@ class Homepage(BaseContentProvider):
 
     @property
     def modelled_content(self) -> HomepageContentModel:
-        """Pydantic modelled version of the contents"""
-        return HomepageContentModel(**self.content)
+        """Modelled version of the contents"""
+        return HomepageContentModel(**self.__content)
 
 
 class EveryoneSearches:

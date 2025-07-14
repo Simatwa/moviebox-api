@@ -5,7 +5,7 @@ This folder stores data discovered during reconnaisance phase.
 # Important
 
 subjectType : 1 = Movie
-subjectType: 1 = Series
+subjectType: 2 = Series
 
 ## Everyone's searching
 

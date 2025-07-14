@@ -5,7 +5,7 @@ Provides ways to interacts with internet using `httpx`
 import httpx
 from httpx import Response
 from typing import Dict
-from moviebox_api.models import MovieboxAppInfor
+from moviebox_api.models import MovieboxAppInfo
 from moviebox_api.utils import process_api_response
 
 request_headers = {
@@ -14,7 +14,7 @@ request_headers = {
     "Accept": "*/*,",  # "application/json",
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
     # "Referer":	"https://moviebox.ng/movies/the-basketball-diaries-GpkJMWty103?id=2518237873669820192&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
-    "Host": "moviebox.ng"
+    "Host": "moviebox.ng",
     # "Alt-Used" :	"moviebox.n"
 }
 
@@ -46,9 +46,7 @@ class Session:
         self._client = httpx.AsyncClient(headers=headers, cookies=cookies)
         self.moviebox_app_info = self._fetch_app_info()
 
-    async def get(
-        self, url: str, params: Dict = {}, **kwargs
-    ) -> Response:
+    async def get(self, url: str, params: Dict = {}, **kwargs) -> Response:
         """Makes a http get request without server cookies from previous requests.
         It's relevant because some requests with expired cookies won't go through
         but having it none does go through.
@@ -75,9 +73,7 @@ class Session:
         response = self.get(*args, **kwargs)
         return process_api_response(response)
 
-    async def get_with_cookies(
-        self, url: str, params: Dict = {}, **kwargs
-    ) -> Response:
+    async def get_with_cookies(self, url: str, params: Dict = {}, **kwargs) -> Response:
         """Makes a http get request without server served cookies from previous requests.
 
         Args:
