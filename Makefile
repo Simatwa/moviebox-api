@@ -15,5 +15,6 @@ install:
 
 # Target to run tests
 test:
-	$(PYTHON) -m unittest discover -s tests -p 'test_*.py' -f -v
+	pytest tests/* -xv 
+# $(PYTHON) -m unittest discover -s tests -p 'test_*.py' -f -v
 
