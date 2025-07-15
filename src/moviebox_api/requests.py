@@ -1,14 +1,15 @@
 """
-Provides ways to interacts with internet using `httpx`
+Provide ways to interact with moviebox using `httpx`
 """
 
 import httpx
 from httpx import Response
+from httpx._config import DEFAULT_TIMEOUT_CONFIG
 from typing import Dict
 from moviebox_api.models import MovieboxAppInfo
 from moviebox_api.utils import process_api_response
 
-request_headers = {
+default_request_headers = {
     "X-Client-Info": '{"timezone":"Africa/Nairobi"}',
     "Accept-Language": "en-US,en;q=0.5",
     "Accept": "*/*,",  # "application/json",
@@ -22,6 +23,8 @@ request_headers = {
 
 request_cookies = {}
 
+__all__ = ["Session", "default_request_headers"]
+
 
 class Session:
     """Performs actual get http requests asynchronously
@@ -33,18 +36,25 @@ class Session:
     )
 
     def __init__(
-        self, headers: Dict = request_headers, cookies: Dict = request_cookies
+        self,
+        headers: Dict = default_request_headers,
+        cookies: Dict = request_cookies,
+        timeout: float | int = DEFAULT_TIMEOUT_CONFIG,
     ):
         """Constructor for `Session`
 
         Args:
-            headers (Dict, optional): Request headers. Defaults to request_headers.
-            cookies (Dict, optional): Request cookies. Defaults to request_cookies.
+            headers (Dict, optional): Http request headers. Defaults to request_headers.
+            cookies (Dict, optional): Http request cookies. Defaults to request_cookies.
+            timeout (int|float, optional): Http request timeout in seconds. Defaults to DEFAULT_TIMEOUT_CONFIG.
         """
         self._headers = headers
         self._cookies = cookies
-        self._client = httpx.AsyncClient(headers=headers, cookies=cookies)
-        self.moviebox_app_info = self._fetch_app_info()
+        self._timeout = timeout
+        self._client = httpx.AsyncClient(
+            headers=headers, cookies=cookies, timeout=timeout
+        )
+        self.moviebox_app_info: MovieboxAppInfo | None = None
 
     async def get(self, url: str, params: Dict = {}, **kwargs) -> Response:
         """Makes a http get request without server cookies from previous requests.
@@ -70,11 +80,11 @@ class Session:
         Returns:
             Dict: Extracted data field value
         """
-        response = self.get(*args, **kwargs)
-        return process_api_response(response)
+        response = await self.get(*args, **kwargs)
+        return process_api_response(response.json())
 
     async def get_with_cookies(self, url: str, params: Dict = {}, **kwargs) -> Response:
-        """Makes a http get request without server served cookies from previous requests.
+        """Makes a http get request without server-assigned cookies from previous requests.
 
         Args:
             url (str): Resource link.
@@ -83,11 +93,14 @@ class Session:
         Returns:
             Response: Httpx response object
         """
+        if self.moviebox_app_info is None:
+            # First run probably
+            await self._fetch_app_info()
         response = await self._client.get(url, params=params, **kwargs)
         return response.raise_for_status()
 
     async def get_with_cookies_from_api(self, *args, **kwargs) -> Dict:
-        """Makes a http get request without server served cookies from previous requests
+        """Makes a http get request without server-assigned cookies from previous requests
         and extract the `data` field from the response.
 
         Returns:
@@ -105,6 +118,7 @@ class Session:
             MovieboxAppInfo: Details about latest moviebox app
         """
         response = await self.get_with_cookies(url=self._moviebox_app_info_url)
-        return MovieboxAppInfo(**response.json())
+        self.moviebox_app_info = MovieboxAppInfo(**response.json())
+        return self.moviebox_app_info
 
     update_session_cookies = _fetch_app_info

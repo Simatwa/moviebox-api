@@ -1,26 +1,14 @@
-"""
-Automated tests for moviebox_api.core module
-"""
-
-import unittest
-from moviebox_api.requests import Session
+import pytest
+from tests import session
 from moviebox_api.core import Homepage
 from moviebox_api.models import HomepageContentModel
 
-
-class BaseRequestsSession(unittest.TestCase):
-    session = Session()
-
-
-class HomepageTest(BaseRequestsSession):
-
-    def setUp(self):
-        self.homepage = Homepage(self.session)
-
-    def test_content_fetching(self):
-        contents: dict = self.homepage.content
-        self.assertIsInstance(contents, dict)
-
-    def test_content_modelling(self):
-        modelled_contents = self.homepage.modelled_content
-        self.assertIsInstance(modelled_contents, HomepageContentModel)
+@pytest.mark.asyncio
+async def test_homepage():
+    """Tests homepage content fetching and modelling it
+    """
+    homepage = Homepage(session=session)
+    contents = await homepage.get_content()
+    assert type(contents) is dict
+    modelled_contents = await homepage.get_modelled_content()
+    assert isinstance(modelled_contents, HomepageContentModel)

@@ -2,8 +2,7 @@
 .PHONY: install test
 
 # Define variables
-PYTHON := python3
-PI := $(PYTHON) -m pip
+PYTHON := python
 
 
 # Default target
@@ -11,7 +10,7 @@ default: install test
 
 # Target to install package
 install:
-	uv pip install .
+	uv pip install -e .
 
 # Target to run tests
 test:

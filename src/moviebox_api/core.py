@@ -22,19 +22,38 @@ class Homepage(BaseContentProvider):
         """
         assert_instance(session, Session, "session")
         self.session = session
-        self.__content: Dict = self._update_content()
+        self.__content: Dict | None = None
 
-    def _update_content(self) -> Dict:
+    async def get_content(self) -> Dict:
+        """Landing page contents
+
+        Returns:
+            Dict
+        """
+        if self.__content is None:
+            await self._update_content()
+        return self.__content
+
+    async def _update_content(self, dry: bool = False) -> Dict:
         """Fetch home page contents and update it.
+
+        Args:
+            dry (bool): Do not update if previously fetched. Defaults to False.
 
         Returns:
             Dict: Home contents
         """
-        return self.session.get_from_api(self._url)
+        if self.__content is not None and dry == True:
+            # Dry update
+            pass
+        else:
+            self.__content = await self.session.get_from_api(self._url)
 
-    @property
-    def modelled_content(self) -> HomepageContentModel:
+        return self.__content
+
+    async def get_modelled_content(self) -> HomepageContentModel:
         """Modelled version of the contents"""
+        await self._update_content(dry=True)
         return HomepageContentModel(**self.__content)
 
 

@@ -32,7 +32,7 @@ class ContentImageModel(BaseModel):
     blurHash: str
     gif: str | None = None
     avgHueLight: str
-    avgHueDar: str
+    avgHueDark: str
     id: str
 
 
@@ -46,10 +46,10 @@ class ContentSubjectModel(BaseModel):
     genre: str
     cover: ContentImageModel
     countryName: str
-    imdRatingValue: float
+    imdbRatingValue: float
     trailer: str | None = None
     detailPath: str
-    stafflist: list
+    stafflist: list | None = None
     appointmentCnt: int
     appointmentDate: str
     corner: str
@@ -64,7 +64,7 @@ class ContentModel(BaseModel):
     url: HttpUrl
     subjectId: str
     subjectType: int
-    subject: ContentSubjectModel
+    subject: ContentSubjectModel | None = None
 
     @property
     def is_movie(self) -> bool:
@@ -92,10 +92,10 @@ class ContentCategoryModel(BaseModel):
     position: int
     title: str
     subjects: list
-    banner: ContentCategoryBannerModel
+    banner: ContentCategoryBannerModel | None = None
     opId: str
     url: str
-    livelist: list
+    livelist: list | None = None
 
 
 class HomepageContentModel(BaseModel):
@@ -104,12 +104,21 @@ class HomepageContentModel(BaseModel):
     """
 
     topPickList: list
-    homelist: list
+    homeList: list
     url: str
     referer: str
     allPlatform: list
     banner: str | None = None
     live: str | None = None
     platformList: list[PlatformsModel]
-    shareParam: str | None = -None
+    shareParam: str | None = None
     operatingList: list[ContentCategoryModel]
+
+    @property
+    def contents(self) -> list[ContentModel]:
+        """Both movies and tv series"""
+        cached_contents = []
+        for operating in self.operatingList:
+            if operating.banner is not None:
+                cached_contents.extend(operating.banner.items)
+        return cached_contents
