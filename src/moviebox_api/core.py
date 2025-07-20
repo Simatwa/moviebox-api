@@ -3,7 +3,7 @@ Main module for the package
 """
 from typing import Dict
 from moviebox_api.requests import Session
-from moviebox_api.utils import assert_instance
+from moviebox_api.utils import assert_instance, SubjectType
 from moviebox_api._bases import BaseContentProvider, BaseContentProviderAndHelper
 from moviebox_api.models import HomepageContentModel, SearchResults
 from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiException
