@@ -114,7 +114,7 @@ class SearchContent(BaseContentProvider):
         )
 
     def next_page(self) -> "SearchContent":
-        """Next page contents of the search.
+        """Navigate to the search results of the next page.
 
         Returns:
             SearchContent
@@ -135,12 +135,12 @@ class SearchContent(BaseContentProvider):
                 )
         else:
             raise MovieboxApiException(
-                "Last page contents not available. "
-                "Access the contents of current page first before navigating to next page."
+                "Unable to navigate to next page. "
+                "Access the contents of current page first before navigating."
             )
 
     def previous_page(self) -> "SearchContent":
-        """Navigate to the contents of the previous page.
+        """Navigate to the search results of the previous page.
         - Useful when the currrent page is greater than  1.
         Returns:
             SearchContent
@@ -161,8 +161,8 @@ class SearchContent(BaseContentProvider):
                 )
         else:
             raise MovieboxApiException(
-                "Last page contents not available. "
-                "Access the contents of current page first before navigating to previous page."
+                "Unable to navigate to previous page. "
+                "Access the contents of current page first before navigating."
             )
 
     def create_payload(self) -> Dict[str, str | int]:
