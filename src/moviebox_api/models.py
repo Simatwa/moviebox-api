@@ -194,3 +194,44 @@ class DownloadableFilesMetadata(BaseModel):
     limited: bool
     limitedCode: int
     hasResource: bool
+
+    @property
+    def best_media_file(self) -> MediaFileMetadata | None:
+        """Highest quality media file
+
+        Returns:
+            MediaFileMetadata|None
+        """
+        if bool(self.downloads):
+            found = self.downloads[0]
+            for media_file in self.downloads:
+                if media_file.resolution > found.resolution:
+                    found = media_file
+            return found
+        else:
+            return None
+
+    @property
+    def worst_media_file(self) -> MediaFileMetadata | None:
+        """Lowest quality media file
+
+        Returns:
+            MediaFileMetadata|None
+        """
+        if bool(self.downloads):
+            found = self.downloads[0]
+            for media_file in self.downloads:
+                if media_file.resolution < found.resolution:
+                    found = media_file
+            return found
+
+    @property
+    def english_subtitle_file(self) -> CaptionFileMetadata | None:
+        """English subtitle file.
+
+        Returns:
+            CaptionFileMetadata|None
+        """
+        for subtitle_file in self.captions:
+            if subtitle_file.lan == "en":
+                return subtitle_file

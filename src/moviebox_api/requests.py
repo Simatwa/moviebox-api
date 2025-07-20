@@ -14,9 +14,9 @@ default_request_headers = {
     "Accept-Language": "en-US,en;q=0.5",
     "Accept": "application/json",
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
-    "Referer": "https://moviebox.ng/",  # movies/titanic-kGoZgiDdff?id=206379412718240440&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
+    "Referer": "https://moviebox.ng/movies/titanic-kGoZgiDdff?id=206379412718240440&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
     # "Referer":	"https://moviebox.ng/movies/the-basketball-diaries-GpkJMWty103?id=2518237873669820192&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
-    "Host": host_url,
+    "Host": "moviebox.ng",
     # "Alt-Used" :	"moviebox.n"
     "X-Source": "",
 }

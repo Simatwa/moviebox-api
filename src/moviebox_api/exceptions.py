@@ -21,6 +21,6 @@ class ExhaustedSearchResultsError(BaseMovieboxException):
     """Raised when trying to navigate to next page of a complete search results"""
 
     def __init__(self, last_pager, *args, **kwargs):
-        self.last_pager = self.last_pager
+        self.last_pager = last_pager
         """Page info of the current page"""
         super().__init__(*args, **kwargs)
