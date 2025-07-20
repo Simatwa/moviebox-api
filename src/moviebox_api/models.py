@@ -3,9 +3,11 @@ Models for package level usage.
 """
 
 from dataclasses import dataclass
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, HttpUrl, field_validator
 from datetime import date
 from uuid import UUID
+from json import loads
+from moviebox_api.utils import SubjectType
 
 
 @dataclass(frozen=True)
@@ -39,7 +41,7 @@ class ContentImageModel(BaseModel):
 
 class ContentSubjectModel(BaseModel):
     subjectId: str
-    subjectType: int
+    subjectType: SubjectType
     title: str
     description: str
     releaseDate: date
@@ -139,10 +141,18 @@ class OPS(BaseModel):
 class SearchResultsItem(ContentSubjectModel):
     """Specific result info"""
 
-    subtitles: str
+    subtitles: list[str]
     ops: OPS
     hasResource: bool
     imdbRatingCount: int
+
+    @field_validator("ops", mode="before")
+    def validate_ops(value: str) -> dict:
+        return loads(value)
+
+    @field_validator("subtitles", mode="before")
+    def validate_subtitles(value: str) -> list[str]:
+        return value.split(",")
 
 
 class SearchResultsPager(BaseModel):

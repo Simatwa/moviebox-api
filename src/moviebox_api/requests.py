@@ -59,7 +59,7 @@ class Session:
         """Used to track cookies assignment status"""
 
     def __repr__(self):
-        return rf"<Session(MovieBox) timeout={self._timeout}>"
+        return rf"<Session(MovieBoxAPI) timeout={self._timeout}>"
 
     async def get(self, url: str, params: Dict = {}, **kwargs) -> Response:
         """Makes a http get request without server cookies from previous requests.

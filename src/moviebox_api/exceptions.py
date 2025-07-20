@@ -2,7 +2,6 @@
 
 from typing import Dict
 from moviebox_api._bases import BaseMovieboxException
-from moviebox_api.models import SearchResultsPager
 
 
 class MovieboxApiException(BaseMovieboxException):
@@ -21,7 +20,7 @@ class UnsuccessfulResponseError(BaseMovieboxException):
 class ExhaustedSearchResultsError(BaseMovieboxException):
     """Raised when trying to navigate to next page of a complete search results"""
 
-    def __init__(self, last_pager: SearchResultsPager, *args, **kwargs):
+    def __init__(self, last_pager, *args, **kwargs):
         self.last_pager = self.last_pager
         """Page info of the current page"""
         super().__init__(*args, **kwargs)

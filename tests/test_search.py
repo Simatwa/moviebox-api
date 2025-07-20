@@ -1,37 +1,62 @@
 import pytest
-from tests import session
-from moviebox_api.core import Search
+from moviebox_api.core import Search, SubjectType
 from moviebox_api.models import SearchResults
-
-
-@pytest.fixture
-def search():
-    return Search(session=session, keyword="Titanic", per_page=4, page=1)
+from tests import init_search
 
 
 @pytest.mark.asyncio
-async def test_get_content(search: Search):
+@pytest.mark.parametrize(
+    argnames=["subject_type"],
+    argvalues=(
+        [SubjectType.ALL],
+        [SubjectType.MOVIES],
+        [SubjectType.TV_SERIES],
+        [SubjectType.MUSIC],
+    ),
+)
+async def test_get_content(subject_type: SubjectType):
+    search: Search = init_search(subject_type=subject_type)
     contents = await search.get_content()
     assert type(contents) is dict
 
 
 @pytest.mark.asyncio
-async def test_model_content(search: Search):
-    modelled_contents = await search.get_modelled_content(latest=True)
+@pytest.mark.parametrize(
+    argnames=["subject_type"],
+    argvalues=(
+        [SubjectType.ALL],
+        [SubjectType.MOVIES],
+        [SubjectType.TV_SERIES],
+        [SubjectType.MUSIC],
+    ),
+)
+async def test_model_content(subject_type: SubjectType):
+    search: Search = init_search(subject_type=subject_type)
+    modelled_contents = await search.get_modelled_content()
     assert isinstance(modelled_contents, SearchResults)
+    for item in modelled_contents.items:
+        assert item.subjectType == subject_type
 
 
 @pytest.mark.asyncio
-async def test_next_page_navigation(search: Search):
-    next_search = search.next_page()
-    await search.get_modelled_content(latest=True)
+async def test_next_page_navigation():
+    search = init_search()
+    contents = await search.get_modelled_content()
+    assert isinstance(contents, SearchResults)
+    next_search = search.next_page(contents)
     assert isinstance(next_search, Search)
+    next_contents = await next_search.get_modelled_content()
+    assert isinstance(next_contents, SearchResults)
+    assert contents.pager.page + 1 == next_contents.pager.page
 
 
 @pytest.mark.asyncio
-async def test_previous_page_navigation(search: Search):
-    await search.get_modelled_content(latest=True)
-    next_search = search.next_page()
-    await search.get_modelled_content(latest=True)
-    previous_page = next_search.previous_page()
-    assert isinstance(previous_page, Search)
+async def test_previous_page_navigation():
+    search: Search = init_search(page=3)
+    contents = await search.get_modelled_content()
+    assert isinstance(contents, SearchResults)
+    previous_search = search.previous_page(contents)
+    assert isinstance(previous_search, Search)
+    previous_contents = await previous_search.get_modelled_content()
+    assert isinstance(previous_contents, SearchResults)
+    assert contents.pager.page - 1 == previous_contents.pager.page
