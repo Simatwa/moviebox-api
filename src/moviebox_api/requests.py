@@ -55,6 +55,11 @@ class Session:
             headers=headers, cookies=cookies, timeout=timeout
         )
         self.moviebox_app_info: MovieboxAppInfo | None = None
+        self.__moviebox_app_info_fetched: bool = False
+        """Used to track cookies assignment status"""
+
+    def __repr__(self):
+        return rf"<Session(MovieBox) timeout={self._timeout}>"
 
     async def get(self, url: str, params: Dict = {}, **kwargs) -> Response:
         """Makes a http get request without server cookies from previous requests.
@@ -93,9 +98,7 @@ class Session:
         Returns:
             Response: Httpx response object
         """
-        if self.moviebox_app_info is None:
-            # First run probably
-            await self._fetch_app_info()
+        await self.ensure_cookies_are_assigned()
         response = await self._client.get(url, params=params, **kwargs)
         return response.raise_for_status()
 
@@ -109,6 +112,43 @@ class Session:
         response = await self.get_with_cookies(*args, **kwargs)
         return process_api_response(response.json())
 
+    async def post(self, url: str, json: dict, **kwargs) -> Response:
+        """Makes a http post request with both self assigned and server-
+        assigned cookies
+
+        Args:
+            url (str): Resource link
+            json (dict): Data to be send.
+
+        Returns:
+            Response: Httpx response object
+        """
+        await self.ensure_cookies_are_assigned()
+        response = await self._client.post(url, json=json, **kwargs)
+        return response.raise_for_status()
+
+    async def post_to_api(self, *args, **kwargs) -> Dict:
+        """Sends data to api and extract the `data` field from the response
+
+        Returns:
+            Dict: Extracted data field value
+        """
+        response = await self.post(*args, **kwargs)
+        return process_api_response(response.json())
+
+    async def ensure_cookies_are_assigned(self) -> bool:
+        """Checks if the essential cookies are available
+        if not it update.
+
+        Returns:
+            bool: `account` cookie availability status.
+        """
+        if not self.__moviebox_app_info_fetched:
+            # First run probably
+            await self._fetch_app_info()
+            self.__moviebox_app_info_fetched = True
+        return self._client.cookies.get("acoount") is not None
+
     async def _fetch_app_info(self) -> MovieboxAppInfo:
         """Fetches the moviebox app info but the main goal
         is to get the essential cookies required for requests
@@ -117,8 +157,12 @@ class Session:
         Returns:
             MovieboxAppInfo: Details about latest moviebox app
         """
-        response = await self.get_with_cookies(url=self._moviebox_app_info_url)
-        self.moviebox_app_info = MovieboxAppInfo(**response.json())
+        response = await self._client.get(url=self._moviebox_app_info_url)
+        response.raise_for_status()
+        moviebox_app_info = process_api_response(response.json())
+        if isinstance(moviebox_app_info, list):
+            moviebox_app_info = moviebox_app_info[0]
+        self.moviebox_app_info = MovieboxAppInfo(**moviebox_app_info)
         return self.moviebox_app_info
 
     update_session_cookies = _fetch_app_info

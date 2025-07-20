@@ -5,6 +5,7 @@ Models for package level usage.
 from dataclasses import dataclass
 from pydantic import BaseModel, HttpUrl
 from datetime import date
+from uuid import UUID
 
 
 @dataclass(frozen=True)
@@ -47,12 +48,16 @@ class ContentSubjectModel(BaseModel):
     cover: ContentImageModel
     countryName: str
     imdbRatingValue: float
+    # subtitles : str
+    # ops : {rid: uuid, trace_id: str}
+    # hasResource :bool
     trailer: str | None = None
     detailPath: str
     stafflist: list | None = None
     appointmentCnt: int
     appointmentDate: str
     corner: str
+    # imdbRatingCount: int
 
 
 class ContentModel(BaseModel):
@@ -122,3 +127,36 @@ class HomepageContentModel(BaseModel):
             if operating.banner is not None:
                 cached_contents.extend(operating.banner.items)
         return cached_contents
+
+
+class OPS(BaseModel):
+    """A value in specific result info"""
+
+    rid: UUID
+    trace_id: str
+
+
+class SearchResultsItem(ContentSubjectModel):
+    """Specific result info"""
+
+    subtitles: str
+    ops: OPS
+    hasResource: bool
+    imdbRatingCount: int
+
+
+class SearchResultsPager(BaseModel):
+    """Search pagination info"""
+
+    hasMore: bool
+    nextPage: int
+    page: int
+    perPage: int
+    totalCount: int
+
+
+class SearchResults(BaseModel):
+    """Whole search results"""
+
+    pager: SearchResultsPager
+    items: list[SearchResultsItem]

@@ -1,5 +1,5 @@
 """
-This module provide functions for
+This module provide functions & classes for
 performing common and frequently required tasks
 as well as storing common variables required 
 across the package
@@ -8,8 +8,9 @@ across the package
 from bs4 import BeautifulSoup as bts
 from os import path
 import typing as t
-from typing import Dict
-from moviebox_api.exceptions import UnsuccessfulResponse
+from typing import Dict, List
+from moviebox_api.exceptions import UnsuccessfulResponseError
+from enum import IntEnum
 
 mirror_hosts = ("httpx://moviebox.ng",)
 
@@ -60,7 +61,7 @@ def assert_instance(obj: object, class_or_tuple, name: str = "Parameter"):
     ), f"{name} value needs to be an instace of {class_or_tuple} not {type(obj)}"
 
 
-def process_api_response(json: Dict) -> Dict:
+def process_api_response(json: Dict) -> Dict | List:
     """Extracts the response data field
 
     Args:
@@ -72,10 +73,31 @@ def process_api_response(json: Dict) -> Dict:
     if json.get("code", 1) == 0 and json.get("message") == "ok":
         return json["data"]
 
-    raise UnsuccessfulResponse(
+    raise UnsuccessfulResponseError(
         json,
-        "Unsuccessful response from the server. Check `.response`  for response info",
+        "Unsuccessful response from the server. Check `.response`  for detailed response info",
     )
 
 
 extract_data_field_value = process_api_response
+
+
+class SubjectType(IntEnum):
+    """Content types mapped to their integer representatives"""
+
+    ALL = 0
+    """Both Movies, series and music contents"""
+    MOVIES = 1
+    """Movies content only"""
+    TV_SERIES = 2
+    """TV Series content only"""
+    MUSIC = 6
+    """Music contents only"""
+
+    @classmethod
+    def map(cls) -> dict[str, int]:
+        """Content-type names mapped to their int representatives"""
+        resp = {}
+        for entry in cls:
+            resp[entry.name] = entry.value
+        return resp
