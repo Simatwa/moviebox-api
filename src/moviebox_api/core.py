@@ -1,9 +1,10 @@
 """ 
 Main module for the package
 """
+
 from typing import Dict
 from moviebox_api.requests import Session
-from moviebox_api.utils import assert_instance, SubjectType
+from moviebox_api.utils import assert_instance, SubjectType, get_absolute_url
 from moviebox_api._bases import BaseContentProvider, BaseContentProviderAndHelper
 from moviebox_api.models import HomepageContentModel, SearchResults
 from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiException
@@ -12,7 +13,7 @@ from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiExce
 class Homepage(BaseContentProviderAndHelper):
     """Content listings on landing page"""
 
-    _url = r"https://moviebox.ng/wefeed-h5-bff/web/home"
+    _url = get_absolute_url(r"/wefeed-h5-bff/web/home")
 
     def __init__(self, session: Session):
         """Constructtor `Home`
@@ -41,7 +42,7 @@ class Homepage(BaseContentProviderAndHelper):
 class EveryoneSearches(BaseContentProviderAndHelper):
     """Movies and series everyone searches"""
 
-    _url = r"https://moviebox.ng/wefeed-h5-bff/web/subject/everyone-search"
+    _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/everyone-search")
 
     def __init__(self, session: Session):
         """Constructor for `EveryoneSearches`
@@ -57,7 +58,7 @@ class EveryoneSearches(BaseContentProviderAndHelper):
 class Search(BaseContentProvider):
     """Performs a search of movies, tv series, music or all"""
 
-    _url = r"https://moviebox.ng/wefeed-h5-bff/web/subject/search"
+    _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/search")
 
     # __slots__ = ("session",)
 

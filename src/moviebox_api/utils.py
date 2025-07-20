@@ -10,11 +10,12 @@ from os import path
 import typing as t
 from typing import Dict, List
 from moviebox_api.exceptions import UnsuccessfulResponseError
+from urllib.parse import urljoin
 from enum import IntEnum
 
-mirror_hosts = ("httpx://moviebox.ng",)
+mirror_hosts = ("http://moviebox.ng/",)
 
-site_url = mirror_hosts[0]
+host_url = mirror_hosts[0]
 
 
 def souper(contents: str) -> bts:
@@ -38,9 +39,7 @@ def get_absolute_url(relative_url: str) -> str:
     Returns:
         str: Complete url with host
     """
-    if relative_url.startswith("/"):
-        relative_url = relative_url[1:]
-    return path.join(site_url, relative_url)
+    return urljoin(host_url, relative_url)
 
 
 def assert_membership(value: t.Any, elements: t.Iterable, identity="Value"):
@@ -80,6 +79,18 @@ def process_api_response(json: Dict) -> Dict | List:
 
 
 extract_data_field_value = process_api_response
+
+
+def get_filesize_string(size_in_bytes: int) -> str:
+    """Get something like 343 MB or 1.25 GB depending on size_in_bytes."""
+    units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+    for unit in units:
+        # 1024 or 1000 ?
+        if size_in_bytes >= 1000.0:
+            size_in_bytes /= 1000.0
+        else:
+            break
+    return f"{size_in_bytes:.2f} {unit}"
 
 
 class SubjectType(IntEnum):

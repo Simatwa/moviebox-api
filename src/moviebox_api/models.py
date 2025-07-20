@@ -170,3 +170,24 @@ class SearchResults(BaseModel):
 
     pager: SearchResultsPager
     items: list[SearchResultsItem]
+
+class MediaFileMetadata(BaseModel):
+    id: str
+    url: HttpUrl
+    resolution: int
+    size: int
+
+class CaptionFileMetadata(BaseModel):
+    id: str
+    lan: str
+    lanName: str
+    url: HttpUrl
+    size: int
+    delay: int
+
+class DownloadableFilesMetadata(BaseModel):
+    downloads: list[MediaFileMetadata]
+    captions: list[CaptionFileMetadata]
+    limited: bool
+    limitedCode: int
+    hasResource: bool

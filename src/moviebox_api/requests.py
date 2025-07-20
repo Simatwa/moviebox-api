@@ -7,16 +7,18 @@ from httpx import Response
 from httpx._config import DEFAULT_TIMEOUT_CONFIG
 from typing import Dict
 from moviebox_api.models import MovieboxAppInfo
-from moviebox_api.utils import process_api_response
+from moviebox_api.utils import process_api_response, host_url
 
 default_request_headers = {
     "X-Client-Info": '{"timezone":"Africa/Nairobi"}',
     "Accept-Language": "en-US,en;q=0.5",
-    "Accept": "*/*,",  # "application/json",
+    "Accept": "application/json",
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
+    "Referer": "https://moviebox.ng/",  # movies/titanic-kGoZgiDdff?id=206379412718240440&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
     # "Referer":	"https://moviebox.ng/movies/the-basketball-diaries-GpkJMWty103?id=2518237873669820192&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
-    "Host": "moviebox.ng",
+    "Host": host_url,
     # "Alt-Used" :	"moviebox.n"
+    "X-Source": "",
 }
 
 # TODO : Set timezone and language values based on user's machine
@@ -89,7 +91,7 @@ class Session:
         return process_api_response(response.json())
 
     async def get_with_cookies(self, url: str, params: Dict = {}, **kwargs) -> Response:
-        """Makes a http get request without server-assigned cookies from previous requests.
+        """Makes a http get request with server-assigned cookies from previous requests.
 
         Args:
             url (str): Resource link.
@@ -103,7 +105,7 @@ class Session:
         return response.raise_for_status()
 
     async def get_with_cookies_from_api(self, *args, **kwargs) -> Dict:
-        """Makes a http get request without server-assigned cookies from previous requests
+        """Makes a http get request with server-assigned cookies from previous requests
         and extract the `data` field from the response.
 
         Returns:
@@ -147,7 +149,7 @@ class Session:
             # First run probably
             await self._fetch_app_info()
             self.__moviebox_app_info_fetched = True
-        return self._client.cookies.get("acoount") is not None
+        return self._client.cookies.get("account") is not None
 
     async def _fetch_app_info(self) -> MovieboxAppInfo:
         """Fetches the moviebox app info but the main goal
