@@ -27,23 +27,6 @@ class BaseContentProvider(ABC):
 class ContentProviderHelper:
     """Provides common methods to content proder classes"""
 
-    async def _update_content(self, dry: bool = False) -> Dict:
-        """Fetch contents and update it.
-
-        Args:
-            dry (bool): Do not update if previously fetched. Defaults to False.
-
-        Returns:
-            Dict: Home contents
-        """
-        if self.__content is not None and dry == True:
-            # Dry update
-            pass
-        else:
-            self.__content = await self.session.get_from_api(self._url)
-
-        return self.__content
-
 
 class BaseContentProviderAndHelper(BaseContentProvider, ContentProviderHelper):
     """A class that inherits both `BaseContentProvider(ABC)` and `ContentProviderHelper`"""

@@ -4,6 +4,7 @@ from moviebox_api.models import SearchResults
 from tests import init_search
 
 
+# TODO: [fix] These first 2 tests fails due to async loop timing out
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     argnames=["subject_type"],

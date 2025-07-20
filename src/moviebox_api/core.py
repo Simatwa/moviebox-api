@@ -1,14 +1,12 @@
 """ 
 Main module for the package
 """
-
+from typing import Dict
 from moviebox_api.requests import Session
 from moviebox_api.utils import assert_instance
 from moviebox_api._bases import BaseContentProvider, BaseContentProviderAndHelper
 from moviebox_api.models import HomepageContentModel, SearchResults
 from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiException
-from typing import Dict
-from moviebox_api.utils import SubjectType
 
 
 class Homepage(BaseContentProviderAndHelper):
@@ -24,7 +22,6 @@ class Homepage(BaseContentProviderAndHelper):
         """
         assert_instance(session, Session, "session")
         self.session = session
-        self.__content: Dict | None = None
 
     async def get_content(self) -> Dict:
         """Landing page contents
@@ -32,31 +29,13 @@ class Homepage(BaseContentProviderAndHelper):
         Returns:
             Dict
         """
-        if self.__content is None:
-            await self._update_content()
-        return self.__content
-
-    async def _update_content(self, dry: bool = False) -> Dict:
-        """Fetch home page contents and update it.
-
-        Args:
-            dry (bool): Do not update if previously fetched. Defaults to False.
-
-        Returns:
-            Dict: Home contents
-        """
-        if self.__content is not None and dry == True:
-            # Dry update
-            pass
-        else:
-            self.__content = await self.session.get_from_api(self._url)
-
-        return self.__content
+        content = await self.session.get_from_api(self._url)
+        return content
 
     async def get_modelled_content(self) -> HomepageContentModel:
         """Modelled version of the contents"""
-        await self._update_content(dry=True)
-        return HomepageContentModel(**self.__content)
+        content = await self.get_content()
+        return HomepageContentModel(**content)
 
 
 class EveryoneSearches(BaseContentProviderAndHelper):
