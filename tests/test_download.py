@@ -1,0 +1,44 @@
+import pytest
+from moviebox_api.requests import Session
+from moviebox_api.core import Search, SubjectType
+from moviebox_api.download import (
+    DownloadableFilesDetail,
+    CaptionFileDownloader,
+    MediaFileDownloader,
+)
+
+
+@pytest.asyncio
+async def test_download_movie_caption_file():
+    session = Session()
+    search = Search(session, "avatar", subject_type=SubjectType.MOVIES)
+    search_results = await search.get_modelled_content()
+    target_movie = search_results.items[0]
+    # print("Target movie :", target_movie)
+    downloadable_files = DownloadableFilesDetail(session, target_movie)
+    downloadable_files_detail = await downloadable_files.get_modelled_content()
+    target_caption_file = downloadable_files_detail.english_subtitle_file
+    # print("Target caption file :", target_caption_file)
+    caption_file_downloader = CaptionFileDownloader(target_caption_file)
+    response = await caption_file_downloader.run(
+        filename=target_movie.title + "- English.srt", test=True
+    )
+    assert response.is_success == True
+
+
+@pytest.asyncio
+async def test_download_movie_file():
+    session = Session()
+    search = Search(session, "avatar", subject_type=SubjectType.MOVIES)
+    search_results = await search.get_modelled_content()
+    target_movie = search_results.items[0]
+    # print("Target movie :", target_movie)
+    downloadable_files = DownloadableFilesDetail(session, target_movie)
+    downloadable_files_detail = await downloadable_files.get_modelled_content()
+    target_media_file = downloadable_files_detail.best_media_file
+    # print("Target media file :", target_media_file)
+    media_file_downloader = MediaFileDownloader(target_media_file)
+    response = await media_file_downloader.run(
+        filename=target_movie.title + ".mp4", test=True
+    )
+    assert response.is_success == True

@@ -210,3 +210,8 @@ __marimo__/
 
 test-*.py
 test.py
+*.mp4
+*.mkv
+*.webm
+*.mpv
+*.srt

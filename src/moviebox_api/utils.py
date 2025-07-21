@@ -6,16 +6,52 @@ across the package
 """
 
 from bs4 import BeautifulSoup as bts
-from os import path
 import typing as t
 from typing import Dict, List
+from moviebox_api import logger
 from moviebox_api.exceptions import UnsuccessfulResponseError
 from urllib.parse import urljoin
 from enum import IntEnum
 
-mirror_hosts = ("http://moviebox.ng/",)
+mirror_hosts = (
+    "moviebox.ng",
+    "h5.aoneroom.com",
+    "movieboxapp.in",
+    "moviebox.pk",
+    "moviebox.ph",
+    "moviebox.id",
+)
+"""Mirror domains/subdomains of Moviebox"""
 
-host_url = mirror_hosts[0]
+selected_host = mirror_hosts[0]
+"""Host adress only with protocol"""
+
+host_protocol = "https"
+"""Host protocol i.e http/https"""
+
+host_url = f"{host_protocol}://{selected_host}/"
+"""Complete host adress with protocol"""
+
+logger.info(f"Moviebox host url - {host_url}")
+
+default_request_headers = {
+    "X-Client-Info": '{"timezone":"Africa/Nairobi"}',  # TODO: Set this value dynamically.
+    "Accept-Language": "en-US,en;q=0.5",
+    "Accept": "application/json",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
+    "Referer": host_url,  # "https://moviebox.ng/movies/titanic-kGoZgiDdff?id=206379412718240440&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
+    "Host": selected_host,
+    # "X-Source": "",
+}
+"""For general http requests other than download"""
+
+download_request_headers = {
+    "Accept": "*/*",  # "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
+    "Origin": selected_host,
+    "Referer": host_url,
+}
+"""For media and subtitle files download requests"""
 
 
 def souper(contents: str) -> bts:
@@ -72,6 +108,7 @@ def process_api_response(json: Dict) -> Dict | List:
     if json.get("code", 1) == 0 and json.get("message") == "ok":
         return json["data"]
 
+    logger.debug(f"Unsuccessful response received from server - {json}")
     raise UnsuccessfulResponseError(
         json,
         "Unsuccessful response from the server. Check `.response`  for detailed response info",

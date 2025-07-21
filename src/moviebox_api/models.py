@@ -192,7 +192,7 @@ class DownloadableFilesMetadata(BaseModel):
     downloads: list[MediaFileMetadata]
     captions: list[CaptionFileMetadata]
     limited: bool
-    limitedCode: int | str
+    limitedCode: str
     hasResource: bool
 
     @property

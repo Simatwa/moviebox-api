@@ -10,14 +10,21 @@ from moviebox_api.requests import Session
 from moviebox_api.utils import (
     assert_instance,
     get_absolute_url,
-    host_url,
     get_filesize_string,
+    download_request_headers,
 )
 from os import getcwd, path
 from pathlib import Path
-from tqdm import tqdm
 import httpx
 from moviebox_api import logger
+
+try:
+    from tqdm import tqdm
+except ImportError:
+    logger.debug(
+        "tqdm library not installed so download while showing "
+        "progress-bar will not be possible. Run `pip install tqdm`"
+    )
 
 
 class DownloadableFilesDetail(BaseContentProvider):
@@ -76,11 +83,7 @@ class DownloadableFilesDetail(BaseContentProvider):
 class MediaFileDownloader:
     """Makes a remote media file available locally"""
 
-    request_headers = {
-        "Accept": "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5",
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
-        "Origin": "moviebox.ng",
-    }
+    request_headers = download_request_headers
     request_cookies = {}
 
     def __init__(self, media_file: MediaFileMetadata):
@@ -107,7 +110,8 @@ class MediaFileDownloader:
         leave: bool = True,
         colour: str = "cyan",
         simple: bool = True,
-    ):
+        test: bool = False,
+    ) -> Path | httpx.Response:
         """Performs the actual download.
         Args:
             filename (str): Movie filename
@@ -119,12 +123,13 @@ class MediaFileDownloader:
             leave (bool, optional): Keep all leaves of the progressbar. Defaults to True.
             colour (str, optional): Progress bar display color. Defaults to "cyan".
             simple (bool, optional): Show percentage and bar only in progressbar. Deafults to False.
+            test (bool, optional): Just test if download is possible but do not actually download. Defaults to False.
 
         Raises:
             FileExistsError:  Incase of `resume=True` but the download was complete
 
         Returns:
-            str: Path where the media file has been saved to.
+            str|httpx.Response: Path where the media file has been saved to or httpx Response (test).
         """
         current_downloaded_size = 0
         current_downloaded_size_in_mb = 0
@@ -160,6 +165,11 @@ class MediaFileDownloader:
                 "GET", str(self._media_file.url)
             ) as response:
                 response.raise_for_status()
+                if test:
+                    logger.info(
+                        f"Download test passed successfully {response.__repr__}"
+                    )
+                    return response
                 with open(save_to, saving_mode) as fh:
                     p_bar = tqdm(
                         total=round(size_in_mb, 1),
@@ -188,6 +198,11 @@ class MediaFileDownloader:
                 "GET", str(self._media_file.url)
             ) as response:
                 response.raise_for_status()
+                if test:
+                    logger.info(
+                        f"Download test passed successfully {response.__repr__}"
+                    )
+                    return response
                 with open(save_to, saving_mode) as fh:
                     async for chunk in response.aiter_bytes(chunk_size_in_bytes):
                         fh.write(chunk)
@@ -200,11 +215,7 @@ class MediaFileDownloader:
 class CaptionFileDownloader:
     """Makes a local copy of a remote subtitle/caption file"""
 
-    request_headers = {
-        "Accept": "*/*",
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
-        "Origin": host_url,
-    }
+    request_headers = download_request_headers
     request_cookies = {}
 
     def __init__(self, caption_file: CaptionFileMetadata):
@@ -225,19 +236,24 @@ class CaptionFileDownloader:
         filename: str,
         dir: str = getcwd(),
         chunk_size: int = 16,
-    ):
+        test: bool = False,
+    ) -> Path | httpx.Response:
         """Performs the actual download.
         Args:
             filename (str): Movie filename
             dir (str, optional): Directory for saving the contents Defaults to current directory. Defaults to cwd.
             chunk_size (int, optional): Chunk_size for downloading files in KB. Defaults to 16.
+            test (bool, optional): Just test if download is possible but do not actually download. Defaults to False.
 
         Returns:
-            str: Path where the caption file has been saved to.
+            Path|httpx.Response: Path where the caption file has been saved to or httpx Response (test).
         """
         save_to = Path(dir) / filename
         async with self.session.stream("GET", str(self._caption_file.url)) as response:
             response.raise_for_status()
+            if test:
+                logger.info(f"Download test passed successfully {response.__repr__}")
+                return response
             with open(save_to, mode="wb") as fh:
                 async for chunk in response.aiter_bytes(chunk_size * 1_000):
                     fh.write(chunk)
