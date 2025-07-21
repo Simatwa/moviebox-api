@@ -8,7 +8,7 @@ from moviebox_api.download import (
 )
 
 
-@pytest.asyncio
+@pytest.mark.asyncio
 async def test_download_movie_caption_file():
     session = Session()
     search = Search(session, "avatar", subject_type=SubjectType.MOVIES)
@@ -26,7 +26,7 @@ async def test_download_movie_caption_file():
     assert response.is_success == True
 
 
-@pytest.asyncio
+@pytest.mark.asyncio
 async def test_download_movie_file():
     session = Session()
     search = Search(session, "avatar", subject_type=SubjectType.MOVIES)
