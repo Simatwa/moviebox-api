@@ -1,4 +1,4 @@
-""" 
+"""
 Models for package level usage.
 """
 
@@ -192,7 +192,7 @@ class DownloadableFilesMetadata(BaseModel):
     downloads: list[MediaFileMetadata]
     captions: list[CaptionFileMetadata]
     limited: bool
-    limitedCode: int
+    limitedCode: int | str
     hasResource: bool
 
     @property

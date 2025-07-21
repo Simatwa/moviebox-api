@@ -84,7 +84,7 @@ class MediaFileDownloader:
             session (Session): MovieboxAPI request session.
             media_file (MediaFileMetadata): Movie/tv-series/music to be downloaded.
         """
-        assert_instance(media_file, MediaFileDownloader, "media_file")
+        assert_instance(media_file, MediaFileMetadata, "media_file")
         self._media_file = media_file
         self.session = httpx.AsyncClient(
             headers=self.request_headers, cookies=self.request_cookies
@@ -150,7 +150,9 @@ class MediaFileDownloader:
         if progress_bar:
             if not quiet:
                 print(f"{filename}")
-            async with self.session.stream("GET", self._media_file.url) as response:
+            async with self.session.stream(
+                "GET", str(self._media_file.url)
+            ) as response:
                 with open(save_to, saving_mode) as fh:
                     p_bar = tqdm(
                         total=round(size_in_mb, 1),
@@ -197,7 +199,7 @@ class CaptionFileDownloader:
             session (Session): MovieboxAPI request session.
             caption_file (CaptionFileMetadata): Movie/tv-series/music to be downloaded.
         """
-        assert_instance(caption_file, CaptionFileDownloader, "caption_file")
+        assert_instance(caption_file, CaptionFileMetadata, "caption_file")
         self._caption_file = caption_file
         self.session = httpx.AsyncClient(
             headers=self.request_headers, cookies=self.request_cookies
@@ -220,8 +222,8 @@ class CaptionFileDownloader:
             str: Path where the caption file has been saved to.
         """
         save_to = Path(dir) / filename
-        async with self.session.stream("GET", self._caption_file.url) as response:
-            with open(save_to, mode="w") as fh:
-                async for chunk in response.aiter_text(chunk_size * 1_000):
+        async with self.session.stream("GET", str(self._caption_file.url)) as response:
+            with open(save_to, mode="wb") as fh:
+                async for chunk in response.aiter_bytes(chunk_size * 1_000):
                     fh.write(chunk)
         return save_to

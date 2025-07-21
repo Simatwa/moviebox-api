@@ -1,7 +1,7 @@
 """
 This module provide functions & classes for
 performing common and frequently required tasks
-as well as storing common variables required 
+as well as storing common variables required
 across the package
 """
 

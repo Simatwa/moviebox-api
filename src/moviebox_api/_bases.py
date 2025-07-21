@@ -1,4 +1,4 @@
-""" 
+"""
 This module contains base classes for the entire package
 """
 
