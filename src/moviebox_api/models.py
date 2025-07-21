@@ -208,8 +208,6 @@ class DownloadableFilesMetadata(BaseModel):
                 if media_file.resolution > found.resolution:
                     found = media_file
             return found
-        else:
-            return None
 
     @property
     def worst_media_file(self) -> MediaFileMetadata | None:
