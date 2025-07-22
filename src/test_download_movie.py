@@ -1,7 +1,7 @@
 #!/usrr/bin/python
 
-# NOTE: I use this file to debug the package in Windowe
-# machine that I don't have admin privileges to install it systemwide
+# NOTE: I use this file to debug the package in Windows
+# machine that I don't have admin privileges to install it system-wide
 # using uv
 
 import logging
@@ -27,13 +27,13 @@ async def main():
     # print("Target movie :", target_movie)
     downloadable_files = DownloadableFilesDetail(session, target_movie)
     downloadable_files_detail = await downloadable_files.get_modelled_content()
-    target_media_file = downloadable_files_detail.best_media_file
+    target_media_file = downloadable_files_detail.worst_media_file
     media_file_downloader = MediaFileDownloader(target_media_file)
     media_file_saved_to = await media_file_downloader.run(
-        filename=target_movie.title + ".mp4",
+        filename=f"{target_movie.title} - {target_media_file.resolution}p.mp4",
         progress_bar=True,
         # test=False,
-        resume=True,  # False,  # True,
+        # resume=True,  # False,  # True,
         simple=False,
         ascii=False,
     )
