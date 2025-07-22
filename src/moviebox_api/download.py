@@ -174,11 +174,13 @@ class MediaFileDownloader:
                     return response
                 with open(save_to, saving_mode) as fh:
                     p_bar = tqdm(
+                        desc="Downloading",
                         total=round(size_in_mb, 1),
                         unit="Mb",
-                        unit_scale=True,
+                        # unit_scale=True,
                         colour=colour,
                         leave=leave,
+                        initial=current_downloaded_size_in_mb,
                         bar_format=(
                             "{l_bar}{bar} | %(size)s" % (dict(size=size_with_unit))
                             if simple
