@@ -9,7 +9,7 @@ import logging
 logging.basicConfig(
     format="%(asctime)s - [%(levelname)s] - %(message)s",
     datefmt="%d-%b-%Y %H:%M:%S",
-    level=logging.DEBUG,
+    level=logging.INFO,
 )
 
 
@@ -28,14 +28,12 @@ async def main():
     downloadable_files = DownloadableFilesDetail(session, target_movie)
     downloadable_files_detail = await downloadable_files.get_modelled_content()
     target_media_file = downloadable_files_detail.best_media_file
-
-    print(
-        f"[{get_filesize_string(target_media_file.size)}]Target media file :",
-        target_media_file.resolution,
-    )
     media_file_downloader = MediaFileDownloader(target_media_file)
     media_file_saved_to = await media_file_downloader.run(
-        filename=target_movie.title + ".mp4", progress_bar=True, test=True
+        filename=target_movie.title + ".mp4",
+        progress_bar=True,
+        test=False,
+        resume=True,
     )
     print(media_file_saved_to)
 

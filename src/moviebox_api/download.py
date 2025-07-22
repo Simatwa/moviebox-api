@@ -109,7 +109,7 @@ class MediaFileDownloader:
         resume: bool = False,
         leave: bool = True,
         colour: str = "cyan",
-        simple: bool = True,
+        simple: bool = False,
         test: bool = False,
     ) -> Path | httpx.Response:
         """Performs the actual download.
@@ -158,9 +158,11 @@ class MediaFileDownloader:
         chunk_size_in_bytes = chunk_size * 1_000
 
         saving_mode = "ab" if resume else "wb"
+        logger.info(
+            f"Downloading media file ({size_with_unit}) - resume : {resume}. "
+            f"Writing to ({save_to})"
+        )
         if progress_bar:
-            if not quiet:
-                print(f"{filename}")
             async with self.session.stream(
                 "GET", str(self._media_file.url)
             ) as response:
@@ -190,10 +192,6 @@ class MediaFileDownloader:
             return save_to
         else:
             logger.debug(f"Movie file info {self._media_file}")
-            logger.info(
-                f"[{size_with_unit}] Downloading media. (Resume : {resume}) "
-                f"writing to ({save_to})"
-            )
             async with self.session.stream(
                 "GET", str(self._media_file.url)
             ) as response:
@@ -249,6 +247,10 @@ class CaptionFileDownloader:
             Path|httpx.Response: Path where the caption file has been saved to or httpx Response (test).
         """
         save_to = Path(dir) / filename
+        logger.info(
+            f"Downloading caption file ({get_filesize_string(self._caption_file.size)}). "
+            f"Writing to ({save_to})"
+        )
         async with self.session.stream("GET", str(self._caption_file.url)) as response:
             response.raise_for_status()
             if test:
