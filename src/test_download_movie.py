@@ -21,7 +21,7 @@ from moviebox_api.utils import get_filesize_string
 
 async def main():
     session = Session()
-    search = Search(session, "titanic", subject_type=SubjectType.MOVIES)
+    search = Search(session, "avatar", subject_type=SubjectType.MOVIES)
     search_results = await search.get_modelled_content()
     target_movie = search_results.items[0]
     # print("Target movie :", target_movie)
@@ -32,8 +32,10 @@ async def main():
     media_file_saved_to = await media_file_downloader.run(
         filename=target_movie.title + ".mp4",
         progress_bar=True,
-        test=False,
-        resume=True,
+        # test=False,
+        resume=True,  # False,  # True,
+        simple=False,
+        ascii=False,
     )
     print(media_file_saved_to)
 

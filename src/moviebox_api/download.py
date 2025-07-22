@@ -107,10 +107,11 @@ class MediaFileDownloader:
         quiet: bool = False,
         chunk_size: int = 512,
         resume: bool = False,
-        leave: bool = True,
         colour: str = "cyan",
         simple: bool = False,
         test: bool = False,
+        leave: bool = True,
+        ascii: bool = False,
     ) -> Path | httpx.Response:
         """Performs the actual download.
         Args:
@@ -124,6 +125,7 @@ class MediaFileDownloader:
             colour (str, optional): Progress bar display color. Defaults to "cyan".
             simple (bool, optional): Show percentage and bar only in progressbar. Deafults to False.
             test (bool, optional): Just test if download is possible but do not actually download. Defaults to False.
+            ascii (bool, optional): Use unicode (smooth blocks) to fill the progress-bar meter. Defaults to False.
 
         Raises:
             FileExistsError:  Incase of `resume=True` but the download was complete
@@ -181,6 +183,7 @@ class MediaFileDownloader:
                         colour=colour,
                         leave=leave,
                         initial=current_downloaded_size_in_mb,
+                        ascii=ascii,
                         bar_format=(
                             "{l_bar}{bar} | %(size)s" % (dict(size=size_with_unit))
                             if simple
