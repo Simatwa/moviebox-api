@@ -15,7 +15,7 @@ logging.basicConfig(
 
 from moviebox_api.requests import Session
 from moviebox_api.core import Search, SubjectType
-from moviebox_api.download import DownloadableFilesDetail, MediaFileDownloader
+from moviebox_api.movies.download import DownloadableFilesDetail, MediaFileDownloader
 
 # from moviebox_api.utils import get_filesize_string
 

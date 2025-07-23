@@ -1,7 +1,7 @@
 import pytest
 from moviebox_api.requests import Session
 from moviebox_api.core import Search, SubjectType
-from moviebox_api.download import (
+from moviebox_api.movies.download import (
     DownloadableFilesDetail,
     CaptionFileDownloader,
     MediaFileDownloader,

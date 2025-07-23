@@ -57,7 +57,7 @@ class DownloadableFilesDetail(BaseContentProvider):
         Returns:
             Dict: File details
         """
-        # Refererer
+        # Referer
         request_header = {
             "Referer": get_absolute_url(f"/movies/{self._item.detailPath}")
         }
