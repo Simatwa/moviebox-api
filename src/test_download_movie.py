@@ -31,7 +31,7 @@ async def main():
     target_media_file = downloadable_files_detail.best_media_file
     media_file_downloader = MediaFileDownloader(target_media_file)
     media_file_saved_to = await media_file_downloader.run(
-        filename=f"{target_movie.title} - {target_media_file.resolution}p.mp4",
+        filename=target_movie,
         progress_bar=True,
         test=True,
         # resume=True,  # False,  # True,

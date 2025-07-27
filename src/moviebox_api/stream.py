@@ -26,17 +26,23 @@ class StreamFilesDetail(BaseContentProvider):
         self.session = session
         self._item = item
 
-    def _create_request_params(self) -> Dict:
+    def _create_request_params(self, season: int, episode: int) -> Dict:
         """Creates request parameters
+
+        Args:
+            season (int): Season number of the series.
+            episde (int): Episode number of the series.
         Returns:
             Dict: Request params
         """
-        # se -> season
-        # ep -> episode
-        return {"subjectId": self._item.subjectId, "se": 1, "ep": 1}
+        return {"subjectId": self._item.subjectId, "se": season, "ep": episode}
 
-    async def get_content(self) -> Dict:
+    async def get_content(self, season: int, episode: int) -> Dict:
         """Performs the actual fetching of files detail.
+
+        Args:
+            season (int): Season number of the series.
+            episde (int): Episode number of the series.
 
         Returns:
             Dict: File details
@@ -49,16 +55,22 @@ class StreamFilesDetail(BaseContentProvider):
 
         content = await self.session.get_with_cookies_from_api(
             url=self._url,
-            params=self._create_request_params(),
+            params=self._create_request_params(season, episode),
             headers=request_header,
         )
         return content
 
-    async def get_modelled_content(self) -> StreamFilesMetadata:
+    async def get_modelled_content(
+        self, season: int, episode: int
+    ) -> StreamFilesMetadata:
         """Get modelled version of the streamable files detail.
 
+        Args:
+            season (int): Season number of the series.
+            episde (int): Episode number of the series
+
         Returns:
-            StreamFilesMetadata: Modelled file details
+            StreamFilesMetadata: Modelled stream files details
         """
-        contents = await self.get_content()
+        contents = await self.get_content(season, episode)
         return StreamFilesMetadata(**contents)

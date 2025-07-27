@@ -12,6 +12,7 @@ from moviebox_api.helpers import (
     get_absolute_url,
     get_filesize_string,
     download_request_headers,
+    SubjectType,
 )
 from os import getcwd, path
 from pathlib import Path
@@ -28,6 +29,8 @@ except ImportError:
 
 
 class BaseDownloadableFilesDetail(BaseContentProvider):
+    """Base class for fetching and modelling downloadable files details"""
+
     _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/download")
 
     def __init__(self, session: Session, item: SearchResultsItem):
@@ -108,10 +111,25 @@ class DownloadableSeriesFilesDetail(BaseDownloadableFilesDetail):
 
 
 class MediaFileDownloader:
-    """Makes a remote media file available locally"""
+    """Makes a remote file available locally"""
 
     request_headers = download_request_headers
     request_cookies = {}
+    movie_filename_generation_template = (
+        "%(title)s (%(release_year)d) - %(resolution)dP.%(ext)s"
+    )
+    series_filename_generation_template = (
+        "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(resolution)dP.%(ext)s"
+    )
+    possible_filename_placeholders = (
+        "%(title)s",
+        "%(release_year)d",
+        "%(release_date)s" "%(resolution)d",
+        "%(ext)s",
+        "%(size_string)s",
+        "%(season)d",
+        "%(episode)d",
+    )
 
     def __init__(self, media_file: MediaFileMetadata):
         """Constructor for `MediaFileDownloader`
@@ -126,12 +144,47 @@ class MediaFileDownloader:
         )
         """Httpx client session for downloading the file"""
 
+    def generate_filename(
+        self,
+        search_results_item: SearchResultsItem,
+        ext: str = "mp4",
+        season: int = 0,
+        episode: int = 0,
+    ) -> str:
+        """Generates filename in the format as in `self.*filename_generation_template`
+
+        Args:
+            search_results_item (SearchResultsItem)
+            ext (str, optional): File extension. Defaults to mp4.
+            season (int): Season number of the series.
+            episde (int): Episode number of the series.
+
+        Returns:
+            str: Generated filename
+        """
+        assert_instance(search_results_item, SearchResultsItem, "search_results_item")
+        placeholders = dict(
+            title=search_results_item.title,
+            release_date=str(search_results_item.releaseDate),
+            release_year=search_results_item.releaseDate.year,
+            ext=ext,
+            resolution=self._media_file.resolution,
+            size_string=get_filesize_string(self._media_file.size),
+            season=season,
+            episode=episode,
+        )
+        filename_generation_template = (
+            self.series_filename_generation_template
+            if search_results_item.subjectType == SubjectType.TV_SERIES
+            else self.movie_filename_generation_template
+        )
+        return filename_generation_template % placeholders
+
     async def run(
         self,
-        filename: str,
+        filename: str | SearchResultsItem,
         dir: str = getcwd(),
         progress_bar=True,
-        quiet: bool = False,
         chunk_size: int = 512,
         resume: bool = False,
         colour: str = "cyan",
@@ -139,13 +192,13 @@ class MediaFileDownloader:
         test: bool = False,
         leave: bool = True,
         ascii: bool = False,
+        **kwargs,
     ) -> Path | httpx.Response:
         """Performs the actual download.
         Args:
-            filename (str): Movie filename
+            filename (str|SearchResultsItem): Movie filename
             dir (str, optional): Directory for saving the contents Defaults to current directory.
             progress_bar (bool, optional): Display download progress bar. Defaults to True.
-            quiet (bool, optional): Not to stdout anything. Defaults to False.
             chunk_size (int, optional): Chunk_size for downloading files in KB. Defaults to 512.
             resume (bool, optional):  Resume the incomplete download. Defaults to False.
             leave (bool, optional): Keep all leaves of the progressbar. Defaults to True.
@@ -153,6 +206,7 @@ class MediaFileDownloader:
             simple (bool, optional): Show percentage and bar only in progressbar. Deafults to False.
             test (bool, optional): Just test if download is possible but do not actually download. Defaults to False.
             ascii (bool, optional): Use unicode (smooth blocks) to fill the progress-bar meter. Defaults to False.
+            **kwargs: Keyworded arguments for generating filename incase instance of filename is SearchResultsItem.
 
         Raises:
             FileExistsError:  Incase of `resume=True` but the download was complete
@@ -162,6 +216,10 @@ class MediaFileDownloader:
         """
         current_downloaded_size = 0
         current_downloaded_size_in_mb = 0
+        if isinstance(filename, SearchResultsItem):
+            # Lets generate filename
+            filename = self.generate_filename(filename, **kwargs)
+
         save_to = Path(dir) / filename
 
         def pop_range_in_session_headers():
@@ -247,6 +305,23 @@ class CaptionFileDownloader:
 
     request_headers = download_request_headers
     request_cookies = {}
+    movie_filename_generation_template = (
+        "%(title)s (%(release_year)d) - %(lanName)s [delay:%(delay)d].%(ext)s"
+    )
+    series_filename_generation_template = "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s [delay:%(delay)d].%(ext)s"
+    possible_filename_placeholders = (
+        "%(title)s",
+        "%(release_year)d",
+        "%(release_date)s",
+        "%(ext)s",
+        "%(size_string)s",
+        "%(id)s",
+        "%(lan)s",
+        "%(lanName)s",
+        "%(delay)d",
+        "%(season)d",
+        "%(episode)d",
+    )
 
     def __init__(self, caption_file: CaptionFileMetadata):
         """Constructor for `CaptionFileDownloader`
@@ -261,23 +336,66 @@ class CaptionFileDownloader:
         )
         """Httpx client session for downloading the file"""
 
+    def generate_filename(
+        self,
+        search_results_item: SearchResultsItem,
+        ext: str = "srt",
+        season: int = 0,
+        episode: int = 0,
+    ) -> str:
+        """Generates filename in the format as in `self.filename_generation_template`
+
+        Args:
+            search_results_item (SearchResultsItem)
+            ext (str, optional): File extension. Defaults to srt.
+            season (int): Season number of the series.
+            episde (int): Episode number of the series.
+
+        Returns:
+            str: Generated filename
+        """
+        assert_instance(search_results_item, SearchResultsItem, "search_results_item")
+        placeholders = dict(
+            title=search_results_item.title,
+            release_date=str(search_results_item.releaseDate),
+            release_year=search_results_item.releaseDate.year,
+            ext=ext,
+            lan=self._caption_file.lan,
+            lanName=self._caption_file.lanName,
+            delay=self._caption_file.delay,
+            size_string=get_filesize_string(self._caption_file.size),
+            season=season,
+            episode=episode,
+        )
+        filename_generation_template = (
+            self.series_filename_generation_template
+            if search_results_item.subjectType == SubjectType.TV_SERIES
+            else self.movie_filename_generation_template
+        )
+        return filename_generation_template % placeholders
+
     async def run(
         self,
-        filename: str,
+        filename: str | SearchResultsItem,
         dir: str = getcwd(),
         chunk_size: int = 16,
         test: bool = False,
+        **kwargs,
     ) -> Path | httpx.Response:
         """Performs the actual download.
         Args:
-            filename (str): Movie filename
+            filename (str|SearchResultsItem): Movie filename
             dir (str, optional): Directory for saving the contents Defaults to current directory. Defaults to cwd.
             chunk_size (int, optional): Chunk_size for downloading files in KB. Defaults to 16.
             test (bool, optional): Just test if download is possible but do not actually download. Defaults to False.
+            **kwargs: Keyworded arguments for generating filename incase instance of filename is SearchResultsItem.
 
         Returns:
             Path|httpx.Response: Path where the caption file has been saved to or httpx Response (test).
         """
+        if isinstance(filename, SearchResultsItem):
+            # Lets generate filename
+            filename = self.generate_filename(filename, **kwargs)
         save_to = Path(dir) / filename
         logger.info(
             f"Downloading caption file ({get_filesize_string(self._caption_file.size)}). "
