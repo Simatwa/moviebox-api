@@ -7,7 +7,7 @@ from moviebox_api.models import (
     CaptionFileMetadata,
 )
 from moviebox_api.requests import Session
-from moviebox_api.utils import (
+from moviebox_api.helpers import (
     assert_instance,
     get_absolute_url,
     get_filesize_string,
@@ -27,11 +27,11 @@ except ImportError:
     )
 
 
-class DownloadableFilesDetail(BaseContentProvider):
+class BaseDownloadableFilesDetail(BaseContentProvider):
     _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/download")
 
     def __init__(self, session: Session, item: SearchResultsItem):
-        """Constructor for `DownloadbleFilesDetail`
+        """Constructor for `BaseDownloadableFilesDetail`
 
         Args:
             session (Session): MovieboxAPI request session.
@@ -42,17 +42,23 @@ class DownloadableFilesDetail(BaseContentProvider):
         self.session = session
         self._item = item
 
-    def _create_request_params(self) -> Dict:
+    def _create_request_params(self, season: int, episode: int) -> Dict:
         """Creates request parameters
+
+        Args:
+            season (int): Season number of the series.
+            episde (int): Episode number of the series.
         Returns:
             Dict: Request params
         """
-        # se -> season
-        # ep -> episode
-        return {"subjectId": self._item.subjectId, "se": 0, "ep": 0}
+        return {"subjectId": self._item.subjectId, "se": season, "ep": episode}
 
-    async def get_content(self) -> Dict:
+    async def get_content(self, season: int, episode: int) -> Dict:
         """Performs the actual fetching of files detail.
+
+        Args:
+            season (int): Season number of the series.
+            episde (int): Episode number of the series.
 
         Returns:
             Dict: File details
@@ -65,19 +71,40 @@ class DownloadableFilesDetail(BaseContentProvider):
 
         content = await self.session.get_with_cookies_from_api(
             url=self._url,
-            params=self._create_request_params(),
+            params=self._create_request_params(season, episode),
             headers=request_header,
         )
         return content
 
-    async def get_modelled_content(self) -> DownloadableFilesMetadata:
+    async def get_modelled_content(
+        self, season: int, episode: int
+    ) -> DownloadableFilesMetadata:
         """Get modelled version of the downloadable files detail.
+
+        Args:
+            season (int): Season number of the series.
+            episde (int): Episode number of the series.
 
         Returns:
             DownloadableFilesMetadata: Modelled file details
         """
+        contents = await self.get_content(season, episode)
+        return DownloadableFilesMetadata(**contents)
+
+
+class DownloadableMovieFilesDetail(BaseDownloadableFilesDetail):
+    """Fetches and model movie files detail"""
+
+    async def get_content(self):
+        return await super().get_content(season=0, episode=0)
+
+    async def get_modelled_content(self):
         contents = await self.get_content()
         return DownloadableFilesMetadata(**contents)
+
+
+class DownloadableSeriesFilesDetail(BaseDownloadableFilesDetail):
+    """Fetches and model series files detail"""
 
 
 class MediaFileDownloader:

@@ -7,7 +7,11 @@ from httpx import Response
 from httpx._config import DEFAULT_TIMEOUT_CONFIG
 from typing import Dict
 from moviebox_api.models import MovieboxAppInfo
-from moviebox_api.utils import process_api_response, default_request_headers
+from moviebox_api.helpers import (
+    process_api_response,
+    default_request_headers,
+    get_absolute_url,
+)
 
 
 # TODO : Set timezone and language values based on user's machine
@@ -22,8 +26,8 @@ class Session:
     with or without cookies on demand
     """
 
-    _moviebox_app_info_url = (
-        r"https://moviebox.ng/wefeed-h5-bff/app/get-latest-app-pkgs?app_name=moviebox"
+    _moviebox_app_info_url = get_absolute_url(
+        r"/wefeed-h5-bff/app/get-latest-app-pkgs?app_name=moviebox"
     )
 
     def __init__(

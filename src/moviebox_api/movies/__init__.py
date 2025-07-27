@@ -1,1 +1,0 @@
-"""Movies only operations"""

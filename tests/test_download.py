@@ -1,8 +1,8 @@
 import pytest
 from moviebox_api.requests import Session
 from moviebox_api.core import Search, SubjectType
-from moviebox_api.movies.download import (
-    DownloadableFilesDetail,
+from moviebox_api.download import (
+    DownloadableMovieFilesDetail,
     CaptionFileDownloader,
     MediaFileDownloader,
 )
@@ -15,7 +15,7 @@ async def test_download_movie_caption_file():
     search_results = await search.get_modelled_content()
     target_movie = search_results.items[0]
     # print("Target movie :", target_movie)
-    downloadable_files = DownloadableFilesDetail(session, target_movie)
+    downloadable_files = DownloadableMovieFilesDetail(session, target_movie)
     downloadable_files_detail = await downloadable_files.get_modelled_content()
     target_caption_file = downloadable_files_detail.english_subtitle_file
     # print("Target caption file :", target_caption_file)
@@ -33,7 +33,7 @@ async def test_download_movie_file():
     search_results = await search.get_modelled_content()
     target_movie = search_results.items[0]
     # print("Target movie :", target_movie)
-    downloadable_files = DownloadableFilesDetail(session, target_movie)
+    downloadable_files = DownloadableMovieFilesDetail(session, target_movie)
     downloadable_files_detail = await downloadable_files.get_modelled_content()
     target_media_file = downloadable_files_detail.best_media_file
     # print("Target media file :", target_media_file)

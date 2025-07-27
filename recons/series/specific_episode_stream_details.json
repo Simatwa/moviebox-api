@@ -1,0 +1,46 @@
+{
+    "streams": [
+        {
+            "format": "MP4",
+            "id": "8012946208333464168",
+            "url": "https://valiw.hakunaymatata.com/bt/45436569178be1e5aa9f59532b0014f0.mp4?auth_key=1753610420-0-0-0ba3f436c72d913d2e55a0bec806cace",
+            "resolutions": "360",
+            "size": "171536431",
+            "duration": 3419,
+            "codecName": "h264"
+        },
+        {
+            "format": "MP4",
+            "id": "6678403565561988440",
+            "url": "https://valiw.hakunaymatata.com/resource/93f86be16e152169c60531b599df7e26.mp4?auth_key=1753610420-0-0-3f06e663e12fcf25d23b04e100257026",
+            "resolutions": "480",
+            "size": "212124339",
+            "duration": 3419,
+            "codecName": "h264"
+        },
+        {
+            "format": "MP4",
+            "id": "5201146033639753192",
+            "url": "https://valiw.hakunaymatata.com/resource/5cbcf52d137824b6683c11649f22d326.mp4?auth_key=1753610420-0-0-ae6477785d354957ee7c1921980c61ad",
+            "resolutions": "720",
+            "size": "396128500",
+            "duration": 3419,
+            "codecName": "h264"
+        },
+        {
+            "format": "MP4",
+            "id": "8911211214252952296",
+            "url": "https://valiw.hakunaymatata.com/resource/6711624e0cb4219428f0720086eaeba0.mp4?auth_key=1753610420-0-0-cae253174dce4464777e8914a12e2548",
+            "resolutions": "1080",
+            "size": "752505364",
+            "duration": 3419,
+            "codecName": "h264"
+        }
+    ],
+    "freeNum": 6,
+    "limited": false,
+    "limitedCode": "",
+    "dash": [],
+    "hls": [],
+    "hasResource": true
+}

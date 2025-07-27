@@ -15,9 +15,10 @@ logging.basicConfig(
 
 from moviebox_api.requests import Session
 from moviebox_api.core import Search, SubjectType
-from moviebox_api.movies.download import DownloadableFilesDetail, MediaFileDownloader
+from moviebox_api.download import DownloadableMovieFilesDetail, MediaFileDownloader
 
 # from moviebox_api.utils import get_filesize_string
+
 
 async def main():
     session = Session()
@@ -25,14 +26,14 @@ async def main():
     search_results = await search.get_modelled_content()
     target_movie = search_results.items[0]
     # print("Target movie :", target_movie)
-    downloadable_files = DownloadableFilesDetail(session, target_movie)
+    downloadable_files = DownloadableMovieFilesDetail(session, target_movie)
     downloadable_files_detail = await downloadable_files.get_modelled_content()
     target_media_file = downloadable_files_detail.best_media_file
     media_file_downloader = MediaFileDownloader(target_media_file)
     media_file_saved_to = await media_file_downloader.run(
         filename=f"{target_movie.title} - {target_media_file.resolution}p.mp4",
         progress_bar=True,
-        # test=False,
+        test=True,
         # resume=True,  # False,  # True,
         simple=False,
         ascii=False,

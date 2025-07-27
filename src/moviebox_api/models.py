@@ -7,7 +7,7 @@ from pydantic import BaseModel, HttpUrl, field_validator
 from datetime import date
 from uuid import UUID
 from json import loads
-from moviebox_api.utils import SubjectType
+from moviebox_api.helpers import SubjectType
 
 
 @dataclass(frozen=True)
@@ -204,7 +204,7 @@ class DownloadableFilesMetadata(BaseModel):
         """
         if bool(self.downloads):
             found = self.downloads[0]
-            for media_file in self.downloads:
+            for media_file in self.downloads[1:]:
                 if media_file.resolution > found.resolution:
                     found = media_file
             return found
@@ -218,7 +218,7 @@ class DownloadableFilesMetadata(BaseModel):
         """
         if bool(self.downloads):
             found = self.downloads[0]
-            for media_file in self.downloads:
+            for media_file in self.downloads[1:]:
                 if media_file.resolution < found.resolution:
                     found = media_file
             return found
@@ -233,3 +233,50 @@ class DownloadableFilesMetadata(BaseModel):
         for subtitle_file in self.captions:
             if subtitle_file.lan == "en":
                 return subtitle_file
+
+
+class StreamFileMetadata(BaseModel):
+    format: str
+    id: str
+    url: HttpUrl
+    resolutions: int
+    size: int
+    duration: int
+    codecName: str
+
+
+class StreamFilesMetadata(BaseModel):
+    streams: list[StreamFileMetadata]
+    freeNum: int
+    limited: bool
+    dash: list
+    hls: list
+    hasResource: bool
+
+    @property
+    def best_stream_file(self) -> StreamFileMetadata | None:
+        """Highest quality stream file
+
+        Returns:
+            StreamFileMetadata|None
+        """
+        if bool(self.streams):
+            found = self.streams[0]
+            for stream_file in self.streams[1:]:
+                if stream_file.resolutions > found.resolutions:
+                    found = stream_file
+            return found
+
+    @property
+    def worst_stream_file(self) -> StreamFileMetadata | None:
+        """Lowest quality stream file
+
+        Returns:
+            StreamFileMetadata|None
+        """
+        if bool(self.streams):
+            found = self.streams[0]
+            for stream_file in self.streams[1:]:
+                if stream_file.resolutions < found.resolutions:
+                    found = stream_file
+            return found
