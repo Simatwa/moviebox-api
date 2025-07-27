@@ -1,7 +1,7 @@
 """
 This package does the Lord's work
 of automating the process of downloading a movies
-and tv series from moviebox.ng.
+and tv series from moviebox.ng and its mirror hosts.
 
 Right from performing `search` query down to downloading
 it in your desired quality.
