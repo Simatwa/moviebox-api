@@ -26,3 +26,6 @@ dev = [
     "pytest>=8.4.1",
     "pytest-asyncio>=1.0.0",
 ]
+cli = [
+    "click>=8.2.1",
+]
