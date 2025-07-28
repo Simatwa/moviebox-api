@@ -34,3 +34,7 @@ class ExhaustedSearchResultsError(BaseMovieboxException):
         self.last_pager = last_pager
         """Page info of the current page"""
         super().__init__(*args, **kwargs)
+
+
+class ZeroSearchResultsError(BaseMovieboxException):
+    """Raised when empty search results is encountered."""

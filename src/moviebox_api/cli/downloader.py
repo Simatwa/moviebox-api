@@ -7,7 +7,7 @@ from moviebox_api.download import (
     CaptionFileDownloader,
 )
 from moviebox_api.models import DownloadableFilesMetadata
-from moviebox_api.helpers import SubjectType
+from moviebox_api.constants import SubjectType
 
 session = Session()
 

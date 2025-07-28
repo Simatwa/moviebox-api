@@ -2,12 +2,15 @@
 Models for package level usage.
 """
 
+import typing as t
 from dataclasses import dataclass
 from pydantic import BaseModel, HttpUrl, field_validator
 from datetime import date
 from uuid import UUID
 from json import loads
-from moviebox_api.helpers import SubjectType
+from moviebox_api.constants import SubjectType
+from moviebox_api.exceptions import ZeroSearchResultsError
+from moviebox_api.constants import downloadQualitiesType
 
 
 @dataclass(frozen=True)
@@ -76,12 +79,17 @@ class ContentModel(BaseModel):
     @property
     def is_movie(self) -> bool:
         """Check whether content is a movie._"""
-        return self.subjectType == 1
+        return self.subjectType == SubjectType.MOVIES.value
 
     @property
     def is_tv_series(self) -> bool:
         """Check whether content is a tv series."""
-        return self.subjectType == 2
+        return self.subjectType == SubjectType.TV_SERIES.value
+
+    @property
+    def is_music(self) -> bool:
+        """Check whether content is a music"""
+        return self.subjectType == SubjectType.MUSIC.value
 
 
 class PlatformsModel(BaseModel):
@@ -171,6 +179,18 @@ class SearchResults(BaseModel):
     pager: SearchResultsPager
     items: list[SearchResultsItem]
 
+    @field_validator("items", mode="after")
+    def validate_items(value: list[SearchResultsItem]):
+        if not bool(value):
+            raise ZeroSearchResultsError(
+                "Search yielded empty results. Try a different keyword."
+            )
+        return value
+
+    @property
+    def first_item(self) -> SearchResultsItem:
+        return self.items[0]
+
 
 class MediaFileMetadata(BaseModel):
     id: str
@@ -197,11 +217,7 @@ class DownloadableFilesMetadata(BaseModel):
 
     @property
     def best_media_file(self) -> MediaFileMetadata | None:
-        """Highest quality media file
-
-        Returns:
-            MediaFileMetadata|None
-        """
+        """Highest quality media file"""
         if bool(self.downloads):
             found = self.downloads[0]
             for media_file in self.downloads[1:]:
@@ -211,11 +227,7 @@ class DownloadableFilesMetadata(BaseModel):
 
     @property
     def worst_media_file(self) -> MediaFileMetadata | None:
-        """Lowest quality media file
-
-        Returns:
-            MediaFileMetadata|None
-        """
+        """Lowest quality media file"""
         if bool(self.downloads):
             found = self.downloads[0]
             for media_file in self.downloads[1:]:
@@ -225,14 +237,65 @@ class DownloadableFilesMetadata(BaseModel):
 
     @property
     def english_subtitle_file(self) -> CaptionFileMetadata | None:
-        """English subtitle file.
-
-        Returns:
-            CaptionFileMetadata|None
-        """
+        """English subtitle file."""
         for subtitle_file in self.captions:
             if subtitle_file.lan == "en":
                 return subtitle_file
+
+    def get_quality_downloads_map(
+        self,
+    ) -> t.Dict[downloadQualitiesType, MediaFileMetadata]:
+        """Maps media file quality to their equivalent media files object
+
+        Returns:
+            t.Dict[downloadQualitiesType, MediaFileMetadata]
+        """
+        resolution_downloads_map = {}
+        for item in self.downloads:
+            resolution_downloads_map[f"{item.resolution}P"] = item
+        return resolution_downloads_map
+
+    def get_media_file_by_resolution(self, resolution: int) -> MediaFileMetadata:
+        """Get specific MediaFileMetadata based on resolution.
+
+        Args:
+            resolution (int): Media file resolution e.g 480, 720, 1080 etc
+
+        Returns:
+            MediaFileMetadata: Media file matching that resolution.
+
+        Raises:
+            ValueError: Incase no media_file matched the resolution.
+        """
+        available_media_file_resolutions = []
+        for media_file in self.downloads:
+            available_media_file_resolutions.append(media_file.resolution)
+            if media_file.resolution == resolution:
+                return media_file
+        raise ValueError(
+            "No media_file matched that resolution. "
+            f"Available resolutions include {available_media_file_resolutions}"
+        )
+
+    def get_language_subtitle_map(self) -> t.Dict[str, CaptionFileMetadata]:
+        """Returns something like { English : CaptionFileMetadata }"""
+        language_subtitle_map = {}
+        for caption in self.captions:
+            language_subtitle_map[caption.lanName] = caption
+        return language_subtitle_map
+
+    def get_language_short_subtitle_map(self) -> t.Dict[str, CaptionFileMetadata]:
+        """Returns something like { en : CaptionFileMetadata }"""
+        language_subtitle_map = {}
+        for caption in self.captions:
+            language_subtitle_map[caption.lan] = caption
+        return language_subtitle_map
+
+    def get_subtitle_by_language(self, language: str) -> CaptionFileMetadata | None:
+        """Both of `English` and `en` will return same thing"""
+        if len(language) == 2:
+            return self.get_language_short_subtitle_map().get(language.lower())
+        return self.get_language_subtitle_map().get(language.capitalize())
 
 
 class StreamFileMetadata(BaseModel):
@@ -255,11 +318,7 @@ class StreamFilesMetadata(BaseModel):
 
     @property
     def best_stream_file(self) -> StreamFileMetadata | None:
-        """Highest quality stream file
-
-        Returns:
-            StreamFileMetadata|None
-        """
+        """Highest quality stream file"""
         if bool(self.streams):
             found = self.streams[0]
             for stream_file in self.streams[1:]:
@@ -269,11 +328,7 @@ class StreamFilesMetadata(BaseModel):
 
     @property
     def worst_stream_file(self) -> StreamFileMetadata | None:
-        """Lowest quality stream file
-
-        Returns:
-            StreamFileMetadata|None
-        """
+        """Lowest quality stream file"""
         if bool(self.streams):
             found = self.streams[0]
             for stream_file in self.streams[1:]:

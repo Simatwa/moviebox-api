@@ -4,6 +4,10 @@ from moviebox_api.core import SubjectType
 
 keyword = "Titanic"
 
+MOVIE_KEYWORD = keyword
+
+TV_SERIES_KEYWORD = "Merlin"
+
 
 def init_search(
     session=Session(), keyword=keyword, subject_type=SubjectType.ALL, per_page=4, page=1

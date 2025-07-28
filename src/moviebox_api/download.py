@@ -1,4 +1,4 @@
-from typing import Dict
+import typing as t
 from moviebox_api._bases import BaseContentProvider
 from moviebox_api.models import (
     SearchResultsItem,
@@ -11,8 +11,12 @@ from moviebox_api.helpers import (
     assert_instance,
     get_absolute_url,
     get_filesize_string,
-    download_request_headers,
+)
+from moviebox_api.constants import (
     SubjectType,
+    download_request_headers,
+    downloadQualitiesType,
+    DOWNLOAD_QUALITIES,
 )
 from os import getcwd, path
 from pathlib import Path
@@ -26,6 +30,33 @@ except ImportError:
         "tqdm library not installed so download while showing "
         "progress-bar will not be possible. Run `pip install tqdm`"
     )
+
+
+def resolve_media_file_to_be_downloaded(
+    quality: downloadQualitiesType, downloadable_metadata: DownloadableFilesMetadata
+) -> DownloadableFilesMetadata:
+    match quality:
+        case "BEST":
+            target_metadata = downloadable_metadata.best_media_file
+        case "WORST":
+            target_metadata = downloadable_metadata.worst_media_file
+        case "_":
+            if quality in DOWNLOAD_QUALITIES:
+                quality_downloads_map = (
+                    downloadable_metadata.get_quality_downloads_map()
+                )
+                target_metadata = quality_downloads_map.get(quality)
+                if target_metadata is None:
+                    raise ValueError(
+                        f"Media file for quality {quality} does not exists. "
+                        f"Try other qualities from {target_metadata.keys()}"
+                    )
+            else:
+                raise ValueError(
+                    f"Unknown media file quality expected {quality}. "
+                    f"Choose from {DOWNLOAD_QUALITIES}"
+                )
+    return target_metadata
 
 
 class BaseDownloadableFilesDetail(BaseContentProvider):
@@ -45,18 +76,18 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
         self.session = session
         self._item = item
 
-    def _create_request_params(self, season: int, episode: int) -> Dict:
+    def _create_request_params(self, season: int, episode: int) -> t.Dict:
         """Creates request parameters
 
         Args:
             season (int): Season number of the series.
             episde (int): Episode number of the series.
         Returns:
-            Dict: Request params
+            t.Dict: Request params
         """
         return {"subjectId": self._item.subjectId, "se": season, "ep": episode}
 
-    async def get_content(self, season: int, episode: int) -> Dict:
+    async def get_content(self, season: int, episode: int) -> t.Dict:
         """Performs the actual fetching of files detail.
 
         Args:
@@ -64,7 +95,7 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
             episde (int): Episode number of the series.
 
         Returns:
-            Dict: File details
+            t.Dict: File details
         """
         # Referer
         request_header = {
@@ -342,6 +373,7 @@ class CaptionFileDownloader:
         ext: str = "srt",
         season: int = 0,
         episode: int = 0,
+        **kwargs,
     ) -> str:
         """Generates filename in the format as in `self.filename_generation_template`
 
@@ -350,6 +382,10 @@ class CaptionFileDownloader:
             ext (str, optional): File extension. Defaults to srt.
             season (int): Season number of the series.
             episde (int): Episode number of the series.
+
+        Kwargs: Nothing much folk.
+                They're just here so that `MediaFileDownloader.run` and `CaptionFileDownloader.run`
+                will accept similar parameters in `moviebox_api.extra.movies.Auto.run` method.
 
         Returns:
             str: Generated filename

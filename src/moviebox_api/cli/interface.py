@@ -13,12 +13,11 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-DEBUG = False
+DEBUG = True  # TODO: Change this accordingly.
 
 loop = new_event_loop()
 
 
-# add click to dependencies - uv
 @click.group()
 def moviebox():
     """Search and download movies/series and their subtitles"""

@@ -9,9 +9,9 @@ from typing import Dict
 from moviebox_api.models import MovieboxAppInfo
 from moviebox_api.helpers import (
     process_api_response,
-    default_request_headers,
     get_absolute_url,
 )
+from moviebox_api.constants import default_request_headers
 from moviebox_api.exceptions import EmptyResponseError
 
 # TODO : Set timezone and language values based on user's machine
@@ -55,7 +55,7 @@ class Session:
 
     def _validate_response(self, response: Response) -> Response:
         """Ensures response is not empty"""
-        if response is None:
+        if response is None or not bool(response.content):
             raise EmptyResponseError(
                 response, "Server returned an empty body response."
             )
