@@ -26,7 +26,10 @@ async def main():
     target_media_file = downloadable_files_detail.best_media_file
 
     media_file_downloader = MediaFileDownloader(target_media_file)
-    response = await media_file_downloader.run(filename=target_series, test=True)
+    filename = media_file_downloader.generate_filename(
+        target_series, season=1, episode=1
+    )
+    response = await media_file_downloader.run(filename, test=True)
     print(response)
     assert response.is_success == True
 

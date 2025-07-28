@@ -23,7 +23,7 @@ mirror_hosts = (
 )
 """Mirror domains/subdomains of Moviebox"""
 
-selected_host = mirror_hosts[2]  # TODO: Choose the right value based on working status
+selected_host = mirror_hosts[1]  # TODO: Choose the right value based on working status
 """Host adress only with protocol"""
 
 host_protocol = "https"

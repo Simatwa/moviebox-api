@@ -80,7 +80,8 @@ class Session:
             headers=self._headers, cookies=self._cookies, **kwargs
         )
         response = await client.get(url, params=params)
-        return self._validate_response(response.raise_for_status())
+        response.raise_for_status()
+        return self._validate_response(response)
 
     async def get_from_api(self, *args, **kwargs) -> Dict:
         """Fetch data from api and extract the `data` field from the response
@@ -103,7 +104,8 @@ class Session:
         """
         await self.ensure_cookies_are_assigned()
         response = await self._client.get(url, params=params, **kwargs)
-        return self._validate_response(response.raise_for_status())
+        response.raise_for_status()
+        return self._validate_response(response)
 
     async def get_with_cookies_from_api(self, *args, **kwargs) -> Dict:
         """Makes a http get request with server-assigned cookies from previous requests
@@ -128,7 +130,8 @@ class Session:
         """
         await self.ensure_cookies_are_assigned()
         response = await self._client.post(url, json=json, **kwargs)
-        return self._validate_response(response.raise_for_status())
+        response.raise_for_status()
+        return self._validate_response(response)
 
     async def post_to_api(self, *args, **kwargs) -> Dict:
         """Sends data to api and extract the `data` field from the response
