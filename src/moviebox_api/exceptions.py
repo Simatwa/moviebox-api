@@ -2,6 +2,7 @@
 
 from typing import Dict
 from moviebox_api._bases import BaseMovieboxException
+from httpx import Response
 
 
 class MovieboxApiException(BaseMovieboxException):
@@ -14,7 +15,16 @@ class UnsuccessfulResponseError(BaseMovieboxException):
     def __init__(self, response: Dict, *args, **kwargs):
         self.response = response
         """Unsuccessful response data"""
-        super().__self__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+
+
+class EmptyResponseError(BaseMovieboxException):
+    """Raised when an empty body response is received with status code 200-OK"""
+
+    def __init__(self, response: Response, *args, **kwargs):
+        self.response = response
+        """Httpx response object"""
+        super().__init__(*args, **kwargs)
 
 
 class ExhaustedSearchResultsError(BaseMovieboxException):

@@ -12,7 +12,7 @@ from moviebox_api.helpers import (
     default_request_headers,
     get_absolute_url,
 )
-
+from moviebox_api.exceptions import EmptyResponseError
 
 # TODO : Set timezone and language values based on user's machine
 
@@ -53,6 +53,14 @@ class Session:
         self.__moviebox_app_info_fetched: bool = False
         """Used to track cookies assignment status"""
 
+    def _validate_response(self, response: Response) -> Response:
+        """Ensures response is not empty"""
+        if response is None:
+            raise EmptyResponseError(
+                response, "Server returned an empty body response."
+            )
+        return response
+
     def __repr__(self):
         return rf"<Session(MovieBoxAPI) timeout={self._timeout}>"
 
@@ -72,7 +80,7 @@ class Session:
             headers=self._headers, cookies=self._cookies, **kwargs
         )
         response = await client.get(url, params=params)
-        return response.raise_for_status()
+        return self._validate_response(response.raise_for_status())
 
     async def get_from_api(self, *args, **kwargs) -> Dict:
         """Fetch data from api and extract the `data` field from the response
@@ -95,7 +103,7 @@ class Session:
         """
         await self.ensure_cookies_are_assigned()
         response = await self._client.get(url, params=params, **kwargs)
-        return response.raise_for_status()
+        return self._validate_response(response.raise_for_status())
 
     async def get_with_cookies_from_api(self, *args, **kwargs) -> Dict:
         """Makes a http get request with server-assigned cookies from previous requests
@@ -120,7 +128,7 @@ class Session:
         """
         await self.ensure_cookies_are_assigned()
         response = await self._client.post(url, json=json, **kwargs)
-        return response.raise_for_status()
+        return self._validate_response(response.raise_for_status())
 
     async def post_to_api(self, *args, **kwargs) -> Dict:
         """Sends data to api and extract the `data` field from the response
