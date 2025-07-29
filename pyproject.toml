@@ -1,21 +1,20 @@
 [project]
 name = "moviebox-api"
 version = "0.1.0"
-description = "Search and download movies, tv series, their subtitles & cover photos etc."
+description = "Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-series and their subtitles."
 readme = "README.md"
 authors = [
     { name = "smartwa", email = "smartwacaleb@gmail.com" }
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "bs4>=0.0.2",
     "httpx>=0.28.1",
     "pydantic>=2.11.7",
-    "tqdm>=4.67.1",
 ]
 
 [project.scripts]
-moviebox-api = "moviebox_api:main"
+moviebox-api = "moviebox_api.cli:main"
+moviebox = "moviebox_api.cli:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -28,4 +27,5 @@ dev = [
 ]
 cli = [
     "click>=8.2.1",
+    "tqdm>=4.67.1",
 ]

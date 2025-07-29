@@ -1,7 +1,7 @@
 <div align="center">
 
 # moviebox-api
-Search and download movies and tv series.
+Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-series and their subtitles.
 
 [![PyPI version](https://badge.fury.io/py/moviebox-api.svg)](https://pypi.org/project/moviebox-api)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/moviebox-api)](https://pypi.org/project/moviebox-api)
@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
 ## Commandline
 
-```
+```sh
 # $ python -m moviebox_api --help
 
 
@@ -88,17 +88,9 @@ $ python -m moviebox_api download-movie <Movie title>
 
 </summary>
 
-<details>
-
-<summary>
-
 ```sh
-$ python -m moviebox_api download-movie --help
-```
+# python -m moviebox_api download-movie --help
 
-</summary>
-
-```sh
 Usage: python -m moviebox_api download-movie [OPTIONS] TITLE
 
   Search and download movie.
@@ -122,16 +114,6 @@ Options:
 
 <summary>
 
-
-
-</summary>
-
-</details>
-
-<details>
-
-<summary>
-
 ### Download Series
 
 ```sh
@@ -141,17 +123,10 @@ $ python -m moviebox_api download-series <Series title> -s <season offset> -e <e
 
 </summary>
 
-<details>
-
-<summary>
-
 ```sh
-$ python -m moviebox_api download-series --help
-```
+# python -m moviebox_api download-movie --help
 
-</summary>
 
-```sh
 Usage: python -m moviebox_api download-series [OPTIONS] TITLE
 
   Search and download tv series.
@@ -175,8 +150,6 @@ Options:
   -h, --help                      Show this message and exit.
 
 ```
-
-</details>
 
 <details>
 
