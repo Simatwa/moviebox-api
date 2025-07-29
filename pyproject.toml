@@ -16,6 +16,11 @@ dependencies = [
 moviebox-api = "moviebox_api.cli:main"
 moviebox = "moviebox_api.cli:main"
 
+[project.urls]
+homepage = "https://github.com/Simatwa/moviebox-api"
+repository = "https://github.com/Simatwa/moviebox-api"
+documentation = "https://github.com/Simatwa/moviebox-api"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
