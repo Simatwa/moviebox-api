@@ -217,7 +217,7 @@ class MediaFileDownloader:
         dir: str = getcwd(),
         progress_bar=True,
         chunk_size: int = 512,
-        resume: bool = False,
+        resume: bool | t.Literal["AUTO"] = "AUTO",
         colour: str = "cyan",
         simple: bool = False,
         test: bool = False,
@@ -231,7 +231,7 @@ class MediaFileDownloader:
             dir (str, optional): Directory for saving the contents Defaults to current directory.
             progress_bar (bool, optional): Display download progress bar. Defaults to True.
             chunk_size (int, optional): Chunk_size for downloading files in KB. Defaults to 512.
-            resume (bool, optional):  Resume the incomplete download. Defaults to False.
+            resume (bool | t.Literal["AUTO"], optional):  Resume the incomplete download. Defaults to AUTO (Decide intelligently).
             leave (bool, optional): Keep all leaves of the progressbar. Defaults to True.
             colour (str, optional): Progress bar display color. Defaults to "cyan".
             simple (bool, optional): Show percentage and bar only in progressbar. Deafults to False.
@@ -252,6 +252,19 @@ class MediaFileDownloader:
             filename = self.generate_filename(filename, **kwargs)
 
         save_to = Path(dir) / filename
+
+        if isinstance(resume, str):
+            if resume.lower() == "auto":
+                if save_to.exists():
+                    logger.debug("Download set to resume")
+                    resume = True
+                else:
+                    resume = False
+                    logger.debug("Download set to start afresh")
+            else:
+                raise ValueError(
+                    f"Value for resume can only be a boolean or 'auto' not {resume}"
+                )
 
         def pop_range_in_session_headers():
             if self.session.headers.get("Range"):
@@ -419,7 +432,7 @@ class CaptionFileDownloader:
         test: bool = False,
         **kwargs,
     ) -> Path | httpx.Response:
-        """Performs the actual download.
+        """Performs the actual download, incase already downloaded then return its Path.
         Args:
             filename (str|SearchResultsItem): Movie filename
             dir (str, optional): Directory for saving the contents Defaults to current directory. Defaults to cwd.
@@ -434,6 +447,9 @@ class CaptionFileDownloader:
             # Lets generate filename
             filename = self.generate_filename(filename, **kwargs)
         save_to = Path(dir) / filename
+        if save_to.exists and path.getsize(save_to) == self._caption_file.size:
+            logger.info(f"Caption file already downloaded - {save_to}.")
+            return save_to
         size_with_unit = get_filesize_string(self._caption_file.size)
         logger.info(
             f"Downloading caption file ({size_with_unit}). " f"Writing to ({save_to})"
