@@ -1,1 +1,1 @@
-"""Extended functioanlities module"""
+"""Extended functionalities module"""

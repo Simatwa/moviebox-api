@@ -42,6 +42,8 @@ class Auto:
         Args:
             session (Session, optional): MovieboxAPI requests session. Defaults to Session().
             caption_language (str, optional): Caption language filter. Defaults to DEFAULT_CAPTION_LANGUAGE.
+
+         - Pass None as caption_language to disable downloading subtitle.
         """
         self._session = session
         self._caption_language = caption_language
@@ -118,7 +120,8 @@ class Auto:
         """Download caption file.
 
         Args:
-            downloadable_movie_file_details (DownloadableFilesMetadata): Primarily served from `self._search_handler`
+            downloadable_movie_file_details (DownloadableFilesMetadata): Primarily served from `self._search_handler`.
+            caption_language: Subtitle language e.g 'English' or simply 'en'.
 
         Returns:
             Path: Location under which caption file is saved.

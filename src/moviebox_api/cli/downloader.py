@@ -1,9 +1,7 @@
 """Gets the work done - download media"""
 
-import click
 from pathlib import Path
-from moviebox_api import logger
-from moviebox_api.core import Search, Session
+from moviebox_api.core import Session
 from moviebox_api.download import (
     DownloadableSeriesFilesDetail,
     DownloadableMovieFilesDetail,

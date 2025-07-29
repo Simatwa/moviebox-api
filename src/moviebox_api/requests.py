@@ -18,7 +18,7 @@ from moviebox_api.exceptions import EmptyResponseError
 
 request_cookies = {}
 
-__all__ = ["Session", "default_request_headers"]
+__all__ = ["Session"]
 
 
 class Session:

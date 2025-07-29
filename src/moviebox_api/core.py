@@ -1,5 +1,5 @@
 """
-Main module for the package
+Main module for the package. Generate models from httpx request responses.
 """
 
 from typing import Dict
@@ -9,6 +9,8 @@ from moviebox_api.helpers import assert_instance, get_absolute_url
 from moviebox_api._bases import BaseContentProvider, BaseContentProviderAndHelper
 from moviebox_api.models import HomepageContentModel, SearchResults
 from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiException
+
+__all__ = ["Homepage", "Search"]
 
 
 class Homepage(BaseContentProviderAndHelper):
@@ -52,6 +54,7 @@ class EveryoneSearches(BaseContentProviderAndHelper):
             session (Session): MovieboxAPI request session
         """
         assert_instance(session, Session, "session")
+        raise NotImplementedError("Not implemented yet. Check later versions")
 
     # TODO: Complete this
 

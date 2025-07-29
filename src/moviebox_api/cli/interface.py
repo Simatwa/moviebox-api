@@ -155,7 +155,7 @@ def download_tv_series(
     caption_only: bool,
     yes: bool,
 ):
-    """Search and download tv series"""
+    """Search and download tv series."""
     from moviebox_api.cli.downloader import Downloader
     from moviebox_api.cli.helpers import prepare_start
 

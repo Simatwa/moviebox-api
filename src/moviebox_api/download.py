@@ -1,3 +1,7 @@
+"""Contains functionalities for fetching and model downloadable files metadata
+and performing the actual download
+"""
+
 import typing as t
 from moviebox_api._bases import BaseContentProvider
 from moviebox_api.models import (
@@ -33,6 +37,15 @@ except ImportError:
         "so as to suppress this warning.",
         UserWarning,
     )
+
+
+__all__ = [
+    "MediaFileDownloader",
+    "CaptionFileDownloader",
+    "DownloadableMovieFilesDetail",
+    "DownloadableSeriesFilesDetail",
+    "resolve_media_file_to_be_downloaded",
+]
 
 
 def resolve_media_file_to_be_downloaded(
@@ -349,7 +362,7 @@ class MediaFileDownloader:
 
 
 class CaptionFileDownloader:
-    """Makes a local copy of a remote subtitle/caption file"""
+    """Creates a local copy of a remote subtitle/caption file"""
 
     request_headers = download_request_headers
     request_cookies = {}
