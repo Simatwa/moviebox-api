@@ -5,19 +5,21 @@ from pathlib import Path
 from moviebox_api import logger
 from moviebox_api.core import Search, Session
 from moviebox_api.download import (
+    DownloadableSeriesFilesDetail,
     DownloadableMovieFilesDetail,
     MediaFileDownloader,
     CaptionFileDownloader,
 )
 from moviebox_api.constants import SubjectType
 from moviebox_api.download import resolve_media_file_to_be_downloaded
+from moviebox_api.cli.helpers import perform_search_and_get_item
 
 
-class Downloader:
-    """Carries out the  download - movies/series"""
+class MovieDownloader:
+    """Controls the movie download process"""
 
     def __init__(self, session: Session = Session()):
-        """Constructor for `Downloader`
+        """Constructor for `MovieDownloader`
 
         Args:
             session (Session, optional): MovieboxAPI httpx request session . Defaults to Session().
@@ -34,17 +36,7 @@ class Downloader:
         download_caption: bool = True,
         caption_only: bool = True,
     ):
-
-        search = Search(self._session, title, SubjectType.MOVIES)
-        search_results = await search.get_modelled_content()
-        logger.info(f"Query '{title}' yielded {len(search_results.items)} movies.")
-        if yes:
-            target_movie = search_results.items[0]
-        else:
-            for movie in search_results.items:
-                if click.confirm(f"Download {movie.title} ({movie.releaseDate.year})"):
-                    target_movie = movie
-                    break
+        target_movie = await perform_search_and_get_item(self._session, title, SubjectType.MOVIES, yes)
         downloadable_details_inst = DownloadableMovieFilesDetail(
             self._session, target_movie
         )
@@ -77,3 +69,47 @@ class Downloader:
         # TODO: Consider downloader.run options
         movie_saved_to = await movie_downloader.run(target_movie, dir)
         return (movie_saved_to, subtitle_saved_to)
+
+
+class TVSeriesDownloader:
+    """Controls the download of tv-series process."""
+    # TODO: Implement this
+
+    def __init__(self, session: Session = Session()):
+        """Constructor for `MTVSeriesDownloader`
+
+        Args:
+            session (Session, optional): MovieboxAPI httpx request session . Defaults to Session().
+        """
+
+        self._session = session
+
+
+    async def download_tv_series(
+        self,
+        title:str,
+        season:int,
+            episode:int,
+            yes: bool,
+            dir: Path,
+            quality: str,
+            language: str = "English",
+            download_caption: bool = True,
+            caption_only: bool = True,
+            limit:int=1,
+            ):
+
+        target_tv_series = await perform_search_and_get_item(self._session, title, SubjectType.TV_SERIES, yes)
+        downloadable_files = DownloadableSeriesFilesDetail(self._session, target_tv_series)
+        downloadable_files_detail = await downloadable_files.get_modelled_content(
+        season=1, episode=1)
+        
+        if caption_only:
+            for _ in range(limit):
+                pass
+        target_media_file = downloadable_files_detail.best_media_file
+
+        media_file_downloader = MediaFileDownloader(target_media_file)
+        filename = media_file_downloader.generate_filename(
+        target_tv_series, season=1, episode=1)
+        response = await media_file_downloader.run(filename, test=True)

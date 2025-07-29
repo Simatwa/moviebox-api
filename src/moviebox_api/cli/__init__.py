@@ -1,1 +1,1 @@
-"""Commandline interaface"""
+"""Commandline interface"""

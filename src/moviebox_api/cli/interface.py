@@ -59,9 +59,9 @@ def download_movie(
     """Search and download movies."""
     # TODO: Consider default moviebox host
     # TODO: Feature other download.run options
-    from moviebox_api.cli.downloader import Downloader
+    from moviebox_api.cli.downloader import MovieDownloader
 
-    downloader = Downloader()
+    downloader = MovieDownloader()
     loop.run_until_complete(
         downloader.download_movie(
             title,
