@@ -1,3 +1,5 @@
+import pytest
+import asyncio
 from moviebox_api.requests import Session
 from moviebox_api.core import Search
 from moviebox_api.core import SubjectType
@@ -19,3 +21,13 @@ def init_search(
         per_page=per_page,
         page=page,
     )
+
+
+@pytest.fixture(scope="session")
+def event_loop():
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+    yield loop
+    loop.close()

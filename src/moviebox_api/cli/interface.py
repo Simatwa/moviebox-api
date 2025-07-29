@@ -4,6 +4,7 @@ import click
 import os
 from pathlib import Path
 from asyncio import new_event_loop
+from moviebox_api.constants import DOWNLOAD_QUALITIES
 
 import logging
 
@@ -29,8 +30,8 @@ def moviebox():
     "-q",
     "quality",
     help="Media quality to be downloaded",
-    type=click.Choice(["worst", "best"]),
-    default="best",
+    type=click.Choice(DOWNLOAD_QUALITIES),
+    default="BEST",
 )
 @click.option(
     "-d",

@@ -310,6 +310,7 @@ class MediaFileDownloader:
                         fh.write(chunk)
                         p_bar.update(round(chunk_size_in_bytes / 1_000_000, 1))
             pop_range_in_session_headers()
+            logger.info(f"{filename} - {size_with_unit} ✅")
             return save_to
         else:
             logger.debug(f"Movie file info {self._media_file}")
@@ -433,9 +434,9 @@ class CaptionFileDownloader:
             # Lets generate filename
             filename = self.generate_filename(filename, **kwargs)
         save_to = Path(dir) / filename
+        size_with_unit = get_filesize_string(self._caption_file.size)
         logger.info(
-            f"Downloading caption file ({get_filesize_string(self._caption_file.size)}). "
-            f"Writing to ({save_to})"
+            f"Downloading caption file ({size_with_unit}). " f"Writing to ({save_to})"
         )
         async with self.session.stream("GET", str(self._caption_file.url)) as response:
             response.raise_for_status()
@@ -445,4 +446,5 @@ class CaptionFileDownloader:
             with open(save_to, mode="wb") as fh:
                 async for chunk in response.aiter_bytes(chunk_size * 1_000):
                     fh.write(chunk)
+        logger.info(f"{filename} - {size_with_unit} ✅")
         return save_to

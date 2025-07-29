@@ -1,3 +1,5 @@
+"""Gets the work done"""
+
 import click
 from pathlib import Path
 from moviebox_api.core import Search, Session
@@ -8,23 +10,9 @@ from moviebox_api.download import (
 )
 from moviebox_api.models import DownloadableFilesMetadata
 from moviebox_api.constants import SubjectType
+from moviebox_api.download import resolve_media_file_to_be_downloaded
 
 session = Session()
-
-
-def resolve_media_file_to_be_downloaded(
-    quality: str, downloadable_metadata: DownloadableFilesMetadata
-):
-    match quality:
-        case "best":
-            target_metadata = downloadable_metadata.best_media_file
-        case "worst":
-            target_metadata = downloadable_metadata.worst_media_file
-        case "_":
-            target_metadata = downloadable_metadata.best_media_file
-        # case "480"
-        # TODO: Support this
-    return target_metadata
 
 
 class Downloader:
@@ -53,6 +41,7 @@ class Downloader:
             for movie in search_results.items:
                 if click.confirm(f"Download {movie.title} ({movie.releaseDate.year})"):
                     target_movie = movie
+                    break
         downloadable_details_inst = DownloadableMovieFilesDetail(
             self._session, target_movie
         )
