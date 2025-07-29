@@ -5,7 +5,8 @@ across the package.
 """
 
 import re
-from bs4 import BeautifulSoup as bts
+
+# from bs4 import BeautifulSoup as bts
 import typing as t
 from typing import Dict, List
 from moviebox_api import logger
@@ -15,7 +16,8 @@ from urllib.parse import urljoin
 
 file_ext_pattern = re.compile(r".+\.(\w+)\?.+")
 
-
+# Not needed currently
+''' 
 def souper(contents: str) -> bts:
     """Converts str object to `soup`
 
@@ -26,6 +28,7 @@ def souper(contents: str) -> bts:
         bts: souped sring object
     """
     return bts(contents, "html.parser")
+'''
 
 
 def get_absolute_url(relative_url: str) -> str:
