@@ -26,7 +26,7 @@ __all__ = ["Auto"]
 
 
 class Auto:
-    """Search movie based on given query
+    """Search movie based on a given query
     and proceed downloading the first one in the results.
     This is a workaround for writing many lines of code
     at the expense of flow control.

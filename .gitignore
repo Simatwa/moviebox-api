@@ -215,3 +215,4 @@ test.py
 *.webm
 *.mpv
 *.srt
+commit-msg*

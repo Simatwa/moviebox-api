@@ -11,7 +11,7 @@ from json import loads
 from moviebox_api.constants import SubjectType
 from moviebox_api.exceptions import ZeroSearchResultsError
 from moviebox_api.constants import downloadQualitiesType
-
+from moviebox_api.helpers import get_file_extension
 
 @dataclass(frozen=True)
 class MovieboxAppInfo:
@@ -191,15 +191,22 @@ class SearchResults(BaseModel):
     def first_item(self) -> SearchResultsItem:
         return self.items[0]
 
+class BaseFileMetadata(BaseModel):
 
-class MediaFileMetadata(BaseModel):
+    @property
+    def ext(self):
+        """Media file extension such as `mp4` or `srt`"""
+        return get_file_extension(self.url)
+
+class MediaFileMetadata(BaseFileMetadata):
     id: str
     url: HttpUrl
     resolution: int
     size: int
 
 
-class CaptionFileMetadata(BaseModel):
+
+class CaptionFileMetadata(BaseFileMetadata):
     id: str
     lan: str
     lanName: str

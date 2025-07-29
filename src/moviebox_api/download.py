@@ -178,7 +178,6 @@ class MediaFileDownloader:
     def generate_filename(
         self,
         search_results_item: SearchResultsItem,
-        ext: str = "mp4",
         season: int = 0,
         episode: int = 0,
     ) -> str:
@@ -186,7 +185,6 @@ class MediaFileDownloader:
 
         Args:
             search_results_item (SearchResultsItem)
-            ext (str, optional): File extension. Defaults to mp4.
             season (int): Season number of the series.
             episde (int): Episode number of the series.
 
@@ -198,7 +196,7 @@ class MediaFileDownloader:
             title=search_results_item.title,
             release_date=str(search_results_item.releaseDate),
             release_year=search_results_item.releaseDate.year,
-            ext=ext,
+            ext=self._media_file.ext,
             resolution=self._media_file.resolution,
             size_string=get_filesize_string(self._media_file.size),
             season=season,
@@ -384,7 +382,6 @@ class CaptionFileDownloader:
     def generate_filename(
         self,
         search_results_item: SearchResultsItem,
-        ext: str = "srt",
         season: int = 0,
         episode: int = 0,
         **kwargs,
@@ -393,12 +390,11 @@ class CaptionFileDownloader:
 
         Args:
             search_results_item (SearchResultsItem)
-            ext (str, optional): File extension. Defaults to srt.
             season (int): Season number of the series.
             episde (int): Episode number of the series.
 
         Kwargs: Nothing much folk.
-                They're just here so that `MediaFileDownloader.run` and `CaptionFileDownloader.run`
+                It's just here so that `MediaFileDownloader.run` and `CaptionFileDownloader.run`
                 will accept similar parameters in `moviebox_api.extra.movies.Auto.run` method.
 
         Returns:
@@ -409,7 +405,7 @@ class CaptionFileDownloader:
             title=search_results_item.title,
             release_date=str(search_results_item.releaseDate),
             release_year=search_results_item.releaseDate.year,
-            ext=ext,
+            ext=self._caption_file.ext,
             lan=self._caption_file.lan,
             lanName=self._caption_file.lanName,
             delay=self._caption_file.delay,

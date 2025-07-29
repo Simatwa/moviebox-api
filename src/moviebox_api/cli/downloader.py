@@ -12,17 +12,17 @@ from moviebox_api.download import (
 from moviebox_api.constants import SubjectType
 from moviebox_api.download import resolve_media_file_to_be_downloaded
 
-session = Session()
-
 
 class Downloader:
-    """Class that carry out the  download - movies/series"""
+    """Carries out the  download - movies/series"""
 
-    def __init__(self):
+    def __init__(self, session: Session=Session()):
         """Constructor for `Downloader`
-        # TODO: accept timeout parameters etc
+
+        Args:
+            session (Session, optional): MovieboxAPI httpx request session . Defaults to Session().
         """
-        self._session = Session()
+        self._session = session
 
     async def download_movie(
         self,
@@ -35,7 +35,7 @@ class Downloader:
         caption_only: bool = True,
     ):
 
-        search = Search(session, title, SubjectType.MOVIES)
+        search = Search(self._session, title, SubjectType.MOVIES)
         search_results = await search.get_modelled_content()
         logger.info(f"Query '{title}' yielded {len(search_results.items)} movies.")
         if yes:
