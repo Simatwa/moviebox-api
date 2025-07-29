@@ -3,10 +3,22 @@ name = "moviebox-api"
 version = "0.1.0"
 description = "Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-series and their subtitles."
 readme = "README.md"
+license="Unlicense"
 authors = [
     { name = "smartwa", email = "smartwacaleb@gmail.com" }
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.10"
+classifiers = [
+    "License :: OSI Approved :: The Unlicense (Unlicense)",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Communications :: File Sharing",
+]
 dependencies = [
     "httpx>=0.28.1",
     "pydantic>=2.11.7",
