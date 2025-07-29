@@ -12,7 +12,7 @@ from moviebox_api.download import (
 )
 from moviebox_api.constants import SubjectType
 from moviebox_api.download import resolve_media_file_to_be_downloaded
-from moviebox_api.cli.helpers import perform_search_and_get_item
+from moviebox_api.cli.helpers import perform_search_and_get_item, get_caption_file_or_raise
 
 
 class MovieDownloader:
@@ -46,19 +46,7 @@ class MovieDownloader:
         )
         subtitle_saved_to = None
         if download_caption or caption_only:
-            target_caption_file = downloadable_details.get_subtitle_by_language(
-                language
-            )
-            if target_caption_file is None:
-                language_subtitle_map = (
-                    downloadable_details.get_language_short_subtitle_map
-                    if len(language) == 2
-                    else downloadable_details.get_language_subtitle_map
-                )
-                raise ValueError(
-                    f"There is no caption file for the language '{language}'. "
-                    f"Choose from available ones - {', '.join(list(language_subtitle_map().keys()))}"
-                )
+            target_caption_file = get_caption_file_or_raise(downloadable_details, language)
             caption_downloader = CaptionFileDownloader(target_caption_file)
             subtitle_saved_to = await caption_downloader.run(target_movie, dir)
             if caption_only:
@@ -101,12 +89,14 @@ class TVSeriesDownloader:
 
         target_tv_series = await perform_search_and_get_item(self._session, title, SubjectType.TV_SERIES, yes)
         downloadable_files = DownloadableSeriesFilesDetail(self._session, target_tv_series)
-        downloadable_files_detail = await downloadable_files.get_modelled_content(
-        season=1, episode=1)
-        
-        if caption_only:
-            for _ in range(limit):
-                pass
+        for _ in range(limit):
+            downloadable_files_detail = await downloadable_files.get_modelled_content(
+                season=1,
+                episode=1
+            )
+            if caption_only:
+                target_caption_file = downloadable_files_detail.get_subtitle_by_language()
+                caption_downloader = CaptionFileDownloader()
         target_media_file = downloadable_files_detail.best_media_file
 
         media_file_downloader = MediaFileDownloader(target_media_file)
