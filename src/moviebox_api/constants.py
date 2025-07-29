@@ -1,5 +1,6 @@
 """This module store constant variables"""
 
+import os
 import typing as t
 from moviebox_api import logger
 from enum import IntEnum
@@ -14,7 +15,12 @@ mirror_hosts = (
 )
 """Mirror domains/subdomains of Moviebox"""
 
-selected_host = mirror_hosts[1]  # TODO: Choose the right value based on working status
+ENVIRONMENT_HOST_KEY = "MOVIEBOX_API_HOST"
+"""User declares host to use as environment variable using this key"""
+
+selected_host = (
+    os.getenv(ENVIRONMENT_HOST_KEY) or mirror_hosts[0]
+)  # TODO: Choose the right value based on working status
 """Host adress only with protocol"""
 
 host_protocol = "https"
