@@ -3,6 +3,7 @@ This module provide functions for
 performing common and frequently required tasks
 across the package.
 """
+
 import re
 from bs4 import BeautifulSoup as bts
 import typing as t
@@ -13,6 +14,7 @@ from moviebox_api.constants import host_url
 from urllib.parse import urljoin
 
 file_ext_pattern = re.compile(r".+\.(\w+)\?.+")
+
 
 def souper(contents: str) -> bts:
     """Converts str object to `soup`
@@ -89,7 +91,8 @@ def get_filesize_string(size_in_bytes: int) -> str:
             break
     return f"{size_in_bytes:.2f} {unit}"
 
-def get_file_extension(url:str) -> str|None:
+
+def get_file_extension(url: str) -> str | None:
     """Extracts extension from file url e.g `mp4` or `srt`
 
     For example:

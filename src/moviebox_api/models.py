@@ -13,6 +13,7 @@ from moviebox_api.exceptions import ZeroSearchResultsError
 from moviebox_api.constants import downloadQualitiesType
 from moviebox_api.helpers import get_file_extension
 
+
 @dataclass(frozen=True)
 class MovieboxAppInfo:
     """This data is fetched when requesting for cookies,
@@ -191,6 +192,7 @@ class SearchResults(BaseModel):
     def first_item(self) -> SearchResultsItem:
         return self.items[0]
 
+
 class BaseFileMetadata(BaseModel):
 
     @property
@@ -198,12 +200,12 @@ class BaseFileMetadata(BaseModel):
         """Media file extension such as `mp4` or `srt`"""
         return get_file_extension(self.url)
 
+
 class MediaFileMetadata(BaseFileMetadata):
     id: str
     url: HttpUrl
     resolution: int
     size: int
-
 
 
 class CaptionFileMetadata(BaseFileMetadata):

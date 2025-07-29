@@ -16,7 +16,7 @@ from moviebox_api.download import resolve_media_file_to_be_downloaded
 class Downloader:
     """Carries out the  download - movies/series"""
 
-    def __init__(self, session: Session=Session()):
+    def __init__(self, session: Session = Session()):
         """Constructor for `Downloader`
 
         Args:

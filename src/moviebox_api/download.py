@@ -22,13 +22,16 @@ from os import getcwd, path
 from pathlib import Path
 import httpx
 from moviebox_api import logger
+import warnings
 
 try:
     from tqdm import tqdm
 except ImportError:
-    logger.debug(
+    warnings.warn(
         "tqdm library not installed so download while showing "
-        "progress-bar will not be possible. Run `pip install tqdm`"
+        "progress-bar will not be possible. Run `pip install tqdm` "
+        "so as to suppress this warning.",
+        UserWarning,
     )
 
 
@@ -140,9 +143,11 @@ class DownloadableMovieFilesDetail(BaseDownloadableFilesDetail):
 class DownloadableSeriesFilesDetail(BaseDownloadableFilesDetail):
     """Fetches and model series files detail"""
 
+    # NOTE: Already implemented by parent class - BaseDownloadableFilesDetail
+
 
 class MediaFileDownloader:
-    """Makes a remote file available locally"""
+    """Download movie and tv-series files"""
 
     request_headers = download_request_headers
     request_cookies = {}
@@ -429,6 +434,7 @@ class CaptionFileDownloader:
         **kwargs,
     ) -> Path | httpx.Response:
         """Performs the actual download, incase already downloaded then return its Path.
+
         Args:
             filename (str|SearchResultsItem): Movie filename
             dir (str, optional): Directory for saving the contents Defaults to current directory. Defaults to cwd.

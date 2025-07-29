@@ -14,7 +14,7 @@ async def test_download_movie_caption_file():
     session = Session()
     search = Search(session, "avatar", subject_type=SubjectType.MOVIES)
     search_results = await search.get_modelled_content()
-    target_movie = search_results.items[0]
+    target_movie = search_results.first_item
 
     downloadable_files = DownloadableMovieFilesDetail(session, target_movie)
     downloadable_files_detail = await downloadable_files.get_modelled_content()
@@ -32,7 +32,7 @@ async def test_download_movie_file():
     session = Session()
     search = Search(session, "avatar", subject_type=SubjectType.MOVIES)
     search_results = await search.get_modelled_content()
-    target_movie = search_results.items[0]
+    target_movie = search_results.first_item
 
     downloadable_files = DownloadableMovieFilesDetail(session, target_movie)
     downloadable_files_detail = await downloadable_files.get_modelled_content()
@@ -50,7 +50,7 @@ async def test_download_tv_series_file():
     session = Session()
     search = Search(session, "Merlin", subject_type=SubjectType.TV_SERIES)
     search_results = await search.get_modelled_content()
-    target_series = search_results.items[0]
+    target_series = search_results.first_item
     downloadable_files = DownloadableSeriesFilesDetail(session, target_series)
     downloadable_files_detail = await downloadable_files.get_modelled_content(
         season=1, episode=1
