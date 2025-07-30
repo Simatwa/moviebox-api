@@ -98,8 +98,11 @@ class Downloader:
                     downloadable_files_detail, language
                 )
                 caption_downloader = CaptionFileDownloader(target_caption_file)
+                caption_filename = caption_downloader.generate_filename(
+                    target_tv_series, season=season, episode=current_episode
+                    )
                 caption_saved_to = await caption_downloader.run(
-                    target_tv_series, dir=dir, **kwargs
+                    caption_filename, dir=dir, **kwargs
                 )
                 if caption_only:
                     # Avoid downloading tv-series

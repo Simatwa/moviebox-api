@@ -173,7 +173,7 @@ class MediaFileDownloader:
     possible_filename_placeholders = (
         "%(title)s",
         "%(release_year)d",
-        "%(release_date)s" "%(resolution)d",
+        "%(release_date)s","%(resolution)d",
         "%(ext)s",
         "%(size_string)s",
         "%(season)d",
@@ -370,7 +370,7 @@ class CaptionFileDownloader:
     movie_filename_generation_template = (
         "%(title)s (%(release_year)d) - %(lanName)s [delay - %(delay)d].%(ext)s"
     )
-    series_filename_generation_template = "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s [delay:%(delay)d].%(ext)s"
+    series_filename_generation_template = "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s [delay - %(delay)d].%(ext)s"
     possible_filename_placeholders = (
         "%(title)s",
         "%(release_year)d",
