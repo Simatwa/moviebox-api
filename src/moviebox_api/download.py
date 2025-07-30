@@ -173,7 +173,8 @@ class MediaFileDownloader:
     possible_filename_placeholders = (
         "%(title)s",
         "%(release_year)d",
-        "%(release_date)s","%(resolution)d",
+        "%(release_date)s",
+        "%(resolution)d",
         "%(ext)s",
         "%(size_string)s",
         "%(season)d",

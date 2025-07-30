@@ -5,7 +5,8 @@ import os
 from pathlib import Path
 from asyncio import new_event_loop
 from moviebox_api.constants import DOWNLOAD_QUALITIES
-
+from moviebox_api.cli.helpers import command_context_settings
+from moviebox_api.cli.extras import mirror_hosts
 import logging
 
 logging.basicConfig(
@@ -14,13 +15,11 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-DEBUG = os.getenv("DEBUG","0") == "1"  # TODO: Change this accordingly.
+DEBUG = os.getenv("DEBUG", "0") == "1"  # TODO: Change this accordingly.
 
 extra_download_args = dict(test=DEBUG)
 
 loop = new_event_loop()
-
-command_context_settings = dict(auto_envvar_prefix="MOVIEBOX")
 
 
 @click.group()
@@ -184,6 +183,7 @@ def main():
     try:
         moviebox.add_command(download_movie, "download-movie")
         moviebox.add_command(download_tv_series, "download-series")
+        moviebox.add_command(mirror_hosts, "mirror-hosts")
         moviebox()
     except Exception as e:
         if DEBUG:

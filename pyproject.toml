@@ -1,6 +1,6 @@
 [project]
 name = "moviebox-api"
-version = "0.1.0"
+version = "0.1.1"
 description = "Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-series and their subtitles."
 readme = "README.md"
 license="Unlicense"
@@ -44,5 +44,6 @@ dev = [
 ]
 cli = [
     "click>=8.2.1",
+    "rich>=14.1.0",
     "tqdm>=4.67.1",
 ]

@@ -100,7 +100,7 @@ class Downloader:
                 caption_downloader = CaptionFileDownloader(target_caption_file)
                 caption_filename = caption_downloader.generate_filename(
                     target_tv_series, season=season, episode=current_episode
-                    )
+                )
                 caption_saved_to = await caption_downloader.run(
                     caption_filename, dir=dir, **kwargs
                 )

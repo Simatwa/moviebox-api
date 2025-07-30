@@ -19,11 +19,24 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 - Fully asynchronous
 - Native pydantic modelling of response
 
+## Installation
+
+Run the following command in your terminal:
+
+```sh
+$ pip install "moviebox-api[cli]"
+
+# For developers
+$ pip install moviebox-api
+```
+
+## Usage
+
 <details open>
 
 <summary>
 
-## Developers
+### Developers
 
 </summary>
 
@@ -53,7 +66,7 @@ if __name__ == "__main__":
 
 <summary>
 
-## Commandline
+### Commandline
 
 ```sh
 # $ python -m moviebox_api --help
@@ -156,17 +169,26 @@ Options:
 <summary>
 
 
-
 </summary>
 
 </details>
 
 </details>
+
+> [!TIP]
+> Shorthand for `$ python -m moviebox_api` is simply `$ moviebox`
+
 </details>
 
-# Disclaimer
+## Further info
 
-> "All videos and pictures on MovieBox are from the Internet, and their copyrights belong to the original creators. We only provide webpage services and do not store, record, or upload any content." - Moviebox as on *Sunday 13th, July 2025*
+> [!NOTE]
+> Moviebox.ph has several other mirror hosts, in order to set specific ones to be used by the script simply expose it as environment variable using name `MOVIEBOX_API_HOST`. For instance, in Linux systems one might need to run - `$ export MOVIEBOX_API_HOST="h5.aoneroom.com"`
+
+
+## Disclaimer
+
+> "All videos and pictures on MovieBox are from the Internet, and their copyrights belong to the original creators. We only provide webpage services and do not store, record, or upload any content." - moviebox.ph as on *Sunday 13th, July 2025*
 
 Long live Moviebox spirit
 

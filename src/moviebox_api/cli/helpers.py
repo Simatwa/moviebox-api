@@ -8,6 +8,8 @@ from moviebox_api import logger
 from moviebox_api.models import DownloadableFilesMetadata
 from moviebox_api.constants import host_url
 
+command_context_settings = dict(auto_envvar_prefix="MOVIEBOX")
+
 
 async def perform_search_and_get_item(
     session: Session,
