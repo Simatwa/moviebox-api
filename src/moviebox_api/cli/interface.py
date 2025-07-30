@@ -14,7 +14,7 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-DEBUG = True  # TODO: Change this accordingly.
+DEBUG = os.getenv("DEBUG","0") == "1"  # TODO: Change this accordingly.
 
 extra_download_args = dict(test=DEBUG)
 

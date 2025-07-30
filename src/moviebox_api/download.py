@@ -242,6 +242,7 @@ class MediaFileDownloader:
         **kwargs,
     ) -> Path | httpx.Response:
         """Performs the actual download.
+
         Args:
             filename (str|SearchResultsItem): Movie filename
             dir (str, optional): Directory for saving the contents Defaults to current directory.
@@ -306,7 +307,7 @@ class MediaFileDownloader:
 
         saving_mode = "ab" if resume else "wb"
         logger.info(
-            f"Downloading media file ({size_with_unit}) - resume : {resume}. "
+            f"Downloading media file ({size_with_unit}, resume - {resume}). "
             f"Writing to ({save_to})"
         )
         if progress_bar:
@@ -321,7 +322,7 @@ class MediaFileDownloader:
                     return response
                 with open(save_to, saving_mode) as fh:
                     p_bar = tqdm(
-                        desc="Downloading",
+                        desc=f"Downloading [{filename}]",
                         total=round(size_in_mb, 1),
                         unit="Mb",
                         # unit_scale=True,
@@ -367,7 +368,7 @@ class CaptionFileDownloader:
     request_headers = download_request_headers
     request_cookies = {}
     movie_filename_generation_template = (
-        "%(title)s (%(release_year)d) - %(lanName)s [delay:%(delay)d].%(ext)s"
+        "%(title)s (%(release_year)d) - %(lanName)s [delay - %(delay)d].%(ext)s"
     )
     series_filename_generation_template = "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s [delay:%(delay)d].%(ext)s"
     possible_filename_placeholders = (
@@ -462,7 +463,7 @@ class CaptionFileDownloader:
             # Lets generate filename
             filename = self.generate_filename(filename, **kwargs)
         save_to = Path(dir) / filename
-        if save_to.exists and path.getsize(save_to) == self._caption_file.size:
+        if save_to.exists() and path.getsize(save_to) == self._caption_file.size:
             logger.info(f"Caption file already downloaded - {save_to}.")
             return save_to
         size_with_unit = get_filesize_string(self._caption_file.size)

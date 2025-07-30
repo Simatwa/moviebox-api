@@ -116,6 +116,7 @@ class ContentCategoryModel(BaseModel):
 
 class HomepageContentModel(BaseModel):
     """Main model for home contents
+
     - Movies/series available under path operatingList[0].banner.items
     """
 
