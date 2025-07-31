@@ -72,9 +72,10 @@ if __name__ == "__main__":
 # $ python -m moviebox_api --help
 
 
-Usage: python -m moviebox_api [OPTIONS] COMMAND [ARGS]...
+Usage: moviebox [OPTIONS] COMMAND [ARGS]...
 
-  Search and download movies/series and their subtitles
+  Search and download movies/series and their subtitles. envvar-prefix :
+  MOVIEBOX
 
 Options:
   --version  Show the version and exit.
@@ -83,7 +84,7 @@ Options:
 Commands:
   download-movie   Search and download movie.
   download-series  Search and download tv series.
-
+  mirror-hosts     Discover moviebox mirror hosts [env: MOVIEBOX_API_HOST]
 ```
 
 </summary>
@@ -109,14 +110,40 @@ Usage: python -m moviebox_api download-movie [OPTIONS] TITLE
   Search and download movie.
 
 Options:
-  -q [WORST|BEST|360P|480P|720P|1080P]
+  -y, --year INTEGER              Year filter for the movie to proceed with :
+                                  0
+  -q, --quality [worst|best|360p|480p|720p|1080p]
                                   Media quality to be downloaded : BEST
-  -d, --directory DIRECTORY       Directory for saving the movie to : PWD
-  -x, --language TEXT             Subtitle language filter
-  --caption / --no-caption        Download caption file. : True
-  --caption-only                  Download caption file only and ignore movie
+  -d, --dir DIRECTORY             Directory for saving the movie to : PWD
+  -D, --caption-dir DIRECTORY     Directory for saving the caption file to :
+                                  PWD
+  -Z, --chunk-size INTEGER RANGE  Chunk_size for downloading files in KB : 512
+                                  [1<=x<=10000]
+  -m, --mode [start|resume|auto]  Start the download, resume or set
+                                  automatically : AUTO
+  -c, --colour TEXT               Progress bar display colour : cyan
+  -A, --ascii                     Use unicode (smooth blocks) to fill the
+                                  progress-bar meter : False
+  -x, --language TEXT             Caption language filter : [English]
+  -M, --movie-filename-tmpl TEXT  Template for generating movie filename :
+                                  [default]
+  -C, --caption-filename-tmpl TEXT
+                                  Template for generating caption filename :
+                                  [default]
+  --progress-bar / --no-progress-bar
+                                  Display or disable progress-bar : True
+  --leave / --no-leave            Keep all leaves of the progressbar : True
+  --caption / --no-caption        Download caption file : True
+  -O, --caption-only              Download caption file only and ignore movie
                                   : False
-  -y, --yes                       Do not prompt for movie confirmation : False
+  -S, --simple                    Show download percentage and bar only in
+                                  progressbar : False
+  -T, --test                      Just test if download is possible but do not
+                                  actually download : False
+  -V, --verbose                   Show more detailed interactive texts : False
+  -Q, --quiet                     Disable showing interactive texts on the
+                                  progress (logs) : False
+  -Y, --yes                       Do not prompt for movie confirmation : False
   -h, --help                      Show this message and exit.
 
 ```
@@ -131,13 +158,13 @@ Options:
 
 ```sh
 $ python -m moviebox_api download-series <Series title> -s <season offset> -e <episode offset>
-# e.g python -m moviebox_api download-movie Avatar -s 1 -e 1
+# e.g python -m moviebox_api download-series Avatar -s 1 -e 1
 ```
 
 </summary>
 
 ```sh
-# python -m moviebox_api download-movie --help
+# python -m moviebox_api download-series --help
 
 
 Usage: python -m moviebox_api download-series [OPTIONS] TITLE
@@ -145,20 +172,47 @@ Usage: python -m moviebox_api download-series [OPTIONS] TITLE
   Search and download tv series.
 
 Options:
+  -y, --year INTEGER              Year filter for the series to proceed with :
+                                  0
   -s, --season INTEGER RANGE      TV Series season filter  [1<=x<=1000;
                                   required]
   -e, --episode INTEGER RANGE     Episode offset of the tv-series season
                                   [1<=x<=1000; required]
   -l, --limit INTEGER RANGE       Total number of episodes to download in the
                                   season : 1  [1<=x<=1000]
-  -q [WORST|BEST|360P|480P|720P|1080P]
+  -q, --quality [worst|best|360p|480p|720p|1080p]
                                   Media quality to be downloaded : BEST
-  -d, --directory DIRECTORY       Directory for saving the movie to : PWD
-  -x, --language TEXT             Subtitle language filter : English
+  -x, --language TEXT             Caption language filter : [English]
+  -d, --dir DIRECTORY             Directory for saving the series file to :
+                                  PWD
+  -D, --caption-dir DIRECTORY     Directory for saving the caption file to :
+                                  PWD
+  -Z, --chunk-size INTEGER RANGE  Chunk_size for downloading files in KB : 512
+                                  [1<=x<=10000]
+  -m, --mode [start|resume|auto]  Start new download, resume or set
+                                  automatically : AUTO
+  -E, --episode-filename-tmpl TEXT
+                                  Template for generating series episode
+                                  filename : [default]
+  -C, --caption-filename-tmpl TEXT
+                                  Template for generating caption filename :
+                                  [default]
+  -c, --colour TEXT               Progress bar display color : cyan
+  -A, --ascii                     Use unicode (smooth blocks) to fill the
+                                  progress-bar meter : False
+  --progress-bar / --no-progress-bar
+                                  Display or disable progress-bar : True
+  --leave / --no-leave            Keep all leaves of the progressbar : True
   --caption / --no-caption        Download caption file : True
-  --caption-only                  Download caption file only and ignore series
+  -O, --caption-only              Download caption file only and ignore movie
                                   : False
-  -y, --yes                       Do not prompt for tv-series confirmation :
+  -S, --simple                    Show download percentage and bar only in
+                                  progressbar : False
+  -T, --test                      Just test if download is possible but do not
+                                  actually download : False
+  -V, --verbose                   Show more detailed interactive texts : False
+  -Q, --quiet                     Do not show download progressbar : False
+  -Y, --yes                       Do not prompt for tv-series confirmation :
                                   False
   -h, --help                      Show this message and exit.
 
@@ -175,15 +229,16 @@ Options:
 
 </details>
 
-> [!TIP]
-> Shorthand for `$ python -m moviebox_api` is simply `$ moviebox`
-
 </details>
 
 ## Further info
 
+
+> [!TIP]
+> Shorthand for `$ python -m moviebox_api` is simply `$ moviebox`
+
 > [!NOTE]
-> Moviebox.ph has several other mirror hosts, in order to set specific ones to be used by the script simply expose it as environment variable using name `MOVIEBOX_API_HOST`. For instance, in Linux systems one might need to run - `$ export MOVIEBOX_API_HOST="h5.aoneroom.com"`
+> Moviebox.ph has several other mirror hosts, in order to set specific one to be used by the script simply expose it as environment variable using name `MOVIEBOX_API_HOST`. For instance, in Linux systems one might need to run `$ export MOVIEBOX_API_HOST="h5.aoneroom.com"`
 
 
 ## Disclaimer

@@ -17,30 +17,50 @@ async def perform_search_and_get_item(
     year: int,
     subject_type: SubjectType,
     yes: bool,
+    search: Search = None,
 ):
     """Search movie/tv-series and return target search results item"""
-    search = Search(session, title, subject_type)
+    search = search or Search(session, title, subject_type)
     search_results = await search.get_modelled_content()
     subject_type_name = " ".join(subject_type.name.lower().split("_"))
     logger.info(
-        f"Query '{title}' yielded {len(search_results.items)} {subject_type_name}."
+        f"Query '{title}' yielded {'over ' if search_results.pager.hasMore else ''}"
+        f"{len(search_results.items)} {subject_type_name}."
     )
     items = (
         filter(lambda item: item.releaseDate.year == year, search_results.items)
         if year > 0
         else search_results.items
     )
+    if not isinstance(items, list):
+        items = [item for item in items]
 
     if yes:
         for item in items:
             # Just iterate once
             return item
     else:
-        for item in items:
-            if click.confirm(f"> Download {item.title} ({item.releaseDate.year})"):
+        for pos, item in enumerate(items, start=1):
+            if click.confirm(
+                f"> Download ({pos}/{len(items)}) : {item.title} {item.releaseDate.year, item.imdbRatingValue}"
+            ):
                 return item
+    if search_results.pager.hasMore:
+        next_search: Search = search.next_page(search_results)
+        logging.info(
+            f"Navigating to the search results of page number {next_search._page}"
+        )
+        return await perform_search_and_get_item(
+            session=session,
+            title=title,
+            year=year,
+            subject_type=subject_type,
+            yes=yes,
+            search=next_search,
+        )
+
     raise RuntimeError(
-        "All items in the search results are exhausted. Try researching with different keyword"
+        "All items in the search results are exhausted. Try researching with a different keyword"
         f'{" or different year filter." if year > 0 else ""}'
     )
 

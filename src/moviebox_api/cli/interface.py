@@ -22,7 +22,7 @@ loop = new_event_loop()
 @click.group()
 @click.version_option("-v", "--version", package_name="moviebox-api")
 def moviebox():
-    """Search and download movies/series and their subtitles. envvar_prefix : MOVIEBOX"""
+    """Search and download movies/series and their subtitles. envvar-prefix : MOVIEBOX"""
 
 
 @click.command(context_settings=command_context_settings)
@@ -31,7 +31,7 @@ def moviebox():
     "-y",
     "--year",
     type=click.INT,
-    help="Year filter on deciding the movie to proceed with : 0",
+    help="Year filter for the movie to proceed with : 0",
     default=0,
 )
 @click.option(
@@ -49,28 +49,25 @@ def moviebox():
     default=os.getcwd(),
 )
 @click.option(
-    "-cd",
+    "-D",
     "--caption-dir",
     help="Directory for saving the caption file to : PWD",
     type=click.Path(exists=True, file_okay=False),
     default=os.getcwd(),
 )
 @click.option(
-    "-cs",
+    "-Z",
     "--chunk-size",
     type=click.IntRange(min=1, max=10000),
-    help="Chunk_size for downloading files in KB - 512",
+    help="Chunk_size for downloading files in KB : 512",
     default=512,
 )
 @click.option(
     "-m",
     "--mode",
     type=click.Choice(["START", "RESUME", "AUTO"], case_sensitive=False),
-    help="Start the download, resume or set automatically - AUTO",
+    help="Start the download, resume or set automatically : AUTO",
     default="AUTO",
-)
-@click.option(
-    "--leave/--no-leave", default=True, help="Keep all leaves of the progressbar : True"
 )
 @click.option(
     "-c",
@@ -79,7 +76,7 @@ def moviebox():
     default="cyan",
 )
 @click.option(
-    "-ac",
+    "-A",
     "--ascii",
     is_flag=True,
     help="Use unicode (smooth blocks) to fill the progress-bar meter : False",
@@ -92,55 +89,59 @@ def moviebox():
     default=["English"],
 )
 @click.option(
-    "-mft",
+    "-M",
     "--movie-filename-tmpl",
     help=f"Template for generating movie filename : [default]",
     default=MediaFileDownloader.movie_filename_generation_template,
 )
 @click.option(
-    "-cft",
+    "-C",
     "--caption-filename-tmpl",
     help=f"Template for generating caption filename : [default]",
     default=CaptionFileDownloader.movie_filename_generation_template,
 )
 @click.option(
+    "--progress-bar/--no-progress-bar", help="Display or disable progress-bar : True"
+)
+@click.option(
+    "--leave/--no-leave", default=True, help="Keep all leaves of the progressbar : True"
+)
+@click.option(
     "--caption/--no-caption", help="Download caption file : True", default=True
 )
 @click.option(
+    "-O",
     "--caption-only",
     is_flag=True,
     help="Download caption file only and ignore movie : False",
 )
 @click.option(
-    "--progress-bar/--no-progress-bar", help="Display or disable progress-bar : True"
-)
-@click.option(
-    "-s",
+    "-S",
     "--simple",
     is_flag=True,
     help="Show download percentage and bar only in progressbar : False",
 )
 @click.option(
-    "-t",
+    "-T",
     "--test",
     is_flag=True,
     help="Just test if download is possible but do not actually download : False",
 )
 @click.option(
-    "-v",
+    "-V",
     "--verbose",
     count=True,
     help="Show more detailed interactive texts : False",
     default=0,
 )
 @click.option(
-    "-qu",
+    "-Q",
     "--quiet",
     is_flag=True,
     help="Disable showing interactive texts on the progress (logs) : False",
 )
 @click.option(
-    "-y", "--yes", is_flag=True, help="Do not prompt for movie confirmation : False"
+    "-Y", "--yes", is_flag=True, help="Do not prompt for movie confirmation : False"
 )
 @click.help_option("-h", "--help")
 def download_movie(
@@ -188,7 +189,7 @@ def download_movie(
     "-y",
     "--year",
     type=click.INT,
-    help="Year filter on deciding the series to proceed with : 0",
+    help="Year filter for the series to proceed with : 0",
     default=0,
 )
 @click.option(
@@ -234,40 +235,37 @@ def download_movie(
     default=os.getcwd(),
 )
 @click.option(
-    "-cd",
+    "-D",
     "--caption-dir",
     help="Directory for saving the caption file to : PWD",
     type=click.Path(exists=True, file_okay=False),
     default=os.getcwd(),
 )
 @click.option(
-    "-cs",
+    "-Z",
     "--chunk-size",
     type=click.IntRange(min=1, max=10000),
-    help="Chunk_size for downloading files in KB - 512",
+    help="Chunk_size for downloading files in KB : 512",
     default=512,
 )
 @click.option(
     "-m",
     "--mode",
     type=click.Choice(["START", "RESUME", "AUTO"], case_sensitive=False),
-    help="Start new download, resume or set automatically - AUTO",
+    help="Start new download, resume or set automatically : AUTO",
     default="AUTO",
 )
 @click.option(
-    "-eft",
+    "-E",
     "--episode-filename-tmpl",
     help=f"Template for generating series episode filename : [default]",
     default=MediaFileDownloader.series_filename_generation_template,
 )
 @click.option(
-    "-cft",
+    "-C",
     "--caption-filename-tmpl",
     help=f"Template for generating caption filename : [default]",
     default=CaptionFileDownloader.series_filename_generation_template,
-)
-@click.option(
-    "--leave/--no-leave", default=True, help="Keep all leaves of the progressbar : True"
 )
 @click.option(
     "-c",
@@ -276,46 +274,53 @@ def download_movie(
     default="cyan",
 )
 @click.option(
-    "-ac",
+    "-A",
     "--ascii",
     is_flag=True,
     help="Use unicode (smooth blocks) to fill the progress-bar meter : False",
 )
 @click.option(
+    "--progress-bar/--no-progress-bar", help="Display or disable progress-bar : True"
+)
+@click.option(
+    "--leave/--no-leave", default=True, help="Keep all leaves of the progressbar : True"
+)
+@click.option(
     "--caption/--no-caption", help="Download caption file : True", default=True
 )
 @click.option(
+    "-O",
     "--caption-only",
     is_flag=True,
     help="Download caption file only and ignore movie : False",
 )
 @click.option(
-    "-si",
+    "-S",
     "--simple",
     is_flag=True,
     help="Show download percentage and bar only in progressbar : False",
 )
 @click.option(
-    "-t",
+    "-T",
     "--test",
     is_flag=True,
     help="Just test if download is possible but do not actually download : False",
 )
 @click.option(
-    "-v",
+    "-V",
     "--verbose",
     count=True,
     help="Show more detailed interactive texts : False",
     default=0,
 )
 @click.option(
-    "-qu",
+    "-Q",
     "--quiet",
     is_flag=True,
     help="Do not show download progressbar : False",
 )
 @click.option(
-    "-y", "--yes", is_flag=True, help="Do not prompt for tv-series confirmation : False"
+    "-Y", "--yes", is_flag=True, help="Do not prompt for tv-series confirmation : False"
 )
 @click.help_option("-h", "--help")
 def download_tv_series(
