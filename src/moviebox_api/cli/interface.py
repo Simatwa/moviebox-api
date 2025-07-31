@@ -121,14 +121,56 @@ def download_movie(
     default="BEST",
 )
 @click.option(
+    "-x", "--language", help="Subtitle language filter : English", default="English"
+)
+@click.option(
     "-d",
-    "--directory",
-    help="Directory for saving the movie to : PWD",
+    "--dir",
+    help="Directory for saving the series file to : PWD",
     type=click.Path(exists=True, file_okay=False),
     default=os.getcwd(),
 )
 @click.option(
-    "-x", "--language", help="Subtitle language filter : English", default="English"
+    "-cd",
+    "--caption-dir",
+    help="Directory for saving the caption file to : PWD",
+    type=click.Path(exists=True, file_okay=False),
+    default=os.getcwd(),
+)
+@click.option(
+    "-cs",
+    "--chunk-size",
+    type=click.IntRange(min=1, max=10000),
+    help="Chunk_size for downloading files in KB - 512",
+    default=512,
+)
+@click.option(
+    "-dm",
+    "--download-mode",
+    type=click.Choice(["START", "RESUME", "AUTO"]),
+    help="Start the download, resume or set automatically - AUTO",
+    default="AUTO",
+)
+@click.option(
+    "--leave/--no-leave", default=True, help="Keep all leaves of the progressbar : True"
+)
+@click.option(
+    "-pc",
+    "--progressbar-color",
+    help="Progress bar display color : cyan",
+    default="cyan",
+)
+@click.option(
+    "-ac",
+    "--ascii",
+    is_flag=True,
+    help="Use unicode (smooth blocks) to fill the progress-bar meter : False",
+)
+@click.option(
+    "-t",
+    "--test",
+    is_flag=True,
+    help="Just test if download is possible but do not actually download : False",
 )
 @click.option(
     "--caption/--no-caption", help="Download caption file : True", default=True
@@ -137,6 +179,12 @@ def download_movie(
     "--caption-only",
     is_flag=True,
     help="Download caption file only and ignore series : False",
+)
+@click.option(
+    "-qt",
+    "--quiet",
+    is_flag=True,
+    help="Do not show download progressbar : False",
 )
 @click.option(
     "-y", "--yes", is_flag=True, help="Do not prompt for tv-series confirmation : False"
@@ -148,10 +196,18 @@ def download_tv_series(
     episode: int,
     limit: int,
     quality: str,
-    directory: Path,
     language: str,
+    dir: Path,
+    caption_dir: Path,
+    chunk_size: int,
+    download_mode: str,
+    leave: bool,
+    progressbar_color: str,
+    ascii: bool,
+    test: bool,
     caption: bool,
     caption_only: bool,
+    quiet: bool,
     yes: bool,
 ):
     """Search and download tv series."""
@@ -167,7 +223,7 @@ def download_tv_series(
             season=season,
             episode=episode,
             yes=yes,
-            dir=directory,
+            dir=dir,
             quality=quality,
             language=language,
             download_caption=caption,
