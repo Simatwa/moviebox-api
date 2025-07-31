@@ -6,7 +6,7 @@ from moviebox_api.core import Search, Session
 from moviebox_api.constants import SubjectType
 from moviebox_api import logger
 from moviebox_api.models import DownloadableFilesMetadata
-from moviebox_api.constants import host_url
+from moviebox_api.constants import host_url, DownloadMode
 
 command_context_settings = dict(auto_envvar_prefix="MOVIEBOX")
 
@@ -66,3 +66,8 @@ def prepare_start():
     for package_name in packages:
         package_logger = logging.getLogger(package_name)
         package_logger.setLevel(logging.WARNING)
+
+
+def process_download_runner_params(params: dict):
+    params["mode"] = DownloadMode.map_cls().get(params.get("mode").lower())
+    return params

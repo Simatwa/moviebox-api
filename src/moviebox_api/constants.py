@@ -3,7 +3,7 @@
 import os
 import typing as t
 from moviebox_api import logger
-from enum import IntEnum
+from enum import IntEnum, StrEnum
 
 mirror_hosts = (
     "moviebox.ng",
@@ -89,3 +89,22 @@ class SubjectType(IntEnum):
         for entry in cls:
             resp[entry.name] = entry.value
         return resp
+
+
+class DownloadMode(StrEnum):
+    START = "start"
+    RESUME = "resume"
+    AUTO = "auto"
+
+    @classmethod
+    def map(cls) -> dict[str, str]:
+        """Modes mapped to their string representatives"""
+        resp = {}
+        for entry in cls:
+            resp[entry.name] = entry.value
+        return resp
+
+    @classmethod
+    def map_cls(cls):
+        """Names in lower case mapped to their values"""
+        return {"start": cls.START, "resume": cls.RESUME, "auto": cls.AUTO}

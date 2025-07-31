@@ -32,8 +32,9 @@ class Downloader:
         title: str,
         yes: bool,
         dir: Path,
+        caption_dir: Path,
         quality: str,
-        language: str = DEFAULT_CAPTION_LANGUAGE,
+        language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
         **kwargs,
@@ -48,23 +49,25 @@ class Downloader:
         target_media_file = resolve_media_file_to_be_downloaded(
             quality, downloadable_details
         )
-        subtitle_saved_to = None
+        subtitles_saved_to = []
         if download_caption or caption_only:
-            target_caption_file = get_caption_file_or_raise(
-                downloadable_details, language
-            )
-            caption_downloader = CaptionFileDownloader(target_caption_file)
-            subtitle_saved_to = await caption_downloader.run(
-                target_movie, dir, **kwargs
-            )
+            for lang in language:
+                target_caption_file = get_caption_file_or_raise(
+                    downloadable_details, lang
+                )
+                caption_downloader = CaptionFileDownloader(target_caption_file)
+                subtitle_saved_to = await caption_downloader.run(
+                    target_movie, caption_dir, **kwargs
+                )
+                subtitles_saved_to.append(subtitle_saved_to)
             if caption_only:
                 # terminate
-                return (None, subtitle_saved_to)
+                return (None, subtitles_saved_to)
 
         movie_downloader = MediaFileDownloader(target_media_file)
         # TODO: Consider downloader.run options
         movie_saved_to = await movie_downloader.run(target_movie, dir, **kwargs)
-        return (movie_saved_to, subtitle_saved_to)
+        return (movie_saved_to, subtitles_saved_to)
 
     async def download_tv_series(
         self,
@@ -73,8 +76,9 @@ class Downloader:
         episode: int,
         yes: bool,
         dir: Path,
+        caption_dir: bool,
         quality: str,
-        language: str = DEFAULT_CAPTION_LANGUAGE,
+        language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
         limit: int = 1,
@@ -93,17 +97,20 @@ class Downloader:
                 season=season, episode=current_episode
             )
             # TODO: Iterate over seasons as well
+            captions_saved_to = []
             if caption_only or download_caption:
-                target_caption_file = get_caption_file_or_raise(
-                    downloadable_files_detail, language
-                )
-                caption_downloader = CaptionFileDownloader(target_caption_file)
-                caption_filename = caption_downloader.generate_filename(
-                    target_tv_series, season=season, episode=current_episode
-                )
-                caption_saved_to = await caption_downloader.run(
-                    caption_filename, dir=dir, **kwargs
-                )
+                for lang in language:
+                    target_caption_file = get_caption_file_or_raise(
+                        downloadable_files_detail, lang
+                    )
+                    caption_downloader = CaptionFileDownloader(target_caption_file)
+                    caption_filename = caption_downloader.generate_filename(
+                        target_tv_series, season=season, episode=current_episode
+                    )
+                    caption_saved_to = await caption_downloader.run(
+                        caption_filename, dir=caption_dir, **kwargs
+                    )
+                    captions_saved_to.append(caption_saved_to)
                 if caption_only:
                     # Avoid downloading tv-series
                     continue
@@ -121,3 +128,4 @@ class Downloader:
             tv_series_saved_to = await media_file_downloader.run(
                 filename, dir=dir, **kwargs
             )
+            return (tv_series_saved_to, captions_saved_to)

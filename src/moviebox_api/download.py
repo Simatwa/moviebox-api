@@ -21,6 +21,7 @@ from moviebox_api.constants import (
     download_request_headers,
     downloadQualitiesType,
     DOWNLOAD_QUALITIES,
+    DownloadMode,
 )
 from os import getcwd, path
 from pathlib import Path
@@ -234,7 +235,7 @@ class MediaFileDownloader:
         dir: str = getcwd(),
         progress_bar=True,
         chunk_size: int = 512,
-        resume: bool | t.Literal["AUTO"] = "AUTO",
+        mode: DownloadMode = DownloadMode.AUTO,
         colour: str = "cyan",
         simple: bool = False,
         test: bool = False,
@@ -249,7 +250,7 @@ class MediaFileDownloader:
             dir (str, optional): Directory for saving the contents Defaults to current directory.
             progress_bar (bool, optional): Display download progress bar. Defaults to True.
             chunk_size (int, optional): Chunk_size for downloading files in KB. Defaults to 512.
-            resume (bool | t.Literal["AUTO"], optional):  Resume the incomplete download. Defaults to AUTO (Decide intelligently).
+            mode (DownloadMode, DownloadMode.AUTO): Whether to start fresh download, resume or auto decide the download. Defaults to Auto.
             leave (bool, optional): Keep all leaves of the progressbar. Defaults to True.
             colour (str, optional): Progress bar display color. Defaults to "cyan".
             simple (bool, optional): Show percentage and bar only in progressbar. Deafults to False.
@@ -263,6 +264,7 @@ class MediaFileDownloader:
         Returns:
             str|httpx.Response: Path where the media file has been saved to or httpx Response (test).
         """
+        assert_instance(mode, DownloadMode, "mode")
         current_downloaded_size = 0
         current_downloaded_size_in_mb = 0
         if isinstance(filename, SearchResultsItem):
@@ -271,29 +273,31 @@ class MediaFileDownloader:
 
         save_to = Path(dir) / filename
 
-        if isinstance(resume, str):
-            if resume.lower() == "auto":
-                if save_to.exists():
-                    logger.debug("Download set to resume")
-                    resume = True
-                else:
-                    resume = False
-                    logger.debug("Download set to start afresh")
-            else:
-                raise ValueError(
-                    f"Value for resume can only be a boolean or 'auto' not {resume}"
-                )
+        match mode:
+
+            case DownloadMode.RESUME:
+                resume = True
+
+            case DownloadMode.START:
+                resume = False
+
+            case DownloadMode.AUTO:
+                # AUTO
+                resume = save_to.exists()
 
         def pop_range_in_session_headers():
             if self.session.headers.get("Range"):
                 self.session.headers.pop("Range")
 
         if resume:
+            logger.debug("Download set to resume")
             assert path.exists(save_to), f"File not found in path - '{save_to}'"
             current_downloaded_size = path.getsize(save_to)
             # Set the headers to resume download from the last byte
             self.session.headers.update({"Range": f"bytes={current_downloaded_size}-"})
             current_downloaded_size_in_mb = current_downloaded_size / 1000000
+        else:
+            logger.debug("Download set to start afresh")
 
         size_in_bytes = self._media_file.size
 
