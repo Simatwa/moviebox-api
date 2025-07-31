@@ -22,7 +22,7 @@ __all__ = ["Session"]
 
 
 class Session:
-    """Performs actual get http requests asynchronously
+    """Performs actual get & post http requests asynchronously
     with or without cookies on demand
     """
 

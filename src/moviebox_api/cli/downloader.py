@@ -30,17 +30,26 @@ class Downloader:
     async def download_movie(
         self,
         title: str,
+        year: int,
         yes: bool,
         dir: Path,
         caption_dir: Path,
         quality: str,
+        movie_filename_tmpl,
+        caption_filename_tmpl,
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
         **kwargs,
     ):
+        MediaFileDownloader.movie_filename_generation_template = movie_filename_tmpl
+        CaptionFileDownloader.movie_filename_generation_template = caption_filename_tmpl
         target_movie = await perform_search_and_get_item(
-            self._session, title, SubjectType.MOVIES, yes
+            self._session,
+            title=title,
+            year=year,
+            subject_type=SubjectType.MOVIES,
+            yes=yes,
         )
         downloadable_details_inst = DownloadableMovieFilesDetail(
             self._session, target_movie
@@ -72,21 +81,32 @@ class Downloader:
     async def download_tv_series(
         self,
         title: str,
+        year: int,
         season: int,
         episode: int,
         yes: bool,
         dir: Path,
         caption_dir: bool,
         quality: str,
+        episode_filename_tmpl,
+        caption_filename_tmpl,
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
         limit: int = 1,
         **kwargs,
     ):
+        MediaFileDownloader.series_filename_generation_template = episode_filename_tmpl
+        CaptionFileDownloader.series_filename_generation_template = (
+            caption_filename_tmpl
+        )
 
         target_tv_series = await perform_search_and_get_item(
-            self._session, title, SubjectType.TV_SERIES, yes
+            self._session,
+            title=title,
+            year=year,
+            subject_type=SubjectType.TV_SERIES,
+            yes=yes,
         )
         downloadable_files = DownloadableSeriesFilesDetail(
             self._session, target_tv_series

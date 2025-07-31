@@ -145,18 +145,18 @@ wheels = [
 
 [[package]]
 name = "moviebox-api"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "." }
 dependencies = [
     { name = "httpx" },
     { name = "pydantic" },
+    { name = "tqdm" },
 ]
 
 [package.dev-dependencies]
 cli = [
     { name = "click" },
     { name = "rich" },
-    { name = "tqdm" },
 ]
 dev = [
     { name = "pytest" },
@@ -167,13 +167,13 @@ dev = [
 requires-dist = [
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "pydantic", specifier = ">=2.11.7" },
+    { name = "tqdm", specifier = ">=4.67.1" },
 ]
 
 [package.metadata.requires-dev]
 cli = [
     { name = "click", specifier = ">=8.2.1" },
     { name = "rich", specifier = ">=14.1.0" },
-    { name = "tqdm", specifier = ">=4.67.1" },
 ]
 dev = [
     { name = "pytest", specifier = ">=8.4.1" },

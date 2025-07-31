@@ -48,8 +48,8 @@ async def main():
     movie_saved_to, subtitle_saved_to = await auto.run("Avatar")
     print(movie_saved_to, subtitle_saved_to, sep="\n")
     # Output
-    # /home/smartwa/.../Avatar - 1080P.mp4
-    # /home/smartwa/.../Avatar - English.srt
+    # /.../Avatar - 1080P.mp4
+    # /.../Avatar - English.srt
 
 if __name__ == "__main__":
     import asyncio

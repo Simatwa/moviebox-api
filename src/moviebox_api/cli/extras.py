@@ -1,4 +1,4 @@
-"""Contains non-essentail cli-commands"""
+"""Contains non-essential cli-commands"""
 
 import click
 from moviebox_api.cli.helpers import command_context_settings

@@ -1,20 +1,18 @@
 """Contains the actual console commands"""
 
-import click
 import os
+import sys
+import logging
+import click
 from pathlib import Path
 from asyncio import new_event_loop
-from moviebox_api.constants import DOWNLOAD_QUALITIES, DownloadMode
+from moviebox_api.constants import DOWNLOAD_QUALITIES
 from moviebox_api.cli.helpers import command_context_settings
 from moviebox_api.cli.helpers import prepare_start, process_download_runner_params
 from moviebox_api.cli.extras import mirror_hosts
-import logging
-
-logging.basicConfig(
-    format="[%(asctime)s] : %(levelname)s - %(message)s",
-    datefmt="%d-%b-%Y %H:%M:%S",
-    level=logging.INFO,
-)
+from moviebox_api.cli.downloader import Downloader
+from moviebox_api.download import MediaFileDownloader, CaptionFileDownloader
+from httpx import ConnectTimeout
 
 DEBUG = os.getenv("DEBUG", "0") == "1"  # TODO: Change this accordingly.
 
@@ -30,10 +28,17 @@ def moviebox():
 @click.command(context_settings=command_context_settings)
 @click.argument("title")
 @click.option(
+    "-y",
+    "--year",
+    type=click.INT,
+    help="Year filter on deciding the movie to proceed with : 0",
+    default=0,
+)
+@click.option(
     "-q",
-    "quality",
+    "--quality",
     help="Media quality to be downloaded : BEST",
-    type=click.Choice(DOWNLOAD_QUALITIES),
+    type=click.Choice(DOWNLOAD_QUALITIES, case_sensitive=False),
     default="BEST",
 )
 @click.option(
@@ -80,20 +85,26 @@ def moviebox():
     help="Use unicode (smooth blocks) to fill the progress-bar meter : False",
 )
 @click.option(
-    "-t",
-    "--test",
-    is_flag=True,
-    help="Just test if download is possible but do not actually download : False",
-)
-@click.option(
     "-x",
     "--language",
-    help="Subtitle language filter",
+    help="Caption language filter : [English]",
     multiple=True,
     default=["English"],
 )
 @click.option(
-    "--caption/--no-caption", help="Download caption file. : True", default=True
+    "-mft",
+    "--movie-filename-tmpl",
+    help=f"Template for generating movie filename : [default]",
+    default=MediaFileDownloader.movie_filename_generation_template,
+)
+@click.option(
+    "-cft",
+    "--caption-filename-tmpl",
+    help=f"Template for generating caption filename : [default]",
+    default=CaptionFileDownloader.movie_filename_generation_template,
+)
+@click.option(
+    "--caption/--no-caption", help="Download caption file : True", default=True
 )
 @click.option(
     "--caption-only",
@@ -101,10 +112,32 @@ def moviebox():
     help="Download caption file only and ignore movie : False",
 )
 @click.option(
+    "--progress-bar/--no-progress-bar", help="Display or disable progress-bar : True"
+)
+@click.option(
+    "-s",
+    "--simple",
+    is_flag=True,
+    help="Show download percentage and bar only in progressbar : False",
+)
+@click.option(
+    "-t",
+    "--test",
+    is_flag=True,
+    help="Just test if download is possible but do not actually download : False",
+)
+@click.option(
+    "-v",
+    "--verbose",
+    count=True,
+    help="Show more detailed interactive texts : False",
+    default=0,
+)
+@click.option(
     "-qu",
     "--quiet",
     is_flag=True,
-    help="Do not show download progressbar : False",
+    help="Disable showing interactive texts on the progress (logs) : False",
 )
 @click.option(
     "-y", "--yes", is_flag=True, help="Do not prompt for movie confirmation : False"
@@ -112,31 +145,38 @@ def moviebox():
 @click.help_option("-h", "--help")
 def download_movie(
     title: str,
+    year: int,
     quality: str,
     dir: Path,
     caption_dir: Path,
     language: list[str],
+    movie_filename_tmpl: str,
+    caption_filename_tmpl: str,
     caption: bool,
     caption_only: bool,
+    verbose: int,
+    quiet: bool,
     yes: bool,
     **download_runner_params,
 ):
     """Search and download movie."""
-    from moviebox_api.cli.downloader import Downloader
 
-    prepare_start()
+    prepare_start(quiet, verbose=verbose)
 
     downloader = Downloader()
     loop.run_until_complete(
         downloader.download_movie(
             title,
+            year=year,
             yes=yes,
             dir=dir,
             caption_dir=caption_dir,
-            quality=quality,
+            quality=quality.upper(),
             language=language,
             download_caption=caption,
             caption_only=caption_only,
+            movie_filename_tmpl=movie_filename_tmpl,
+            caption_filename_tmpl=caption_filename_tmpl,
             **process_download_runner_params(download_runner_params),
         )
     )
@@ -144,6 +184,13 @@ def download_movie(
 
 @click.command(context_settings=command_context_settings)
 @click.argument("title")
+@click.option(
+    "-y",
+    "--year",
+    type=click.INT,
+    help="Year filter on deciding the series to proceed with : 0",
+    default=0,
+)
 @click.option(
     "-s",
     "--season",
@@ -169,13 +216,13 @@ def download_movie(
     "-q",
     "--quality",
     help="Media quality to be downloaded : BEST",
-    type=click.Choice(DOWNLOAD_QUALITIES),
+    type=click.Choice(DOWNLOAD_QUALITIES, case_sensitive=False),
     default="BEST",
 )
 @click.option(
     "-x",
     "--language",
-    help="Subtitle language filter",
+    help="Caption language filter : [English]",
     multiple=True,
     default=["English"],
 )
@@ -208,6 +255,18 @@ def download_movie(
     default="AUTO",
 )
 @click.option(
+    "-eft",
+    "--episode-filename-tmpl",
+    help=f"Template for generating series episode filename : [default]",
+    default=MediaFileDownloader.series_filename_generation_template,
+)
+@click.option(
+    "-cft",
+    "--caption-filename-tmpl",
+    help=f"Template for generating caption filename : [default]",
+    default=CaptionFileDownloader.series_filename_generation_template,
+)
+@click.option(
     "--leave/--no-leave", default=True, help="Keep all leaves of the progressbar : True"
 )
 @click.option(
@@ -223,18 +282,31 @@ def download_movie(
     help="Use unicode (smooth blocks) to fill the progress-bar meter : False",
 )
 @click.option(
+    "--caption/--no-caption", help="Download caption file : True", default=True
+)
+@click.option(
+    "--caption-only",
+    is_flag=True,
+    help="Download caption file only and ignore movie : False",
+)
+@click.option(
+    "-si",
+    "--simple",
+    is_flag=True,
+    help="Show download percentage and bar only in progressbar : False",
+)
+@click.option(
     "-t",
     "--test",
     is_flag=True,
     help="Just test if download is possible but do not actually download : False",
 )
 @click.option(
-    "--caption/--no-caption", help="Download caption file : True", default=True
-)
-@click.option(
-    "--caption-only",
-    is_flag=True,
-    help="Download caption file only and ignore series : False",
+    "-v",
+    "--verbose",
+    count=True,
+    help="Show more detailed interactive texts : False",
+    default=0,
 )
 @click.option(
     "-qu",
@@ -248,37 +320,44 @@ def download_movie(
 @click.help_option("-h", "--help")
 def download_tv_series(
     title: str,
+    year: int,
     season: int,
     episode: int,
     limit: int,
     quality: str,
     language: list[str],
     dir: Path,
+    episode_filename_tmpl: str,
+    caption_filename_tmpl: str,
     caption_dir: Path,
     caption: bool,
     caption_only: bool,
+    verbose: int,
+    quiet: bool,
     yes: bool,
     **download_runner_params,
 ):
     """Search and download tv series."""
-    from moviebox_api.cli.downloader import Downloader
 
-    prepare_start()
+    prepare_start(quiet, verbose=verbose)
 
     downloader = Downloader()
     loop.run_until_complete(
         downloader.download_tv_series(
             title,
+            year=year,
             season=season,
             episode=episode,
             yes=yes,
             dir=dir,
             caption_dir=caption_dir,
-            quality=quality,
+            quality=quality.upper(),
             language=language,
             download_caption=caption,
             caption_only=caption_only,
             limit=limit,
+            episode_filename_tmpl=episode_filename_tmpl,
+            caption_filename_tmpl=caption_filename_tmpl,
             **process_download_runner_params(download_runner_params),
         )
     )
@@ -290,12 +369,21 @@ def main():
         moviebox.add_command(download_movie, "download-movie")
         moviebox.add_command(download_tv_series, "download-series")
         moviebox.add_command(mirror_hosts, "mirror-hosts")
-        moviebox()
+        return moviebox()
+
+    except ConnectTimeout:
+        logging.error(
+            "Http connect request has timed out. Check your connection and retry."
+        )
+
     except Exception as e:
+
         if DEBUG:
             logging.exception(e)
         else:
             logging.error(f"{e.args[1] if e.args and len(e.args)>1 else e}")
+
+    sys.exit(1)
 
 
 if __name__ == "__main__":

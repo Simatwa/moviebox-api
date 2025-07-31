@@ -1,5 +1,5 @@
 """Contains functionalities for fetching and model downloadable files metadata
-and performing the actual download
+and later performing the actual download as well
 """
 
 import typing as t
@@ -15,6 +15,7 @@ from moviebox_api.helpers import (
     assert_instance,
     get_absolute_url,
     get_filesize_string,
+    sanitize_filename,
 )
 from moviebox_api.constants import (
     SubjectType,
@@ -23,22 +24,14 @@ from moviebox_api.constants import (
     DOWNLOAD_QUALITIES,
     DownloadMode,
 )
+from moviebox_api.exceptions import DownloadCompletedError
 from os import getcwd, path
 from pathlib import Path
 import httpx
 from moviebox_api import logger
-import warnings
+from tqdm import tqdm
 
-try:
-    from tqdm import tqdm
-except ImportError:
-    warnings.warn(
-        "tqdm library not installed so download while showing "
-        "progress-bar will not be possible. Run `pip install tqdm` "
-        "so as to suppress this warning.",
-        UserWarning,
-    )
-
+# TODO: Make tqdm required dependency
 
 __all__ = [
     "MediaFileDownloader",
@@ -227,7 +220,7 @@ class MediaFileDownloader:
             if search_results_item.subjectType == SubjectType.TV_SERIES
             else self.movie_filename_generation_template
         )
-        return filename_generation_template % placeholders
+        return sanitize_filename(filename_generation_template % placeholders)
 
     async def run(
         self,
@@ -241,6 +234,7 @@ class MediaFileDownloader:
         test: bool = False,
         leave: bool = True,
         ascii: bool = False,
+        suppress_complete_error: bool = False,
         **kwargs,
     ) -> Path | httpx.Response:
         """Performs the actual download.
@@ -256,6 +250,7 @@ class MediaFileDownloader:
             simple (bool, optional): Show percentage and bar only in progressbar. Deafults to False.
             test (bool, optional): Just test if download is possible but do not actually download. Defaults to False.
             ascii (bool, optional): Use unicode (smooth blocks) to fill the progress-bar meter. Defaults to False.
+            suppress_complete_error (bool, optional): Do not raise error when trying to resume a complete download. Defaults to False.
             **kwargs: Keyworded arguments for generating filename incase instance of filename is SearchResultsItem.
 
         Raises:
@@ -291,7 +286,8 @@ class MediaFileDownloader:
 
         if resume:
             logger.debug("Download set to resume")
-            assert path.exists(save_to), f"File not found in path - '{save_to}'"
+            if not path.exists(save_to):
+                raise FileNotFoundError(f"File not found in path - '{save_to}'")
             current_downloaded_size = path.getsize(save_to)
             # Set the headers to resume download from the last byte
             self.session.headers.update({"Range": f"bytes={current_downloaded_size}-"})
@@ -302,9 +298,15 @@ class MediaFileDownloader:
         size_in_bytes = self._media_file.size
 
         if resume:
-            assert (
-                size_in_bytes != current_downloaded_size
-            ), f"Download completed for the file in path - '{save_to}'"
+            if size_in_bytes != current_downloaded_size:
+                if suppress_complete_error:
+                    logger.info(
+                        f"Download already completed for the file in path - {save_to}"
+                    )
+                    return save_to
+                raise DownloadCompletedError(
+                    save_to, f"Download completed for the file in path - '{save_to}'"
+                )
 
         size_in_mb = (size_in_bytes / 1_000_000) + current_downloaded_size_in_mb
         size_with_unit = get_filesize_string(self._media_file.size)
@@ -373,7 +375,8 @@ class CaptionFileDownloader:
     request_headers = download_request_headers
     request_cookies = {}
     movie_filename_generation_template = (
-        "%(title)s (%(release_year)d) - %(lanName)s [delay - %(delay)d].%(ext)s"
+        "%(title)s (%(release_year)d) - %(lanName)s.%(ext)s"
+        # "%(title)s (%(release_year)d) - %(lanName)s [delay - %(delay)d].%(ext)s"
     )
     series_filename_generation_template = "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s [delay - %(delay)d].%(ext)s"
     possible_filename_placeholders = (
@@ -442,7 +445,7 @@ class CaptionFileDownloader:
             if search_results_item.subjectType == SubjectType.TV_SERIES
             else self.movie_filename_generation_template
         )
-        return filename_generation_template % placeholders
+        return sanitize_filename(filename_generation_template % placeholders)
 
     async def run(
         self,

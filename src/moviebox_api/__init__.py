@@ -4,6 +4,26 @@ and tv series from moviebox.ph and its mirror hosts.
 
 Right from performing `search` query down to downloading
 it in your desired quality.
+
+For instance:
+
+```python
+from moviebox_api import Auto
+
+async def main():
+    auto = Auto()
+    movie_saved_to, subtitle_saved_to = await auto.run("Avatar")
+    print(movie_saved_to, subtitle_saved_to, sep="\n")
+    # Output
+    # /.../Avatar - 1080P.mp4
+    # /.../Avatar - English.srt
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
+
+```
 """
 
 from importlib import metadata

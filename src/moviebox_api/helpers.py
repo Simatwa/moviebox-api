@@ -16,6 +16,8 @@ from urllib.parse import urljoin
 
 file_ext_pattern = re.compile(r".+\.(\w+)\?.+")
 
+illegal_characters_pattern = re.compile(r"[^\w\-_\.\s()&|]")
+
 # Not needed currently
 ''' 
 def souper(contents: str) -> bts:
@@ -54,7 +56,7 @@ def assert_membership(value: t.Any, elements: t.Iterable, identity="Value"):
     assert value in elements, f"{identity} '{value}' is not one of {elements}"
 
 
-def assert_instance(obj: object, class_or_tuple, name: str = "Parameter"):
+def assert_instance(obj: object, class_or_tuple, name: str = "Parameter") -> t.NoReturn:
     """assert obj an instance of class_or_tuple"""
     assert isinstance(
         obj, class_or_tuple
@@ -105,3 +107,8 @@ def get_file_extension(url: str) -> str | None:
     all = re.findall(file_ext_pattern, str(url))
     if all:
         return all[0]
+
+
+def sanitize_filename(filename: str) -> str:
+    """Remove illegal characters from a filename"""
+    return re.sub(illegal_characters_pattern, "", filename.replace(":", "-"))

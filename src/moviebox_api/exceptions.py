@@ -3,6 +3,7 @@
 from typing import Dict
 from moviebox_api._bases import BaseMovieboxException
 from httpx import Response
+from pathlib import Path
 
 
 class MovieboxApiException(BaseMovieboxException):
@@ -38,3 +39,12 @@ class ExhaustedSearchResultsError(BaseMovieboxException):
 
 class ZeroSearchResultsError(BaseMovieboxException):
     """Raised when empty search results is encountered."""
+
+
+class DownloadCompletedError(BaseMovieboxException):
+    """Raised whren attempting to resume a complete download."""
+
+    def __init__(self, saved_to: Path, *args, **kwargs):
+        self.saved_to = saved_to
+        """Path to the already downloaded movie/tv-series file"""
+        super().__init__(*args, **kwargs)
