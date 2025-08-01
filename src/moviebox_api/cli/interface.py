@@ -6,6 +6,7 @@ import logging
 import click
 from pathlib import Path
 from asyncio import new_event_loop
+from moviebox_api import __version__
 from moviebox_api.constants import DOWNLOAD_QUALITIES
 from moviebox_api.cli.helpers import command_context_settings
 from moviebox_api.cli.helpers import prepare_start, process_download_runner_params
@@ -20,7 +21,7 @@ loop = new_event_loop()
 
 
 @click.group()
-@click.version_option("-v", "--version", package_name="moviebox-api")
+@click.version_option(version=__version__)
 def moviebox():
     """Search and download movies/series and their subtitles. envvar-prefix : MOVIEBOX"""
 
@@ -101,7 +102,9 @@ def moviebox():
     default=CaptionFileDownloader.movie_filename_generation_template,
 )
 @click.option(
-    "--progress-bar/--no-progress-bar", help="Display or disable progress-bar : True"
+    "--progress-bar/--no-progress-bar",
+    help="Display or disable progress-bar : True",
+    default=True,
 )
 @click.option(
     "--leave/--no-leave", default=True, help="Keep all leaves of the progressbar : True"
@@ -280,7 +283,9 @@ def download_movie(
     help="Use unicode (smooth blocks) to fill the progress-bar meter : False",
 )
 @click.option(
-    "--progress-bar/--no-progress-bar", help="Display or disable progress-bar : True"
+    "--progress-bar/--no-progress-bar",
+    help="Display or disable progress-bar : True",
+    default=True,
 )
 @click.option(
     "--leave/--no-leave", default=True, help="Keep all leaves of the progressbar : True"

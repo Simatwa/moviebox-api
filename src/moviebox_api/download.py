@@ -329,7 +329,7 @@ class MediaFileDownloader:
                     return response
                 with open(save_to, saving_mode) as fh:
                     p_bar = tqdm(
-                        desc=f"Downloading [{filename}]",
+                        desc=f"Downloading {'' if simple else f'[{filename}]'}",
                         total=round(size_in_mb, 1),
                         unit="Mb",
                         # unit_scale=True,
@@ -378,7 +378,9 @@ class CaptionFileDownloader:
         "%(title)s (%(release_year)d) - %(lanName)s.%(ext)s"
         # "%(title)s (%(release_year)d) - %(lanName)s [delay - %(delay)d].%(ext)s"
     )
-    series_filename_generation_template = "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s.%(ext)s"
+    series_filename_generation_template = (
+        "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s.%(ext)s"
+    )
     possible_filename_placeholders = (
         "%(title)s",
         "%(release_year)d",
