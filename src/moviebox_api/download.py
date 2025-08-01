@@ -298,7 +298,7 @@ class MediaFileDownloader:
         size_in_bytes = self._media_file.size
 
         if resume:
-            if size_in_bytes != current_downloaded_size:
+            if size_in_bytes == current_downloaded_size:
                 if suppress_complete_error:
                     logger.info(
                         f"Download already completed for the file in path - {save_to}"
@@ -378,7 +378,7 @@ class CaptionFileDownloader:
         "%(title)s (%(release_year)d) - %(lanName)s.%(ext)s"
         # "%(title)s (%(release_year)d) - %(lanName)s [delay - %(delay)d].%(ext)s"
     )
-    series_filename_generation_template = "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s [delay - %(delay)d].%(ext)s"
+    series_filename_generation_template = "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s.%(ext)s"
     possible_filename_placeholders = (
         "%(title)s",
         "%(release_year)d",
