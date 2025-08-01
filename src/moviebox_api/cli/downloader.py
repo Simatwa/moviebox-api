@@ -95,7 +95,7 @@ class Downloader:
         caption_only: bool = False,
         limit: int = 1,
         **kwargs,
-    ):
+    ) -> dict[int, dict[str, Path | list[Path]]]:
         MediaFileDownloader.series_filename_generation_template = episode_filename_tmpl
         CaptionFileDownloader.series_filename_generation_template = (
             caption_filename_tmpl
@@ -111,12 +111,15 @@ class Downloader:
         downloadable_files = DownloadableSeriesFilesDetail(
             self._session, target_tv_series
         )
+        response = {}
+
         for episode_count in range(limit):
             current_episode = episode + episode_count
             downloadable_files_detail = await downloadable_files.get_modelled_content(
                 season=season, episode=current_episode
             )
             # TODO: Iterate over seasons as well
+            current_episode_details = {}
             captions_saved_to = []
             if caption_only or download_caption:
                 for lang in language:
@@ -137,6 +140,8 @@ class Downloader:
 
             # Download series
 
+            current_episode_details["captions_path"] = captions_saved_to
+
             target_media_file = resolve_media_file_to_be_downloaded(
                 quality, downloadable_files_detail
             )
@@ -148,4 +153,7 @@ class Downloader:
             tv_series_saved_to = await media_file_downloader.run(
                 filename, dir=dir, **kwargs
             )
-            return (tv_series_saved_to, captions_saved_to)
+            current_episode_details["movie_path"] = tv_series_saved_to
+            response[current_episode] = current_episode_details
+
+        return response
