@@ -12,7 +12,7 @@ from moviebox_api.download import (
 
 from moviebox_api.constants import (
     SubjectType,
-    downloadQualitiesType,
+    DownloadQualitiesType,
     DEFAULT_CAPTION_LANGUAGE,
 )
 from moviebox_api.download import resolve_media_file_to_be_downloaded
@@ -41,7 +41,7 @@ class Downloader:
         yes: bool,
         dir: Path,
         caption_dir: Path,
-        quality: downloadQualitiesType,
+        quality: DownloadQualitiesType,
         movie_filename_tmpl: str,
         caption_filename_tmpl: str,
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
@@ -57,7 +57,7 @@ class Downloader:
             yes (bool): Proceed with the first item in the results instead of prompting confirmation.
             dir (Path): Directory for saving the movie file to.
             caption_dir (Path): Directory for saving the caption file to.
-            quality (downloadQualitiesType): Such as `720p` or simply `BEST` etc.
+            quality (DownloadQualitiesType): Such as `720p` or simply `BEST` etc.
             movie_filename_tmpl (str): Template for generating movie filename
             caption_filename_tmpl (str): Template for generating caption filename
             language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
@@ -131,7 +131,7 @@ class Downloader:
             yes (bool): Proceed with the first item in the results instead of prompting confirmation.
             dir (Path): Directory for saving the movie file to.
             caption_dir (Path): Directory for saving the caption files to.
-            quality (downloadQualitiesType): Episode quality such as `720p` or simply `BEST` etc.
+            quality (DownloadQualitiesType): Episode quality such as `720p` or simply `BEST` etc.
             episode_filename_tmpl (str): Template for generating episode filename.
             caption_filename_tmpl (str): Template for generating caption filename.
             language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).

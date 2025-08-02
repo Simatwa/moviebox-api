@@ -15,7 +15,7 @@ from moviebox_api.download import (
 )
 
 from moviebox_api.constants import (
-    downloadQualitiesType,
+    DownloadQualitiesType,
     SubjectType,
     DOWNLOAD_QUALITIES,
     DEFAULT_CAPTION_LANGUAGE,
@@ -92,7 +92,7 @@ class Auto:
     async def _movie_download_handler(
         self,
         downloadable_movie_file_details: DownloadableFilesMetadata,
-        quality: downloadQualitiesType = "BEST",
+        quality: DownloadQualitiesType = "BEST",
         **kwargs,
     ) -> Path | Response:
         """Downloads movie
@@ -147,7 +147,7 @@ class Auto:
         self,
         query: str,
         year: int = None,
-        quality: downloadQualitiesType = "BEST",
+        quality: DownloadQualitiesType = "BEST",
         caption_language: str = None,
         caption_only: bool = False,
         **kwargs,

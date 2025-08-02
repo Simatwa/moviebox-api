@@ -6,6 +6,7 @@ import logging
 import click
 
 from pathlib import Path
+from httpx import ConnectTimeout
 from asyncio import new_event_loop
 
 from moviebox_api import __version__
@@ -18,9 +19,8 @@ from moviebox_api.cli.downloader import Downloader
 
 from moviebox_api.download import MediaFileDownloader, CaptionFileDownloader
 
-from httpx import ConnectTimeout
 
-DEBUG = os.getenv("DEBUG", "0") == "1"  # TODO: Change this accordingly.
+DEBUG = os.getenv("DEBUG", "0") == "1"
 
 loop = new_event_loop()
 
@@ -28,7 +28,7 @@ loop = new_event_loop()
 @click.group()
 @click.version_option(version=__version__)
 def moviebox():
-    """Search and download movies/series and their subtitles. envvar-prefix : MOVIEBOX"""
+    """Search and download movies/tv-series and their subtitles. envvar-prefix : MOVIEBOX"""
 
 
 @click.command(context_settings=command_context_settings)

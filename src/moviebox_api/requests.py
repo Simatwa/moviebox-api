@@ -3,19 +3,18 @@ Provide ways to interact with Moviebox using `httpx`
 """
 
 import httpx
+from typing import Dict
 from httpx import Response
 from httpx._config import DEFAULT_TIMEOUT_CONFIG
 
-from typing import Dict
-
 from moviebox_api.models import MovieboxAppInfo
+from moviebox_api.constants import DOWNLOAD_REQUEST_HEADERS
+from moviebox_api.exceptions import EmptyResponseError
+
 from moviebox_api.helpers import (
     process_api_response,
     get_absolute_url,
 )
-
-from moviebox_api.constants import DOWNLOAD_REQUEST_HEADERS
-from moviebox_api.exceptions import EmptyResponseError
 
 # TODO : Set timezone and language values based on user's machine
 

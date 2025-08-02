@@ -4,15 +4,12 @@ and later performing the actual download as well
 
 import httpx
 
+import typing as t
 from os import getcwd, path
 from pathlib import Path
-
-from moviebox_api import logger
-
 from tqdm import tqdm
 
-import typing as t
-
+from moviebox_api import logger
 from moviebox_api._bases import BaseContentProvider
 from moviebox_api.models import (
     SearchResultsItem,
@@ -33,14 +30,11 @@ from moviebox_api.helpers import (
 from moviebox_api.constants import (
     SubjectType,
     DOWNLOAD_REQUEST_HEADERS,
-    downloadQualitiesType,
+    DownloadQualitiesType,
     DOWNLOAD_QUALITIES,
     DownloadMode,
 )
 from moviebox_api.exceptions import DownloadCompletedError
-
-
-# TODO: Make tqdm required dependency
 
 __all__ = [
     "MediaFileDownloader",
@@ -52,8 +46,21 @@ __all__ = [
 
 
 def resolve_media_file_to_be_downloaded(
-    quality: downloadQualitiesType, downloadable_metadata: DownloadableFilesMetadata
-) -> DownloadableFilesMetadata:
+    quality: DownloadQualitiesType, downloadable_metadata: DownloadableFilesMetadata
+) -> MediaFileMetadata:
+    """Gets media-file-metadata that matches the target quality
+
+    Args:
+        quality (DownloadQualitiesType): Target media quality such
+        downloadable_metadata (DownloadableFilesMetadata): Downloadable files metadata
+
+    Raises:
+        ValueError: Incase media file matching target quality not found
+        ValueError: Unexpected target media quality
+
+    Returns:
+        MediaFileMetadata: Media file details matching the target media quality
+    """
     match quality:
         case "BEST":
             target_metadata = downloadable_metadata.best_media_file
@@ -212,6 +219,7 @@ class MediaFileDownloader:
             str: Generated filename
         """
         assert_instance(search_results_item, SearchResultsItem, "search_results_item")
+
         placeholders = dict(
             title=search_results_item.title,
             release_date=str(search_results_item.releaseDate),
@@ -222,17 +230,19 @@ class MediaFileDownloader:
             season=season,
             episode=episode,
         )
+
         filename_template = (
             self.series_filename_template
             if search_results_item.subjectType == SubjectType.TV_SERIES
             else self.movie_filename_template
         )
+
         return sanitize_filename(filename_template % placeholders)
 
     async def run(
         self,
         filename: str | SearchResultsItem,
-        dir: str = getcwd(),
+        dir: str | Path = getcwd(),
         progress_bar=True,
         chunk_size: int = 512,
         mode: DownloadMode = DownloadMode.AUTO,
@@ -248,7 +258,7 @@ class MediaFileDownloader:
 
         Args:
             filename (str|SearchResultsItem): Movie filename
-            dir (str, optional): Directory for saving the contents Defaults to current directory.
+            dir (str|Path, optional): Directory for saving the contents. Defaults to current working directory.
             progress_bar (bool, optional): Display download progress bar. Defaults to True.
             chunk_size (int, optional): Chunk_size for downloading files in KB. Defaults to 512.
             mode (DownloadMode, DownloadMode.AUTO): Whether to start fresh download, resume or auto decide the download. Defaults to Auto.
@@ -266,9 +276,11 @@ class MediaFileDownloader:
         Returns:
             str|httpx.Response: Path where the media file has been saved to or httpx Response (test).
         """
+
         assert_instance(mode, DownloadMode, "mode")
         current_downloaded_size = 0
         current_downloaded_size_in_mb = 0
+
         if isinstance(filename, SearchResultsItem):
             # Lets generate filename
             filename = self.generate_filename(filename, **kwargs)
@@ -284,7 +296,6 @@ class MediaFileDownloader:
                 resume = False
 
             case DownloadMode.AUTO:
-                # AUTO
                 resume = save_to.exists()
 
         def pop_range_in_session_headers():
@@ -293,12 +304,15 @@ class MediaFileDownloader:
 
         if resume:
             logger.debug("Download set to resume")
+
             if not path.exists(save_to):
                 raise FileNotFoundError(f"File not found in path - '{save_to}'")
+
             current_downloaded_size = path.getsize(save_to)
             # Set the headers to resume download from the last byte
             self.session.headers.update({"Range": f"bytes={current_downloaded_size}-"})
             current_downloaded_size_in_mb = current_downloaded_size / 1000000
+
         else:
             logger.debug("Download set to start afresh")
 
@@ -311,6 +325,7 @@ class MediaFileDownloader:
                         f"Download already completed for the file in path - {save_to}"
                     )
                     return save_to
+
                 raise DownloadCompletedError(
                     save_to, f"Download completed for the file in path - '{save_to}'"
                 )
@@ -324,19 +339,23 @@ class MediaFileDownloader:
             f"Downloading media file ({size_with_unit}, resume - {resume}). "
             f"Writing to ({save_to})"
         )
+
         if progress_bar:
+
             async with self.session.stream(
                 "GET", str(self._media_file.url)
             ) as response:
                 response.raise_for_status()
+
                 if test:
                     logger.info(
                         f"Download test passed successfully {response.__repr__}"
                     )
                     return response
+
                 with open(save_to, saving_mode) as fh:
                     p_bar = tqdm(
-                        desc=f"Downloading {'' if simple else f'[{filename}]'}",
+                        desc=f"Downloading{' ' if simple else f' [{filename}]'}",
                         total=round(size_in_mb, 1),
                         unit="Mb",
                         # unit_scale=True,
@@ -353,26 +372,33 @@ class MediaFileDownloader:
                     async for chunk in response.aiter_bytes(chunk_size_in_bytes):
                         fh.write(chunk)
                         p_bar.update(round(chunk_size_in_bytes / 1_000_000, 1))
-            pop_range_in_session_headers()
+
             logger.info(f"{filename} - {size_with_unit} ✅")
+            pop_range_in_session_headers()
+
             return save_to
+
         else:
             logger.debug(f"Movie file info {self._media_file}")
+
             async with self.session.stream(
                 "GET", str(self._media_file.url)
             ) as response:
                 response.raise_for_status()
+
                 if test:
                     logger.info(
                         f"Download test passed successfully {response.__repr__}"
                     )
                     return response
+
                 with open(save_to, saving_mode) as fh:
                     async for chunk in response.aiter_bytes(chunk_size_in_bytes):
                         fh.write(chunk)
-            pop_range_in_session_headers()
+
             logger.info(f"{filename} - {size_with_unit} ✅")
             pop_range_in_session_headers()
+
             return save_to
 
 
@@ -437,6 +463,7 @@ class CaptionFileDownloader:
             str: Generated filename
         """
         assert_instance(search_results_item, SearchResultsItem, "search_results_item")
+
         placeholders = dict(
             title=search_results_item.title,
             release_date=str(search_results_item.releaseDate),
@@ -449,6 +476,7 @@ class CaptionFileDownloader:
             season=season,
             episode=episode,
         )
+
         filename_template = (
             self.series_filename_template
             if search_results_item.subjectType == SubjectType.TV_SERIES
@@ -479,21 +507,29 @@ class CaptionFileDownloader:
         if isinstance(filename, SearchResultsItem):
             # Lets generate filename
             filename = self.generate_filename(filename, **kwargs)
+
         save_to = Path(dir) / filename
+
         if save_to.exists() and path.getsize(save_to) == self._caption_file.size:
             logger.info(f"Caption file already downloaded - {save_to}.")
             return save_to
+
         size_with_unit = get_filesize_string(self._caption_file.size)
+
         logger.info(
             f"Downloading caption file ({size_with_unit}). " f"Writing to ({save_to})"
         )
+
         async with self.session.stream("GET", str(self._caption_file.url)) as response:
             response.raise_for_status()
+
             if test:
                 logger.info(f"Download test passed successfully {response.__repr__}")
                 return response
+
             with open(save_to, mode="wb") as fh:
                 async for chunk in response.aiter_bytes(chunk_size * 1_000):
                     fh.write(chunk)
+
         logger.info(f"{filename} - {size_with_unit} ✅")
         return save_to

@@ -5,17 +5,14 @@ across the package.
 """
 
 import re
+import typing as t
+from urllib.parse import urljoin
 
 # from bs4 import BeautifulSoup as bts
-import typing as t
-from typing import Dict, List
-
 from moviebox_api import logger
 
 from moviebox_api.exceptions import UnsuccessfulResponseError
 from moviebox_api.constants import HOST_URL
-
-from urllib.parse import urljoin
 
 file_ext_pattern = re.compile(r".+\.(\w+)\?.+")
 
@@ -66,14 +63,14 @@ def assert_instance(obj: object, class_or_tuple, name: str = "Parameter") -> t.N
     ), f"{name} value needs to be an instace of {class_or_tuple} not {type(obj)}"
 
 
-def process_api_response(json: Dict) -> Dict | List:
+def process_api_response(json: t.Dict) -> t.Dict | t.List:
     """Extracts the response data field
 
     Args:
-        json (Dict): Whole server response
+        json (t.Dict): Whole server response
 
     Returns:
-        Dict: Extracted data field value
+        t.Dict: Extracted data field value
     """
     if json.get("code", 1) == 0 and json.get("message") == "ok":
         return json["data"]
@@ -89,7 +86,7 @@ extract_data_field_value = process_api_response
 
 
 def get_filesize_string(size_in_bytes: int) -> str:
-    """Get something like 343 MB or 1.25 GB depending on size_in_bytes."""
+    """Get something like `343 MB` or `1.25 GB` depending on size_in_bytes."""
     units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
     for unit in units:
         # 1024 or 1000 ?

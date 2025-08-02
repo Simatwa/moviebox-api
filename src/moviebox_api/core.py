@@ -3,6 +3,7 @@ Main module for the package. Generate models from httpx request responses.
 """
 
 from typing import Dict
+
 from moviebox_api.requests import Session
 from moviebox_api.constants import SubjectType
 from moviebox_api.helpers import assert_instance, get_absolute_url
@@ -43,7 +44,7 @@ class Homepage(BaseContentProviderAndHelper):
 
 
 class EveryoneSearches(BaseContentProviderAndHelper):
-    """Movies and series everyone searches"""
+    """Movies and tv-series everyone searches"""
 
     _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/everyone-search")
 
@@ -85,6 +86,7 @@ class Search(BaseContentProvider):
         """
         assert_instance(subject_type, SubjectType, "subject_type")
         assert_instance(session, Session, "session")
+
         self.session = session
         self._subject_type = subject_type
         self._keyword = keyword
@@ -132,6 +134,7 @@ class Search(BaseContentProvider):
             Search
         """
         assert_instance(content, SearchResults, "content")
+
         if content.pager.page >= 2:
             return Search(
                 session=self.session,
@@ -152,6 +155,7 @@ class Search(BaseContentProvider):
         Returns:
             Dict[str, str|int]: Ready payload
         """
+
         return {
             "keyword": self._keyword,
             "page": self._page,

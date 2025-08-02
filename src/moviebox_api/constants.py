@@ -51,7 +51,7 @@ DOWNLOAD_REQUEST_HEADERS = {
 """For media and subtitle files download requests"""
 
 
-downloadQualitiesType: t.TypeAlias = t.Literal[
+DownloadQualitiesType: t.TypeAlias = t.Literal[
     "WORST", "BEST", "360P", "480P", "720P", "1080P"
 ]  # TODO: Add more qualities
 
@@ -105,6 +105,6 @@ class DownloadMode(StrEnum):
         return resp
 
     @classmethod
-    def map_cls(cls):
+    def map_cls(cls) -> dict:
         """Names in lower case mapped to their values"""
         return {"start": cls.START, "resume": cls.RESUME, "auto": cls.AUTO}

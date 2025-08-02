@@ -182,7 +182,7 @@ class SearchResults(BaseModel):
     items: list[SearchResultsItem]
 
     @field_validator("items", mode="after")
-    def validate_items(value: list[SearchResultsItem]):
+    def validate_items(value: list[SearchResultsItem]) -> list[SearchResultsItem]:
         if not bool(value):
             raise ZeroSearchResultsError(
                 "Search yielded empty results. Try a different keyword."
@@ -197,7 +197,7 @@ class SearchResults(BaseModel):
 class BaseFileMetadata(BaseModel):
 
     @property
-    def ext(self):
+    def ext(self) -> str:
         """Media file extension such as `mp4` or `srt`"""
         return get_file_extension(self.url)
 
