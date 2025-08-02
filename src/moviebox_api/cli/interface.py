@@ -65,7 +65,7 @@ def moviebox():
     "-Z",
     "--chunk-size",
     type=click.IntRange(min=1, max=10000),
-    help="Chunk_size for downloading files in KB : 512",
+    help="Chunk-size for downloading files in KB : 512",
     default=512,
 )
 @click.option(
@@ -253,7 +253,7 @@ def download_movie(
     "-Z",
     "--chunk-size",
     type=click.IntRange(min=1, max=10000),
-    help="Chunk_size for downloading files in KB : 512",
+    help="Chunk-size for downloading files in KB : 512",
     default=512,
 )
 @click.option(

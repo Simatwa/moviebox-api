@@ -6,8 +6,8 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 [![PyPI version](https://badge.fury.io/py/moviebox-api.svg)](https://pypi.org/project/moviebox-api)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/moviebox-api)](https://pypi.org/project/moviebox-api)
 [![PyPI - License](https://img.shields.io/pypi/l/moviebox-api)](https://pypi.org/project/moviebox-api)
-[![Hits](https://hits.sh/github.com/Almas-Ali/moviebox-api.svg?label=Total%20hits&logo=dotenv)](https://github.com/Almas-Ali/moviebox-api "Total hits")
-[![Code Coverage](https://img.shields.io/codecov/c/github/Almas-Ali/moviebox-api)](https://codecov.io/gh/Almas-Ali/moviebox-api)
+[![Hits](https://hits.sh/github.com/Simatwa/moviebox-api.svg?label=Total%20hits&logo=dotenv)](https://github.com/Simatwa/moviebox-api "Total hits")
+[![Code Coverage](https://img.shields.io/codecov/c/github/Simatwa/moviebox-api)](https://codecov.io/gh/Simatwa/moviebox-api)
 [![Downloads](https://pepy.tech/badge/moviebox-api)](https://pepy.tech/project/moviebox-api)
 <!-- TODO: Add logo & wakatime-->
 </div>
@@ -116,7 +116,7 @@ Options:
   -d, --dir DIRECTORY             Directory for saving the movie to : PWD
   -D, --caption-dir DIRECTORY     Directory for saving the caption file to :
                                   PWD
-  -Z, --chunk-size INTEGER RANGE  Chunk_size for downloading files in KB : 512
+  -Z, --chunk-size INTEGER RANGE  Chunk-size for downloading files in KB : 512
                                   [1<=x<=10000]
   -m, --mode [start|resume|auto]  Start the download, resume or set
                                   automatically : AUTO
@@ -185,7 +185,7 @@ Options:
                                   PWD
   -D, --caption-dir DIRECTORY     Directory for saving the caption file to :
                                   PWD
-  -Z, --chunk-size INTEGER RANGE  Chunk_size for downloading files in KB : 512
+  -Z, --chunk-size INTEGER RANGE  Chunk-size for downloading files in KB : 512
                                   [1<=x<=10000]
   -m, --mode [start|resume|auto]  Start new download, resume or set
                                   automatically : AUTO
@@ -235,6 +235,6 @@ Options:
 
 > "All videos and pictures on MovieBox are from the Internet, and their copyrights belong to the original creators. We only provide webpage services and do not store, record, or upload any content." - moviebox.ph as on *Sunday 13th, July 2025*
 
-Long live Moviebox spirit
+> Long live Moviebox spirit
 
 <p align="center"> Made with ❤️</p>
