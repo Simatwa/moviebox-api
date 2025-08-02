@@ -9,9 +9,12 @@ import re
 # from bs4 import BeautifulSoup as bts
 import typing as t
 from typing import Dict, List
+
 from moviebox_api import logger
+
 from moviebox_api.exceptions import UnsuccessfulResponseError
-from moviebox_api.constants import host_url
+from moviebox_api.constants import HOST_URL
+
 from urllib.parse import urljoin
 
 file_ext_pattern = re.compile(r".+\.(\w+)\?.+")
@@ -42,7 +45,7 @@ def get_absolute_url(relative_url: str) -> str:
     Returns:
         str: Complete url with host
     """
-    return urljoin(host_url, relative_url)
+    return urljoin(HOST_URL, relative_url)
 
 
 def assert_membership(value: t.Any, elements: t.Iterable, identity="Value"):

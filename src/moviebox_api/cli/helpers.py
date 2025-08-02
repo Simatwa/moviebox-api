@@ -2,11 +2,12 @@
 
 import click
 import logging
+
 from moviebox_api import logger
 from moviebox_api.core import Search, Session
 from moviebox_api.constants import SubjectType
+from moviebox_api.constants import HOST_URL, DownloadMode
 from moviebox_api.models import DownloadableFilesMetadata
-from moviebox_api.constants import host_url, DownloadMode
 
 command_context_settings = dict(auto_envvar_prefix="MOVIEBOX")
 
@@ -108,7 +109,7 @@ def prepare_start(quiet: bool, verbose: bool):
             else (30 - (verbose * 10)) if verbose > 0 else logging.INFO
         ),
     )
-    logging.info(f"Using host url - {host_url}")
+    logging.info(f"Using host url - {HOST_URL}")
     packages = ("httpx",)
     for package_name in packages:
         package_logger = logging.getLogger(package_name)

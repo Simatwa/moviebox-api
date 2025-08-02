@@ -2,7 +2,17 @@
 and later performing the actual download as well
 """
 
+import httpx
+
+from os import getcwd, path
+from pathlib import Path
+
+from moviebox_api import logger
+
+from tqdm import tqdm
+
 import typing as t
+
 from moviebox_api._bases import BaseContentProvider
 from moviebox_api.models import (
     SearchResultsItem,
@@ -10,26 +20,25 @@ from moviebox_api.models import (
     MediaFileMetadata,
     CaptionFileMetadata,
 )
+
 from moviebox_api.requests import Session
+
 from moviebox_api.helpers import (
     assert_instance,
     get_absolute_url,
     get_filesize_string,
     sanitize_filename,
 )
+
 from moviebox_api.constants import (
     SubjectType,
-    download_request_headers,
+    DOWNLOAD_REQUEST_HEADERS,
     downloadQualitiesType,
     DOWNLOAD_QUALITIES,
     DownloadMode,
 )
 from moviebox_api.exceptions import DownloadCompletedError
-from os import getcwd, path
-from pathlib import Path
-import httpx
-from moviebox_api import logger
-from tqdm import tqdm
+
 
 # TODO: Make tqdm required dependency
 
@@ -156,12 +165,10 @@ class DownloadableSeriesFilesDetail(BaseDownloadableFilesDetail):
 class MediaFileDownloader:
     """Download movie and tv-series files"""
 
-    request_headers = download_request_headers
+    request_headers = DOWNLOAD_REQUEST_HEADERS
     request_cookies = {}
-    movie_filename_generation_template = (
-        "%(title)s (%(release_year)d) - %(resolution)dP.%(ext)s"
-    )
-    series_filename_generation_template = (
+    movie_filename_template = "%(title)s (%(release_year)d) - %(resolution)dP.%(ext)s"
+    series_filename_template = (
         "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(resolution)dP.%(ext)s"
     )
     possible_filename_placeholders = (
@@ -194,7 +201,7 @@ class MediaFileDownloader:
         season: int = 0,
         episode: int = 0,
     ) -> str:
-        """Generates filename in the format as in `self.*filename_generation_template`
+        """Generates filename in the format as in `self.*filename_template`
 
         Args:
             search_results_item (SearchResultsItem)
@@ -215,12 +222,12 @@ class MediaFileDownloader:
             season=season,
             episode=episode,
         )
-        filename_generation_template = (
-            self.series_filename_generation_template
+        filename_template = (
+            self.series_filename_template
             if search_results_item.subjectType == SubjectType.TV_SERIES
-            else self.movie_filename_generation_template
+            else self.movie_filename_template
         )
-        return sanitize_filename(filename_generation_template % placeholders)
+        return sanitize_filename(filename_template % placeholders)
 
     async def run(
         self,
@@ -372,13 +379,13 @@ class MediaFileDownloader:
 class CaptionFileDownloader:
     """Creates a local copy of a remote subtitle/caption file"""
 
-    request_headers = download_request_headers
+    request_headers = DOWNLOAD_REQUEST_HEADERS
     request_cookies = {}
-    movie_filename_generation_template = (
+    movie_filename_template = (
         "%(title)s (%(release_year)d) - %(lanName)s.%(ext)s"
         # "%(title)s (%(release_year)d) - %(lanName)s [delay - %(delay)d].%(ext)s"
     )
-    series_filename_generation_template = (
+    series_filename_template = (
         "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s.%(ext)s"
     )
     possible_filename_placeholders = (
@@ -415,7 +422,7 @@ class CaptionFileDownloader:
         episode: int = 0,
         **kwargs,
     ) -> str:
-        """Generates filename in the format as in `self.filename_generation_template`
+        """Generates filename in the format as in `self.filename_template`
 
         Args:
             search_results_item (SearchResultsItem)
@@ -442,12 +449,12 @@ class CaptionFileDownloader:
             season=season,
             episode=episode,
         )
-        filename_generation_template = (
-            self.series_filename_generation_template
+        filename_template = (
+            self.series_filename_template
             if search_results_item.subjectType == SubjectType.TV_SERIES
-            else self.movie_filename_generation_template
+            else self.movie_filename_template
         )
-        return sanitize_filename(filename_generation_template % placeholders)
+        return sanitize_filename(filename_template % placeholders)
 
     async def run(
         self,

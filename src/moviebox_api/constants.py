@@ -5,7 +5,7 @@ import typing as t
 from moviebox_api import logger
 from enum import IntEnum, StrEnum
 
-mirror_hosts = (
+MIRROR_HOSTS = (
     "moviebox.ng",
     "h5.aoneroom.com",
     "movieboxapp.in",
@@ -18,35 +18,35 @@ mirror_hosts = (
 ENVIRONMENT_HOST_KEY = "MOVIEBOX_API_HOST"
 """User declares host to use as environment variable using this key"""
 
-selected_host = (
-    os.getenv(ENVIRONMENT_HOST_KEY) or mirror_hosts[0]
+SELECTED_HOST = (
+    os.getenv(ENVIRONMENT_HOST_KEY) or MIRROR_HOSTS[0]
 )  # TODO: Choose the right value based on working status
 """Host adress only with protocol"""
 
-host_protocol = "https"
+HOST_PROTOCOL = "https"
 """Host protocol i.e http/https"""
 
-host_url = f"{host_protocol}://{selected_host}/"
+HOST_URL = f"{HOST_PROTOCOL}://{SELECTED_HOST}/"
 """Complete host adress with protocol"""
 
-logger.info(f"Moviebox host url - {host_url}")
+logger.info(f"Moviebox host url - {HOST_URL}")
 
-default_request_headers = {
+DEFAULT_REQUEST_HEADERS = {
     "X-Client-Info": '{"timezone":"Africa/Nairobi"}',  # TODO: Set this value dynamically.
     "Accept-Language": "en-US,en;q=0.5",
     "Accept": "application/json",
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
-    "Referer": host_url,  # "https://moviebox.ng/movies/titanic-kGoZgiDdff?id=206379412718240440&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
-    "Host": selected_host,
+    "Referer": HOST_URL,  # "https://moviebox.ng/movies/titanic-kGoZgiDdff?id=206379412718240440&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
+    "Host": SELECTED_HOST,
     # "X-Source": "",
 }
 """For general http requests other than download"""
 
-download_request_headers = {
+DOWNLOAD_REQUEST_HEADERS = {
     "Accept": "*/*",  # "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5",
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
-    "Origin": selected_host,
-    "Referer": host_url,
+    "Origin": SELECTED_HOST,
+    "Referer": HOST_URL,
 }
 """For media and subtitle files download requests"""
 

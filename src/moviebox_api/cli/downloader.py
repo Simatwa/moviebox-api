@@ -2,14 +2,17 @@
 
 from pathlib import Path
 from moviebox_api.core import Session
+
 from moviebox_api.download import (
     DownloadableSeriesFilesDetail,
     DownloadableMovieFilesDetail,
     MediaFileDownloader,
     CaptionFileDownloader,
 )
+
 from moviebox_api.constants import SubjectType, DEFAULT_CAPTION_LANGUAGE
 from moviebox_api.download import resolve_media_file_to_be_downloaded
+
 from moviebox_api.cli.helpers import (
     perform_search_and_get_item,
     get_caption_file_or_raise,
@@ -42,8 +45,8 @@ class Downloader:
         caption_only: bool = False,
         **kwargs,
     ):
-        MediaFileDownloader.movie_filename_generation_template = movie_filename_tmpl
-        CaptionFileDownloader.movie_filename_generation_template = caption_filename_tmpl
+        MediaFileDownloader.movie_filename_template = movie_filename_tmpl
+        CaptionFileDownloader.movie_filename_template = caption_filename_tmpl
         target_movie = await perform_search_and_get_item(
             self._session,
             title=title,
@@ -96,10 +99,8 @@ class Downloader:
         limit: int = 1,
         **kwargs,
     ) -> dict[int, dict[str, Path | list[Path]]]:
-        MediaFileDownloader.series_filename_generation_template = episode_filename_tmpl
-        CaptionFileDownloader.series_filename_generation_template = (
-            caption_filename_tmpl
-        )
+        MediaFileDownloader.series_filename_template = episode_filename_tmpl
+        CaptionFileDownloader.series_filename_template = caption_filename_tmpl
 
         target_tv_series = await perform_search_and_get_item(
             self._session,

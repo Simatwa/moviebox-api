@@ -5,13 +5,16 @@ Provide ways to interact with Moviebox using `httpx`
 import httpx
 from httpx import Response
 from httpx._config import DEFAULT_TIMEOUT_CONFIG
+
 from typing import Dict
+
 from moviebox_api.models import MovieboxAppInfo
 from moviebox_api.helpers import (
     process_api_response,
     get_absolute_url,
 )
-from moviebox_api.constants import default_request_headers
+
+from moviebox_api.constants import DOWNLOAD_REQUEST_HEADERS
 from moviebox_api.exceptions import EmptyResponseError
 
 # TODO : Set timezone and language values based on user's machine
@@ -32,7 +35,7 @@ class Session:
 
     def __init__(
         self,
-        headers: Dict = default_request_headers,
+        headers: Dict = DOWNLOAD_REQUEST_HEADERS,
         cookies: Dict = request_cookies,
         timeout: float | int = DEFAULT_TIMEOUT_CONFIG,
     ):

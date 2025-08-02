@@ -41,6 +41,7 @@ logger = logging.getLogger(__name__)
 
 from moviebox_api.core import Homepage, Search
 from moviebox_api.requests import Session
+
 from moviebox_api.download import (
     MediaFileDownloader,
     CaptionFileDownloader,

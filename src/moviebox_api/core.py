@@ -122,6 +122,7 @@ class Search(BaseContentProvider):
 
     def previous_page(self, content: SearchResults) -> "Search":
         """Navigate to the search results of the previous page.
+
         - Useful when the currrent page is greater than  1.
 
         Args:
