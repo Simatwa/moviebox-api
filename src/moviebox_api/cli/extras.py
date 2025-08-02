@@ -10,8 +10,8 @@ from moviebox_api.cli.helpers import command_context_settings
 
 @click.command(context_settings=command_context_settings)
 @click.option("-j", "--json", is_flag=True, help="Output details in json format")
-def MIRROR_HOSTS(json: bool):
-    """Discover moviebox mirror hosts [env: MOVIEBOX_API_HOST]"""
+def mirror_hosts(json: bool):
+    """Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST]"""
 
     if json:
         rich.print_json(dumps(dict(details=MIRROR_HOSTS), indent=4))
@@ -19,7 +19,7 @@ def MIRROR_HOSTS(json: bool):
         from rich.table import Table
 
         table = Table(
-            title="Mirror hosts",
+            title="Moviebox mirror hosts",
             show_lines=True,
         )
         table.add_column("No.", style="white", justify="center")

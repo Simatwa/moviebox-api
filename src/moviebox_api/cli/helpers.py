@@ -1,12 +1,16 @@
 """Contain support functions and constant variables"""
 
+import random
 import click
 import logging
 
-from moviebox_api import logger
+from httpx import ConnectTimeout, HTTPStatusError
+from pydantic import ValidationError
+
+from moviebox_api import logger, __repo__
 from moviebox_api.core import Search, Session
-from moviebox_api.constants import SubjectType
-from moviebox_api.constants import HOST_URL, DownloadMode
+from moviebox_api.constants import SubjectType, ENVIRONMENT_HOST_KEY
+from moviebox_api.constants import HOST_URL, MIRROR_HOSTS, DownloadMode
 from moviebox_api.models import DownloadableFilesMetadata
 from moviebox_api.models import SearchResultsItem, CaptionFileMetadata
 
@@ -156,3 +160,47 @@ def process_download_runner_params(params: dict) -> dict:
     params["mode"] = DownloadMode.map_cls().get(params.get("mode").lower())
     params["suppress_complete_error"] = True
     return params
+
+
+def show_any_help(exception: Exception, exception_msg: str) -> int:
+    """Process exception and suggest solution if exists.
+
+    Args:
+        exception (Exception): Exact exception encountered.
+        exception_msg (str): Exception message
+
+    Returns:
+        int: Exit status code
+    """
+    exit_code = 1
+
+    if isinstance(exception, ConnectTimeout):
+        logging.info(
+            "Http connect request has timed out. Check your connection and retry."
+        )
+
+    elif isinstance(exception, HTTPStatusError):
+
+        match exception.response.status_code:
+            case 403:
+                logging.info(
+                    f"Looks like you're in a region that Moviebox doesn't offer their services to. "
+                    "Use a proxy or a VPN from a different geographical location to bypass this restriction."
+                )
+
+    elif isinstance(exception, ValidationError):
+        logging.info(
+            "Looks like there are structural changes in the server response.\n"
+            f"Report this issue at {__repo__}/issues/new"
+        )
+
+    if "404 Domain" in exception_msg:
+
+        example_host = random.choice(MIRROR_HOSTS)
+        logging.info(
+            'Run "moviebox mirror-hosts" command to check available mirror hosts and '
+            f'then export it to the environment using name "{ENVIRONMENT_HOST_KEY}".\n'
+            f"For instance: In Linux system you might run 'export {ENVIRONMENT_HOST_KEY}=\"{example_host}\"'"
+        )
+
+    return exit_code

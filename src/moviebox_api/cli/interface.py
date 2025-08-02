@@ -6,15 +6,18 @@ import logging
 import click
 
 from pathlib import Path
-from httpx import ConnectTimeout
 from asyncio import new_event_loop
 
 from moviebox_api import __version__
 from moviebox_api.constants import DOWNLOAD_QUALITIES
 
 from moviebox_api.cli.helpers import command_context_settings
-from moviebox_api.cli.helpers import prepare_start, process_download_runner_params
-from moviebox_api.cli.extras import MIRROR_HOSTS
+from moviebox_api.cli.helpers import (
+    prepare_start,
+    process_download_runner_params,
+    show_any_help,
+)
+from moviebox_api.cli.extras import mirror_hosts
 from moviebox_api.cli.downloader import Downloader
 
 from moviebox_api.download import MediaFileDownloader, CaptionFileDownloader
@@ -383,20 +386,19 @@ def main():
     try:
         moviebox.add_command(download_movie, "download-movie")
         moviebox.add_command(download_tv_series, "download-series")
-        moviebox.add_command(MIRROR_HOSTS, "mirror-hosts")
+        moviebox.add_command(mirror_hosts, "mirror-hosts")
         return moviebox()
 
-    except ConnectTimeout:
-        logging.error(
-            "Http connect request has timed out. Check your connection and retry."
-        )
-
     except Exception as e:
+        exception_msg = str({e.args[1] if e.args and len(e.args) > 1 else e})
 
         if DEBUG:
             logging.exception(e)
         else:
-            logging.error(f"{e.args[1] if e.args and len(e.args)>1 else e}")
+
+            if bool(exception_msg):
+                logging.error(exception_msg)
+            sys.exit(show_any_help(e, exception_msg))
 
     sys.exit(1)
 
