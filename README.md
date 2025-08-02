@@ -218,15 +218,6 @@ Options:
 
 ```
 
-<details>
-
-<summary>
-
-
-</summary>
-
-</details>
-
 </details>
 
 </details>

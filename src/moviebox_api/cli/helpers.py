@@ -8,6 +8,8 @@ from moviebox_api.core import Search, Session
 from moviebox_api.constants import SubjectType
 from moviebox_api.constants import HOST_URL, DownloadMode
 from moviebox_api.models import DownloadableFilesMetadata
+from moviebox_api.models import SearchResultsItem, CaptionFileMetadata
+
 
 command_context_settings = dict(auto_envvar_prefix="MOVIEBOX")
 
@@ -19,8 +21,23 @@ async def perform_search_and_get_item(
     subject_type: SubjectType,
     yes: bool,
     search: Search = None,
-):
-    """Search movie/tv-series and return target search results item"""
+) -> SearchResultsItem:
+    """Search movie/tv-series and return target search results item
+
+    Args:
+        session (Session): MovieboxAPI requests session.
+        title (str): Partial or complete name of the movie/tv-series.
+        year (int): `ReleaseDate.year` filter of the search result items.
+        subject_type (SubjectType): Movie or tv-series.
+        yes (bool): Proceed with the first item instead of prompting confirmation.
+        search (Search, optional): Search object. Defaults to None.
+
+    Raises:
+        RuntimeError: When all items are exhausted without a match.
+
+    Returns:
+        SearchResultsItem: Targeted movie/tv-series
+    """
     search = search or Search(session, title, subject_type)
     search_results = await search.get_modelled_content()
     subject_type_name = " ".join(subject_type.name.lower().split("_"))
@@ -68,8 +85,19 @@ async def perform_search_and_get_item(
 
 def get_caption_file_or_raise(
     downloadable_details: DownloadableFilesMetadata, language: str
-):
-    """Returns caption-file based on desired language or raise ValueError if it doesn't exist."""
+) -> CaptionFileMetadata:
+    """Get caption-file based on desired language or raise ValueError if it doesn't exist.
+
+    Args:
+        downloadable_details (DownloadableFilesMetadata)
+        language (str): language filter such as `en` or `English`
+
+    Raises:
+        ValueError: Incase caption file for target does not exist.
+
+    Returns:
+        CaptionFileMetadata: Target caption file details
+    """
     target_caption_file = downloadable_details.get_subtitle_by_language(language)
     if target_caption_file is None:
         language_subtitle_map = (
@@ -84,7 +112,7 @@ def get_caption_file_or_raise(
     return target_caption_file
 
 
-def prepare_start(quiet: bool, verbose: bool):
+def prepare_start(quiet: bool, verbose: bool) -> None:
     """Set up some stuff for better CLI usage such as:
 
     - Set higher logging level for some packages.
@@ -116,7 +144,15 @@ def prepare_start(quiet: bool, verbose: bool):
         package_logger.setLevel(logging.WARNING)
 
 
-def process_download_runner_params(params: dict):
+def process_download_runner_params(params: dict) -> dict:
+    """Format parsed args from cli to required types and add extra ones
+
+    Args:
+        params (dict): Parameters for `Downloader.run`
+
+    Returns:
+        dict: Processed parameters
+    """
     params["mode"] = DownloadMode.map_cls().get(params.get("mode").lower())
     params["suppress_complete_error"] = True
     return params

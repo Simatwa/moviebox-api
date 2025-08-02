@@ -10,7 +10,11 @@ from moviebox_api.download import (
     CaptionFileDownloader,
 )
 
-from moviebox_api.constants import SubjectType, DEFAULT_CAPTION_LANGUAGE
+from moviebox_api.constants import (
+    SubjectType,
+    downloadQualitiesType,
+    DEFAULT_CAPTION_LANGUAGE,
+)
 from moviebox_api.download import resolve_media_file_to_be_downloaded
 
 from moviebox_api.cli.helpers import (
@@ -37,14 +41,32 @@ class Downloader:
         yes: bool,
         dir: Path,
         caption_dir: Path,
-        quality: str,
-        movie_filename_tmpl,
-        caption_filename_tmpl,
+        quality: downloadQualitiesType,
+        movie_filename_tmpl: str,
+        caption_filename_tmpl: str,
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
         **kwargs,
-    ):
+    ) -> tuple[Path | None, list[Path] | None]:
+        """Search movie by name and proceed to download it.
+
+        Args:
+            title (str): Complete or partial movie name
+            year (int): `releaseDate.year` filter for the movie.
+            yes (bool): Proceed with the first item in the results instead of prompting confirmation.
+            dir (Path): Directory for saving the movie file to.
+            caption_dir (Path): Directory for saving the caption file to.
+            quality (downloadQualitiesType): Such as `720p` or simply `BEST` etc.
+            movie_filename_tmpl (str): Template for generating movie filename
+            caption_filename_tmpl (str): Template for generating caption filename
+            language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
+            download_caption (bool, optional): Whether to download caption or not. Defaults to False.
+            caption_only (bool, optional): Whether to ignore movie file or not. Defaults to False.
+
+        Returns:
+            tuple[Path|None, list[Path]|None]: Path to downloaded movie and downloaded caption files.
+        """
         MediaFileDownloader.movie_filename_template = movie_filename_tmpl
         CaptionFileDownloader.movie_filename_template = caption_filename_tmpl
         target_movie = await perform_search_and_get_item(
@@ -91,14 +113,35 @@ class Downloader:
         dir: Path,
         caption_dir: bool,
         quality: str,
-        episode_filename_tmpl,
-        caption_filename_tmpl,
+        episode_filename_tmpl: str,
+        caption_filename_tmpl: str,
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
         limit: int = 1,
         **kwargs,
     ) -> dict[int, dict[str, Path | list[Path]]]:
+        """Search tv-series by name and proceed to download its episodes.
+
+        Args:
+            title (str): Complete or partial tv-series name
+            year (int): `releaseDate.year` filter for the tv-series
+            season (int): Target season number of the tv-series
+            episode (int): Target episode number of the tv-series
+            yes (bool): Proceed with the first item in the results instead of prompting confirmation.
+            dir (Path): Directory for saving the movie file to.
+            caption_dir (Path): Directory for saving the caption files to.
+            quality (downloadQualitiesType): Episode quality such as `720p` or simply `BEST` etc.
+            episode_filename_tmpl (str): Template for generating episode filename.
+            caption_filename_tmpl (str): Template for generating caption filename.
+            language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
+            download_caption (bool, optional): Whether to download caption or not. Defaults to False.
+            caption_only (bool, optional): Whether to ignore episode files or not. Defaults to False.
+            limit (int, optional): Number of episodes to download including the offset episode. Defaults to 1.
+
+        Returns:
+            dict[int, dict[str, Path | list[Path]]]: Episode number and path to downloaded episode file and caption files.
+        """
         MediaFileDownloader.series_filename_template = episode_filename_tmpl
         CaptionFileDownloader.series_filename_template = caption_filename_tmpl
 

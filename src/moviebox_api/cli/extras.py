@@ -1,7 +1,10 @@
 """Contains non-essential cli-commands"""
 
 import click
+import rich
+from json import dumps
 
+from moviebox_api.constants import MIRROR_HOSTS
 from moviebox_api.cli.helpers import command_context_settings
 
 
@@ -9,10 +12,6 @@ from moviebox_api.cli.helpers import command_context_settings
 @click.option("-j", "--json", is_flag=True, help="Output details in json format")
 def MIRROR_HOSTS(json: bool):
     """Discover moviebox mirror hosts [env: MOVIEBOX_API_HOST]"""
-    # Import stuffs here so as to make cli fast
-    from moviebox_api.constants import MIRROR_HOSTS
-    from json import dumps
-    import rich
 
     if json:
         rich.print_json(dumps(dict(details=MIRROR_HOSTS), indent=4))
@@ -20,7 +19,7 @@ def MIRROR_HOSTS(json: bool):
         from rich.table import Table
 
         table = Table(
-            title="Help info",
+            title="Mirror hosts",
             show_lines=True,
         )
         table.add_column("No.", style="white", justify="center")

@@ -327,7 +327,7 @@ def download_movie(
     "-Q",
     "--quiet",
     is_flag=True,
-    help="Do not show download progressbar : False",
+    help="Disable showing interactive texts on the progress (logs) : False",
 )
 @click.option(
     "-Y", "--yes", is_flag=True, help="Do not prompt for tv-series confirmation : False"
