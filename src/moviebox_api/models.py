@@ -10,7 +10,7 @@ from uuid import UUID
 from json import loads
 from moviebox_api.constants import SubjectType
 from moviebox_api.exceptions import ZeroSearchResultsError
-from moviebox_api.constants import downloadQualitiesType
+from moviebox_api.constants import DownloadQualitiesType
 from moviebox_api.helpers import get_file_extension
 
 
@@ -254,11 +254,11 @@ class DownloadableFilesMetadata(BaseModel):
 
     def get_quality_downloads_map(
         self,
-    ) -> t.Dict[downloadQualitiesType, MediaFileMetadata]:
+    ) -> t.Dict[DownloadQualitiesType, MediaFileMetadata]:
         """Maps media file quality to their equivalent media files object
 
         Returns:
-            t.Dict[downloadQualitiesType, MediaFileMetadata]
+            t.Dict[DownloadQualitiesType, MediaFileMetadata]
         """
         resolution_downloads_map = {}
         for item in self.downloads:

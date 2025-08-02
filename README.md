@@ -71,10 +71,9 @@ if __name__ == "__main__":
 ```sh
 # $ python -m moviebox_api --help
 
-
 Usage: moviebox [OPTIONS] COMMAND [ARGS]...
 
-  Search and download movies/series and their subtitles. envvar-prefix :
+  Search and download movies/tv-series and their subtitles. envvar-prefix :
   MOVIEBOX
 
 Options:
@@ -93,7 +92,7 @@ Commands:
 
 <summary>
 
-### Download Movie
+#### Download Movie
 
 ```sh
 $ python -m moviebox_api download-movie <Movie title>
@@ -105,7 +104,7 @@ $ python -m moviebox_api download-movie <Movie title>
 ```sh
 # python -m moviebox_api download-movie --help
 
-Usage: python -m moviebox_api download-movie [OPTIONS] TITLE
+Usage: moviebox download-movie [OPTIONS] TITLE
 
   Search and download movie.
 
@@ -154,7 +153,7 @@ Options:
 
 <summary>
 
-### Download Series
+#### Download Series
 
 ```sh
 $ python -m moviebox_api download-series <Series title> -s <season offset> -e <episode offset>
@@ -166,8 +165,7 @@ $ python -m moviebox_api download-series <Series title> -s <season offset> -e <e
 ```sh
 # python -m moviebox_api download-series --help
 
-
-Usage: python -m moviebox_api download-series [OPTIONS] TITLE
+Usage: moviebox download-series [OPTIONS] TITLE
 
   Search and download tv series.
 
@@ -211,7 +209,8 @@ Options:
   -T, --test                      Just test if download is possible but do not
                                   actually download : False
   -V, --verbose                   Show more detailed interactive texts : False
-  -Q, --quiet                     Do not show download progressbar : False
+  -Q, --quiet                     Disable showing interactive texts on the
+                                  progress (logs) : False
   -Y, --yes                       Do not prompt for tv-series confirmation :
                                   False
   -h, --help                      Show this message and exit.
