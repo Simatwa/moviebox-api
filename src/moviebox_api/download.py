@@ -79,7 +79,7 @@ def resolve_media_file_to_be_downloaded(
                     )
             else:
                 raise ValueError(
-                    f"Unknown media file quality expected {quality}. "
+                    f"Unknown media file quality passed '{quality}'. "
                     f"Choose from {DOWNLOAD_QUALITIES}"
                 )
     return target_metadata
@@ -176,8 +176,10 @@ class MediaFileDownloader:
     request_cookies = {}
     movie_filename_template = "%(title)s (%(release_year)d) - %(resolution)dP.%(ext)s"
     series_filename_template = (
-        "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(resolution)dP.%(ext)s"
+        "%(title)s S%(season)dE%(episode)d - %(resolution)dP.%(ext)s"
     )
+    # Should have been named episode_filename_template but for consistency
+    # with the subject-types {movie, tv-series, music} it's better as it is
     possible_filename_placeholders = (
         "%(title)s",
         "%(release_year)d",
@@ -411,9 +413,7 @@ class CaptionFileDownloader:
         "%(title)s (%(release_year)d) - %(lanName)s.%(ext)s"
         # "%(title)s (%(release_year)d) - %(lanName)s [delay - %(delay)d].%(ext)s"
     )
-    series_filename_template = (
-        "%(title)s (%(release_year)d) S%(season)dE%(episode)d - %(lanName)s.%(ext)s"
-    )
+    series_filename_template = "%(title)s S%(season)dE%(episode)d - %(lanName)s.%(ext)s"
     possible_filename_placeholders = (
         "%(title)s",
         "%(release_year)d",

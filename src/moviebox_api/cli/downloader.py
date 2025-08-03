@@ -1,4 +1,4 @@
-"""Gets the work done - download media"""
+"""Gets the work done - downloads media with flexible flow control"""
 
 from pathlib import Path
 from moviebox_api.core import Session
@@ -9,6 +9,7 @@ from moviebox_api.download import (
     MediaFileDownloader,
     CaptionFileDownloader,
 )
+from moviebox_api.models import SearchResultsItem
 
 from moviebox_api.constants import (
     SubjectType,
@@ -47,6 +48,7 @@ class Downloader:
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
+        search_function: callable = perform_search_and_get_item,
         **kwargs,
     ) -> tuple[Path | None, list[Path] | None]:
         """Search movie by name and proceed to download it.
@@ -63,18 +65,29 @@ class Downloader:
             language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
             download_caption (bool, optional): Whether to download caption or not. Defaults to False.
             caption_only (bool, optional): Whether to ignore movie file or not. Defaults to False.
+            search_function (callable, optional): Accepts `session`, `title`, `year`, `subject_type` & `yes` and returns `SearchResultsItem`.
 
         Returns:
             tuple[Path|None, list[Path]|None]: Path to downloaded movie and downloaded caption files.
         """
         MediaFileDownloader.movie_filename_template = movie_filename_tmpl
         CaptionFileDownloader.movie_filename_template = caption_filename_tmpl
-        target_movie = await perform_search_and_get_item(
+
+        assert callable(
+            search_function
+        ), f"Value for search_function must be callable not {type(search_function)}"
+
+        target_movie = await search_function(
             self._session,
             title=title,
             year=year,
             subject_type=SubjectType.MOVIES,
             yes=yes,
+        )
+
+        assert isinstance(target_movie, SearchResultsItem), (
+            f"Search function {search_function.__name__} must return an instance of "
+            f"{SearchResultsItem} not {type(target_movie)}"
         )
         downloadable_details_inst = DownloadableMovieFilesDetail(
             self._session, target_movie
@@ -99,7 +112,7 @@ class Downloader:
                 return (None, subtitles_saved_to)
 
         movie_downloader = MediaFileDownloader(target_media_file)
-        # TODO: Consider downloader.run options
+
         movie_saved_to = await movie_downloader.run(target_movie, dir, **kwargs)
         return (movie_saved_to, subtitles_saved_to)
 
@@ -119,6 +132,7 @@ class Downloader:
         download_caption: bool = False,
         caption_only: bool = False,
         limit: int = 1,
+        search_function: callable = perform_search_and_get_item,
         **kwargs,
     ) -> dict[int, dict[str, Path | list[Path]]]:
         """Search tv-series by name and proceed to download its episodes.
@@ -138,6 +152,7 @@ class Downloader:
             download_caption (bool, optional): Whether to download caption or not. Defaults to False.
             caption_only (bool, optional): Whether to ignore episode files or not. Defaults to False.
             limit (int, optional): Number of episodes to download including the offset episode. Defaults to 1.
+            search_function (callable, optional): Accepts `session`, `title`, `year`, `subject_type` & `yes` and returns item.
 
         Returns:
             dict[int, dict[str, Path | list[Path]]]: Episode number and path to downloaded episode file and caption files.
@@ -145,13 +160,22 @@ class Downloader:
         MediaFileDownloader.series_filename_template = episode_filename_tmpl
         CaptionFileDownloader.series_filename_template = caption_filename_tmpl
 
-        target_tv_series = await perform_search_and_get_item(
+        assert callable(
+            search_function
+        ), f"Value for search_function must be callable not {type(search_function)}"
+
+        target_tv_series = await search_function(
             self._session,
             title=title,
             year=year,
             subject_type=SubjectType.TV_SERIES,
             yes=yes,
         )
+        assert isinstance(target_tv_series, SearchResultsItem), (
+            f"Search function {search_function.__name__} must return an instance of "
+            f"{SearchResultsItem} not {type(target_tv_series)}"
+        )
+
         downloadable_files = DownloadableSeriesFilesDetail(
             self._session, target_tv_series
         )
