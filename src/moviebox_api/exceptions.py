@@ -48,3 +48,11 @@ class DownloadCompletedError(BaseMovieboxException):
         self.saved_to = saved_to
         """Path to the already downloaded movie/tv-series file"""
         super().__init__(*args, **kwargs)
+
+
+class ZeroCaptionFileError(BaseMovieboxException):
+    """Raised when caption file is required but the item lacks any"""
+
+
+class ZeroMediaFileError(BaseMovieboxException):
+    """Raised when trying to access a downloadable media file but the list is empty"""

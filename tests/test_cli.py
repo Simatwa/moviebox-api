@@ -17,9 +17,11 @@ def run_system_command(command: str) -> int:
         print(e)
         return e.returncode
 
+
 def test_version():
     returncode = run_system_command("--version")
     assert returncode <= 0
+
 
 @pytest.mark.parametrize(
     argnames=[
@@ -28,7 +30,7 @@ def test_version():
     argvalues=[
         ["download-movie --help"],
         ["download-series --help"],
-        ["mirror-hosts --help"]
+        ["mirror-hosts --help"],
     ],
 )
 def test_help(command):

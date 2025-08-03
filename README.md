@@ -156,8 +156,8 @@ Options:
 #### Download Series
 
 ```sh
-$ python -m moviebox_api download-series <Series title> -s <season offset> -e <episode offset>
-# e.g python -m moviebox_api download-series Avatar -s 1 -e 1
+$ python -m moviebox_api download-series <Series title> -s <season number> -e <episode number>
+# e.g python -m moviebox_api download-series Merlin -s 1 -e 1
 ```
 
 </summary>
@@ -235,6 +235,6 @@ Options:
 
 > "All videos and pictures on MovieBox are from the Internet, and their copyrights belong to the original creators. We only provide webpage services and do not store, record, or upload any content." - moviebox.ph as on *Sunday 13th, July 2025*
 
-> Long live Moviebox spirit
+Long live Moviebox spirit
 
 <p align="center"> Made with ❤️</p>

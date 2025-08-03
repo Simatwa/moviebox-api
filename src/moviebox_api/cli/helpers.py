@@ -13,6 +13,7 @@ from moviebox_api.constants import SubjectType, ENVIRONMENT_HOST_KEY
 from moviebox_api.constants import HOST_URL, MIRROR_HOSTS, DownloadMode
 from moviebox_api.models import DownloadableFilesMetadata
 from moviebox_api.models import SearchResultsItem, CaptionFileMetadata
+from moviebox_api.exceptions import ZeroCaptionFileError
 
 
 command_context_settings = dict(auto_envvar_prefix="MOVIEBOX")
@@ -98,6 +99,7 @@ def get_caption_file_or_raise(
 
     Raises:
         ValueError: Incase caption file for target does not exist.
+        NoCaptionFileError: Incase the items lack any caption file.
 
     Returns:
         CaptionFileMetadata: Target caption file details
@@ -109,10 +111,18 @@ def get_caption_file_or_raise(
             if len(language) == 2
             else downloadable_details.get_language_subtitle_map
         )
-        raise ValueError(
-            f"There is no caption file for the language '{language}'. "
-            f"Choose from available ones - {', '.join(list(language_subtitle_map().keys()))}"
-        )
+        subtitle_language_keys = list(language_subtitle_map().keys())
+
+        if subtitle_language_keys:
+            raise ValueError(
+                f"There is no caption file for the language '{language}'. "
+                f"Choose from available ones - {', '.join(list(subtitle_language_keys))}"
+            )
+        else:
+            raise ZeroCaptionFileError(
+                "The target item has no any caption file. Use --no-caption flag if you're using "
+                "the commandline interface to suppress this error."
+            )
     return target_caption_file
 
 
@@ -180,7 +190,6 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
         )
 
     elif isinstance(exception, HTTPStatusError):
-
         match exception.response.status_code:
             case 403:
                 logging.info(
@@ -195,7 +204,6 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
         )
 
     if "404 Domain" in exception_msg:
-
         example_host = random.choice(MIRROR_HOSTS)
         logging.info(
             'Run "moviebox mirror-hosts" command to check available mirror hosts and '

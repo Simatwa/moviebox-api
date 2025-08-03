@@ -4,6 +4,7 @@ from moviebox_api.models import SearchResults
 from moviebox_api.requests import Session
 from tests import init_search
 
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     argnames=["subject_type"],

@@ -9,7 +9,7 @@ from datetime import date
 from uuid import UUID
 from json import loads
 from moviebox_api.constants import SubjectType
-from moviebox_api.exceptions import ZeroSearchResultsError
+from moviebox_api.exceptions import ZeroSearchResultsError, ZeroMediaFileError
 from moviebox_api.constants import DownloadQualitiesType
 from moviebox_api.helpers import get_file_extension
 
@@ -195,7 +195,6 @@ class SearchResults(BaseModel):
 
 
 class BaseFileMetadata(BaseModel):
-
     @property
     def ext(self) -> str:
         """Media file extension such as `mp4` or `srt`"""
@@ -225,9 +224,26 @@ class DownloadableFilesMetadata(BaseModel):
     limitedCode: str
     hasResource: bool
 
+    def _check_downloads(self) -> bool:
+        """Checks whethere there are downloadable media file.
+
+        Raises:
+            ZeroMediaFileError: Incase the downloads list is empty
+
+        Returns:
+            bool: Downloadable media file(s) exist.
+        """
+        if bool(self.downloads):
+            return True
+
+        raise ZeroMediaFileError(
+            "There are no downloadable  mediafiles for the targeted item"
+        )
+
     @property
-    def best_media_file(self) -> MediaFileMetadata | None:
+    def best_media_file(self) -> MediaFileMetadata:
         """Highest quality media file"""
+        self._check_downloads()
         if bool(self.downloads):
             found = self.downloads[0]
             for media_file in self.downloads[1:]:
@@ -236,8 +252,9 @@ class DownloadableFilesMetadata(BaseModel):
             return found
 
     @property
-    def worst_media_file(self) -> MediaFileMetadata | None:
+    def worst_media_file(self) -> MediaFileMetadata:
         """Lowest quality media file"""
+        self._check_downloads()
         if bool(self.downloads):
             found = self.downloads[0]
             for media_file in self.downloads[1:]:
