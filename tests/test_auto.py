@@ -9,3 +9,17 @@ async def test_movie_auto():
     movie_response, caption_response = await auto.run(query=MOVIE_KEYWORD, test=True)
     assert movie_response.is_success == True
     assert caption_response.is_success == True
+
+
+# TODO: Make this test work
+
+"""
+@pytest.mark.asyncio
+async def test_movie_auto_with_progress_hook():
+    def callback_function(progress: dict):
+        print(progress)
+        raise RuntimeError("I don't want to coninue")
+
+    auto = Auto(caption_language=None)
+    await auto.run(query=MOVIE_KEYWORD, progress_hook=callback_function)
+"""

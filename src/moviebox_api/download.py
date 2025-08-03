@@ -3,6 +3,7 @@ and later performing the actual download as well
 """
 
 import httpx
+import asyncio
 
 import typing as t
 from os import getcwd, path
@@ -33,6 +34,7 @@ from moviebox_api.constants import (
     DownloadQualitiesType,
     DOWNLOAD_QUALITIES,
     DownloadMode,
+    DownloadStatus,
 )
 from moviebox_api.exceptions import DownloadCompletedError
 
@@ -254,6 +256,7 @@ class MediaFileDownloader:
         leave: bool = True,
         ascii: bool = False,
         suppress_complete_error: bool = False,
+        progress_hook: t.Callable = None,
         **kwargs,
     ) -> Path | httpx.Response:
         """Performs the actual download.
@@ -280,6 +283,12 @@ class MediaFileDownloader:
         """
 
         assert_instance(mode, DownloadMode, "mode")
+
+        if progress_hook is not None:
+            assert callable(
+                progress_hook
+            ), f"Value for progress_hook must be a function not {type(progress_hook)}"
+
         current_downloaded_size = 0
         current_downloaded_size_in_mb = 0
 
@@ -290,7 +299,6 @@ class MediaFileDownloader:
         save_to = Path(dir) / filename
 
         match mode:
-
             case DownloadMode.RESUME:
                 resume = True
 
@@ -342,8 +350,26 @@ class MediaFileDownloader:
             f"Writing to ({save_to})"
         )
 
-        if progress_bar:
+        download_progress = {
+            "size": self._media_file.size,
+            "size_string": size_with_unit,
+            "downloaded_size": current_downloaded_size,
+            "dir": dir,
+            "filename": filename,
+            "path": save_to,
+            "status": DownloadStatus.DOWNLOADING,
+            "media_file": self._media_file,
+            "download_chunk_size": chunk_size_in_bytes,
+        }
 
+        async def call_progress_hook(progress: t.Dict):
+            if progress_hook is not None:
+                if asyncio.iscoroutinefunction(progress_hook):
+                    await progress(progress)
+                else:
+                    progress_hook(progress)
+
+        if progress_bar:
             async with self.session.stream(
                 "GET", str(self._media_file.url)
             ) as response:
@@ -373,12 +399,13 @@ class MediaFileDownloader:
                     )
                     async for chunk in response.aiter_bytes(chunk_size_in_bytes):
                         fh.write(chunk)
+
+                        current_downloaded_size += chunk_size_in_bytes
                         p_bar.update(round(chunk_size_in_bytes / 1_000_000, 1))
+                        download_progress["downloaded_size"] = current_downloaded_size
 
-            logger.info(f"{filename} - {size_with_unit} ✅")
-            pop_range_in_session_headers()
-
-            return save_to
+                        # TODO: Consider eta
+                        await call_progress_hook(download_progress)
 
         else:
             logger.debug(f"Movie file info {self._media_file}")
@@ -396,12 +423,19 @@ class MediaFileDownloader:
 
                 with open(save_to, saving_mode) as fh:
                     async for chunk in response.aiter_bytes(chunk_size_in_bytes):
+
                         fh.write(chunk)
+                        current_downloaded_size += chunk_size_in_bytes
+                        download_progress["downloaded_size"] = current_downloaded_size
+                        await call_progress_hook()
 
-            logger.info(f"{filename} - {size_with_unit} ✅")
-            pop_range_in_session_headers()
+        download_progress["status"] = DownloadStatus.FINISHED
+        await call_progress_hook(download_progress)
 
-            return save_to
+        logger.info(f"{filename} - {size_with_unit} ✅")
+        pop_range_in_session_headers()
+
+        return save_to
 
 
 class CaptionFileDownloader:

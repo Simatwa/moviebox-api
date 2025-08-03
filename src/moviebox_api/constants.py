@@ -108,3 +108,8 @@ class DownloadMode(StrEnum):
     def map_cls(cls) -> dict:
         """Names in lower case mapped to their values"""
         return {"start": cls.START, "resume": cls.RESUME, "auto": cls.AUTO}
+
+
+class DownloadStatus(StrEnum):
+    DOWNLOADING = "downloading"
+    FINISHED = "finished"
