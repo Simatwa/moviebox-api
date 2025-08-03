@@ -6,7 +6,7 @@ from moviebox_api import logger
 from enum import IntEnum, StrEnum
 
 MIRROR_HOSTS = (
-    "moviebox.ng",
+    # "moviebox.ng",
     "h5.aoneroom.com",
     "movieboxapp.in",
     "moviebox.pk",

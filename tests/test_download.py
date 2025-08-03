@@ -46,6 +46,23 @@ async def test_download_movie_file():
 
 
 @pytest.mark.asyncio
+async def test_download_tv_series_caption_file():
+    session = Session()
+    search = Search(session, "Merlin", subject_type=SubjectType.TV_SERIES)
+    search_results = await search.get_modelled_content()
+    target_series = search_results.first_item
+    downloadable_files = DownloadableSeriesFilesDetail(session, target_series)
+    downloadable_files_detail = await downloadable_files.get_modelled_content(
+        season=1, episode=1
+    )
+    target_caption_file = downloadable_files_detail.english_subtitle_file
+
+    caption_file_downloader = CaptionFileDownloader(target_caption_file)
+    response = await caption_file_downloader.run(filename=target_series, test=True)
+    assert response.is_success == True
+
+
+@pytest.mark.asyncio
 async def test_download_tv_series_file():
     session = Session()
     search = Search(session, "Merlin", subject_type=SubjectType.TV_SERIES)

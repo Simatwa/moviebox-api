@@ -1,10 +1,9 @@
 import pytest
 from moviebox_api.core import Search, SubjectType
 from moviebox_api.models import SearchResults
+from moviebox_api.requests import Session
 from tests import init_search
 
-
-# TODO: [fix] These first 2 tests fails due to async loop timing out
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     argnames=["subject_type"],
@@ -16,7 +15,7 @@ from tests import init_search
     ),
 )
 async def test_get_content(subject_type: SubjectType):
-    search: Search = init_search(subject_type=subject_type)
+    search: Search = init_search(Session(), subject_type=subject_type)
     contents = await search.get_content()
     assert type(contents) is dict
 
@@ -32,16 +31,17 @@ async def test_get_content(subject_type: SubjectType):
     ),
 )
 async def test_model_content(subject_type: SubjectType):
-    search: Search = init_search(subject_type=subject_type)
+    search: Search = init_search(Session(), subject_type=subject_type)
     modelled_contents = await search.get_modelled_content()
     assert isinstance(modelled_contents, SearchResults)
     for item in modelled_contents.items:
-        assert item.subjectType == subject_type
+        if subject_type != SubjectType.ALL:
+            assert item.subjectType == subject_type
 
 
 @pytest.mark.asyncio
 async def test_next_page_navigation():
-    search = init_search()
+    search = init_search(Session())
     contents = await search.get_modelled_content()
     assert isinstance(contents, SearchResults)
     next_search = search.next_page(contents)
@@ -53,7 +53,7 @@ async def test_next_page_navigation():
 
 @pytest.mark.asyncio
 async def test_previous_page_navigation():
-    search: Search = init_search(page=3)
+    search: Search = init_search(Session(), page=3)
     contents = await search.get_modelled_content()
     assert isinstance(contents, SearchResults)
     previous_search = search.previous_page(contents)

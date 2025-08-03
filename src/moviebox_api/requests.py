@@ -5,6 +5,7 @@ Provide ways to interact with Moviebox using `httpx`
 import httpx
 from typing import Dict
 from httpx import Response
+from httpx._types import ProxyTypes, CookieTypes, HeaderTypes, TimeoutTypes
 from httpx._config import DEFAULT_TIMEOUT_CONFIG
 
 from moviebox_api.models import MovieboxAppInfo
@@ -34,22 +35,25 @@ class Session:
 
     def __init__(
         self,
-        headers: Dict = DOWNLOAD_REQUEST_HEADERS,
-        cookies: Dict = request_cookies,
-        timeout: float | int = DEFAULT_TIMEOUT_CONFIG,
+        headers: ProxyTypes | None = DOWNLOAD_REQUEST_HEADERS,
+        cookies: CookieTypes | None = request_cookies,
+        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
+        proxy: ProxyTypes | None = None,
     ):
         """Constructor for `Session`
 
         Args:
-            headers (Dict, optional): Http request headers. Defaults to request_headers.
-            cookies (Dict, optional): Http request cookies. Defaults to request_cookies.
-            timeout (int|float, optional): Http request timeout in seconds. Defaults to DEFAULT_TIMEOUT_CONFIG.
+            headers (ProxyTypes | None, optional): Http request headers. Defaults to DOWNLOAD_REQUEST_HEADERS.
+            cookies (CookieTypes | None , optional): Http request cookies. Defaults to request_cookies.
+            timeout (TimeoutTypes, optional): Http request timeout in seconds. Defaults to DEFAULT_TIMEOUT_CONFIG.
+            proxy (ProxyTypes | None, optional): Http requests proxy. Defaults to None.
         """
         self._headers = headers
         self._cookies = cookies
         self._timeout = timeout
+        self._proxy = proxy
         self._client = httpx.AsyncClient(
-            headers=headers, cookies=cookies, timeout=timeout
+            headers=headers, cookies=cookies, timeout=timeout, proxy=proxy
         )
         self.moviebox_app_info: MovieboxAppInfo | None = None
         self.__moviebox_app_info_fetched: bool = False
@@ -79,7 +83,11 @@ class Session:
             Response: Httpx response object
         """
         client = httpx.AsyncClient(
-            headers=self._headers, cookies=self._cookies, **kwargs
+            headers=self._headers,
+            cookies=self._cookies,
+            proxy=self._proxy,
+            timeout=self._timeout,
+            **kwargs,
         )
         response = await client.get(url, params=params)
         response.raise_for_status()
