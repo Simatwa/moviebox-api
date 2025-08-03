@@ -33,7 +33,7 @@ class ExhaustedSearchResultsError(BaseMovieboxException):
 
     def __init__(self, last_pager, *args, **kwargs):
         self.last_pager = last_pager
-        """Page info of the current page"""
+        """Current page info"""
         super().__init__(*args, **kwargs)
 
 
