@@ -1,5 +1,5 @@
 # Define targets
-.PHONY: install test build publish
+.PHONY: install test build publish install-in-termux
 
 # Define variables
 PYTHON := python
@@ -11,6 +11,12 @@ default: install test
 # Target to install package
 install:
 	uv pip install -e .
+
+# Target to install in termux
+install-in-termux:
+	pip install moviebox-api --no-deps
+	pip install 'pydantic==2.9.2'
+	pip install rich click httpx tqdm
 
 # Target to run tests
 test:

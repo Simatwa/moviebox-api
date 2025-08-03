@@ -6,9 +6,12 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 [![PyPI version](https://badge.fury.io/py/moviebox-api.svg)](https://pypi.org/project/moviebox-api)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/moviebox-api)](https://pypi.org/project/moviebox-api)
 [![PyPI - License](https://img.shields.io/pypi/l/moviebox-api)](https://pypi.org/project/moviebox-api)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Hits](https://hits.sh/github.com/Simatwa/moviebox-api.svg?label=Total%20hits&logo=dotenv)](https://github.com/Simatwa/moviebox-api "Total hits")
-[![Code Coverage](https://img.shields.io/codecov/c/github/Simatwa/moviebox-api)](https://codecov.io/gh/Simatwa/moviebox-api)
 [![Downloads](https://pepy.tech/badge/moviebox-api)](https://pepy.tech/project/moviebox-api)
+<!-- 
+[![Code Coverage](https://img.shields.io/codecov/c/github/Simatwa/moviebox-api)](https://codecov.io/gh/Simatwa/moviebox-api)
+-->
 <!-- TODO: Add logo & wakatime-->
 </div>
 
@@ -28,7 +31,23 @@ $ pip install "moviebox-api[cli]"
 
 # For developers
 $ pip install moviebox-api
+
 ```
+
+<details>
+
+<summary>
+
+## Termux 
+
+</summary>
+
+```sh
+pip install moviebox-api --no-deps
+pip install 'pydantic==2.9.2'
+pip install rich click httpx tqdm
+```
+</details>
 
 ## Usage
 
