@@ -2,6 +2,7 @@
 
 import os
 import typing as t
+from pathlib import Path
 from moviebox_api import logger
 from enum import IntEnum, StrEnum
 
@@ -68,6 +69,9 @@ DOWNLOAD_QUALITIES = (
 DEFAULT_CAPTION_LANGUAGE = "English"
 
 DEFAULT_SHORT_CAPTION_LANGUAGE = "en"
+
+CURRENT_WORKING_DIR = Path(os.getcwd())
+"""Directory where contents will be saved to by default"""
 
 
 class SubjectType(IntEnum):

@@ -55,7 +55,7 @@ async def perform_search_and_get_item(
     )
     items = (
         filter(lambda item: item.releaseDate.year == year, search_results.items)
-        if year > 0
+        if bool(year)
         else search_results.items
     )
     if not isinstance(items, list):

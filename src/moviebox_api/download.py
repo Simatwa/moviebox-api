@@ -6,7 +6,7 @@ import httpx
 import asyncio
 
 import typing as t
-from os import getcwd, path
+from os import path
 from pathlib import Path
 from tqdm import tqdm
 
@@ -31,8 +31,9 @@ from moviebox_api.helpers import (
 from moviebox_api.constants import (
     SubjectType,
     DOWNLOAD_REQUEST_HEADERS,
-    DownloadQualitiesType,
     DOWNLOAD_QUALITIES,
+    CURRENT_WORKING_DIR,
+    DownloadQualitiesType,
     DownloadMode,
     DownloadStatus,
 )
@@ -246,7 +247,7 @@ class MediaFileDownloader:
     async def run(
         self,
         filename: str | SearchResultsItem,
-        dir: str | Path = getcwd(),
+        dir: str | Path = CURRENT_WORKING_DIR,
         progress_bar=True,
         chunk_size: int = 512,
         mode: DownloadMode = DownloadMode.AUTO,
@@ -521,7 +522,7 @@ class CaptionFileDownloader:
     async def run(
         self,
         filename: str | SearchResultsItem,
-        dir: str = getcwd(),
+        dir: str = CURRENT_WORKING_DIR,
         chunk_size: int = 16,
         test: bool = False,
         **kwargs,

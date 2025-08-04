@@ -8,7 +8,7 @@ import click
 from pathlib import Path
 
 from moviebox_api import __version__
-from moviebox_api.constants import DOWNLOAD_QUALITIES
+from moviebox_api.constants import DOWNLOAD_QUALITIES, CURRENT_WORKING_DIR
 
 from moviebox_api.cli.helpers import command_context_settings, loop
 from moviebox_api.cli.helpers import (
@@ -52,14 +52,14 @@ def moviebox():
     "--dir",
     help="Directory for saving the movie to : PWD",
     type=click.Path(exists=True, file_okay=False),
-    default=os.getcwd(),
+    default=CURRENT_WORKING_DIR,
 )
 @click.option(
     "-D",
     "--caption-dir",
     help="Directory for saving the caption file to : PWD",
     type=click.Path(exists=True, file_okay=False),
-    default=os.getcwd(),
+    default=CURRENT_WORKING_DIR,
 )
 @click.option(
     "-Z",
@@ -240,14 +240,14 @@ def download_movie(
     "--dir",
     help="Directory for saving the series file to : PWD",
     type=click.Path(exists=True, file_okay=False),
-    default=os.getcwd(),
+    default=CURRENT_WORKING_DIR,
 )
 @click.option(
     "-D",
     "--caption-dir",
     help="Directory for saving the caption file to : PWD",
     type=click.Path(exists=True, file_okay=False),
-    default=os.getcwd(),
+    default=CURRENT_WORKING_DIR,
 )
 @click.option(
     "-Z",

@@ -15,6 +15,7 @@ from moviebox_api.constants import (
     SubjectType,
     DownloadQualitiesType,
     DEFAULT_CAPTION_LANGUAGE,
+    CURRENT_WORKING_DIR,
 )
 from moviebox_api.download import resolve_media_file_to_be_downloaded
 
@@ -38,13 +39,13 @@ class Downloader:
     async def download_movie(
         self,
         title: str,
-        year: int,
-        yes: bool,
-        dir: Path,
-        caption_dir: Path,
-        quality: DownloadQualitiesType,
-        movie_filename_tmpl: str,
-        caption_filename_tmpl: str,
+        year: int | None = None,
+        yes: bool = False,
+        dir: Path | str = CURRENT_WORKING_DIR,
+        caption_dir: Path | str = CURRENT_WORKING_DIR,
+        quality: DownloadQualitiesType = "BEST",
+        movie_filename_tmpl: str = MediaFileDownloader.movie_filename_template,
+        caption_filename_tmpl: str = CaptionFileDownloader.movie_filename_template,
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
@@ -55,13 +56,13 @@ class Downloader:
 
         Args:
             title (str): Complete or partial movie name
-            year (int): `releaseDate.year` filter for the movie.
-            yes (bool): Proceed with the first item in the results instead of prompting confirmation.
-            dir (Path): Directory for saving the movie file to.
-            caption_dir (Path): Directory for saving the caption file to.
-            quality (DownloadQualitiesType): Such as `720p` or simply `BEST` etc.
-            movie_filename_tmpl (str): Template for generating movie filename
-            caption_filename_tmpl (str): Template for generating caption filename
+            year (int|None, optional): `releaseDate.year` filter for the movie. Defaults to None.
+            yes (bool, optional): Proceed with the first item in the results instead of prompting confirmation. Defaults to False
+            dir (Path|str, optional): Directory for saving the movie file to. Defaults to CURRENT_WORKING_DIR.
+            caption_dir (Path|str, optional): Directory for saving the caption file to. Defaults to CURRENT_WORKING_DIR.
+            quality (DownloadQualitiesType, optional): Such as `720p` or simply `BEST` etc. Defaults to 'BEST'.
+            movie_filename_tmpl (str, optional): Template for generating movie filename. Defaults to MediaFileDownloader.movie_filename_template.
+            caption_filename_tmpl (str, optional): Template for generating caption filename. Defaults to CaptionFileDownloader.movie_filename_template.
             language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
             download_caption (bool, optional): Whether to download caption or not. Defaults to False.
             caption_only (bool, optional): Whether to ignore movie file or not. Defaults to False.
@@ -119,15 +120,15 @@ class Downloader:
     async def download_tv_series(
         self,
         title: str,
-        year: int,
         season: int,
         episode: int,
-        yes: bool,
-        dir: Path,
-        caption_dir: bool,
-        quality: str,
-        episode_filename_tmpl: str,
-        caption_filename_tmpl: str,
+        year: int | None = False,
+        yes: bool = False,
+        dir: Path | str = CURRENT_WORKING_DIR,
+        caption_dir: Path | str = CURRENT_WORKING_DIR,
+        quality: DownloadQualitiesType = "BEST",
+        episode_filename_tmpl: str = MediaFileDownloader.series_filename_template,
+        caption_filename_tmpl: str = CaptionFileDownloader.series_filename_template,
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
@@ -138,16 +139,16 @@ class Downloader:
         """Search tv-series by name and proceed to download its episodes.
 
         Args:
-            title (str): Complete or partial tv-series name
-            year (int): `releaseDate.year` filter for the tv-series
-            season (int): Target season number of the tv-series
-            episode (int): Target episode number of the tv-series
-            yes (bool): Proceed with the first item in the results instead of prompting confirmation.
-            dir (Path): Directory for saving the movie file to.
-            caption_dir (Path): Directory for saving the caption files to.
-            quality (DownloadQualitiesType): Episode quality such as `720p` or simply `BEST` etc.
-            episode_filename_tmpl (str): Template for generating episode filename.
-            caption_filename_tmpl (str): Template for generating caption filename.
+            title (str): Complete or partial tv-series name.
+            season (int): Target season number of the tv-series.
+            episode (int): Target episode number of the tv-series.
+            year (int|None, optional): `releaseDate.year` filter for the tv-series. Defaults to None.
+            yes (bool, optional): Proceed with the first item in the results instead of prompting confirmation. Defaults to False.
+            dir (Path|str, optional): Directory for saving the movie file to. Defaults to CURRENT_WORKING_DIR.
+            caption_dir (Path|str, optional): Directory for saving the caption files to. Defaults to CURRENT_WORKING_DIR.
+            quality (DownloadQualitiesType, optional): Episode quality such as `720p` or simply `BEST` etc. Defaults to 'BEST'.
+            episode_filename_tmpl (str, optional): Template for generating episode filename. Defaults to MediaFileDownloader.series_filename_template.
+            caption_filename_tmpl (str, optional): Template for generating caption filename. Defaults to CaptionFileDownloader.series_filename_template.
             language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
             download_caption (bool, optional): Whether to download caption or not. Defaults to False.
             caption_only (bool, optional): Whether to ignore episode files or not. Defaults to False.
