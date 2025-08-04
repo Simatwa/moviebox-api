@@ -16,7 +16,7 @@ install:
 install-in-termux:
 	pip install moviebox-api --no-deps
 	pip install 'pydantic==2.9.2'
-	pip install rich click httpx tqdm
+	pip install rich click httpx tqdm bs4
 
 # Target to run tests
 test:

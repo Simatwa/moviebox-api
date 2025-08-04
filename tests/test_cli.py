@@ -31,7 +31,7 @@ def test_version():
         ["download-movie --help"],
         ["download-series --help"],
         ["mirror-hosts --help"],
-        ["homepage-content --help"]
+        ["homepage-content --help"],
     ],
 )
 def test_help(command):
@@ -57,6 +57,7 @@ def test_mirror_hosts():
     returncode = run_system_command("mirror-hosts --json")
     assert returncode <= 0
 
+
 @pytest.mark.parametrize(
     argnames=[
         "command",
@@ -65,9 +66,9 @@ def test_mirror_hosts():
         ["homepage-content"],
         ["homepage-content --json"],
         ["homepage-content --banner"],
-        ["homepage-content --banner --json"]
-        ["homepage-content --title 'Trending Now🔥'"]
-
+        ["homepage-content --banner --json"][
+            "homepage-content --title 'Trending Now🔥'"
+        ],
     ],
 )
 def test_homepage(command):

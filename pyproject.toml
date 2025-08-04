@@ -20,6 +20,7 @@ classifiers = [
     "Topic :: Communications :: File Sharing",
 ]
 dependencies = [
+    "bs4>=0.0.2",
     "httpx>=0.28.1",
     "pydantic>=2.11.7",
     "tqdm>=4.67.1",
