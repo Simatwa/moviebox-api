@@ -17,10 +17,9 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 
 ## Features
 
-- Search and discover movies and tv-series
-- Download movies & tv-series and their subtitles
+- Search & download movies, tv-series and their subtitles.
+- Native pydantic modelling of responses
 - Fully asynchronous
-- Native pydantic modelling of response
 
 ## Installation
 
@@ -100,6 +99,9 @@ if __name__=="__main__":
         )
 ```
 
+> ![NOTE]
+> Much time is devoted towards implementing more features to the package. The docs will be updated as time goes by. Otherwise, I cannot document this any better than the code itself, so take a look at [moviebox_api](src/moviebox_api/) package or its [tests](tests).
+
 </details>
 
 
@@ -112,7 +114,7 @@ if __name__=="__main__":
 ```sh
 # $ python -m moviebox_api --help
 
-Usage: moviebox [OPTIONS] COMMAND [ARGS]...
+Usage: python -m moviebox_api [OPTIONS] COMMAND [ARGS]...
 
   Search and download movies/tv-series and their subtitles. envvar-prefix :
   MOVIEBOX
@@ -122,9 +124,10 @@ Options:
   --help     Show this message and exit.
 
 Commands:
-  download-movie   Search and download movie.
-  download-series  Search and download tv series.
-  mirror-hosts     Discover moviebox mirror hosts [env: MOVIEBOX_API_HOST]
+  download-movie    Search and download movie.
+  download-series   Search and download tv series.
+  homepage-content  Show contents displayed at landing page
+  mirror-hosts      Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST]
 ```
 
 </summary>
@@ -264,12 +267,10 @@ Options:
 
 ## Further info
 
-
 > [!TIP]
 > Shorthand for `$ python -m moviebox_api` is simply `$ moviebox`
 
-> [!NOTE]
-> Moviebox.ph has several other mirror hosts, in order to set specific one to be used by the script simply expose it as environment variable using name `MOVIEBOX_API_HOST`. For instance, in Linux systems one might need to run `$ export MOVIEBOX_API_HOST="h5.aoneroom.com"`
+**Moviebox.ph** has several other mirror hosts, in order to set specific one to be used by the script simply expose it as environment variable using name `MOVIEBOX_API_HOST`. For instance, in Linux systems one might need to run `$ export MOVIEBOX_API_HOST="h5.aoneroom.com"`
 
 
 ## Disclaimer
