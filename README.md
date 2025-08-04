@@ -77,6 +77,28 @@ if __name__ == "__main__":
 
 ```
 
+Perform download with progress hook
+
+```python
+from moviebox_api import Auto
+
+async def callback_function(progress: dict):
+    percent = (progress["downloaded_size"] / progress["size"]) * 100
+
+    print(f">>[{percent:.2f}%] Downloading {progress["filename"]}", end="\r")
+
+if __name__=="__main__":
+    import asyncio
+
+    auto = Auto(caption_language=None)
+    asyncio.run(
+        auto.run(
+            query="Avatar",
+            progress_hook=callback_function,
+            progress_bar=False
+            )
+        )
+```
 
 </details>
 

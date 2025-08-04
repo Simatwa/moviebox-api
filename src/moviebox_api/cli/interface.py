@@ -390,7 +390,6 @@ def main():
     except Exception as e:
         exception_msg = str({e.args[1] if e.args and len(e.args) > 1 else e})
 
-        DEBUG = True
         if DEBUG:
             logging.exception(e)
         else:

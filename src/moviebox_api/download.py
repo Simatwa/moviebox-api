@@ -365,7 +365,7 @@ class MediaFileDownloader:
         async def call_progress_hook(progress: t.Dict):
             if progress_hook is not None:
                 if asyncio.iscoroutinefunction(progress_hook):
-                    await progress(progress)
+                    await progress_hook(progress)
                 else:
                     progress_hook(progress)
 
@@ -427,7 +427,7 @@ class MediaFileDownloader:
                         fh.write(chunk)
                         current_downloaded_size += chunk_size_in_bytes
                         download_progress["downloaded_size"] = current_downloaded_size
-                        await call_progress_hook()
+                        await call_progress_hook(download_progress)
 
         download_progress["status"] = DownloadStatus.FINISHED
         await call_progress_hook(download_progress)
