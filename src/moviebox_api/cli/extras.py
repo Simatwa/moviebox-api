@@ -46,73 +46,97 @@ def homepage_content(json: bool, title: str, banner: bool):
     session = Session()
     homepage = Homepage(session)
     homepage_contents = loop.run_until_complete(homepage.get_modelled_content())
-    banners: dict[str, list[tuple[str]]] = {}
-    items: dict[str, list[tuple[str]]] = {}
+    banners: dict[str, list[list[str]]] = {}
+    items: dict[str, list[list[str]]] = {}
     for operating in homepage_contents.operatingList:
         if operating.type == "BANNER":
             banners[operating.title] = [
-                (
+                [
                     item.subjectType.name,
                     item.title,
                     ", ".join(item.subject.genre),
                     str(item.subject.releaseDate),
-                )
+                ]
                 for item in operating.banner.items
+                if item.subject is not None
             ]
         elif operating.type == "SUBJECTS_MOVIE":
             items[operating.title] = (
-                (
+                [
                     subject.subjectType.name,
                     subject.title,
-                    str(subject.releaseDate),
-                    subject.countryName,
                     ", ".join(subject.genre),
                     str(subject.imdbRatingValue),
-                )
+                    subject.countryName,
+                    str(subject.releaseDate),
+                ]
                 for subject in operating.subjects
             )
     if json:
+
         if banner:
-            rich.print_json(data=banner, indent=4)
+            rich.print_json(data=banners, indent=4)
         else:
+            processed_items = {}
+            for key, value in items.items():
+                item_values = []
+                for item in value:
+                    item_values.append(item)
+                processed_items[key] = item_values
+
             if title is not None:
-                items = items.get(title, {})
-            rich.print_json(data=items, indent=4)
+                assert (
+                    title in processed_items.keys()
+                ), f"Title filter '{title}' is not one of {list(processed_items.keys())}"
+
+                rich.print_json(data={title: processed_items.get(title)}, indent=4)
+            else:
+                rich.print_json(data=processed_items, indent=4)
     else:
         if banner:
             for key in banners.keys():
-                target_banner = banner[key]
+                target_banner = banners[key]
                 table = Table(
                     title=f"{key} - Banner",
                     show_lines=True,
                 )
+                table.add_column("Pos")
                 table.add_column("Subject type", style="white")  # justify="center")
                 table.add_column("Title", style="cyan")
-                table.add_column("Release date")
                 table.add_column("Genre")
+                table.add_column("Release date")
                 table.add_column("IMDB Rating")
 
-                for item in target_banner:
+                for pos, item in enumerate(target_banner, start=1):
+                    item.insert(0, str(pos))
                     table.add_row(*item)
 
                 rich.print(table)
 
         else:
+            if title is not None:
+                target_title = items.get(title)
+                assert (
+                    target_title is not None
+                ), f"Title filter '{title}' is not one of {list(items.keys())}"
+                items = {title: target_title}
+
             for key in items.keys():
                 target_item = items[key]
                 table = Table(
                     title=f"{key}",
                     show_lines=True,
                 )
-
+                table.add_column("Pos")
                 table.add_column("Subject type", style="white")
                 table.add_column("Title")
-                table.add_column("Release date")
-                table.add_column("Country name")
                 table.add_column("Genre")
                 table.add_column("IMDB Rating")
+                table.add_column("Country name")
+                table.add_column("Release date")
 
-                for item in target_item:
+                for pos, item in enumerate(target_item, start=1):
+                    item.insert(0, str(pos))
                     table.add_row(*item)
 
                 rich.print(table)

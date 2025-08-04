@@ -82,6 +82,9 @@ class SubjectType(IntEnum):
     MUSIC = 6
     """Music contents only"""
 
+    UNKNOWN = 7
+    """Yet to be known"""
+
     @classmethod
     def map(cls) -> dict[str, int]:
         """Content-type names mapped to their int representatives"""
