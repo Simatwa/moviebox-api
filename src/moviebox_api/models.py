@@ -50,7 +50,7 @@ class ContentSubjectModel(BaseModel):
     description: str
     releaseDate: date
     duration: int
-    genre: str
+    genre: list[str]
     cover: ContentImageModel
     countryName: str
     imdbRatingValue: float
@@ -65,6 +65,10 @@ class ContentSubjectModel(BaseModel):
     corner: str
     # imdbRatingCount: int
 
+    @field_validator("genre", mode="before")
+    def validate_genre(value: str) -> list[str]:
+        return value.split(",")
+
 
 class ContentModel(BaseModel):
     """Model for a particular movie or tv series"""
@@ -74,7 +78,7 @@ class ContentModel(BaseModel):
     image: ContentImageModel
     url: HttpUrl
     subjectId: str
-    subjectType: int
+    subjectType: SubjectType
     subject: ContentSubjectModel | None = None
 
     @property
@@ -102,12 +106,23 @@ class ContentCategoryBannerModel(BaseModel):
     items: list[ContentModel]  # list of series/movies
 
 
+class ContentCategorySubjectsModel(ContentSubjectModel):
+    # also better called operatingListSubjects
+    subtitles: list[str]
+    ops: str
+    hasResource: bool
+
+    @field_validator("subtitles", mode="before")
+    def validate_subtitles(value: str) -> list[str]:
+        return value.split(",")
+
+
 class ContentCategoryModel(BaseModel):
     # named: OperatingList in server response
     type: str
     position: int
     title: str
-    subjects: list
+    subjects: list[ContentCategorySubjectsModel]
     banner: ContentCategoryBannerModel | None = None
     opId: str
     url: str

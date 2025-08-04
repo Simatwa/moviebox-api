@@ -6,26 +6,23 @@ import logging
 import click
 
 from pathlib import Path
-from asyncio import new_event_loop
 
 from moviebox_api import __version__
 from moviebox_api.constants import DOWNLOAD_QUALITIES
 
-from moviebox_api.cli.helpers import command_context_settings
+from moviebox_api.cli.helpers import command_context_settings, loop
 from moviebox_api.cli.helpers import (
     prepare_start,
     process_download_runner_params,
     show_any_help,
 )
-from moviebox_api.cli.extras import mirror_hosts
+from moviebox_api.cli.extras import mirror_hosts, homepage_content
 from moviebox_api.cli.downloader import Downloader
 
 from moviebox_api.download import MediaFileDownloader, CaptionFileDownloader
 
 
 DEBUG = os.getenv("DEBUG", "0") == "1"
-
-loop = new_event_loop()
 
 
 @click.group()
@@ -387,6 +384,7 @@ def main():
         moviebox.add_command(download_movie, "download-movie")
         moviebox.add_command(download_tv_series, "download-series")
         moviebox.add_command(mirror_hosts, "mirror-hosts")
+        moviebox.add_command(homepage_content, "homepage-content")
         return moviebox()
 
     except Exception as e:
@@ -395,7 +393,6 @@ def main():
         if DEBUG:
             logging.exception(e)
         else:
-
             if bool(exception_msg):
                 logging.error(exception_msg)
             sys.exit(show_any_help(e, exception_msg))

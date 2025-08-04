@@ -4,6 +4,8 @@ import random
 import click
 import logging
 
+from asyncio import new_event_loop
+
 from httpx import ConnectTimeout, HTTPStatusError
 from pydantic import ValidationError
 
@@ -15,6 +17,7 @@ from moviebox_api.models import DownloadableFilesMetadata
 from moviebox_api.models import SearchResultsItem, CaptionFileMetadata
 from moviebox_api.exceptions import ZeroCaptionFileError
 
+loop = new_event_loop()
 
 command_context_settings = dict(auto_envvar_prefix="MOVIEBOX")
 
