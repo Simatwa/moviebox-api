@@ -99,7 +99,7 @@ if __name__=="__main__":
         )
 ```
 
-> ![NOTE]
+> [!NOTE]
 > Much time is devoted towards implementing more features to the package. The docs will be updated as time goes by. Otherwise, I cannot document this any better than the code itself, so take a look at [moviebox_api](src/moviebox_api/) package or its [tests](tests).
 
 </details>
