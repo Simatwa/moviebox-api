@@ -73,6 +73,9 @@ DEFAULT_SHORT_CAPTION_LANGUAGE = "en"
 CURRENT_WORKING_DIR = Path(os.getcwd())
 """Directory where contents will be saved to by default"""
 
+ITEM_DETAILS_PATH = "/detail"
+"""Immediate path to particular item details page"""
+
 
 class SubjectType(IntEnum):
     """Content types mapped to their integer representatives"""

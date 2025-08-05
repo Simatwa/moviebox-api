@@ -49,7 +49,7 @@ from moviebox_api.download import (
     DownloadableSeriesFilesDetail,
     resolve_media_file_to_be_downloaded,
 )
-from moviebox_api.extra.movies import Auto
+from moviebox_api.extras.movies import Auto
 
 __all__ = [
     "Auto",

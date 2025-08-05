@@ -1,12 +1,20 @@
 """Contains Base Extractor class"""
 
 import typing as t
+from json import loads
 
 from moviebox_api.extractor.helpers import souper
 
+from moviebox_api.extractor.exceptions import DetailsExtractionError
 
-class BaseDetailsExtractor:
-    """Performs actual extraction of further movie/tv-series details"""
+
+class TagDetailsExtractor:
+    """Performs actual extraction of further movie/tv-series details from html tags of the page
+
+    - Does not extracts seasons details. Use `JsonDetailsExtractor` instead.
+    - Also this extraction method suffers from content restriction
+    - e.g "This content is not available on the website. Please download our Android app to access it."
+    """
 
     def __init__(self, content: str):
         """Constructor for `BaseMovieDetailsExtractor`
@@ -153,9 +161,98 @@ class BaseDetailsExtractor:
         return self.extract_all()
 
 
-class BaseMovieDetailsExtractor(BaseDetailsExtractor):
-    """`Movie` details extractor"""
+class JsonDetailsExtractor:
+    """Performs actual extraction of all movie/tv-series details from script section of the page
+
+    - This extraction method suffers no known restriction.
+    """
+
+    def __init__(self, content: str):
+        """Constructor for `JsonDetailsExtractor`
+
+        Args:
+            content (str): Html formatted text
+        """
+        self.details = self.extract(content)
+
+    @classmethod
+    def extract(self, content: str, whole: bool = False) -> dict[str, t.Any]:
+        """Extract `movie/tv-series` from specific item details page.
+
+        Args:
+            content (str): Contents of the specific item page (html).
+            whole (bool, optional): Do not process response. Defaults to False.
+
+        Raises:
+            DetailsExtractionError: Incase no data extracted
+
+        Returns:
+            dict[str, t.Any]: Extracted item details
+        """
+        from_script = souper(content).find("script", {"type": "application/json"}).text
+        data: list = loads(from_script)
+        extracts = []
+
+        def resolve_value(value):
+            if type(value) is list:
+                return [
+                    resolve_value(data[index] if type(index) == int else index)
+                    for index in value
+                ]
+
+            elif type(value) is dict:
+                processed_value = {}
+                for k, v in value.items():
+                    processed_value[k] = resolve_value(data[v])
+                return processed_value
+
+            return value
+
+        for entry in data:
+            if type(entry) is dict:
+                details = {}
+                for key, index in entry.items():
+                    details[key] = resolve_value(data[index])
+
+                extracts.append(details)
+
+        if extracts:
+            if whole:
+                return extracts[0]
+            else:
+                target_data: dict = extracts[0]["state"][1]
+                return dict(
+                    zip(
+                        [key[2:] for key in target_data.keys()],  # Remove ^$s
+                        target_data.values(),
+                    )
+                )
+
+        else:
+            raise DetailsExtractionError(
+                "The extraction process completed without any find. "
+                "Ensure correct content is passed."
+            )
+
+    @property
+    def resources(self) -> dict:
+        """Key data resource"""
+        return self.details["resData"]
+
+    @property
+    def reviews(self) -> list[dict]:
+        """Reviews only"""
+        return self.details["midReviewsList"]
+
+    @property
+    def resources_and_reviews(self) -> dict[str, dict | list[dict]]:
+        """Combined resources and reviews"""
+        return {"resources": self.resources, "reviews": self.reviews}
 
 
-class TVSeriesDetailsExtractor(BaseDetailsExtractor):
-    """`TV Series` details extractor"""
+# class BaseMovieDetailsExtractor(BaseDetailsExtractor):
+#    """`Movie` details extractor"""
+
+
+# class TVSeriesDetailsExtractor(BaseDetailsExtractor):
+#    """`TV Series` details extractor"""

@@ -8,7 +8,7 @@ from pydantic import BaseModel, HttpUrl, field_validator
 from datetime import date
 from uuid import UUID
 from json import loads
-from moviebox_api.constants import SubjectType
+from moviebox_api.constants import SubjectType, ITEM_DETAILS_PATH
 from moviebox_api.exceptions import ZeroSearchResultsError, ZeroMediaFileError
 from moviebox_api.constants import DownloadQualitiesType
 from moviebox_api.helpers import get_file_extension
@@ -178,6 +178,11 @@ class SearchResultsItem(ContentSubjectModel):
     @field_validator("subtitles", mode="before")
     def validate_subtitles(value: str) -> list[str]:
         return value.split(",")
+
+    @property
+    def page_url(self) -> str:
+        """Url to the specific item details page"""
+        return f"{ITEM_DETAILS_PATH}/{self.detailPath}?id={self.subjectId}"
 
 
 class SearchResultsPager(BaseModel):

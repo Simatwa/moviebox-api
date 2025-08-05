@@ -6,12 +6,19 @@ from typing import Dict
 
 from moviebox_api.requests import Session
 from moviebox_api.constants import SubjectType
-from moviebox_api.helpers import assert_instance, get_absolute_url
+from moviebox_api.helpers import (
+    assert_instance,
+    get_absolute_url,
+    validate_item_page_url,
+)
 from moviebox_api._bases import BaseContentProvider, BaseContentProviderAndHelper
-from moviebox_api.models import HomepageContentModel, SearchResults
+from moviebox_api.models import HomepageContentModel, SearchResults, SearchResultsItem
 from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiException
 
-__all__ = ["Homepage", "Search"]
+from moviebox_api.extractor._core import JsonDetailsExtractor
+
+
+__all__ = ["Homepage", "Search", "MovieDetails", "TVSeriesDetails"]
 
 
 class Homepage(BaseContentProviderAndHelper):
@@ -20,13 +27,13 @@ class Homepage(BaseContentProviderAndHelper):
     _url = get_absolute_url(r"/wefeed-h5-bff/web/home")
 
     def __init__(self, session: Session):
-        """Constructor `Home`
+        """Constructor `Homepage`
 
         Args:
             session (Session): MovieboxAPI request session
         """
         assert_instance(session, Session, "session")
-        self.session = session
+        self._session = session
 
     async def get_content(self) -> Dict:
         """Landing page contents
@@ -34,7 +41,7 @@ class Homepage(BaseContentProviderAndHelper):
         Returns:
             Dict
         """
-        content = await self.session.get_from_api(self._url)
+        content = await self._session.get_from_api(self._url)
         return content
 
     async def get_modelled_content(self) -> HomepageContentModel:
@@ -182,3 +189,104 @@ class Search(BaseContentProvider):
         """
         contents = await self.get_content()
         return SearchResults(**contents)
+
+
+class BaseItemPageDetails:
+    """Base class for specific movie/tv-series item details"""
+
+    def __init__(self, page_url: str, session: Session):
+        """Constructor for `BaseItemPageDetails`
+
+        Args:
+            page_url (str): Url to specific item details.
+            session (Session): MovieboxAPI request session
+        """
+        self._url = validate_item_page_url(page_url)
+        self._session = session
+
+    async def get_html_content(self) -> str:
+        """The specific page contents
+
+        Returns:
+            str: html formatted contents of the page
+        """
+        page_contents = await self._session.get_with_cookies(
+            get_absolute_url(self._url),
+        )
+        return page_contents
+
+    async def get_json_extractor(self) -> JsonDetailsExtractor:
+        """Fetch content return initialized Json details extractor"""
+        html_contents = await self.get_html_content()
+        return JsonDetailsExtractor(html_contents)
+
+    async def get_content(self) -> Dict:
+        """Get extracted item details
+
+        Returns:
+            Dict: Item details
+        """
+        extracted_content = await self.get_json_extractor()
+        return extracted_content.details
+
+
+class MovieDetails(BaseItemPageDetails, BaseContentProviderAndHelper):
+    """Specific movie item details"""
+
+    def __init__(self, url_or_item: str | SearchResultsItem, session: Session):
+        """Constructor for `MovieDetails`
+
+        Args:
+            page_url (str|SearchResultsItem): Url to specific item page or search-results-item.
+            session (Session): MovieboxAPI request session
+        """
+        assert_instance(url_or_item, (str, SearchResultsItem), "url_or_item")
+
+        if isinstance(url_or_item, SearchResultsItem):
+            if url_or_item.subjectType != SubjectType.MOVIES:
+                raise ValueError(
+                    f"item needs to be of subjectType {SubjectType.MOVIES.name} not {url_or_item.subjectType.name}"
+                )
+
+            page_url = url_or_item.page_url
+
+        else:
+            page_url = url_or_item
+
+        super().__init__(page_url=page_url, session=session)
+
+    async def get_modelled_content(self):
+        # TODO: Implement this
+        content = await self.get_content()
+        return await super().get_modelled_content()
+
+
+class TVSeriesDetails(BaseItemPageDetails, BaseContentProviderAndHelper):
+    """Specific tv-series item details"""
+
+    def __init__(self, url_or_item: str | SearchResultsItem, session: Session):
+        """Constructor for `TVSeriesDetails`
+
+        Args:
+            page_url (str|SearchResultsItem): Url to specific item page or search-results-item.
+            session (Session): MovieboxAPI request session
+        """
+        assert_instance(url_or_item, (str, SearchResultsItem), "url_or_item")
+
+        if isinstance(url_or_item, SearchResultsItem):
+            if url_or_item.subjectType != SubjectType.TV_SERIES:
+                raise ValueError(
+                    f"item needs to be of subjectType {SubjectType.TV_SERIES.name} not {url_or_item.subjectType.name}"
+                )
+
+            page_url = url_or_item.page_url
+
+        else:
+            page_url = url_or_item
+
+        super().__init__(page_url=page_url, session=session)
+
+    async def get_modelled_content(self):
+        # TODO: Implement this
+        content = await self.get_content()
+        return await super().get_modelled_content()

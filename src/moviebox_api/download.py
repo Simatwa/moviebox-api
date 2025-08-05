@@ -158,10 +158,12 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
 class DownloadableMovieFilesDetail(BaseDownloadableFilesDetail):
     """Fetches and model movie files detail"""
 
-    async def get_content(self):
+    async def get_content(self) -> t.Dict:
+        """Actual fetch of files detail"""
         return await super().get_content(season=0, episode=0)
 
-    async def get_modelled_content(self):
+    async def get_modelled_content(self) -> DownloadableFilesMetadata:
+        """Modelled version of the files detail"""
         contents = await self.get_content()
         return DownloadableFilesMetadata(**contents)
 
@@ -424,7 +426,6 @@ class MediaFileDownloader:
 
                 with open(save_to, saving_mode) as fh:
                     async for chunk in response.aiter_bytes(chunk_size_in_bytes):
-
                         fh.write(chunk)
                         current_downloaded_size += chunk_size_in_bytes
                         download_progress["downloaded_size"] = current_downloaded_size

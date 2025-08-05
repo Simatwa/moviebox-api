@@ -8,29 +8,20 @@ import re
 import typing as t
 from urllib.parse import urljoin
 
-# from bs4 import BeautifulSoup as bts
 from moviebox_api import logger
 
 from moviebox_api.exceptions import UnsuccessfulResponseError
-from moviebox_api.constants import HOST_URL
+from moviebox_api.constants import HOST_URL, ITEM_DETAILS_PATH
 
-file_ext_pattern = re.compile(r".+\.(\w+)\?.+")
+FILE_EXT_PATTERN = re.compile(r".+\.(\w+)\?.+")
 
-illegal_characters_pattern = re.compile(r"[^\w\-_\.\s()&|]")
+ILLEGAL_CHARACTERS_PATTERN = re.compile(r"[^\w\-_\.\s()&|]")
 
-# Not needed currently
-''' 
-def souper(contents: str) -> bts:
-    """Converts str object to `soup`
+VALID_ITEM_PAGE_URL_PATTERN = re.compile(
+    r".*" + ITEM_DETAILS_PATH + r"/[\w-]+\?id\=\d{19,}.*"
+)
 
-    Args:
-        contents (str): html formatted string
-
-    Returns:
-        bts: souped sring object
-    """
-    return bts(contents, "html.parser")
-'''
+SCHEME_HOST_PATTERN = re.compile(r"https?://[-_\.\w]+")
 
 
 def get_absolute_url(relative_url: str) -> str:
@@ -42,7 +33,7 @@ def get_absolute_url(relative_url: str) -> str:
     Returns:
         str: Complete url with host
     """
-    return urljoin(HOST_URL, relative_url)
+    return urljoin(HOST_URL, re.sub(SCHEME_HOST_PATTERN, "", relative_url))
 
 
 def assert_membership(value: t.Any, elements: t.Iterable, identity="Value"):
@@ -104,11 +95,22 @@ def get_file_extension(url: str) -> str | None:
         url : https://valiw.hakunaymatata.com/resource/537977caa8c13703185d26471ce7de9f.mp4s?auth_key=1753024153-0-0-c824d3b5a5c8acc294bfd41de43c51ef"
         returns mp4
     """
-    all = re.findall(file_ext_pattern, str(url))
+    all = re.findall(FILE_EXT_PATTERN, str(url))
     if all:
         return all[0]
 
 
 def sanitize_filename(filename: str) -> str:
     """Remove illegal characters from a filename"""
-    return re.sub(illegal_characters_pattern, "", filename.replace(":", "-"))
+    return re.sub(ILLEGAL_CHARACTERS_PATTERN, "", filename.replace(":", "-"))
+
+
+def validate_item_page_url(url: str) -> str:
+    """Checks whether specific item page url is valid"""
+    finds = re.findall(VALID_ITEM_PAGE_URL_PATTERN, url)
+    print(VALID_ITEM_PAGE_URL_PATTERN)
+    if finds:
+        if finds[0] == url:
+            return url
+
+    raise ValueError(f"Invalid url for a specific item page - '{url}'")
