@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 
 
 class BaseMovieboxException(Exception):
-    """All exception classes of this package inherits this class"""
+    """Parent class for all exception classes of this package"""
 
 
 class BaseContentProvider(ABC):
@@ -25,7 +25,7 @@ class BaseContentProvider(ABC):
 
 
 class ContentProviderHelper:
-    """Provides common methods to content proder classes"""
+    """Provides common methods to content provider classes"""
 
 
 class BaseContentProviderAndHelper(BaseContentProvider, ContentProviderHelper):

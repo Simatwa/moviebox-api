@@ -4,7 +4,6 @@ from typing import Dict
 from pathlib import Path
 from httpx import Response
 from moviebox_api._bases import BaseMovieboxException
-from moviebox_api.extractor.exceptions import DetailsExtractionError
 
 
 class MovieboxApiException(BaseMovieboxException):

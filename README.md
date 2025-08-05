@@ -50,6 +50,9 @@ pip install rich click httpx tqdm bs4
 
 ## Usage
 
+> [!NOTE]
+> Much focus right now is on implementing more features. The docs will be updated as time goes by. Otherwise, I cannot document this any better than the code itself, so take a look at [moviebox_api](src/moviebox_api/) package or its [tests](tests).
+
 <details open>
 
 <summary>
@@ -98,9 +101,6 @@ if __name__=="__main__":
             )
         )
 ```
-
-> [!NOTE]
-> Much time is devoted towards implementing more features to the package. The docs will be updated as time goes by. Otherwise, I cannot document this any better than the code itself, so take a look at [moviebox_api](src/moviebox_api/) package or its [tests](tests).
 
 </details>
 

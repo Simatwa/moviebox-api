@@ -1,4 +1,4 @@
-"""Contains Base Extractor class"""
+"""Contains Base Extractor classes"""
 
 import typing as t
 from json import loads

@@ -108,7 +108,7 @@ def sanitize_filename(filename: str) -> str:
 def validate_item_page_url(url: str) -> str:
     """Checks whether specific item page url is valid"""
     finds = re.findall(VALID_ITEM_PAGE_URL_PATTERN, url)
-    print(VALID_ITEM_PAGE_URL_PATTERN)
+
     if finds:
         if finds[0] == url:
             return url

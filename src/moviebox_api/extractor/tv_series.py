@@ -1,1 +1,0 @@
-# Extract and model response
