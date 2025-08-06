@@ -174,6 +174,7 @@ class JsonDetailsExtractor:
             content (str): Html formatted text
         """
         self.details = self.extract(content)
+        """Whole extracted data"""
 
     @classmethod
     def extract(self, content: str, whole: bool = False) -> dict[str, t.Any]:
@@ -235,19 +236,72 @@ class JsonDetailsExtractor:
             )
 
     @property
-    def resources(self) -> dict:
-        """Key data resource"""
+    def data(self) -> dict[str, t.Any]:
+        """Key data resources
+
+        Contains key data such as `metadata`, `stars`, `reviews`, `resource.seasons`, `subject` etc
+
+        - Retrieved from `self.details["resData"]`
+        """
         return self.details["resData"]
 
     @property
-    def reviews(self) -> list[dict]:
-        """Reviews only"""
-        return self.details["midReviewsList"]
+    def subject(self) -> dict[str, t.Any]:
+        """Movie details such as `duration`, `releaseDate` etc
+
+        - Retrieved from `self.data["subject"]`
+        """
+
+        return self.data["subject"]
 
     @property
-    def resources_and_reviews(self) -> dict[str, dict | list[dict]]:
-        """Combined resources and reviews"""
-        return {"resources": self.resources, "reviews": self.reviews}
+    def reviews(self) -> list[dict[str, t.Any]]:
+        """Reviews only
+
+        - Retrieved from `self.data["postList"]["items"]`
+        """
+        return self.data["postList"]["items"]
+
+    @property
+    def metadata(self) -> dict[str, str]:
+        """Item metadata such as `description` etc
+
+        - Retrieved from `self.data["metadata"]`
+        """
+        return self.data["metadata"]
+
+    @property
+    def stars(self) -> list[dict[str, str | int]]:
+        """Movie casts
+
+        - Retrieved from `self.data["stars"]`
+        """
+        return self.data["stars"]
+
+    @property
+    def resource(self) -> dict[str, str | list[dict]]:
+        """Data includes `seasons`, `source` & `uploadBy`
+
+        - Retrieved from `self.data["resource"]`
+        """
+        return self.data["resource"]
+
+    @property
+    def seasons(self) -> list[dict[str, str | int | list[dict[str, int]]]]:
+        """Season details
+
+        - Retrieved from `self.resource["seasons"]`
+        """
+        return self.resource["seasons"]
+
+    @property
+    def page_details(self) -> dict[str, str | bool]:
+        """Page details such as `url`, `referer`, `lang` etc
+
+        - Retrieved from `self.data["pubParam"]`
+        """
+
+        return self.data["pubParam"]
 
 
 # class BaseMovieDetailsExtractor(BaseDetailsExtractor):

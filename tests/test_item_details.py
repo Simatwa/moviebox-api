@@ -23,8 +23,8 @@ async def test_movie_using_page_url(url):
         url,
         session=session,
     )
-    extracts = await details.get_json_extractor()
-    assert type(extracts.resources_and_reviews) is dict
+    content = await details.get_content()
+    assert type(content) is dict
 
 
 @pytest.mark.asyncio
@@ -45,8 +45,8 @@ async def test_tv_series_using_page_url(url):
         url,
         session=session,
     )
-    extracts = await details.get_json_extractor()
-    assert type(extracts.resources_and_reviews) is dict
+    content = await details.get_content()
+    assert type(content) is dict
 
 
 @pytest.mark.asyncio
@@ -58,8 +58,8 @@ async def test_movie_using_search_results_item():
         search_results.first_item,
         session=session,
     )
-    extracts = await details.get_json_extractor()
-    assert type(extracts.resources_and_reviews) is dict
+    content = await details.get_content()
+    assert type(content) is dict
 
 
 @pytest.mark.asyncio
@@ -73,5 +73,5 @@ async def test_tv_series_using_search_results_item():
         search_results.first_item,
         session=session,
     )
-    extracts = await details.get_json_extractor()
-    assert type(extracts.resources_and_reviews) is dict
+    content = await details.get_content()
+    assert type(content) is dict
