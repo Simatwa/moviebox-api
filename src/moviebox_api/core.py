@@ -15,7 +15,11 @@ from moviebox_api._bases import BaseContentProvider, BaseContentProviderAndHelpe
 from moviebox_api.models import HomepageContentModel, SearchResults, SearchResultsItem
 from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiException
 
-from moviebox_api.extractor._core import JsonDetailsExtractor
+from moviebox_api.extractor._core import (
+    JsonDetailsExtractor,
+    ModelledJsonDetailsExtractor,
+)
+from moviebox_api.extractor.models import ItemDetailsModel
 
 
 __all__ = ["Homepage", "Search", "MovieDetails", "TVSeriesDetails"]
@@ -191,14 +195,14 @@ class Search(BaseContentProvider):
         return SearchResults(**contents)
 
 
-class BaseItemPageDetails:
-    """Base class for specific movie/tv-series item details"""
+class BaseItemDetails:
+    """Base class for specific movie/tv-series (item) details"""
 
     def __init__(self, page_url: str, session: Session):
         """Constructor for `BaseItemPageDetails`
 
         Args:
-            page_url (str): Url to specific item details.
+            page_url (str): Url to specific page containing the item details.
             session (Session): MovieboxAPI request session
         """
         self._url = validate_item_page_url(page_url)
@@ -216,9 +220,14 @@ class BaseItemPageDetails:
         return page_contents
 
     async def get_json_extractor(self) -> JsonDetailsExtractor:
-        """Fetch content return initialized Json details extractor"""
+        """Fetch content and return instance of `JsonDetailsExtractor`"""
         html_contents = await self.get_html_content()
         return JsonDetailsExtractor(html_contents)
+
+    async def get_modelled_json_extractor(self) -> ModelledJsonDetailsExtractor:
+        """Fetch content and return instance of `ModelledJsonDetailsExtractor`"""
+        html_contents = await self.get_html_content()
+        return ModelledJsonDetailsExtractor(html_contents)
 
     async def get_content(self) -> Dict:
         """Get extracted item details
@@ -229,8 +238,17 @@ class BaseItemPageDetails:
         extracted_content = await self.get_json_extractor()
         return extracted_content.details
 
+    async def get_modelled_content(self) -> ItemDetailsModel:
+        """Get modelled extracted item details
 
-class MovieDetails(BaseItemPageDetails, BaseContentProviderAndHelper):
+        Returns:
+            ItemDetailsModel: Modelled item details
+        """
+        modelled_extrated_content = await self.get_modelled_json_extractor()
+        return modelled_extrated_content.details
+
+
+class MovieDetails(BaseItemDetails, BaseContentProviderAndHelper):
     """Specific movie item details"""
 
     def __init__(self, url_or_item: str | SearchResultsItem, session: Session):
@@ -255,13 +273,8 @@ class MovieDetails(BaseItemPageDetails, BaseContentProviderAndHelper):
 
         super().__init__(page_url=page_url, session=session)
 
-    async def get_modelled_content(self):
-        # TODO: Implement this
-        content = await self.get_content()
-        return await super().get_modelled_content()
 
-
-class TVSeriesDetails(BaseItemPageDetails, BaseContentProviderAndHelper):
+class TVSeriesDetails(BaseItemDetails, BaseContentProviderAndHelper):
     """Specific tv-series item details"""
 
     def __init__(self, url_or_item: str | SearchResultsItem, session: Session):
@@ -285,8 +298,3 @@ class TVSeriesDetails(BaseItemPageDetails, BaseContentProviderAndHelper):
             page_url = url_or_item
 
         super().__init__(page_url=page_url, session=session)
-
-    async def get_modelled_content(self):
-        # TODO: Implement this
-        content = await self.get_content()
-        return await super().get_modelled_content()

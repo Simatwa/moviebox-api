@@ -6,12 +6,23 @@ from json import loads
 from moviebox_api.extractor.helpers import souper
 
 from moviebox_api.extractor.exceptions import DetailsExtractionError
+from moviebox_api.extractor.models import (
+    ItemDetailsModel,
+    ResDataModel,
+    SubjectModel,
+    PostListItemModel,
+    MetadataModel,
+    StarsModel,
+    ResourceModel,
+    SeasonsModel,
+    PubParamModel,
+)
 
 
 class TagDetailsExtractor:
-    """Performs actual extraction of further movie/tv-series details from html tags of the page
+    """Performs extraction of a specific item details from html tags of the page
 
-    - Does not extracts seasons details. Use `JsonDetailsExtractor` instead.
+    - Does not extract season details. Use `JsonDetailsExtractor` instead.
     - Also this extraction method suffers from content restriction
     - e.g "This content is not available on the website. Please download our Android app to access it."
     """
@@ -161,8 +172,22 @@ class TagDetailsExtractor:
         return self.extract_all()
 
 
+class ModelledTagDetailsExtractor:
+    """Uses pydantic to model properties of `ModelledTagDetails`"""
+
+    # TODO: Complete this
+
+    def __init__(self, content: str):
+        """Constructor for `ModelledTagDetailsExtractor`
+
+        Args:
+            content (str): Html formatted text
+        """
+        raise NotImplementedError("Not implemented yet. Check later versions.")
+
+
 class JsonDetailsExtractor:
-    """Performs actual extraction of all movie/tv-series details from script section of the page
+    """Performs extraction of a specific item details from json-formatted data appended on the page
 
     - This extraction method suffers no known restriction.
     """
@@ -171,9 +196,9 @@ class JsonDetailsExtractor:
         """Constructor for `JsonDetailsExtractor`
 
         Args:
-            content (str): Html formatted text
+            content (str): Html contents of the item page
         """
-        self.details = self.extract(content)
+        self.details: dict[str, t.Any] = self.extract(content)
         """Whole extracted data"""
 
     @classmethod
@@ -304,9 +329,100 @@ class JsonDetailsExtractor:
         return self.data["pubParam"]
 
 
-# class BaseMovieDetailsExtractor(BaseDetailsExtractor):
-#    """`Movie` details extractor"""
+class ModelledJsonDetailsExtractor:
+    """Uses pydantic to model properties of `JsonDetailsExtractor`"""
 
+    def __init__(self, content: str):
+        """Constructor for `ModelledJsonDetailsExtractor`
 
-# class TVSeriesDetailsExtractor(BaseDetailsExtractor):
-#    """`TV Series` details extractor"""
+        Args:
+            content (str): Html contents of the item page
+        """
+        self.json_details_extractor: JsonDetailsExtractor = JsonDetailsExtractor(
+            content
+        )
+        self.details: ItemDetailsModel = self.extract(content)
+
+    @classmethod
+    def extract(self, content: str) -> ItemDetailsModel:
+        """Extract `movie/tv-series` from specific item details page.
+
+        Args:
+            content (str): Contents of the specific item page (html).
+
+        Raises:
+            DetailsExtractionError: Incase no data extracted
+
+        Returns:
+            ItemDetailsModel: Modelled extrated item details
+        """
+        contents = JsonDetailsExtractor.extract(content, whole=False)
+        return ItemDetailsModel(**contents)
+
+    @property
+    def data(self) -> ResDataModel:
+        """Key data resources
+
+        Contains key data such as `metadata`, `stars`, `reviews`, `resource.seasons`, `subject` etc
+
+        - Shortcut for `self.details.resData`
+        """
+        self.details.resData
+
+    @property
+    def subject(self) -> SubjectModel:
+        """Movie details such as `duration`, `releaseDate` etc
+
+        - Shortcut for `self.data.subject`
+        """
+        return self.data.subject
+
+    @property
+    def reviews(self) -> list[PostListItemModel]:
+        """Reviews only
+
+        - Shortcut for `self.data.postList.items`
+        """
+        return self.data.postList.items
+
+    @property
+    def metadata(self) -> MetadataModel:
+        """Item metadata such as `description` etc
+
+        - Shortcut for `self.data.metadata`
+        """
+
+        return self.data.metadata
+
+    @property
+    def stars(self) -> list[StarsModel]:
+        """Movie casts
+
+        - Shortcut for `self.data.stars`
+        """
+        return self.data.stars
+
+    @property
+    def resource(self) -> ResourceModel:
+        """Data includes `seasons`, `source` & `uploadBy`
+
+        - Shortcut for `self.data.resource`
+        """
+        return self.data.resource
+
+    @property
+    def seasons(self) -> list[SeasonsModel]:
+        """Season details
+
+        - Shortcut for `self.resource.seasons`
+        """
+        return self.resource.seasons
+
+    @property
+    def page_details(self) -> PubParamModel:
+        """Page details such as `url`, `referer`, `lang` etc
+
+        - Shortcut for `self.data.pubParam`
+        """
+
+        return self.data.pubParam
