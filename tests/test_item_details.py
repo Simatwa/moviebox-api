@@ -52,7 +52,7 @@ async def test_tv_series_using_page_url(url):
 @pytest.mark.asyncio
 async def test_movie_using_search_results_item():
     session = Session()
-    search = Search(session, keyword=MOVIE_KEYWORD, subject_type=SubjectType.MOVIES)
+    search = Search(session, query=MOVIE_KEYWORD, subject_type=SubjectType.MOVIES)
     search_results = await search.get_modelled_content()
     details = MovieDetails(
         search_results.first_item,
@@ -66,7 +66,7 @@ async def test_movie_using_search_results_item():
 async def test_tv_series_using_search_results_item():
     session = Session()
     search = Search(
-        session, keyword=TV_SERIES_KEYWORD, subject_type=SubjectType.TV_SERIES
+        session, query=TV_SERIES_KEYWORD, subject_type=SubjectType.TV_SERIES
     )
     search_results = await search.get_modelled_content()
     details = TVSeriesDetails(
