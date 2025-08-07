@@ -13,6 +13,8 @@ MIRROR_HOSTS = (
     "moviebox.pk",
     "moviebox.ph",
     "moviebox.id",
+    # "fmoviesunblocked.net"
+    "v.moviebox.ph",
 )
 """Mirror domains/subdomains of Moviebox"""
 

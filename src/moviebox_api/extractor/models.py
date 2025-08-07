@@ -12,7 +12,7 @@ class MetadataModel(BaseModel):
 
     description: str
     image: HttpUrl
-    keywords: str
+    keyWords: str
     referer: HttpUrl
     title: str
     url: str
@@ -55,7 +55,7 @@ class ResourceModel(BaseModel):
 class StarsModel(BaseModel):
     """`resData.stars.0`"""
 
-    avatarUrl: HttpUrl
+    avatarUrl: str
     character: str
     detailPath: str
     name: str
@@ -100,7 +100,7 @@ class PostListItemSubjectModel(BaseModel):
     rate: int
     releaseDate: date
     sniffUrl: str
-    sourceurl: HttpUrl
+    sourceUrl: HttpUrl
     subjectId: str
     subjectType: SubjectType
     title: str
@@ -119,18 +119,39 @@ class PostListItemUserModel(BaseModel):
     username: str
 
 
+class PostListMediaModel(BaseModel):
+    """`resData.postList.0.media`"""
+
+    audio: list
+    cover: str | None
+    firstFrame: str | None
+    image: list[ContentImageModel]
+    mediaType: str
+    video: list
+
+
+class PostListItemGroupModel(BaseModel):
+    """`resData.postList.0.group`"""
+
+    avatar: HttpUrl
+    groupId: str
+    name: str
+    postCount: int
+    userCount: int
+
+
 class PostListItemModel(BaseModel):
     """`resData.postList.0`"""
 
-    comment: list
+    commentList: list
     content: str
     cover: ContentImageModel
     createdAt: str
-    group: str | None
+    group: PostListItemGroupModel | None
     groupId: str
     isSubjectRate: bool
     link: str | None
-    media: str | None
+    media: PostListMediaModel | None
     mediaType: str
     poiName: str
     postId: str
@@ -185,14 +206,13 @@ class ResDataModel(BaseModel):
     """`resData`"""
 
     metadata: MetadataModel
-    url: HttpUrl
     postList: PostListModel
     pubParam: PubParamModel
     referer: HttpUrl
     resource: ResourceModel
     stars: list[StarsModel]
     subject: SubjectModel
-    url: HttpUrl
+    url: str
 
 
 class ItemDetailsModel(BaseModel):
@@ -205,7 +225,7 @@ class ItemDetailsModel(BaseModel):
     resData: ResDataModel
     utmSource: str
     showNotFound: bool
-    midForYou: list
+    # midForYou: list
     midReviewsList: list[PostListItemModel]
     pcShowSliderNav: bool
     detailShowSliderNav: bool

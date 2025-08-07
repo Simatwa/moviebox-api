@@ -18,10 +18,21 @@ from moviebox_api.extractor.models import (
     PubParamModel,
 )
 
+__all__ = [
+    "TagDetailsExtractor",
+    "JsonDetailsExtractor",
+    "TagDetailsExtractorModel",
+    "JsonDetailsExtractorModel",
+]
+
 
 class TagDetailsExtractor:
     """Performs extraction of a specific item details from html tags of the page
 
+    #### Pros
+    - It's super faster than `JsonDetailsExtractor`
+
+    #### Cons
     - Does not extract season details. Use `JsonDetailsExtractor` instead.
     - Also this extraction method suffers from content restriction
     - e.g "This content is not available on the website. Please download our Android app to access it."
@@ -68,6 +79,7 @@ class TagDetailsExtractor:
                 entry.get("href")
                 for entry in header.find_all("link", {"rel": "dns-prefetch"})
             ]
+
             resp["images"] = [
                 {"type": entry.get("type"), "url": entry.get("href")}
                 for entry in header.find_all("link", {"as": "image"})
@@ -76,6 +88,7 @@ class TagDetailsExtractor:
 
     def extract_basics(self) -> dict:
         """Extracts basic data such as `title`, `duration` etc"""
+
         resp = {}
         basic_soup = self.souped_content_body.find(
             "div", {"class": "pc-detail-content"}
@@ -159,37 +172,23 @@ class TagDetailsExtractor:
 
     def extract_all(self) -> dict[str, dict[str, t.Any]]:
         """Extract all possible contents from the page"""
-        resp = {"headers": {}, "basics": {}, "casts": {}, "reviews": {}}
-        resp["headers"] = self.extract_headers()
-        resp["basics"] = self.extract_basics()
-        resp["casts"] = self.extract_casts()
-        resp["reviews"] = self.extract_reviews()
-        resp["others"] = self.extract_others()
-        return resp
+        return {
+            "headers": self.extract_headers(),
+            "basics": self.extract_basics(),
+            "casts": self.extract_casts(),
+            "reviews": self.extract_others(),
+        }
 
     def __call__(self):
         """Extract all possible contents from the page"""
         return self.extract_all()
 
 
-class ModelledTagDetailsExtractor:
-    """Uses pydantic to model properties of `ModelledTagDetails`"""
-
-    # TODO: Complete this
-
-    def __init__(self, content: str):
-        """Constructor for `ModelledTagDetailsExtractor`
-
-        Args:
-            content (str): Html formatted text
-        """
-        raise NotImplementedError("Not implemented yet. Check later versions.")
-
-
 class JsonDetailsExtractor:
     """Performs extraction of a specific item details from json-formatted data appended on the page
 
-    - This extraction method suffers no known restriction.
+    - Pros : Extracts whole details available.
+    - Cons : Kinda slower than `TagDetailsExtractor`
     """
 
     def __init__(self, content: str):
@@ -329,7 +328,21 @@ class JsonDetailsExtractor:
         return self.data["pubParam"]
 
 
-class ModelledJsonDetailsExtractor:
+class TagDetailsExtractorModel:
+    """Uses pydantic to model properties of `TagDetailsExtractor`"""
+
+    # TODO: Complete this
+
+    def __init__(self, content: str):
+        """Constructor for `ModelledTagDetailsExtractor`
+
+        Args:
+            content (str): Html formatted text
+        """
+        raise NotImplementedError("Not implemented yet. Check later versions.")
+
+
+class JsonDetailsExtractorModel:
     """Uses pydantic to model properties of `JsonDetailsExtractor`"""
 
     def __init__(self, content: str):
@@ -367,7 +380,7 @@ class ModelledJsonDetailsExtractor:
 
         - Shortcut for `self.details.resData`
         """
-        self.details.resData
+        return self.details.resData
 
     @property
     def subject(self) -> SubjectModel:

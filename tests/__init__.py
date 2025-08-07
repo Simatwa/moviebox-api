@@ -3,6 +3,9 @@ import asyncio
 from moviebox_api.requests import Session
 from moviebox_api.core import Search
 from moviebox_api.core import SubjectType
+from pathlib import Path
+
+project_dir = Path(__file__).parent.parent
 
 keyword = "Titanic"
 

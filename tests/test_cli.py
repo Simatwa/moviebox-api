@@ -14,7 +14,7 @@ def run_system_command(command: str) -> int:
         )
         return result.returncode
     except subprocess.CalledProcessError as e:
-        print(e)
+        print(e, e.output, sep="\n")
         return e.returncode
 
 
@@ -66,9 +66,8 @@ def test_mirror_hosts():
         ["homepage-content"],
         ["homepage-content --json"],
         ["homepage-content --banner"],
-        ["homepage-content --banner --json"][
-            "homepage-content --title 'Trending Now🔥'"
-        ],
+        ["homepage-content --banner --json"],
+        ["homepage-content --title 'Trending Now🔥'"],
     ],
 )
 def test_homepage(command):

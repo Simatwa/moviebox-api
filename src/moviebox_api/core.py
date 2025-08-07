@@ -17,7 +17,7 @@ from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiExce
 
 from moviebox_api.extractor._core import (
     JsonDetailsExtractor,
-    ModelledJsonDetailsExtractor,
+    JsonDetailsExtractorModel,
 )
 from moviebox_api.extractor.models import ItemDetailsModel
 
@@ -224,10 +224,10 @@ class BaseItemDetails:
         html_contents = await self.get_html_content()
         return JsonDetailsExtractor(html_contents)
 
-    async def get_modelled_json_extractor(self) -> ModelledJsonDetailsExtractor:
-        """Fetch content and return instance of `ModelledJsonDetailsExtractor`"""
+    async def get_modelled_json_extractor(self) -> JsonDetailsExtractorModel:
+        """Fetch content and return instance of `JsonDetailsExtractorModel`"""
         html_contents = await self.get_html_content()
-        return ModelledJsonDetailsExtractor(html_contents)
+        return JsonDetailsExtractorModel(html_contents)
 
     async def get_content(self) -> Dict:
         """Get extracted item details

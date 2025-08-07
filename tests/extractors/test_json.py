@@ -1,18 +1,7 @@
 import pytest
+
+from tests.extractors import content_names, content_paths, read_content
 from moviebox_api.extractor._core import JsonDetailsExtractor
-
-
-content_names = ["content_path"]
-
-content_paths = (
-    ["../recons/movies.0/titanic-page-details.html"],
-    ["../recons/series/merlin-page-details-pretty.html"]
-)
-
-
-def read_content(path):
-    with open(path, encoding="utf-8") as fh:
-        return fh.read()
 
 
 @pytest.mark.parametrize(content_names, content_paths)
@@ -28,5 +17,3 @@ def test_extract_whole_data(content_path):
     assert type(extractor.seasons) is list
     assert type(extractor.stars) is list
     assert type(extractor.page_details) is dict
-
-
