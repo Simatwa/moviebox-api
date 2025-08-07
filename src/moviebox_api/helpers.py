@@ -93,7 +93,7 @@ def get_file_extension(url: str) -> str | None:
 
     For example:
         url : https://valiw.hakunaymatata.com/resource/537977caa8c13703185d26471ce7de9f.mp4s?auth_key=1753024153-0-0-c824d3b5a5c8acc294bfd41de43c51ef"
-        returns mp4
+        returns 'mp4'
     """
     all = re.findall(FILE_EXT_PATTERN, str(url))
     if all:

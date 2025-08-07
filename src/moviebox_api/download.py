@@ -169,7 +169,7 @@ class DownloadableMovieFilesDetail(BaseDownloadableFilesDetail):
 
 
 class DownloadableSeriesFilesDetail(BaseDownloadableFilesDetail):
-    """Fetches and model series files detail"""
+    """Fetches and model series file details"""
 
     # NOTE: Already implemented by parent class - BaseDownloadableFilesDetail
 
@@ -468,7 +468,7 @@ class CaptionFileDownloader:
         """Constructor for `CaptionFileDownloader`
         Args:
             session (Session): MovieboxAPI request session.
-            caption_file (CaptionFileMetadata): Movie/tv-series/music to be downloaded.
+            caption_file (CaptionFileMetadata): Movie/tv-series/music caption file details.
         """
         assert_instance(caption_file, CaptionFileMetadata, "caption_file")
         self._caption_file = caption_file
@@ -484,7 +484,7 @@ class CaptionFileDownloader:
         episode: int = 0,
         **kwargs,
     ) -> str:
-        """Generates filename in the format as in `self.filename_template`
+        """Generates filename in the format as in `self.*filename_template`
 
         Args:
             search_results_item (SearchResultsItem)

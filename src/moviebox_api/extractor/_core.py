@@ -214,50 +214,60 @@ class JsonDetailsExtractor:
         Returns:
             dict[str, t.Any]: Extracted item details
         """
-        from_script = souper(content).find("script", {"type": "application/json"}).text
-        data: list = loads(from_script)
-        extracts = []
+        try:
+            from_script = (
+                souper(content).find("script", {"type": "application/json"}).text
+            )
+            data: list = loads(from_script)
+            extracts = []
 
-        def resolve_value(value):
-            if type(value) is list:
-                return [
-                    resolve_value(data[index] if type(index) == int else index)
-                    for index in value
-                ]
+            def resolve_value(value):
+                if type(value) is list:
+                    return [
+                        resolve_value(data[index] if type(index) == int else index)
+                        for index in value
+                    ]
 
-            elif type(value) is dict:
-                processed_value = {}
-                for k, v in value.items():
-                    processed_value[k] = resolve_value(data[v])
-                return processed_value
+                elif type(value) is dict:
+                    processed_value = {}
+                    for k, v in value.items():
+                        processed_value[k] = resolve_value(data[v])
+                    return processed_value
 
-            return value
+                return value
 
-        for entry in data:
-            if type(entry) is dict:
-                details = {}
-                for key, index in entry.items():
-                    details[key] = resolve_value(data[index])
+            for entry in data:
+                if type(entry) is dict:
+                    details = {}
+                    for key, index in entry.items():
+                        details[key] = resolve_value(data[index])
 
-                extracts.append(details)
+                    extracts.append(details)
 
-        if extracts:
-            if whole:
-                return extracts[0]
-            else:
-                target_data: dict = extracts[0]["state"][1]
-                return dict(
-                    zip(
-                        [key[2:] for key in target_data.keys()],  # Remove ^$s
-                        target_data.values(),
+            if extracts:
+                if whole:
+                    return extracts[0]
+                else:
+                    target_data: dict = extracts[0]["state"][1]
+                    return dict(
+                        zip(
+                            [key[2:] for key in target_data.keys()],  # Remove ^$s
+                            target_data.values(),
+                        )
                     )
+            else:
+                raise DetailsExtractionError(
+                    "The extraction process completed without any find. "
+                    "Ensure correct content is passed."
                 )
+        except Exception as e:
+            if isinstance(e, DetailsExtractionError):
+                raise e
 
-        else:
             raise DetailsExtractionError(
                 "The extraction process completed without any find. "
                 "Ensure correct content is passed."
-            )
+            ) from e
 
     @property
     def data(self) -> dict[str, t.Any]:

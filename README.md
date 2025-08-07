@@ -25,7 +25,7 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 
 Run the following command in your terminal:
 
-```sh
+```
 $ pip install "moviebox-api[cli]"
 
 # For developers
@@ -138,14 +138,14 @@ Commands:
 
 #### Download Movie
 
-```sh
+```
 $ python -m moviebox_api download-movie <Movie title>
 # e.g python -m moviebox_api download-movie Avatar
 ```
 
 </summary>
 
-```sh
+```
 # python -m moviebox_api download-movie --help
 
 Usage: moviebox download-movie [OPTIONS] TITLE
@@ -199,14 +199,14 @@ Options:
 
 #### Download Series
 
-```sh
+```
 $ python -m moviebox_api download-series <Series title> -s <season number> -e <episode number>
 # e.g python -m moviebox_api download-series Merlin -s 1 -e 1
 ```
 
 </summary>
 
-```sh
+```
 # python -m moviebox_api download-series --help
 
 Usage: moviebox download-series [OPTIONS] TITLE

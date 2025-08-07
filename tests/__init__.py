@@ -7,19 +7,19 @@ from pathlib import Path
 
 project_dir = Path(__file__).parent.parent
 
-keyword = "Titanic"
+query = "Titanic"
 
-MOVIE_KEYWORD = keyword
+MOVIE_KEYWORD = query
 
 TV_SERIES_KEYWORD = "Merlin"
 
 
 def init_search(
-    session: Session, keyword=keyword, subject_type=SubjectType.ALL, per_page=4, page=1
+    session: Session, query=query, subject_type=SubjectType.ALL, per_page=4, page=1
 ) -> Search:
     return Search(
         session=session,
-        keyword=keyword,
+        query=query,
         subject_type=subject_type,
         per_page=per_page,
         page=page,

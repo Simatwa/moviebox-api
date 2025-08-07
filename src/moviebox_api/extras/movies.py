@@ -66,7 +66,7 @@ class Auto:
             t.Tuple[SearchResultsItem, DownloadableFilesMetadata].
         """
         search = Search(
-            self._session, keyword=query, subject_type=SubjectType.MOVIES, per_page=1
+            self._session, query=query, subject_type=SubjectType.MOVIES, per_page=1
         )
         search_results = await search.get_modelled_content()
         if year is not None:

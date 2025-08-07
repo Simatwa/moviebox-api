@@ -81,7 +81,7 @@ class Search(BaseContentProvider):
     def __init__(
         self,
         session: Session,
-        keyword: str,
+        query: str,
         subject_type: SubjectType = SubjectType.ALL,
         page: int = 1,
         per_page: int = 24,
@@ -90,7 +90,7 @@ class Search(BaseContentProvider):
 
         Args:
             session (Session): MovieboxAPI request session
-            keyword (str): Search keyword.
+            query (str): Search query.
             subject_type (SubjectType, optional): Subject-type filter for performing search. Defaults to SubjectType.ALL.
             page (int, optional): Page number filter. Defaults to 1.
             per_page (int, optional): Maximum number of items per page. Defaults to 24.
@@ -100,13 +100,13 @@ class Search(BaseContentProvider):
 
         self.session = session
         self._subject_type = subject_type
-        self._keyword = keyword
+        self._query = query
         self._page = page
         self._per_page = per_page
 
     def __repr__(self):
         return (
-            rf"<Search keyword='{self._keyword}' subject_type={self._subject_type.name} "
+            rf"<Search query='{self._query}' subject_type={self._subject_type.name} "
             rf"page={self._page} per_page={self._per_page}>"
         )
 
@@ -122,7 +122,7 @@ class Search(BaseContentProvider):
         if content.pager.hasMore:
             return Search(
                 session=self.session,
-                keyword=self._keyword,
+                query=self._query,
                 subject_type=self._subject_type,
                 page=content.pager.nextPage,
                 per_page=self._per_page,
@@ -149,7 +149,7 @@ class Search(BaseContentProvider):
         if content.pager.page >= 2:
             return Search(
                 session=self.session,
-                keyword=self._keyword,
+                query=self._query,
                 subject_type=self._subject_type,
                 page=content.pager.page - 1,
                 per_page=self._per_page,
@@ -168,7 +168,7 @@ class Search(BaseContentProvider):
         """
 
         return {
-            "keyword": self._keyword,
+            "keyword": self._query,
             "page": self._page,
             "perPage": self._per_page,
             "subjectType": self._subject_type.value,
