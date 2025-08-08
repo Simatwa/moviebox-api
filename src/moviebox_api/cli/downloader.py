@@ -16,7 +16,7 @@ from moviebox_api.core import Session
 from moviebox_api.download import (
     CaptionFileDownloader,
     DownloadableMovieFilesDetail,
-    DownloadableSeriesFilesDetail,
+    DownloadableTVSeriesFilesDetail,
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
@@ -167,7 +167,7 @@ class Downloader:
             f"{SearchResultsItem} not {type(target_tv_series)}"
         )
 
-        downloadable_files = DownloadableSeriesFilesDetail(self._session, target_tv_series)
+        downloadable_files = DownloadableTVSeriesFilesDetail(self._session, target_tv_series)
         response = {}
 
         for episode_count in range(limit):

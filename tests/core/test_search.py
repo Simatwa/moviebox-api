@@ -1,6 +1,6 @@
 import pytest
 
-from moviebox_api.core import Search, SubjectType
+from moviebox_api.core import Search, SubjectType, MovieDetails, TVSeriesDetails
 from moviebox_api.models import SearchResults
 from moviebox_api.requests import Session
 from tests import init_search
@@ -16,29 +16,24 @@ from tests import init_search
         [SubjectType.MUSIC],
     ),
 )
-async def test_get_content(subject_type: SubjectType):
+async def test_get_content_and_model(subject_type: SubjectType):
     search: Search = init_search(Session(), subject_type=subject_type)
     contents = await search.get_content()
     assert type(contents) is dict
-
-
-@pytest.mark.asyncio
-@pytest.mark.parametrize(
-    argnames=["subject_type"],
-    argvalues=(
-        [SubjectType.ALL],
-        [SubjectType.MOVIES],
-        [SubjectType.TV_SERIES],
-        [SubjectType.MUSIC],
-    ),
-)
-async def test_model_content(subject_type: SubjectType):
-    search: Search = init_search(Session(), subject_type=subject_type)
     modelled_contents = await search.get_content_model()
     assert isinstance(modelled_contents, SearchResults)
     for item in modelled_contents.items:
-        if subject_type != SubjectType.ALL:
-            assert item.subjectType == subject_type
+        match subject_type:
+            case SubjectType.MOVIES:
+                assert item.subjectType == SubjectType.MOVIES
+                assert isinstance(search.get_item_details(modelled_contents.first_item), MovieDetails)
+
+            case SubjectType.TV_SERIES:
+                assert item.subjectType == SubjectType.TV_SERIES
+                assert isinstance(search.get_item_details(item), TVSeriesDetails)
+
+            case "_":
+                pass
 
 
 @pytest.mark.asyncio

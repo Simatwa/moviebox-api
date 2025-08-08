@@ -4,6 +4,8 @@ Generate models from httpx request responses.
 Also provides ORM support for a specific extracted item details
 """
 
+import typing as t
+
 from moviebox_api._bases import (
     BaseContentProvider,
     BaseContentProviderAndHelper,
@@ -214,7 +216,7 @@ class Search(BaseContentProvider):
         return SearchResults(**contents)
 
     def get_item_details(self, item: SearchResultsItem) -> "MovieDetails | TVSeriesDetails":
-        """Get object that provide more details of the search results item such as casts, seasons etc
+        """Get object that provide more details about the search results item such as casts, seasons etc
 
         Args:
             item (SearchResultsItem): Search result item
@@ -263,13 +265,13 @@ class BaseItemDetails:
             # Not a good approach for async but it will save alot of seconds & bandwidth
             return self.__html_content
 
-        page_contents = await self._session.get_with_cookies(
+        resp = await self._session.get_with_cookies(
             get_absolute_url(self._url),
         )
-        self.__html_content = page_contents
-        return page_contents
+        self.__html_content = resp.text
+        return self.__html_content
 
-    async def get_content(self) -> dict:
+    async def get_content(self) -> dict[str, t.Any]:
         """Get extracted item details using `self.get_json_details_extractor`
 
         Returns:
@@ -305,7 +307,7 @@ class BaseItemDetails:
     async def get_json_details_extractor_model(
         self,
     ) -> JsonDetailsExtractorModel:
-        """Fetch content and return object that models extracted details from json-formatted data in the page"""
+        """Fetch content and return object that models extracted details from json-formatted data in the page"""  # noqa: E501
         html_contents = await self.get_html_content()
         return JsonDetailsExtractorModel(html_contents)
 

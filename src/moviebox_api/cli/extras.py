@@ -6,12 +6,12 @@ from rich.table import Table
 
 from moviebox_api.cli.helpers import command_context_settings, loop
 from moviebox_api.constants import MIRROR_HOSTS
-from moviebox_api.core import Homepage
+from moviebox_api.core import Homepage, PopularSearch
 from moviebox_api.requests import Session
 
 
 @click.command(context_settings=command_context_settings)
-@click.option("-j", "--json", is_flag=True, help="Output details in json format")
+@click.option("-J", "--json", is_flag=True, help="Output details in json format")
 def mirror_hosts(json: bool):
     """Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST]"""
 
@@ -30,23 +30,20 @@ def mirror_hosts(json: bool):
         rich.print(table)
 
 
-# TODO: Add command for showing accessible mirror hosts
-
-
 @click.command()
 @click.option(
-    "-j",
+    "-J",
     "--json",
     is_flag=True,
     help="Output details in json format : False",
 )
 @click.option(
-    "-t",
+    "-T",
     "--title",
     help="Title filter for the contents to list : None",
 )
 @click.option(
-    "-b",
+    "-B",
     "--banner",
     is_flag=True,
     help="Show banner content only : False",
@@ -148,3 +145,27 @@ def homepage_content(json: bool, title: str, banner: bool):
                     table.add_row(*item)
 
                 rich.print(table)
+
+
+@click.command()
+@click.option(
+    "-J",
+    "--json",
+    is_flag=True,
+    help="Output details in json format : False",
+)
+def popular_search(json: bool):
+    """Movies/tv-series many people are searching now"""
+    search = PopularSearch(Session())
+    items = loop.run_until_complete(search.get_content_model())
+
+    if json:
+        processed_items = [item.title for item in items]
+        rich.print_json(data=dict(popular=processed_items), indent=4)
+    else:
+        table = Table(title="Popular Searches Now", show_lines=True)
+        table.add_column("Pos")
+        table.add_column("Title")
+        for pos, item in enumerate(items, start=1):
+            table.add_row(str(pos), item.title)
+        rich.print(table)

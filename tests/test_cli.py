@@ -32,6 +32,7 @@ def test_version():
         ["download-series --help"],
         ["mirror-hosts --help"],
         ["homepage-content --help"],
+        ["popular-search --help"],
     ],
 )
 def test_help(command):
@@ -71,5 +72,16 @@ def test_mirror_hosts():
     ],
 )
 def test_homepage(command):
+    returncode = run_system_command(command)
+    assert returncode <= 0
+
+
+@pytest.mark.parametrize(
+    argnames=[
+        "command",
+    ],
+    argvalues=(["popular-search"], ["popular-search --json"]),
+)
+def test_popular_search(command):
     returncode = run_system_command(command)
     assert returncode <= 0

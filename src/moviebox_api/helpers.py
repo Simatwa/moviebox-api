@@ -46,8 +46,9 @@ def assert_membership(value: t.Any, elements: t.Iterable, identity="Value"):
 
 def assert_instance(obj: object, class_or_tuple, name: str = "Parameter") -> t.NoReturn:
     """assert obj an instance of class_or_tuple"""
+
     assert isinstance(obj, class_or_tuple), (
-        f"{name} value needs to be an instace of {class_or_tuple} not {type(obj)}"
+        f"{name} value needs to be an instace of/any of {class_or_tuple} not {type(obj)}"
     )
 
 

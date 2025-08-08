@@ -96,7 +96,7 @@ class PagerModel(BaseModel):
 
 
 class PostListItemStatModel(BaseModel):
-    """`.resData.postList.0.stat`"""
+    """`.resData.postList.items.0.stat`"""
 
     commentCount: int
     likeCount: int
@@ -106,7 +106,7 @@ class PostListItemStatModel(BaseModel):
 
 
 class PostListItemSubjectModel(BaseModel):
-    """`.resData.postList.0.subject`"""
+    """`.resData.postList.items.0.subject`"""
 
     countryName: str
     cover: ContentImageModel
@@ -141,7 +141,7 @@ class PostListItemSubjectModel(BaseModel):
 
 
 class PostListItemUserModel(BaseModel):
-    """`.resData.postList.0.user`"""
+    """`.resData.postList.items.0.user`"""
 
     avatar: HttpUrl
     nickname: str
@@ -150,7 +150,7 @@ class PostListItemUserModel(BaseModel):
 
 
 class PostListMediaModel(BaseModel):
-    """`.resData.postList.0.media`"""
+    """`.resData.postList.items.0.media`"""
 
     audio: list
     cover: str | None
@@ -161,7 +161,7 @@ class PostListMediaModel(BaseModel):
 
 
 class PostListItemGroupModel(BaseModel):
-    """`.resData.postList.0.group`"""
+    """`.resData.postList.items.0.group`"""
 
     avatar: HttpUrl
     groupId: str
@@ -171,7 +171,7 @@ class PostListItemGroupModel(BaseModel):
 
 
 class PostListItemModel(BaseModel):
-    """`.resData.postList.0`"""
+    """`.resData.postList.items.0`"""
 
     commentList: list
     content: str

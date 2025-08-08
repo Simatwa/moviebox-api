@@ -22,6 +22,10 @@ from moviebox_api.constants import (
     SubjectType,
 )
 from moviebox_api.exceptions import DownloadCompletedError
+from moviebox_api.extractor.models.json import (
+    ItemJsonDetailsModel,
+    PostListItemSubjectModel,
+)
 from moviebox_api.helpers import (
     assert_instance,
     get_absolute_url,
@@ -40,7 +44,7 @@ __all__ = [
     "MediaFileDownloader",
     "CaptionFileDownloader",
     "DownloadableMovieFilesDetail",
-    "DownloadableSeriesFilesDetail",
+    "DownloadableTVSeriesFilesDetail",
     "resolve_media_file_to_be_downloaded",
 ]
 
@@ -88,17 +92,19 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
 
     _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/download")
 
-    def __init__(self, session: Session, item: SearchResultsItem):
+    def __init__(self, session: Session, item: SearchResultsItem | ItemJsonDetailsModel):
         """Constructor for `BaseDownloadableFilesDetail`
 
         Args:
             session (Session): MovieboxAPI request session.
-            item (SearchResultsItem): Movie item to handle.
+            item (SearchResultsItem | ItemJsonDetailsModel): Movie/TVSeries item to handle.
         """
         assert_instance(session, Session, "session")
-        assert_instance(item, SearchResultsItem, "item")
+        assert_instance(item, (SearchResultsItem, ItemJsonDetailsModel), "item")
         self.session = session
-        self._item = item
+        self._item: SearchResultsItem | PostListItemSubjectModel = (
+            item.resData.postList.items[0].subject if isinstance(item, ItemJsonDetailsModel) else item
+        )
 
     def _create_request_params(self, season: int, episode: int) -> dict:
         """Creates request parameters
@@ -163,7 +169,7 @@ class DownloadableMovieFilesDetail(BaseDownloadableFilesDetail):
         return DownloadableFilesMetadata(**contents)
 
 
-class DownloadableSeriesFilesDetail(BaseDownloadableFilesDetail):
+class DownloadableTVSeriesFilesDetail(BaseDownloadableFilesDetail):
     """Fetches and model series file details"""
 
     # NOTE: Already implemented by parent class - BaseDownloadableFilesDetail

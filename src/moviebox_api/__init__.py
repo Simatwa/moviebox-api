@@ -50,7 +50,7 @@ from moviebox_api.core import (  # noqa: E402
 from moviebox_api.download import (  # noqa: E402
     CaptionFileDownloader,
     DownloadableMovieFilesDetail,
-    DownloadableSeriesFilesDetail,
+    DownloadableTVSeriesFilesDetail,
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
@@ -69,6 +69,6 @@ __all__ = [
     "MediaFileDownloader",
     "CaptionFileDownloader",
     "DownloadableMovieFilesDetail",
-    "DownloadableSeriesFilesDetail",
+    "DownloadableTVSeriesFilesDetail",
     "resolve_media_file_to_be_downloaded",
 ]
