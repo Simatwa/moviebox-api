@@ -153,8 +153,8 @@ class PostListMediaModel(BaseModel):
     """`.resData.postList.items.0.media`"""
 
     audio: list
-    cover: str | None
-    firstFrame: str | None
+    cover: ContentImageModel | str | None
+    firstFrame: ContentImageModel | str | None
     image: list[ContentImageModel]
     mediaType: str
     video: list

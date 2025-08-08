@@ -7,7 +7,7 @@ from datetime import date
 from json import loads
 from uuid import UUID
 
-from pydantic import BaseModel, HttpUrl, field_validator
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 from moviebox_api.constants import ITEM_DETAILS_PATH, DownloadQualitiesType, SubjectType
 from moviebox_api.exceptions import (
@@ -172,7 +172,7 @@ class SearchResultsItem(ContentSubjectModel):
     subtitles: list[str]
     ops: OPS
     hasResource: bool
-    imdbRatingCount: int
+    imdbRatingCount: int | None = None  # None for TrendingResults
 
     @field_validator("ops", mode="before")
     def validate_ops(value: str) -> dict:
@@ -188,7 +188,7 @@ class SearchResultsItem(ContentSubjectModel):
         return f"{ITEM_DETAILS_PATH}/{self.detailPath}?id={self.subjectId}"
 
 
-class SearchResultsPager(BaseModel):
+class SearchResultsPagerModel(BaseModel):
     """Search pagination info"""
 
     hasMore: bool
@@ -198,10 +198,10 @@ class SearchResultsPager(BaseModel):
     totalCount: int
 
 
-class SearchResults(BaseModel):
+class SearchResultsModel(BaseModel):
     """Whole search results"""
 
-    pager: SearchResultsPager
+    pager: SearchResultsPagerModel
     items: list[SearchResultsItem]
 
     @field_validator("items", mode="after")
@@ -216,6 +216,34 @@ class SearchResults(BaseModel):
     @property
     def first_item(self) -> SearchResultsItem:
         return self.items[0]
+
+
+class TrendingResultsModel(BaseModel):
+    """Whole trending results"""
+
+    pager: SearchResultsPagerModel
+    subjectList: list[SearchResultsItem]
+
+    @property
+    def items(self) -> list[SearchResultsItem]:
+        return self.subjectList
+
+    @property
+    def first_item(self) -> SearchResultsItem:
+        return self.items[0]
+
+
+class HotMoviesAndTVSeriesModel(BaseModel):
+    movies: list[SearchResultsItem] = Field(alias="movie")
+    tv_series: list[SearchResultsItem] = Field(alias="tv")
+
+
+class SuggestedItemsModel(BaseModel):
+    """Items suggested"""
+
+    items: list
+    keyword: str
+    ops: str
 
 
 class BaseFileMetadata(BaseModel):

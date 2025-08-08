@@ -97,7 +97,8 @@ class Auto:
         """Downloads movie
 
         Args:
-            query (str): Partial or complete movie title.
+            downloadable_movie_file_details (DownloadableFilesMetadata): Primarily served from `self._search_handler`.
+            quality: Video resolution postpixed with 'P' or simple 'BEST' | 'WORST'. Defaults to 'BEST'
 
         Kwargs : Keyworded arguments for `MediaFileDownloader.run` method.
 

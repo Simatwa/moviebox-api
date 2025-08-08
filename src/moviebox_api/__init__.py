@@ -39,12 +39,22 @@ __repo__ = "https://github.com/Simatwa/moviebox-api"
 
 logger = logging.getLogger(__name__)
 
-from moviebox_api.constants import SubjectType  # noqa: E402
+from moviebox_api.constants import (  # noqa: E402
+    DOWNLOAD_QUALITIES,
+    HOST_URL,
+    MIRROR_HOSTS,
+    SELECTED_HOST,
+    SubjectType,
+)
 from moviebox_api.core import (  # noqa: E402
     Homepage,
+    HotMoviesAndTVSeries,
     MovieDetails,
     PopularSearch,
+    Recommend,
     Search,
+    SearchSuggestion,
+    Trending,
     TVSeriesDetails,
 )
 from moviebox_api.download import (  # noqa: E402
@@ -61,14 +71,24 @@ __all__ = [
     "Auto",
     "Search",
     "Session",
+    "Trending",
     "Homepage",
+    "Recommend",
     "SubjectType",
     "MovieDetails",
     "PopularSearch",
     "TVSeriesDetails",
+    "SearchSuggestion",
     "MediaFileDownloader",
+    "HotMoviesAndTVSeries",
     "CaptionFileDownloader",
     "DownloadableMovieFilesDetail",
     "DownloadableTVSeriesFilesDetail",
     "resolve_media_file_to_be_downloaded",
+    # Constants
+    "DOWNLOAD_QUALITIES",
+    "MIRROR_HOSTS",
+    "SELECTED_HOST",
+    "HOST_URL",
+    "SubjectType",
 ]

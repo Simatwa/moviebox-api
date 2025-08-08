@@ -88,7 +88,7 @@ def resolve_media_file_to_be_downloaded(
 
 
 class BaseDownloadableFilesDetail(BaseContentProvider):
-    """Base class for fetching and modelling downloadable files details"""
+    """Base class for fetching and modelling downloadable files detail"""
 
     _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/download")
 
@@ -170,7 +170,7 @@ class DownloadableMovieFilesDetail(BaseDownloadableFilesDetail):
 
 
 class DownloadableTVSeriesFilesDetail(BaseDownloadableFilesDetail):
-    """Fetches and model series file details"""
+    """Fetches and model series files detail"""
 
     # NOTE: Already implemented by parent class - BaseDownloadableFilesDetail
 
@@ -251,7 +251,7 @@ class MediaFileDownloader:
         self,
         filename: str | SearchResultsItem,
         dir: str | Path = CURRENT_WORKING_DIR,
-        progress_bar=True,
+        progress_bar: bool = True,
         chunk_size: int = 512,
         mode: DownloadMode = DownloadMode.AUTO,
         colour: str = "cyan",

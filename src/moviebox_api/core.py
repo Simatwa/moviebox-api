@@ -7,7 +7,6 @@ Also provides ORM support for a specific extracted item details
 import typing as t
 
 from moviebox_api._bases import (
-    BaseContentProvider,
     BaseContentProviderAndHelper,
 )
 from moviebox_api.constants import SubjectType
@@ -29,13 +28,26 @@ from moviebox_api.helpers import (
 )
 from moviebox_api.models import (
     HomepageContentModel,
+    HotMoviesAndTVSeriesModel,
     PopularSearchModel,
-    SearchResults,
     SearchResultsItem,
+    SearchResultsModel,
+    SuggestedItemsModel,
+    TrendingResultsModel,
 )
 from moviebox_api.requests import Session
 
-__all__ = ["Homepage", "Search", "PopularSearch", "MovieDetails", "TVSeriesDetails"]
+__all__ = [
+    "Homepage",
+    "Search",
+    "Trending",
+    "Recommend",
+    "PopularSearch",
+    "MovieDetails",
+    "TVSeriesDetails",
+    "SearchSuggestion",
+    "HotMoviesAndTVSeries",
+]
 
 
 class Homepage(BaseContentProviderAndHelper):
@@ -67,39 +79,53 @@ class Homepage(BaseContentProviderAndHelper):
         return HomepageContentModel(**content)
 
 
-class PopularSearch(BaseContentProviderAndHelper):
-    """Movies and tv-series many people are searching"""
+class BaseSearch(BaseContentProviderAndHelper):
+    """Base class for search providers such as `Trending` and `Search`"""
 
-    _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/everyone-search")
+    session: Session
+    """Moviebox-api requests session"""
 
-    def __init__(self, session: Session):
-        """Constructor for `EveryoneSearches`
+    _url: str
+
+    def _create_payload(self) -> object:
+        raise NotImplementedError("Function needs to be implemented in subclass")
+
+    async def get_content(self) -> dict:
+        """Fetches content
+
+        Returns:
+            dict: Fetched results
+        """
+        contents = await self.session.get_with_cookies_from_api(url=self._url, params=self._create_payload())
+        return contents
+
+    def get_item_details(self, item: SearchResultsItem) -> "MovieDetails | TVSeriesDetails":
+        """Get object that provide more details about the search results item such as casts, seasons etc
 
         Args:
-            session (Session): MovieboxAPI request session
+            item (SearchResultsItem): Search result item
+
+        Returns:
+            MovieDetails | TVSeriesDetails: Object providing more details about the item
         """
-        assert_instance(session, Session, "session")
-        self._session = session
-
-    async def get_content(self) -> list[dict]:
-        """Discover popular items being searched"""
-        content = await self._session.get_with_cookies_from_api(url=self._url)
-        return content["everyoneSearch"]
-
-    async def get_content_model(self) -> list[PopularSearchModel]:
-        """Discover modelled version of popular items being searched"""
-        contents = await self.get_content()
-        return [PopularSearchModel(**item) for item in contents]
-
-    # TODO: Complete this
+        assert_instance(item, SearchResultsItem, "item")
+        match item.subjectType:
+            case SubjectType.MOVIES:
+                return MovieDetails(item, self.session)
+            case SubjectType.TV_SERIES:
+                return TVSeriesDetails(item, self.session)
+            case "_":
+                raise ValueError(
+                    f"Currently only items of {SubjectType.MOVIES.name} and {SubjectType.TV_SERIES.name} "
+                    "subject-types are supported. Check later versions for possible support of other "
+                    "subject-types"
+                )
 
 
-class Search(BaseContentProvider):
+class Search(BaseSearch):
     """Performs a search of movies, tv series, music or all"""
 
     _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/search")
-
-    # __slots__ = ("session",)
 
     def __init__(
         self,
@@ -133,15 +159,35 @@ class Search(BaseContentProvider):
             rf"page={self._page} per_page={self._per_page}>"
         )
 
-    def next_page(self, content: SearchResults) -> "Search":
+    async def get_content(self) -> dict:
+        """Performs the actual fetch of contents
+
+        Returns:
+            dict: Fetched results
+        """
+        contents = await self.session.post_to_api(url=self._url, json=self._create_payload())
+        return contents
+
+    async def get_content_model(self) -> SearchResultsModel:
+        """Modelled version of the contents.
+
+        Returns:
+            SearchResultsModel: Modelled contents
+        """
+        contents = await self.get_content()
+        return SearchResultsModel(**contents)
+
+    def next_page(self, content: SearchResultsModel) -> "Search":
         """Navigate to the search results of the next page.
 
         Args:
-            content (SearchResults): Modelled version of search results
+            content (SearchResultsModel): Modelled version of search results
 
         Returns:
             Search
         """
+        assert_instance(content, TrendingResultsModel, "content")
+
         if content.pager.hasMore:
             return Search(
                 session=self.session,
@@ -156,18 +202,18 @@ class Search(BaseContentProvider):
                 "You have already reached the last page of the search results.",
             )
 
-    def previous_page(self, content: SearchResults) -> "Search":
+    def previous_page(self, content: SearchResultsModel) -> "Search":
         """Navigate to the search results of the previous page.
 
         - Useful when the currrent page is greater than  1.
 
         Args:
-            content (SearchResults): Modelled version of search results
+            content (SearchResultsModel): Modelled version of search results
 
         Returns:
             Search
         """
-        assert_instance(content, SearchResults, "content")
+        assert_instance(content, SearchResultsModel, "content")
 
         if content.pager.page >= 2:
             return Search(
@@ -183,8 +229,8 @@ class Search(BaseContentProvider):
                 "Current page is the first one try navigating to the next one instead."
             )
 
-    def create_payload(self) -> dict[str, str | int]:
-        """Creates post payload from the parameters declared.
+    def _create_payload(self) -> dict[str, str | int]:
+        """Creates payload from the parameters declared.
 
         Returns:
             dict[str, str|int]: Ready payload
@@ -197,47 +243,318 @@ class Search(BaseContentProvider):
             "subjectType": self._subject_type.value,
         }
 
-    async def get_content(self) -> dict:
-        """Performs search based on the parameters set
 
-        Returns:
-            dict: Search results
+class Trending(BaseSearch):
+    """Trending movies, tv-series and music"""
+
+    _url = get_absolute_url(
+        r"/wefeed-h5-bff/web/subject/trending"  # ?uid=5591179548772780352&page=0&perPage=18"
+    )
+
+    def __init__(
+        self,
+        session: Session,
+        page: int = 0,
+        per_page: int = 18,
+    ):
+        """Constructor for `Trending`
+
+        Args:
+            session (Session): MovieboxAPI request session
+            page (int, optional): Page number filter. Defaults to 0.
+            per_page (int, optional): Maximum number of items per page. Defaults to 18.
         """
-        contents = await self.session.post_to_api(url=self._url, json=self.create_payload())
-        return contents
+        assert_instance(session, Session, "session")
 
-    async def get_content_model(self) -> SearchResults:
+        self.session = session
+        self._page = page
+        self._per_page = per_page
+
+    def __repr__(self):
+        return rf"<Trending page={self._page} per_page={self._per_page}>"
+
+    async def get_content_model(self) -> TrendingResultsModel:
         """Modelled version of the contents.
 
         Returns:
-            SearchResults: Modelled contents
+            SearchResultsModel: Modelled contents
         """
         contents = await self.get_content()
-        return SearchResults(**contents)
+        return TrendingResultsModel(**contents)
 
-    def get_item_details(self, item: SearchResultsItem) -> "MovieDetails | TVSeriesDetails":
-        """Get object that provide more details about the search results item such as casts, seasons etc
+    def next_page(self, content: TrendingResultsModel) -> "Trending":
+        """Navigate to the search results of the next page.
 
         Args:
-            item (SearchResultsItem): Search result item
+            content (TrendingResultsModel): Modelled version of search results
 
         Returns:
-            MovieDetails | TVSeriesDetails: Object providing more details about the item
+            Trending
         """
+        assert_instance(content, TrendingResultsModel, "content")
+
+        if content.pager.hasMore:
+            return Trending(
+                session=self.session,
+                page=content.pager.nextPage,
+                per_page=self._per_page,
+            )
+        else:
+            raise ExhaustedSearchResultsError(
+                content.pager,
+                "You have already reached the last page of the search results.",
+            )
+
+    def previous_page(self, content: TrendingResultsModel) -> "Trending":
+        """Navigate to the search results of the previous page.
+
+        - Useful when the currrent page is greater than  1.
+
+        Args:
+            content (TrendingResultsModel): Modelled version of search results
+
+        Returns:
+            Trending
+        """
+        assert_instance(content, TrendingResultsModel, "content")
+
+        if content.pager.page >= 1:  # page starts from 0
+            return Trending(
+                session=self.session,
+                page=content.pager.page - 1,
+                per_page=self._per_page,
+            )
+        else:
+            raise MovieboxApiException(
+                "Unable to navigate to previous page. "
+                "Current page is the first one try navigating to the next one instead."
+            )
+
+    def _create_payload(self) -> dict[str, str | int]:
+        """Creates payload from the parameters declared.
+
+        Returns:
+            dict[str, str|int]: Ready payload
+        """
+
+        return {
+            "page": self._page,
+            "perPage": self._per_page,
+        }
+
+
+class Recommend(BaseSearch):
+    """Recommend other movies/tv-series/music based on a given one"""
+
+    _url = get_absolute_url(
+        "/wefeed-h5-bff/web/subject/detail-rec"  # ?subjectId=2518237873669820192&page=1&perPage=24"
+    )
+
+    def __init__(
+        self,
+        session: Session,
+        item: SearchResultsItem,
+        page: int = 1,
+        per_page: int = 24,
+    ):
+        """Constructor for `Recommend`
+
+        Args:
+            session (Session): MovieboxAPI request session
+            item (SearchResultsItem): Reference item.
+            page (int, optional): Page number filter. Defaults to 1.
+            per_page (int, optional): Maximum number of items per page. Defaults to 24.
+        """
+        assert_instance(session, Session, "session")
         assert_instance(item, SearchResultsItem, "item")
-        match item.subjectType:
-            case SubjectType.MOVIES:
-                return MovieDetails(item, self.session)
-            case SubjectType.TV_SERIES:
-                return TVSeriesDetails(item, self.session)
-            case "_":
-                raise ValueError(
-                    f"Currently only items of {SubjectType.MOVIES.name} and {SubjectType.TV_SERIES.name} "
-                    "subject-types are supported. Check later versions for support of other subject-types"
-                )
+        self.session = session
+        self._item = item
+        self._page = page
+        self._per_page = per_page
+
+    def __repr__(self):
+        return rf"<Recommend item=({self._item.title},{self._item.releaseDate.year} page={self._page} per_page={self._per_page}>"
+
+    async def get_content(self) -> dict:
+        content = await super().get_content()
+
+        # Just a hack to support pagination - pager attr is missing
+        content["pager"] = {
+            "hasMore": bool(content.get("items")),  # If it has items then load more
+            "nextPage": self._page + 1,
+            "page": self._page,
+            "perPage": self._per_page,
+            "totalCount": 0,
+        }
+        return content
+
+    async def get_content_model(self) -> SearchResultsModel:
+        """Modelled version of the contents.
+
+        Returns:
+            SearchResultsModel: Modelled contents
+        """
+        contents = await self.get_content()
+        return SearchResultsModel(**contents)
+
+    def next_page(self, content: SearchResultsModel) -> "Recommend":
+        """Navigate to the search results of the next page.
+
+        Args:
+            content (SearchResultsModel): Modelled version of search results
+
+        Returns:
+            Trending
+        """
+        assert_instance(content, SearchResultsModel, "content")
+
+        if content.pager.hasMore:
+            return Recommend(
+                session=self.session,
+                item=self._item,
+                page=content.pager.nextPage,
+                per_page=self._per_page,
+            )
+        else:
+            raise ExhaustedSearchResultsError(
+                content.pager,
+                "You have already reached the last page of the search results.",
+            )
+
+    def previous_page(self, content: SearchResultsModel) -> "Recommend":
+        """Navigate to the search results of the previous page.
+
+        - Useful when the currrent page is greater than  1.
+
+        Args:
+            content (SearchResultsModel: Modelled version of search results
+
+        Returns:
+            Recommend
+        """
+        assert_instance(content, SearchResultsModel, "content")
+
+        if content.pager.page >= 2:
+            return Recommend(
+                session=self.session,
+                item=self._item,
+                page=content.pager.page - 1,
+                per_page=self._per_page,
+            )
+        else:
+            raise MovieboxApiException(
+                "Unable to navigate to previous page. "
+                "Current page is the first one try navigating to the next one instead."
+            )
+
+    def _create_payload(self) -> dict[str, str | int]:
+        """Creates payload from the parameters declared.
+
+        Returns:
+            dict[str, str|int]: Ready payload
+        """
+
+        return {
+            "page": self._page,
+            "subjectId": self._item.subjectId,
+            "perPage": self._per_page,
+        }
 
 
-class BaseItemDetails:
+class HotMoviesAndTVSeries(BaseSearch):
+    """Hot movies and tv-series"""
+
+    _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/search-rank")
+
+    def __init__(
+        self,
+        session: Session,
+    ):
+        """Constructor for `HotMoviesAndTVSeries`
+
+        Args:
+            session (Session): MovieboxAPI request session
+        """
+        assert_instance(session, Session, "session")
+        self.session = session
+
+    def _create_payload(self) -> dict:
+        return {}
+
+    async def get_content_model(self) -> HotMoviesAndTVSeriesModel:
+        contents = await self.get_content()
+        return HotMoviesAndTVSeriesModel(**contents)
+
+
+class PopularSearch(BaseContentProviderAndHelper):
+    """Movies and tv-series many people are searching"""
+
+    _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/everyone-search")
+
+    def __init__(self, session: Session):
+        """Constructor for `EveryoneSearches`
+
+        Args:
+            session (Session): MovieboxAPI request session
+        """
+        assert_instance(session, Session, "session")
+        self._session = session
+
+    async def get_content(self) -> list[dict]:
+        """Discover popular items being searched"""
+        content = await self._session.get_with_cookies_from_api(url=self._url)
+        return content["everyoneSearch"]
+
+    async def get_content_model(self) -> list[PopularSearchModel]:
+        """Discover modelled version of popular items being searched"""
+        contents = await self.get_content()
+        return [PopularSearchModel(**item) for item in contents]
+
+
+class SearchSuggestion(BaseContentProviderAndHelper):
+    """Suggest movie title based on a given text"""
+
+    _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/search-suggest")
+
+    def __init__(self, session: Session, per_page: int = 10):
+        """Constructor for `SearchSuggestion`
+
+        Args:
+            session (Session): MovieboxAPI request session
+            per_page(int, optional): Number of items to suggest. Defauls to 10.
+        """
+
+        self.session = session
+        self._per_page = per_page
+
+    async def get_content(self, reference: str) -> dict:
+        """Get movie suggestions based on a reference
+
+        Args:
+            reference (str): Movie keyword or title
+
+        Returns:
+            dict: Suggested item(s) details
+        """
+        contents = await self.session.post_to_api(
+            self._url, json={"per_page": self._per_page, "keyword": reference}
+        )
+        return contents
+
+    async def get_content_model(self, reference: str) -> SuggestedItemsModel:
+        """Get movie suggestions based on a reference
+
+        Args:
+            reference (str): Movie keyword or title
+
+        Returns:
+            SuggestedItemsModel: Modelled suggested item(s) details
+        """
+        contents = await self.get_content(reference)
+        return SuggestedItemsModel(**contents)
+
+
+class BaseItemDetails(BaseContentProviderAndHelper):
     """Base class for specific movie/tv-series (item) details
 
     - Page content is fetched only once throughout the life of the instance
@@ -302,7 +619,7 @@ class BaseItemDetails:
     async def get_tag_details_extractor_model(self) -> TagDetailsExtractorModel:
         """Fetch content and return object that provide ways to model extracted details from html tags"""
         html_content = await self.get_html_content()
-        return TagDetailsExtractorModel(**html_content)
+        return TagDetailsExtractorModel(html_content)
 
     async def get_json_details_extractor_model(
         self,
@@ -312,7 +629,7 @@ class BaseItemDetails:
         return JsonDetailsExtractorModel(html_contents)
 
 
-class MovieDetails(BaseItemDetails, BaseContentProviderAndHelper):
+class MovieDetails(BaseItemDetails):
     """Specific movie item details"""
 
     def __init__(self, url_or_item: str | SearchResultsItem, session: Session):
@@ -339,8 +656,8 @@ class MovieDetails(BaseItemDetails, BaseContentProviderAndHelper):
         super().__init__(page_url=page_url, session=session)
 
 
-class TVSeriesDetails(BaseItemDetails, BaseContentProviderAndHelper):
-    """Specific tv-series item details"""
+class TVSeriesDetails(BaseItemDetails):
+    """Specific tv-series details"""
 
     def __init__(self, url_or_item: str | SearchResultsItem, session: Session):
         """Constructor for `TVSeriesDetails`

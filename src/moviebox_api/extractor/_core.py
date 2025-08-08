@@ -1,4 +1,6 @@
-"""Contains Base Extractor classes"""
+"""Provide classes that extracts and model specific movie/tv-series details
+from its dedicated page.
+"""
 
 import typing as t
 from json import loads

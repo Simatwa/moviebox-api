@@ -2,8 +2,8 @@ from tests import project_dir
 
 content_names = ["content_path"]
 content_paths = (
-    [project_dir / "recons/movies.0/titanic-page-details-pretty.html"],
-    [project_dir / "recons/series/merlin-page-details-pretty.html"],
+    [project_dir / "assets/recons/movies.0/titanic-page-details-pretty.html"],
+    [project_dir / "assets/recons/series/merlin-page-details-pretty.html"],
 )
 
 
