@@ -1,8 +1,7 @@
 """
-Models for package level usage.
+Pydantic models.
 """
 
-import typing as t
 from dataclasses import dataclass
 from datetime import date
 from json import loads
@@ -293,11 +292,11 @@ class DownloadableFilesMetadata(BaseModel):
 
     def get_quality_downloads_map(
         self,
-    ) -> t.Dict[DownloadQualitiesType, MediaFileMetadata]:
+    ) -> dict[DownloadQualitiesType, MediaFileMetadata]:
         """Maps media file quality to their equivalent media files object
 
         Returns:
-            t.Dict[DownloadQualitiesType, MediaFileMetadata]
+            dict[DownloadQualitiesType, MediaFileMetadata]
         """
         resolution_downloads_map = {}
         for item in self.downloads:
@@ -322,12 +321,13 @@ class DownloadableFilesMetadata(BaseModel):
             if media_file.resolution == resolution:
                 return media_file
         raise ValueError(
-            f"No media_file matched that resolution. Available resolutions include {available_media_file_resolutions}"
+            "No media_file matched that resolution. Available resolutions "
+            f"include {available_media_file_resolutions}"
         )
 
     def get_language_subtitle_map(
         self,
-    ) -> t.Dict[str, CaptionFileMetadata]:
+    ) -> dict[str, CaptionFileMetadata]:
         """Returns something like { English : CaptionFileMetadata }"""
         language_subtitle_map = {}
         for caption in self.captions:
@@ -336,7 +336,7 @@ class DownloadableFilesMetadata(BaseModel):
 
     def get_language_short_subtitle_map(
         self,
-    ) -> t.Dict[str, CaptionFileMetadata]:
+    ) -> dict[str, CaptionFileMetadata]:
         """Returns something like { en : CaptionFileMetadata }"""
         language_subtitle_map = {}
         for caption in self.captions:
@@ -344,7 +344,7 @@ class DownloadableFilesMetadata(BaseModel):
         return language_subtitle_map
 
     def get_subtitle_by_language(self, language: str) -> CaptionFileMetadata | None:
-        """Both of `English` and `en` will return same thing"""
+        """Both `English` and `en` will return same thing"""
         if len(language) == 2:
             return self.get_language_short_subtitle_map().get(language.lower())
         return self.get_language_subtitle_map().get(language.capitalize())

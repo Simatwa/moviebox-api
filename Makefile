@@ -20,7 +20,7 @@ install-in-termux:
 
 # Target to run tests
 test:
-	pytest tests/* -xv 
+	pytest tests -v 
 
 # target to build dist
 build:
@@ -31,5 +31,4 @@ build:
 publish:
 	uv publish --token $(shell get pypi)
 
-# $(PYTHON) -m unittest discover -s tests -p 'test_*.py' -f -v
 

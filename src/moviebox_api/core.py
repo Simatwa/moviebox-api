@@ -14,8 +14,10 @@ from moviebox_api.exceptions import (
 from moviebox_api.extractor._core import (
     JsonDetailsExtractor,
     JsonDetailsExtractorModel,
+    TagDetailsExtractor,
+    TagDetailsExtractorModel,
 )
-from moviebox_api.extractor.models import ItemDetailsModel
+from moviebox_api.extractor.models.json import ItemJsonDetailsModel
 from moviebox_api.helpers import (
     assert_instance,
     get_absolute_url,
@@ -54,7 +56,7 @@ class Homepage(BaseContentProviderAndHelper):
         content = await self._session.get_from_api(self._url)
         return content
 
-    async def get_modelled_content(self) -> HomepageContentModel:
+    async def get_content_model(self) -> HomepageContentModel:
         """Modelled version of the contents"""
         content = await self.get_content()
         return HomepageContentModel(**content)
@@ -189,7 +191,7 @@ class Search(BaseContentProvider):
         contents = await self.session.post_to_api(url=self._url, json=self.create_payload())
         return contents
 
-    async def get_modelled_content(self) -> SearchResults:
+    async def get_content_model(self) -> SearchResults:
         """Modelled version of the contents.
 
         Returns:
@@ -198,9 +200,33 @@ class Search(BaseContentProvider):
         contents = await self.get_content()
         return SearchResults(**contents)
 
+    def get_item_details(self, item: SearchResultsItem) -> "MovieDetails | TVSeriesDetails":
+        """Get object that provide more details of the search results item such as casts, seasons etc
+
+        Args:
+            item (SearchResultsItem): Search result item
+
+        Returns:
+            MovieDetails | TVSeriesDetails: Object providing more details about the item
+        """
+        assert_instance(item, SearchResultsItem, "item")
+        match item.subjectType:
+            case SubjectType.MOVIES:
+                return MovieDetails(item, self.session)
+            case SubjectType.TV_SERIES:
+                return TVSeriesDetails(item, self.session)
+            case "_":
+                raise ValueError(
+                    f"Currently only items of {SubjectType.MOVIES.name} and {SubjectType.TV_SERIES.name} "
+                    "subject-types are supported. Check later versions for support of other subject-types"
+                )
+
 
 class BaseItemDetails:
-    """Base class for specific movie/tv-series (item) details"""
+    """Base class for specific movie/tv-series (item) details
+
+    - Page content is fetched only once throughout the life of the instance
+    """
 
     def __init__(self, page_url: str, session: Session):
         """Constructor for `BaseItemPageDetails`
@@ -211,6 +237,8 @@ class BaseItemDetails:
         """
         self._url = validate_item_page_url(page_url)
         self._session = session
+        self.__html_content: str | None = None
+        """Cached page contents"""
 
     async def get_html_content(self) -> str:
         """The specific page contents
@@ -218,40 +246,55 @@ class BaseItemDetails:
         Returns:
             str: html formatted contents of the page
         """
+        if self.__html_content is not None:
+            # Not a good approach for async but it will save alot of seconds & bandwidth
+            return self.__html_content
+
         page_contents = await self._session.get_with_cookies(
             get_absolute_url(self._url),
         )
+        self.__html_content = page_contents
         return page_contents
 
-    async def get_json_extractor(self) -> JsonDetailsExtractor:
-        """Fetch content and return instance of `JsonDetailsExtractor`"""
-        html_contents = await self.get_html_content()
-        return JsonDetailsExtractor(html_contents)
-
-    async def get_modelled_json_extractor(
-        self,
-    ) -> JsonDetailsExtractorModel:
-        """Fetch content and return instance of `JsonDetailsExtractorModel`"""
-        html_contents = await self.get_html_content()
-        return JsonDetailsExtractorModel(html_contents)
-
     async def get_content(self) -> dict:
-        """Get extracted item details
+        """Get extracted item details using `self.get_json_details_extractor`
 
         Returns:
             dict: Item details
         """
-        extracted_content = await self.get_json_extractor()
+        extracted_content = await self.get_json_details_extractor()
         return extracted_content.details
 
-    async def get_modelled_content(self) -> ItemDetailsModel:
-        """Get modelled extracted item details
+    async def get_content_model(self) -> ItemJsonDetailsModel:
+        """Get modelled version of extracted item details using `self.get_json_details_extractor_model`
 
         Returns:
-            ItemDetailsModel: Modelled item details
+            ItemJsonDetailsModel: Modelled item details
         """
-        modelled_extrated_content = await self.get_modelled_json_extractor()
-        return modelled_extrated_content.details
+        modelled_extracted_content = await self.get_json_details_extractor_model()
+        return modelled_extracted_content.details
+
+    async def get_tag_details_extractor(self) -> TagDetailsExtractor:
+        """Fetch content and return object that provide ways to extract details from html tags of the page"""
+        content = await self.get_html_content()
+        return TagDetailsExtractor(content)
+
+    async def get_json_details_extractor(self) -> JsonDetailsExtractor:
+        """Fetch content and return object that extract details from json-formatted data in the page"""
+        html_contents = await self.get_html_content()
+        return JsonDetailsExtractor(html_contents)
+
+    async def get_tag_details_extractor_model(self) -> TagDetailsExtractorModel:
+        """Fetch content and return object that provide ways to model extracted details from html tags"""
+        html_content = await self.get_html_content()
+        return TagDetailsExtractorModel(**html_content)
+
+    async def get_json_details_extractor_model(
+        self,
+    ) -> JsonDetailsExtractorModel:
+        """Fetch content and return object that models extracted details from json-formatted data in the page"""
+        html_contents = await self.get_html_content()
+        return JsonDetailsExtractorModel(html_contents)
 
 
 class MovieDetails(BaseItemDetails, BaseContentProviderAndHelper):

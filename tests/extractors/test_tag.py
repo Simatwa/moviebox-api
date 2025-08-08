@@ -31,8 +31,8 @@ def test_extract_casts(content_path):
     content = read_content(content_path)
     extractor = TagDetailsExtractor(content)
     extracted_details = extractor.extract_casts()
-    assert isinstance(extracted_details, dict)
-    assert extracted_details.get("casts") is not None
+    assert type(extracted_details) is list
+    assert type(extracted_details[0]) is dict
 
 
 @pytest.mark.parametrize(content_names, content_paths)
@@ -40,8 +40,8 @@ def test_extract_reviews(content_path):
     content = read_content(content_path)
     extractor = TagDetailsExtractor(content)
     extracted_details = extractor.extract_reviews()
-    assert isinstance(extracted_details, dict)
-    assert extracted_details.get("reviews") is not None
+    assert type(extracted_details) is list
+    assert type(extracted_details[0]) is dict
 
 
 @pytest.mark.parametrize(content_names, content_paths)

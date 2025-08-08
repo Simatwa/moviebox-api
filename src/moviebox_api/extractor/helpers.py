@@ -1,4 +1,4 @@
-"""Contains common functions for the submodule use"""
+"""Contains common functions for the submodule"""
 
 from bs4 import BeautifulSoup
 

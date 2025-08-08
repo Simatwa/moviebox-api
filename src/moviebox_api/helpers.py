@@ -1,6 +1,5 @@
 """
-This module provide functions for
-performing common and frequently required tasks
+This module provide functions for performing common and frequently required tasks
 across the package.
 """
 
@@ -22,14 +21,15 @@ SCHEME_HOST_PATTERN = re.compile(r"https?://[-_\.\w]+")
 
 
 def get_absolute_url(relative_url: str) -> str:
-    """Makes absolute url from relative url
+    """Makes absolute url from relative one
 
     Args:
-        relative_url (str): Incomplete url
+        relative_url (str): Path of a url
 
     Returns:
         str: Complete url with host
     """
+
     return urljoin(HOST_URL, re.sub(SCHEME_HOST_PATTERN, "", relative_url))
 
 

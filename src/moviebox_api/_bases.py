@@ -18,7 +18,7 @@ class BaseContentProvider(ABC):
         raise NotImplementedError("Function needs to be implemented in subclass.")
 
     @abstractmethod
-    async def get_modelled_content(self) -> object:
+    async def get_content_model(self) -> object:
         """Modelled version of the content"""
         raise NotImplementedError("Function needs to be implemented in subclass.")
 

@@ -72,7 +72,7 @@ class Auto:
             subject_type=SubjectType.MOVIES,
             per_page=1,
         )
-        search_results = await search.get_modelled_content()
+        search_results = await search.get_content_model()
         if year is not None:
             target_movie = None
             for item in search_results.items:
@@ -86,7 +86,7 @@ class Auto:
                 )
         target_movie = search_results.first_item
         downloadable_movie_file_details_inst = DownloadableMovieFilesDetail(self._session, target_movie)
-        downloadable_movie_file_details = await downloadable_movie_file_details_inst.get_modelled_content()
+        downloadable_movie_file_details = await downloadable_movie_file_details_inst.get_content_model()
         return target_movie, downloadable_movie_file_details
 
     async def _movie_download_handler(

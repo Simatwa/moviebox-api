@@ -54,7 +54,7 @@ async def perform_search_and_get_item(
         SearchResultsItem: Targeted movie/tv-series
     """
     search = search or Search(session, title, subject_type)
-    search_results = await search.get_modelled_content()
+    search_results = await search.get_content_model()
     subject_type_name = " ".join(subject_type.name.lower().split("_"))
     logger.info(
         f"Query '{title}' yielded {'over ' if search_results.pager.hasMore else ''}"

@@ -136,7 +136,7 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
         )
         return content
 
-    async def get_modelled_content(self, season: int, episode: int) -> DownloadableFilesMetadata:
+    async def get_content_model(self, season: int, episode: int) -> DownloadableFilesMetadata:
         """Get modelled version of the downloadable files detail.
 
         Args:
@@ -157,7 +157,7 @@ class DownloadableMovieFilesDetail(BaseDownloadableFilesDetail):
         """Actual fetch of files detail"""
         return await super().get_content(season=0, episode=0)
 
-    async def get_modelled_content(self) -> DownloadableFilesMetadata:
+    async def get_content_model(self) -> DownloadableFilesMetadata:
         """Modelled version of the files detail"""
         contents = await self.get_content()
         return DownloadableFilesMetadata(**contents)

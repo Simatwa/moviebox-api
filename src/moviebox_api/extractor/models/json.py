@@ -1,4 +1,4 @@
-"""Pydantic models of extracted contents"""
+"""Models for item details extracted from json-formatted data"""
 
 import typing as t
 from datetime import date
@@ -6,6 +6,7 @@ from datetime import date
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 from moviebox_api.constants import SubjectType
+from moviebox_api.helpers import get_absolute_url
 from moviebox_api.models import (
     ContentCategorySubjectsModel,
     ContentImageModel,
@@ -13,39 +14,47 @@ from moviebox_api.models import (
 
 
 class MetadataModel(BaseModel):
-    """`resData.metadata`"""
+    """`.resData.metadata`"""
 
     description: str
     image: HttpUrl
     keyWords: list[str]
     referer: HttpUrl
     title: str
-    url: str
+    url: HttpUrl
 
     @field_validator("keyWords", mode="before")
     def validate_genre(value: str) -> list[str]:
         return value.split(",")
 
+    @field_validator("url", mode="before")
+    def validate_url(value: str) -> str:
+        return get_absolute_url(value) if bool(value) else value
+
 
 class PubParamModel(BaseModel):
-    """`resData.pubParam`"""
+    """`.resData.pubParam`"""
 
     isNewUser: bool
     lang: str
     referer: HttpUrl
     uid: str
-    url: str
+    url: HttpUrl
+
+    @field_validator("url", mode="before")
+    def validate_url(value: str) -> str:
+        return get_absolute_url(value) if bool(value) else value
 
 
 class SeasonsResolutionModel(BaseModel):
-    """`resData.resource.seasons.0.resolutions.0`"""
+    """`.resData.resource.seasons.0.resolutions.0`"""
 
     epNum: int
     resolution: t.Literal[360, 480, 720, 1080]
 
 
 class SeasonsModel(BaseModel):
-    """`resData.resource.seasons.0`"""
+    """`.resData.resource.seasons.0`"""
 
     allEp: str
     maxEp: int
@@ -54,7 +63,7 @@ class SeasonsModel(BaseModel):
 
 
 class ResourceModel(BaseModel):
-    """`resData.resource`"""
+    """`.resData.resource`"""
 
     seasons: list[SeasonsModel]
     source: str
@@ -62,18 +71,22 @@ class ResourceModel(BaseModel):
 
 
 class StarsModel(BaseModel):
-    """`resData.stars.0`"""
+    """`.resData.stars.0`"""
 
-    avatarUrl: str
+    avatarUrl: HttpUrl | str
     character: str
     detailPath: str
     name: str
     staffId: str
     staffType: int  # TODO: Consider using Enum
 
+    @field_validator("avatarUrl", mode="before")
+    def validate_url(value: str) -> str:
+        return get_absolute_url(value) if bool(value) else value
+
 
 class PagerModel(BaseModel):
-    """`resData.postList.pager.`"""
+    """`.resData.postList.pager.`"""
 
     hasMore: bool
     nextPage: str
@@ -83,7 +96,7 @@ class PagerModel(BaseModel):
 
 
 class PostListItemStatModel(BaseModel):
-    """`resData.postList.0.stat`"""
+    """`.resData.postList.0.stat`"""
 
     commentCount: int
     likeCount: int
@@ -93,13 +106,13 @@ class PostListItemStatModel(BaseModel):
 
 
 class PostListItemSubjectModel(BaseModel):
-    """`resData.postList.0.subject`"""
+    """`.resData.postList.0.subject`"""
 
     countryName: str
     cover: ContentImageModel
     description: str
     detailPath: str
-    detailUrl: str
+    detailUrl: HttpUrl | str
     dl: str | None
     duration: str
     durationSeconds: int
@@ -108,7 +121,7 @@ class PostListItemSubjectModel(BaseModel):
     imdbRate: float
     rate: int
     releaseDate: date
-    sniffUrl: str
+    sniffUrl: HttpUrl | str
     sourceUrl: HttpUrl
     subjectId: str
     subjectType: SubjectType
@@ -118,9 +131,17 @@ class PostListItemSubjectModel(BaseModel):
     def validate_genre(value: str) -> list[str]:
         return value.split(",")
 
+    @field_validator("detailUrl", mode="before")
+    def validate_anyUrl(value: str) -> str:
+        return get_absolute_url(value) if bool(value) else value
+
+    @field_validator("sniffUrl", mode="before")
+    def validate_sniffUrl(value: str) -> str:
+        return get_absolute_url(value) if bool(value) else value
+
 
 class PostListItemUserModel(BaseModel):
-    """`resData.postList.0.user`"""
+    """`.resData.postList.0.user`"""
 
     avatar: HttpUrl
     nickname: str
@@ -129,7 +150,7 @@ class PostListItemUserModel(BaseModel):
 
 
 class PostListMediaModel(BaseModel):
-    """`resData.postList.0.media`"""
+    """`.resData.postList.0.media`"""
 
     audio: list
     cover: str | None
@@ -140,7 +161,7 @@ class PostListMediaModel(BaseModel):
 
 
 class PostListItemGroupModel(BaseModel):
-    """`resData.postList.0.group`"""
+    """`.resData.postList.0.group`"""
 
     avatar: HttpUrl
     groupId: str
@@ -150,7 +171,7 @@ class PostListItemGroupModel(BaseModel):
 
 
 class PostListItemModel(BaseModel):
-    """`resData.postList.0`"""
+    """`.resData.postList.0`"""
 
     commentList: list
     content: str
@@ -176,14 +197,14 @@ class PostListItemModel(BaseModel):
 
 
 class PostListModel(BaseModel):
-    """`resData.postList.`"""
+    """`.resData.postList.`"""
 
     items: list[PostListItemModel]
     pager: PagerModel
 
 
 class TrailerVideoAddressModel(BaseModel):
-    """`resData.subject.trailer.videoAddress`"""
+    """`.resData.subject.trailer.videoAddress`"""
 
     bitrate: int
     definition: str
@@ -198,21 +219,21 @@ class TrailerVideoAddressModel(BaseModel):
 
 
 class SubjectTrailerModel(BaseModel):
-    """`resData.subject.trailer`"""
+    """`.resData.subject.trailer`"""
 
     cover: ContentImageModel
     videoAddress: TrailerVideoAddressModel
 
 
 class SubjectModel(ContentCategorySubjectsModel):
-    """`resData.subject`"""
+    """`.resData.subject`"""
 
     title: str
     trailer: SubjectTrailerModel
 
 
 class ResDataModel(BaseModel):
-    """`resData`"""
+    """`.resData`"""
 
     metadata: MetadataModel
     postList: PostListModel
@@ -221,14 +242,15 @@ class ResDataModel(BaseModel):
     resource: ResourceModel
     stars: list[StarsModel]
     subject: SubjectModel
-    url: str
+    url: HttpUrl
+
+    @field_validator("url", mode="before")
+    def validate_url(value: str) -> str:
+        return get_absolute_url(value) if bool(value) else value
 
 
-class ItemDetailsModel(BaseModel):
-    """Complete extracted item details
-
-    - Houses all the other models
-    """
+class ItemJsonDetailsModel(BaseModel):
+    """Whole extracted item details from json-formatted data"""
 
     nuxt_i18n_meta: dict = Field(alias="nuxt-i18n-meta")
     resData: ResDataModel

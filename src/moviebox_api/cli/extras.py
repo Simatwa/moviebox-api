@@ -56,7 +56,7 @@ def homepage_content(json: bool, title: str, banner: bool):
     # TODO: Add automated test for this command
     session = Session()
     homepage = Homepage(session)
-    homepage_contents = loop.run_until_complete(homepage.get_modelled_content())
+    homepage_contents = loop.run_until_complete(homepage.get_content_model())
     banners: dict[str, list[list[str]]] = {}
     items: dict[str, list[list[str]]] = {}
     for operating in homepage_contents.operatingList:

@@ -89,7 +89,7 @@ class Downloader:
             f"{SearchResultsItem} not {type(target_movie)}"
         )
         downloadable_details_inst = DownloadableMovieFilesDetail(self._session, target_movie)
-        downloadable_details = await downloadable_details_inst.get_modelled_content()
+        downloadable_details = await downloadable_details_inst.get_content_model()
         target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_details)
         subtitles_saved_to = []
         if download_caption or caption_only:
@@ -172,7 +172,7 @@ class Downloader:
 
         for episode_count in range(limit):
             current_episode = episode + episode_count
-            downloadable_files_detail = await downloadable_files.get_modelled_content(
+            downloadable_files_detail = await downloadable_files.get_content_model(
                 season=season, episode=current_episode
             )
             # TODO: Iterate over seasons as well

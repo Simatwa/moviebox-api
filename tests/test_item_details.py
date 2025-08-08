@@ -1,7 +1,14 @@
 import pytest
+from pydantic import BaseModel
 
 from moviebox_api.constants import SubjectType
 from moviebox_api.core import MovieDetails, Search, TVSeriesDetails
+from moviebox_api.extractor import (
+    JsonDetailsExtractor,
+    JsonDetailsExtractorModel,
+    TagDetailsExtractor,
+    TagDetailsExtractorModel,
+)
 from moviebox_api.requests import Session
 from tests import MOVIE_KEYWORD, TV_SERIES_KEYWORD
 
@@ -22,8 +29,13 @@ async def test_movie_using_page_url(url):
         url,
         session=session,
     )
-    content = await details.get_content()
-    assert type(content) is dict
+    assert type(await details.get_html_content()) is str
+    assert type(await details.get_content()) is dict
+    assert issubclass(await details.get_content_model(), BaseModel)
+    assert isinstance(await details.get_json_details_extractor(), JsonDetailsExtractor)
+    assert isinstance(await details.get_tag_details_extractor(), TagDetailsExtractor)
+    assert isinstance(await details.get_json_details_extractor_model(), JsonDetailsExtractorModel)
+    assert isinstance(await details.get_tag_details_extractor_model(), TagDetailsExtractorModel)
 
 
 @pytest.mark.asyncio
@@ -44,21 +56,31 @@ async def test_tv_series_using_page_url(url):
         url,
         session=session,
     )
-    content = await details.get_content()
-    assert type(content) is dict
+    assert type(await details.get_html_content()) is str
+    assert type(await details.get_content()) is dict
+    assert issubclass(await details.get_content_model(), BaseModel)
+    assert isinstance(await details.get_json_details_extractor(), JsonDetailsExtractor)
+    assert isinstance(await details.get_tag_details_extractor(), TagDetailsExtractor)
+    assert isinstance(await details.get_json_details_extractor_model(), JsonDetailsExtractorModel)
+    assert isinstance(await details.get_tag_details_extractor_model(), TagDetailsExtractorModel)
 
 
 @pytest.mark.asyncio
 async def test_movie_using_search_results_item():
     session = Session()
     search = Search(session, query=MOVIE_KEYWORD, subject_type=SubjectType.MOVIES)
-    search_results = await search.get_modelled_content()
+    search_results = await search.get_content_model()
     details = MovieDetails(
         search_results.first_item,
         session=session,
     )
-    content = await details.get_content()
-    assert type(content) is dict
+    assert type(await details.get_html_content()) is str
+    assert type(await details.get_content()) is dict
+    assert issubclass(await details.get_content_model(), BaseModel)
+    assert isinstance(await details.get_json_details_extractor(), JsonDetailsExtractor)
+    assert isinstance(await details.get_tag_details_extractor(), TagDetailsExtractor)
+    assert isinstance(await details.get_json_details_extractor_model(), JsonDetailsExtractorModel)
+    assert isinstance(await details.get_tag_details_extractor_model(), TagDetailsExtractorModel)
 
 
 @pytest.mark.asyncio
@@ -69,10 +91,15 @@ async def test_tv_series_using_search_results_item():
         query=TV_SERIES_KEYWORD,
         subject_type=SubjectType.TV_SERIES,
     )
-    search_results = await search.get_modelled_content()
+    search_results = await search.get_content_model()
     details = TVSeriesDetails(
         search_results.first_item,
         session=session,
     )
-    content = await details.get_content()
-    assert type(content) is dict
+    assert type(await details.get_html_content()) is str
+    assert type(await details.get_content()) is dict
+    assert issubclass(await details.get_content_model(), BaseModel)
+    assert isinstance(await details.get_json_details_extractor(), JsonDetailsExtractor)
+    assert isinstance(await details.get_tag_details_extractor(), TagDetailsExtractor)
+    assert isinstance(await details.get_json_details_extractor_model(), JsonDetailsExtractorModel)
+    assert isinstance(await details.get_tag_details_extractor_model(), TagDetailsExtractorModel)

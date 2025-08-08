@@ -5,8 +5,8 @@ from json import loads
 
 from moviebox_api.extractor.exceptions import DetailsExtractionError
 from moviebox_api.extractor.helpers import souper
-from moviebox_api.extractor.models import (
-    ItemDetailsModel,
+from moviebox_api.extractor.models.json import (
+    ItemJsonDetailsModel,
     MetadataModel,
     PostListItemModel,
     PubParamModel,
@@ -15,6 +15,14 @@ from moviebox_api.extractor.models import (
     SeasonsModel,
     StarsModel,
     SubjectModel,
+)
+from moviebox_api.extractor.models.tag import (
+    BasicsModel,
+    CastModel,
+    HeadersModel,
+    ItemTagDetailsModel,
+    OthersModel,
+    ReviewModel,
 )
 
 __all__ = [
@@ -26,10 +34,10 @@ __all__ = [
 
 
 class TagDetailsExtractor:
-    """Performs extraction of a specific item details from html tags of the page
+    """Extracts specific item details from html tags of the page
 
     #### Pros
-    - It's super faster than `JsonDetailsExtractor`
+    - It's super fast than `JsonDetailsExtractor`
 
     #### Cons
     - Does not extract season details. Use `JsonDetailsExtractor` instead.
@@ -46,6 +54,18 @@ class TagDetailsExtractor:
         self._content = content
         self.souped_content = souper(content)
         self.souped_content_body = self.souped_content.find("body")
+
+    def __call__(self) -> dict[str, list[str] | dict[str, t.Any]]:
+        """Extract all possible contents from the page"""
+        return self.details
+
+    @property
+    def details(self) -> dict[str, list[str] | dict[str, t.Any]]:
+        """Whole content
+
+        - Shortcut for `self.extract_all()`
+        """
+        return self.extract_all()
 
     def extract_headers(self, include_extra: bool = True) -> dict[str, str | list[str | dict[str, str]]]:
         """Extracts juicy data from the header section
@@ -97,13 +117,11 @@ class TagDetailsExtractor:
 
         return resp
 
-    def extract_casts(self) -> dict[str, str | list[dict[str, str]]]:
-        """Extracts actors/actress details"""
-        resp = {}
+    def extract_casts(self) -> list[dict[str, str]]:
+        """Extracts characters detail"""
 
         cast_soup = self.souped_content_body.find("div", {"class": "pc-btm-section flx-sta-sta"})
         cast_staff_soup = cast_soup.find("div", {"class": "pc-staff"})
-        resp["intro"] = cast_staff_soup.find("div", {"class": "pc-foryou-title"}).text
 
         cast_staff_details = []
 
@@ -113,19 +131,16 @@ class TagDetailsExtractor:
             details["name"] = entry.find("div", {"class": "pc-starring-name"}).text
             details["character"] = entry.find("div", {"class": "pc-starring-director"}).text
             cast_staff_details.append(details)
-        resp["casts"] = cast_staff_details
 
-        return resp
+        return cast_staff_details
 
     def extract_reviews(
         self,
-    ) -> dict[str, str | list[dict[str, str]]]:
+    ) -> list[dict[str, str]]:
         """Retrieves review details"""
-        resp = {}
-        reviews_soup = self.souped_content_body.find("div", {"class": "pc-reviews-box"})
-        resp["intro"] = reviews_soup.find("h3", {"class": "pc-reviews-tit pc-sec-tit"}).text
-        review_details = []
 
+        reviews_soup = self.souped_content_body.find("div", {"class": "pc-reviews-box"})
+        review_details = []
         for entry in reviews_soup.find_all("div", {"class": "pc-list-item flx-clm-sta"}):
             details = {}
             details["author_img"] = entry.find("div", {"class": "pc-avator"}).find("img").get("src")
@@ -135,8 +150,8 @@ class TagDetailsExtractor:
             review_container_soup = entry.find("div", {"class": "pc-reviews-desc-container"})
             details["message"] = review_container_soup.find("div", {"class": "pc-reviews-desc"}).text
             review_details.append(details)
-        resp["reviews"] = review_details
-        return resp
+
+        return review_details
 
     def extract_others(self) -> dict:
         """This include disclaimer etc"""
@@ -146,22 +161,24 @@ class TagDetailsExtractor:
         resp["desc"] = web_page_soup.find("div", {"class": "desc"}).text
         return resp
 
-    def extract_all(self) -> dict[str, dict[str, t.Any]]:
+    def extract_all(self) -> dict[str, list[str] | dict[str, t.Any]]:
         """Extract all possible contents from the page"""
+
         return {
             "headers": self.extract_headers(),
             "basics": self.extract_basics(),
             "casts": self.extract_casts(),
             "reviews": self.extract_others(),
+            "others": self.extract_others(),
         }
 
-    def __call__(self):
-        """Extract all possible contents from the page"""
-        return self.extract_all()
+    def get_details_extractor_model(self) -> "TagDetailsExtractorModel":
+        """Returns object that allows modelling of the extracted details"""
+        return TagDetailsExtractorModel(self._content)
 
 
 class JsonDetailsExtractor:
-    """Performs extraction of a specific item details from json-formatted data appended on the page
+    """Exracts specific item details from json-formatted data appended on the page
 
     - Pros : Extracts whole details available.
     - Cons : Kinda slower than `TagDetailsExtractor`
@@ -173,16 +190,21 @@ class JsonDetailsExtractor:
         Args:
             content (str): Html contents of the item page
         """
+        self._content = content
         self.details: dict[str, t.Any] = self.extract(content)
-        """Whole extracted data"""
+        """Whole important extracted details"""
+
+    def __call__(self) -> dict[str, t.Any]:
+        """Whole important extracted details"""
+        return self.details
 
     @classmethod
     def extract(self, content: str, whole: bool = False) -> dict[str, t.Any]:
-        """Extract `movie/tv-series` from specific item details page.
+        """Extract item details from its specific page.
 
         Args:
             content (str): Contents of the specific item page (html).
-            whole (bool, optional): Do not process response. Defaults to False.
+            whole (bool, optional): Include less important details. Defaults to False.
 
         Raises:
             DetailsExtractionError: Incase no data extracted
@@ -308,36 +330,83 @@ class JsonDetailsExtractor:
 
         return self.data["pubParam"]
 
+    def get_details_extractor_model(self) -> "JsonDetailsExtractorModel":
+        """Returns object that allows modelling of extracted details"""
+        return JsonDetailsExtractorModel(self._content)
+
 
 class TagDetailsExtractorModel:
-    """Uses pydantic to model properties of `TagDetailsExtractor`"""
-
-    # TODO: Complete this
+    """Extracts item details from html tags and model them"""
 
     def __init__(self, content: str):
-        """Constructor for `ModelledTagDetailsExtractor`
+        """Constructor for `TagDetailsExtractorModel`
 
         Args:
             content (str): Html formatted text
         """
-        raise NotImplementedError("Not implemented yet. Check later versions.")
+        self.tag_details_extractor: TagDetailsExtractor = TagDetailsExtractor(content)
+
+    @property
+    def details(self) -> ItemTagDetailsModel:
+        """Modelled extracted item details
+
+        - Shortcut for `self.extract_all()`
+        """
+        return self.extract_all()
+
+    def extract_headers(self) -> HeadersModel:
+        """Extracts and model juicy data from the header section of the page"""
+        content = self.tag_details_extractor.extract_headers()
+        return HeadersModel(**content)
+
+    def extract_basics(self) -> BasicsModel:
+        """Extracts and and model basic data such as `title`, `duration` etc"""
+        content = self.tag_details_extractor.extract_basics()
+        return BasicsModel(**content)
+
+    def extract_casts(self) -> list[CastModel]:
+        """Extracts and model characters detail"""
+        contents = self.tag_details_extractor.extract_casts()
+        return [CastModel(**cast) for cast in contents]
+
+    def extract_reviews(self) -> list[ReviewModel]:
+        """Extracts and model reviews"""
+        contents = self.tag_details_extractor.extract_reviews()
+        return [ReviewModel(**review) for review in contents]
+
+    def extract_others(self) -> OthersModel:
+        """Extracts and model other details"""
+        content = self.tag_details_extractor.extract_others()
+        return OthersModel(**content)
+
+    def extract_all(self) -> ItemTagDetailsModel:
+        """Extract item details from its specific page and form model.
+
+        Raises:
+            DetailsExtractionError: Incase no data extracted
+
+        Returns:
+            ItemTagDetailsModel: Modelled extracted item details
+        """
+        content = self.tag_details_extractor.extract_all()
+        return ItemTagDetailsModel(**content)
 
 
 class JsonDetailsExtractorModel:
-    """Uses pydantic to model properties of `JsonDetailsExtractor`"""
+    """Extracts item details from json-formatted data and models them"""
 
     def __init__(self, content: str):
-        """Constructor for `ModelledJsonDetailsExtractor`
+        """Constructor for `JsonDetailsExtractorModel`
 
         Args:
             content (str): Html contents of the item page
         """
         self.json_details_extractor: JsonDetailsExtractor = JsonDetailsExtractor(content)
-        self.details: ItemDetailsModel = self.extract(content)
+        self.details: ItemJsonDetailsModel = self.extract(content)
 
     @classmethod
-    def extract(self, content: str) -> ItemDetailsModel:
-        """Extract `movie/tv-series` from specific item details page.
+    def extract(cls, content: str) -> ItemJsonDetailsModel:
+        """Extract item details from its specific page and form model.
 
         Args:
             content (str): Contents of the specific item page (html).
@@ -346,10 +415,10 @@ class JsonDetailsExtractorModel:
             DetailsExtractionError: Incase no data extracted
 
         Returns:
-            ItemDetailsModel: Modelled extrated item details
+            ItemJsonDetailsModel: Modelled extracted item details
         """
         contents = JsonDetailsExtractor.extract(content, whole=False)
-        return ItemDetailsModel(**contents)
+        return ItemJsonDetailsModel(**contents)
 
     @property
     def data(self) -> ResDataModel:

@@ -14,11 +14,11 @@ from moviebox_api.requests import Session
 async def test_download_movie_caption_file():
     session = Session()
     search = Search(session, "avatar", subject_type=SubjectType.MOVIES)
-    search_results = await search.get_modelled_content()
+    search_results = await search.get_content_model()
     target_movie = search_results.first_item
 
     downloadable_files = DownloadableMovieFilesDetail(session, target_movie)
-    downloadable_files_detail = await downloadable_files.get_modelled_content()
+    downloadable_files_detail = await downloadable_files.get_content_model()
     target_caption_file = downloadable_files_detail.english_subtitle_file
 
     caption_file_downloader = CaptionFileDownloader(target_caption_file)
@@ -30,11 +30,11 @@ async def test_download_movie_caption_file():
 async def test_download_movie_file():
     session = Session()
     search = Search(session, "avatar", subject_type=SubjectType.MOVIES)
-    search_results = await search.get_modelled_content()
+    search_results = await search.get_content_model()
     target_movie = search_results.first_item
 
     downloadable_files = DownloadableMovieFilesDetail(session, target_movie)
-    downloadable_files_detail = await downloadable_files.get_modelled_content()
+    downloadable_files_detail = await downloadable_files.get_content_model()
     target_media_file = downloadable_files_detail.best_media_file
 
     media_file_downloader = MediaFileDownloader(target_media_file)
@@ -46,10 +46,10 @@ async def test_download_movie_file():
 async def test_download_tv_series_caption_file():
     session = Session()
     search = Search(session, "Merlin", subject_type=SubjectType.TV_SERIES)
-    search_results = await search.get_modelled_content()
+    search_results = await search.get_content_model()
     target_series = search_results.first_item
     downloadable_files = DownloadableSeriesFilesDetail(session, target_series)
-    downloadable_files_detail = await downloadable_files.get_modelled_content(season=1, episode=1)
+    downloadable_files_detail = await downloadable_files.get_content_model(season=1, episode=1)
     target_caption_file = downloadable_files_detail.english_subtitle_file
 
     caption_file_downloader = CaptionFileDownloader(target_caption_file)
@@ -61,10 +61,10 @@ async def test_download_tv_series_caption_file():
 async def test_download_tv_series_file():
     session = Session()
     search = Search(session, "Merlin", subject_type=SubjectType.TV_SERIES)
-    search_results = await search.get_modelled_content()
+    search_results = await search.get_content_model()
     target_series = search_results.first_item
     downloadable_files = DownloadableSeriesFilesDetail(session, target_series)
-    downloadable_files_detail = await downloadable_files.get_modelled_content(season=1, episode=1)
+    downloadable_files_detail = await downloadable_files.get_content_model(season=1, episode=1)
     target_media_file = downloadable_files_detail.best_media_file
 
     media_file_downloader = MediaFileDownloader(target_media_file)

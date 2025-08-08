@@ -8,7 +8,7 @@ from moviebox_api._bases import BaseMovieboxException
 
 
 class MovieboxApiException(BaseMovieboxException):
-    """A unique `Exception` for the package"""
+    """A unique base `Exception` for the package"""
 
 
 class UnsuccessfulResponseError(BaseMovieboxException):

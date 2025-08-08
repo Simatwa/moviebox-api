@@ -34,7 +34,7 @@ async def test_get_content(subject_type: SubjectType):
 )
 async def test_model_content(subject_type: SubjectType):
     search: Search = init_search(Session(), subject_type=subject_type)
-    modelled_contents = await search.get_modelled_content()
+    modelled_contents = await search.get_content_model()
     assert isinstance(modelled_contents, SearchResults)
     for item in modelled_contents.items:
         if subject_type != SubjectType.ALL:
@@ -44,11 +44,11 @@ async def test_model_content(subject_type: SubjectType):
 @pytest.mark.asyncio
 async def test_next_page_navigation():
     search = init_search(Session())
-    contents = await search.get_modelled_content()
+    contents = await search.get_content_model()
     assert isinstance(contents, SearchResults)
     next_search = search.next_page(contents)
     assert isinstance(next_search, Search)
-    next_contents = await next_search.get_modelled_content()
+    next_contents = await next_search.get_content_model()
     assert isinstance(next_contents, SearchResults)
     assert contents.pager.page + 1 == next_contents.pager.page
 
@@ -56,10 +56,10 @@ async def test_next_page_navigation():
 @pytest.mark.asyncio
 async def test_previous_page_navigation():
     search: Search = init_search(Session(), page=3)
-    contents = await search.get_modelled_content()
+    contents = await search.get_content_model()
     assert isinstance(contents, SearchResults)
     previous_search = search.previous_page(contents)
     assert isinstance(previous_search, Search)
-    previous_contents = await previous_search.get_modelled_content()
+    previous_contents = await previous_search.get_content_model()
     assert isinstance(previous_contents, SearchResults)
     assert contents.pager.page - 1 == previous_contents.pager.page
