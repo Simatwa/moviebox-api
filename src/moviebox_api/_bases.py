@@ -2,19 +2,18 @@
 This module contains base classes for the entire package
 """
 
-from typing import Dict
 from abc import ABC, abstractmethod
 
 
 class BaseMovieboxException(Exception):
-    """Parent class for all exception classes of this package"""
+    """Base class for all exceptions of this package"""
 
 
 class BaseContentProvider(ABC):
     """Provides easy retrieval of resource from moviebox"""
 
     @abstractmethod
-    async def get_content(self) -> Dict | str:
+    async def get_content(self) -> dict | str:
         """Response as received from server"""
         raise NotImplementedError("Function needs to be implemented in subclass.")
 

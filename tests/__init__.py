@@ -1,9 +1,10 @@
-import pytest
 import asyncio
-from moviebox_api.requests import Session
-from moviebox_api.core import Search
-from moviebox_api.core import SubjectType
 from pathlib import Path
+
+import pytest
+
+from moviebox_api.core import Search, SubjectType
+from moviebox_api.requests import Session
 
 project_dir = Path(__file__).parent.parent
 
@@ -15,7 +16,11 @@ TV_SERIES_KEYWORD = "Merlin"
 
 
 def init_search(
-    session: Session, query=query, subject_type=SubjectType.ALL, per_page=4, page=1
+    session: Session,
+    query=query,
+    subject_type=SubjectType.ALL,
+    per_page=4,
+    page=1,
 ) -> Search:
     return Search(
         session=session,

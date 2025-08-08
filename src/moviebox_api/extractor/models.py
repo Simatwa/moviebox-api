@@ -2,9 +2,14 @@
 
 import typing as t
 from datetime import date
+
 from pydantic import BaseModel, Field, HttpUrl, field_validator
+
 from moviebox_api.constants import SubjectType
-from moviebox_api.models import ContentImageModel, ContentCategorySubjectsModel
+from moviebox_api.models import (
+    ContentCategorySubjectsModel,
+    ContentImageModel,
+)
 
 
 class MetadataModel(BaseModel):
@@ -12,10 +17,14 @@ class MetadataModel(BaseModel):
 
     description: str
     image: HttpUrl
-    keyWords: str
+    keyWords: list[str]
     referer: HttpUrl
     title: str
     url: str
+
+    @field_validator("keyWords", mode="before")
+    def validate_genre(value: str) -> list[str]:
+        return value.split(",")
 
 
 class PubParamModel(BaseModel):

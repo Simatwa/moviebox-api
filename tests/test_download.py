@@ -1,12 +1,13 @@
 import pytest
-from moviebox_api.requests import Session
+
 from moviebox_api.core import Search, SubjectType
 from moviebox_api.download import (
+    CaptionFileDownloader,
     DownloadableMovieFilesDetail,
     DownloadableSeriesFilesDetail,
-    CaptionFileDownloader,
     MediaFileDownloader,
 )
+from moviebox_api.requests import Session
 
 
 @pytest.mark.asyncio
@@ -21,10 +22,8 @@ async def test_download_movie_caption_file():
     target_caption_file = downloadable_files_detail.english_subtitle_file
 
     caption_file_downloader = CaptionFileDownloader(target_caption_file)
-    response = await caption_file_downloader.run(
-        filename=target_movie.title + "- English.srt", test=True
-    )
-    assert response.is_success == True
+    response = await caption_file_downloader.run(filename=target_movie.title + "- English.srt", test=True)
+    assert response.is_success
 
 
 @pytest.mark.asyncio
@@ -39,10 +38,8 @@ async def test_download_movie_file():
     target_media_file = downloadable_files_detail.best_media_file
 
     media_file_downloader = MediaFileDownloader(target_media_file)
-    response = await media_file_downloader.run(
-        filename=target_movie.title + ".mp4", test=True
-    )
-    assert response.is_success == True
+    response = await media_file_downloader.run(filename=target_movie.title + ".mp4", test=True)
+    assert response.is_success
 
 
 @pytest.mark.asyncio
@@ -52,14 +49,12 @@ async def test_download_tv_series_caption_file():
     search_results = await search.get_modelled_content()
     target_series = search_results.first_item
     downloadable_files = DownloadableSeriesFilesDetail(session, target_series)
-    downloadable_files_detail = await downloadable_files.get_modelled_content(
-        season=1, episode=1
-    )
+    downloadable_files_detail = await downloadable_files.get_modelled_content(season=1, episode=1)
     target_caption_file = downloadable_files_detail.english_subtitle_file
 
     caption_file_downloader = CaptionFileDownloader(target_caption_file)
     response = await caption_file_downloader.run(filename=target_series, test=True)
-    assert response.is_success == True
+    assert response.is_success
 
 
 @pytest.mark.asyncio
@@ -69,11 +64,9 @@ async def test_download_tv_series_file():
     search_results = await search.get_modelled_content()
     target_series = search_results.first_item
     downloadable_files = DownloadableSeriesFilesDetail(session, target_series)
-    downloadable_files_detail = await downloadable_files.get_modelled_content(
-        season=1, episode=1
-    )
+    downloadable_files_detail = await downloadable_files.get_modelled_content(season=1, episode=1)
     target_media_file = downloadable_files_detail.best_media_file
 
     media_file_downloader = MediaFileDownloader(target_media_file)
     response = await media_file_downloader.run(filename=target_series, test=True)
-    assert response.is_success == True
+    assert response.is_success

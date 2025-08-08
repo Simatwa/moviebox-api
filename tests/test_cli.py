@@ -1,5 +1,6 @@
-import pytest
 import subprocess
+
+import pytest
 
 
 def run_system_command(command: str) -> int:
@@ -9,8 +10,7 @@ def run_system_command(command: str) -> int:
             shell=True,
             check=True,
             text=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
         )
         return result.returncode
     except subprocess.CalledProcessError as e:

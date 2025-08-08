@@ -1,10 +1,9 @@
 import pytest
 
-from moviebox_api.core import MovieDetails, TVSeriesDetails
-from moviebox_api.requests import Session
 from moviebox_api.constants import SubjectType
-from moviebox_api.core import Search
-from tests import TV_SERIES_KEYWORD, MOVIE_KEYWORD
+from moviebox_api.core import MovieDetails, Search, TVSeriesDetails
+from moviebox_api.requests import Session
+from tests import MOVIE_KEYWORD, TV_SERIES_KEYWORD
 
 
 @pytest.mark.asyncio
@@ -66,7 +65,9 @@ async def test_movie_using_search_results_item():
 async def test_tv_series_using_search_results_item():
     session = Session()
     search = Search(
-        session, query=TV_SERIES_KEYWORD, subject_type=SubjectType.TV_SERIES
+        session,
+        query=TV_SERIES_KEYWORD,
+        subject_type=SubjectType.TV_SERIES,
     )
     search_results = await search.get_modelled_content()
     details = TVSeriesDetails(

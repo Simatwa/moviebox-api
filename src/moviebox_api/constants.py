@@ -2,9 +2,10 @@
 
 import os
 import typing as t
-from pathlib import Path
-from moviebox_api import logger
 from enum import IntEnum, StrEnum
+from pathlib import Path
+
+from moviebox_api import logger
 
 MIRROR_HOSTS = (
     # "moviebox.ng",
@@ -15,6 +16,9 @@ MIRROR_HOSTS = (
     "moviebox.id",
     # "fmoviesunblocked.net"
     "v.moviebox.ph",
+    "netnaija.video",
+    # "sflix.film",
+    # "netnaija.com"
 )
 """Mirror domains/subdomains of Moviebox"""
 
@@ -119,7 +123,11 @@ class DownloadMode(StrEnum):
     @classmethod
     def map_cls(cls) -> dict:
         """Names in lower case mapped to their values"""
-        return {"start": cls.START, "resume": cls.RESUME, "auto": cls.AUTO}
+        return {
+            "start": cls.START,
+            "resume": cls.RESUME,
+            "auto": cls.AUTO,
+        }
 
 
 class DownloadStatus(StrEnum):

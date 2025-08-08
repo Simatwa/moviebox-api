@@ -1,4 +1,5 @@
 import pytest
+
 from moviebox_api.core import Search, SubjectType
 from moviebox_api.models import SearchResults
 from moviebox_api.requests import Session

@@ -6,7 +6,7 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 [![PyPI version](https://badge.fury.io/py/moviebox-api.svg)](https://pypi.org/project/moviebox-api)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/moviebox-api)](https://pypi.org/project/moviebox-api)
 [![PyPI - License](https://img.shields.io/pypi/l/moviebox-api)](https://pypi.org/project/moviebox-api)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Hits](https://hits.sh/github.com/Simatwa/moviebox-api.svg?label=Total%20hits&logo=dotenv)](https://github.com/Simatwa/moviebox-api "Total hits")
 [![Downloads](https://pepy.tech/badge/moviebox-api)](https://pepy.tech/project/moviebox-api)
 <!-- 
@@ -25,7 +25,7 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 
 Run the following command in your terminal:
 
-```
+```sh
 $ pip install "moviebox-api[cli]"
 
 # For developers
@@ -111,7 +111,7 @@ if __name__=="__main__":
 
 ### Commandline
 
-```sh
+```
 # $ python -m moviebox_api --help
 
 Usage: python -m moviebox_api [OPTIONS] COMMAND [ARGS]...

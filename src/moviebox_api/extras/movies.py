@@ -1,29 +1,30 @@
 """Extra functionalities for movies"""
 
 import warnings
-import typing as t
 from pathlib import Path
+
 from httpx import Response
 
-from moviebox_api.requests import Session
-from moviebox_api.core import Search
-from moviebox_api.download import (
-    DownloadableMovieFilesDetail,
-    MediaFileDownloader,
-    CaptionFileDownloader,
-    resolve_media_file_to_be_downloaded,
-)
-
 from moviebox_api.constants import (
+    DEFAULT_CAPTION_LANGUAGE,
+    DOWNLOAD_QUALITIES,
     DownloadQualitiesType,
     SubjectType,
-    DOWNLOAD_QUALITIES,
-    DEFAULT_CAPTION_LANGUAGE,
 )
-
-from moviebox_api.helpers import assert_membership
-from moviebox_api.models import DownloadableFilesMetadata, SearchResultsItem
+from moviebox_api.core import Search
+from moviebox_api.download import (
+    CaptionFileDownloader,
+    DownloadableMovieFilesDetail,
+    MediaFileDownloader,
+    resolve_media_file_to_be_downloaded,
+)
 from moviebox_api.exceptions import ZeroSearchResultsError
+from moviebox_api.helpers import assert_membership
+from moviebox_api.models import (
+    DownloadableFilesMetadata,
+    SearchResultsItem,
+)
+from moviebox_api.requests import Session
 
 __all__ = ["Auto"]
 
@@ -53,7 +54,7 @@ class Auto:
 
     async def _search_handler(
         self, query: str, year: int | None
-    ) -> t.Tuple[SearchResultsItem, DownloadableFilesMetadata]:
+    ) -> tuple[SearchResultsItem, DownloadableFilesMetadata]:
         """Performs actual search and get downloadable files metadata.
 
         Args:
@@ -63,10 +64,13 @@ class Auto:
         Kwargs : Keyworded arguments for `MediaFileDownloader.run` method.
 
         Returns:
-            t.Tuple[SearchResultsItem, DownloadableFilesMetadata].
+            tuple[SearchResultsItem, DownloadableFilesMetadata].
         """
         search = Search(
-            self._session, query=query, subject_type=SubjectType.MOVIES, per_page=1
+            self._session,
+            query=query,
+            subject_type=SubjectType.MOVIES,
+            per_page=1,
         )
         search_results = await search.get_modelled_content()
         if year is not None:
@@ -81,12 +85,8 @@ class Auto:
                     "Try a different year filter or ommit the filter completely."
                 )
         target_movie = search_results.first_item
-        downloadable_movie_file_details_inst = DownloadableMovieFilesDetail(
-            self._session, target_movie
-        )
-        downloadable_movie_file_details = (
-            await downloadable_movie_file_details_inst.get_modelled_content()
-        )
+        downloadable_movie_file_details_inst = DownloadableMovieFilesDetail(self._session, target_movie)
+        downloadable_movie_file_details = await downloadable_movie_file_details_inst.get_modelled_content()
         return target_movie, downloadable_movie_file_details
 
     async def _movie_download_handler(
@@ -107,9 +107,7 @@ class Auto:
             Response : if test=true
         """
         assert_membership(quality, DOWNLOAD_QUALITIES, "quality")
-        target_media_file = resolve_media_file_to_be_downloaded(
-            quality, downloadable_movie_file_details
-        )
+        target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_movie_file_details)
         downloader = MediaFileDownloader(target_media_file)
         saved_to_or_response = await downloader.run(**kwargs)
         return saved_to_or_response
@@ -129,19 +127,15 @@ class Auto:
         Returns:
             Path: Location under which caption file is saved.
             Response : if test=true
-        """
+        """  # noqa: E501
 
-        target_subtitle = downloadable_movie_file_details.get_subtitle_by_language(
-            caption_language
-        )
+        target_subtitle = downloadable_movie_file_details.get_subtitle_by_language(caption_language)
         downloader = CaptionFileDownloader(target_subtitle)
         if target_subtitle:
             saved_to_or_response = await downloader.run(**kwargs)
             return saved_to_or_response
         else:
-            raise ValueError(
-                f"No caption file matched that language - {caption_language}"
-            )
+            raise ValueError(f"No caption file matched that language - {caption_language}")
 
     async def run(
         self,
@@ -151,7 +145,7 @@ class Auto:
         caption_language: str = None,
         caption_only: bool = False,
         **kwargs,
-    ) -> t.Tuple[Path | Response | None, Path | Response | None]:
+    ) -> tuple[Path | Response | None, Path | Response | None]:
         """Perform movie search and download first item in the search results.
 
         Args:
@@ -164,17 +158,16 @@ class Auto:
         Kwargs : Keyworded arguments for `MediaFileDownloader.run` method.
 
         Returns:
-            t.Tuple[Path|Response|None, Path |Response| None]: Path to downloaded movie or httpx response
+            tuple[Path|Response|None, Path |Response| None]: Path to downloaded movie or httpx response
              and caption file or httpx response respectively.
 
-        """
+        """  # noqa: E501
 
-        target_movie, downloadable_movie_file_details = await self._search_handler(
-            query, year
-        )
-        kwargs.setdefault(
-            "filename", target_movie
-        )  # SearchResultsItem - auto-filename generation
+        (
+            target_movie,
+            downloadable_movie_file_details,
+        ) = await self._search_handler(query, year)
+        kwargs.setdefault("filename", target_movie)  # SearchResultsItem - auto-filename generation
         caption_language = caption_language or self._caption_language
         movie_saved_to = caption_saved_to = None
         if caption_only:
@@ -186,13 +179,17 @@ class Auto:
                 )
                 caption_language = DEFAULT_CAPTION_LANGUAGE
             caption_saved_to = await self._caption_download_handler(
-                downloadable_movie_file_details, caption_language, **kwargs
+                downloadable_movie_file_details,
+                caption_language,
+                **kwargs,
             )
         else:
             # Download subtitle first
             if caption_language:
                 caption_saved_to = await self._caption_download_handler(
-                    downloadable_movie_file_details, caption_language, **kwargs
+                    downloadable_movie_file_details,
+                    caption_language,
+                    **kwargs,
                 )
             movie_saved_to = await self._movie_download_handler(
                 downloadable_movie_file_details, quality, **kwargs

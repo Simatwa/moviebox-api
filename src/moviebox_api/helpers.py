@@ -9,17 +9,14 @@ import typing as t
 from urllib.parse import urljoin
 
 from moviebox_api import logger
-
-from moviebox_api.exceptions import UnsuccessfulResponseError
 from moviebox_api.constants import HOST_URL, ITEM_DETAILS_PATH
+from moviebox_api.exceptions import UnsuccessfulResponseError
 
 FILE_EXT_PATTERN = re.compile(r".+\.(\w+)\?.+")
 
 ILLEGAL_CHARACTERS_PATTERN = re.compile(r"[^\w\-_\.\s()&|]")
 
-VALID_ITEM_PAGE_URL_PATTERN = re.compile(
-    r".*" + ITEM_DETAILS_PATH + r"/[\w-]+\?id\=\d{19,}.*"
-)
+VALID_ITEM_PAGE_URL_PATTERN = re.compile(r".*" + ITEM_DETAILS_PATH + r"/[\w-]+\?id\=\d{19,}.*")
 
 SCHEME_HOST_PATTERN = re.compile(r"https?://[-_\.\w]+")
 
@@ -49,12 +46,12 @@ def assert_membership(value: t.Any, elements: t.Iterable, identity="Value"):
 
 def assert_instance(obj: object, class_or_tuple, name: str = "Parameter") -> t.NoReturn:
     """assert obj an instance of class_or_tuple"""
-    assert isinstance(
-        obj, class_or_tuple
-    ), f"{name} value needs to be an instace of {class_or_tuple} not {type(obj)}"
+    assert isinstance(obj, class_or_tuple), (
+        f"{name} value needs to be an instace of {class_or_tuple} not {type(obj)}"
+    )
 
 
-def process_api_response(json: t.Dict) -> t.Dict | t.List:
+def process_api_response(json: dict) -> dict | list:
     """Extracts the response data field
 
     Args:

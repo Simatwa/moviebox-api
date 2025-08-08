@@ -26,8 +26,8 @@ if __name__ == "__main__":
 ```
 """
 
-from importlib import metadata
 import logging
+from importlib import metadata
 
 try:
     __version__ = metadata.version("moviebox-api")
@@ -39,17 +39,16 @@ __repo__ = "https://github.com/Simatwa/moviebox-api"
 
 logger = logging.getLogger(__name__)
 
-from moviebox_api.core import Homepage, Search
-from moviebox_api.requests import Session
-
-from moviebox_api.download import (
-    MediaFileDownloader,
+from moviebox_api.core import Homepage, Search  # noqa: E402
+from moviebox_api.download import (  # noqa: E402
     CaptionFileDownloader,
     DownloadableMovieFilesDetail,
     DownloadableSeriesFilesDetail,
+    MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
-from moviebox_api.extras.movies import Auto
+from moviebox_api.extras.movies import Auto  # noqa: E402
+from moviebox_api.requests import Session  # noqa: E402
 
 __all__ = [
     "Auto",

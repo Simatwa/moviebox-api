@@ -3,19 +3,21 @@ Provide ways to interact with Moviebox using `httpx`
 """
 
 import httpx
-from typing import Dict
 from httpx import Response
-from httpx._types import ProxyTypes, CookieTypes, HeaderTypes, TimeoutTypes
 from httpx._config import DEFAULT_TIMEOUT_CONFIG
+from httpx._types import (
+    CookieTypes,
+    ProxyTypes,
+    TimeoutTypes,
+)
 
-from moviebox_api.models import MovieboxAppInfo
 from moviebox_api.constants import DOWNLOAD_REQUEST_HEADERS
 from moviebox_api.exceptions import EmptyResponseError
-
 from moviebox_api.helpers import (
-    process_api_response,
     get_absolute_url,
+    process_api_response,
 )
+from moviebox_api.models import MovieboxAppInfo
 
 # TODO : Set timezone and language values based on user's machine
 
@@ -29,9 +31,7 @@ class Session:
     with or without cookies on demand
     """
 
-    _moviebox_app_info_url = get_absolute_url(
-        r"/wefeed-h5-bff/app/get-latest-app-pkgs?app_name=moviebox"
-    )
+    _moviebox_app_info_url = get_absolute_url(r"/wefeed-h5-bff/app/get-latest-app-pkgs?app_name=moviebox")
 
     def __init__(
         self,
@@ -47,13 +47,16 @@ class Session:
             cookies (CookieTypes | None , optional): Http request cookies. Defaults to request_cookies.
             timeout (TimeoutTypes, optional): Http request timeout in seconds. Defaults to DEFAULT_TIMEOUT_CONFIG.
             proxy (ProxyTypes | None, optional): Http requests proxy. Defaults to None.
-        """
+        """  # noqa: E501
         self._headers = headers
         self._cookies = cookies
         self._timeout = timeout
         self._proxy = proxy
         self._client = httpx.AsyncClient(
-            headers=headers, cookies=cookies, timeout=timeout, proxy=proxy
+            headers=headers,
+            cookies=cookies,
+            timeout=timeout,
+            proxy=proxy,
         )
         self.moviebox_app_info: MovieboxAppInfo | None = None
         self.__moviebox_app_info_fetched: bool = False
@@ -62,22 +65,20 @@ class Session:
     def _validate_response(self, response: Response) -> Response:
         """Ensures response is not empty"""
         if response is None or not bool(response.content):
-            raise EmptyResponseError(
-                response, "Server returned an empty body response."
-            )
+            raise EmptyResponseError(response, "Server returned an empty body response.")
         return response
 
     def __repr__(self):
         return rf"<Session(MovieBoxAPI) timeout={self._timeout}>"
 
-    async def get(self, url: str, params: Dict = {}, **kwargs) -> Response:
+    async def get(self, url: str, params: dict = {}, **kwargs) -> Response:
         """Makes a http get request without server cookies from previous requests.
         It's relevant because some requests with expired cookies won't go through
         but having it none does go through.
 
         Args:
             url (str): Resource link.
-            params (Dict, optional): Request params. Defaults to {}.
+            params (dict, optional): Request params. Defaults to {}.
 
         Returns:
             Response: Httpx response object
@@ -93,21 +94,21 @@ class Session:
         response.raise_for_status()
         return self._validate_response(response)
 
-    async def get_from_api(self, *args, **kwargs) -> Dict:
+    async def get_from_api(self, *args, **kwargs) -> dict:
         """Fetch data from api and extract the `data` field from the response
 
         Returns:
-            Dict: Extracted data field value
+            dict: Extracted data field value
         """
         response = await self.get(*args, **kwargs)
         return process_api_response(response.json())
 
-    async def get_with_cookies(self, url: str, params: Dict = {}, **kwargs) -> Response:
+    async def get_with_cookies(self, url: str, params: dict = {}, **kwargs) -> Response:
         """Makes a http get request with server-assigned cookies from previous requests.
 
         Args:
             url (str): Resource link.
-            params (Dict, optional): Request params. Defaults to {}.
+            params (dict, optional): Request params. Defaults to {}.
 
         Returns:
             Response: Httpx response object
@@ -117,12 +118,12 @@ class Session:
         response.raise_for_status()
         return self._validate_response(response)
 
-    async def get_with_cookies_from_api(self, *args, **kwargs) -> Dict:
+    async def get_with_cookies_from_api(self, *args, **kwargs) -> dict:
         """Makes a http get request with server-assigned cookies from previous requests
         and extract the `data` field from the response.
 
         Returns:
-            Dict: Extracted data field value
+            dict: Extracted data field value
         """
         response = await self.get_with_cookies(*args, **kwargs)
         return process_api_response(response.json())
@@ -143,18 +144,17 @@ class Session:
         response.raise_for_status()
         return self._validate_response(response)
 
-    async def post_to_api(self, *args, **kwargs) -> Dict:
+    async def post_to_api(self, *args, **kwargs) -> dict:
         """Sends data to api and extract the `data` field from the response
 
         Returns:
-            Dict: Extracted data field value
+            dict: Extracted data field value
         """
         response = await self.post(*args, **kwargs)
         return process_api_response(response.json())
 
     async def ensure_cookies_are_assigned(self) -> bool:
-        """Checks if the essential cookies are available
-        if not it update.
+        """Checks if the essential cookies are available if not it update.
 
         Returns:
             bool: `account` cookie availability status.
@@ -166,9 +166,8 @@ class Session:
         return self._client.cookies.get("account") is not None
 
     async def _fetch_app_info(self) -> MovieboxAppInfo:
-        """Fetches the moviebox app info but the main goal
-        is to get the essential cookies required for requests
-        such as download to go through.
+        """Fetches the moviebox app info but the main goal is to get the essential
+          cookies required for requests such as download to go through.
 
         Returns:
             MovieboxAppInfo: Details about latest moviebox app

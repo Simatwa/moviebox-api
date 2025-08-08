@@ -4,13 +4,17 @@ Models for package level usage.
 
 import typing as t
 from dataclasses import dataclass
-from pydantic import BaseModel, HttpUrl, field_validator
 from datetime import date
-from uuid import UUID
 from json import loads
-from moviebox_api.constants import SubjectType, ITEM_DETAILS_PATH
-from moviebox_api.exceptions import ZeroSearchResultsError, ZeroMediaFileError
-from moviebox_api.constants import DownloadQualitiesType
+from uuid import UUID
+
+from pydantic import BaseModel, HttpUrl, field_validator
+
+from moviebox_api.constants import ITEM_DETAILS_PATH, DownloadQualitiesType, SubjectType
+from moviebox_api.exceptions import (
+    ZeroMediaFileError,
+    ZeroSearchResultsError,
+)
 from moviebox_api.helpers import get_file_extension
 
 
@@ -202,11 +206,11 @@ class SearchResults(BaseModel):
     items: list[SearchResultsItem]
 
     @field_validator("items", mode="after")
-    def validate_items(value: list[SearchResultsItem]) -> list[SearchResultsItem]:
+    def validate_items(
+        value: list[SearchResultsItem],
+    ) -> list[SearchResultsItem]:
         if not bool(value):
-            raise ZeroSearchResultsError(
-                "Search yielded empty results. Try a different keyword."
-            )
+            raise ZeroSearchResultsError("Search yielded empty results. Try a different keyword.")
         return value
 
     @property
@@ -256,9 +260,7 @@ class DownloadableFilesMetadata(BaseModel):
         if bool(self.downloads):
             return True
 
-        raise ZeroMediaFileError(
-            "There are no downloadable  mediafiles for the targeted item"
-        )
+        raise ZeroMediaFileError("There are no downloadable  mediafiles for the targeted item")
 
     @property
     def best_media_file(self) -> MediaFileMetadata:
@@ -320,18 +322,21 @@ class DownloadableFilesMetadata(BaseModel):
             if media_file.resolution == resolution:
                 return media_file
         raise ValueError(
-            "No media_file matched that resolution. "
-            f"Available resolutions include {available_media_file_resolutions}"
+            f"No media_file matched that resolution. Available resolutions include {available_media_file_resolutions}"
         )
 
-    def get_language_subtitle_map(self) -> t.Dict[str, CaptionFileMetadata]:
+    def get_language_subtitle_map(
+        self,
+    ) -> t.Dict[str, CaptionFileMetadata]:
         """Returns something like { English : CaptionFileMetadata }"""
         language_subtitle_map = {}
         for caption in self.captions:
             language_subtitle_map[caption.lanName] = caption
         return language_subtitle_map
 
-    def get_language_short_subtitle_map(self) -> t.Dict[str, CaptionFileMetadata]:
+    def get_language_short_subtitle_map(
+        self,
+    ) -> t.Dict[str, CaptionFileMetadata]:
         """Returns something like { en : CaptionFileMetadata }"""
         language_subtitle_map = {}
         for caption in self.captions:

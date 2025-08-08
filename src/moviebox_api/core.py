@@ -2,25 +2,31 @@
 Main module for the package. Generate models from httpx request responses.
 """
 
-from typing import Dict
-
-from moviebox_api.requests import Session
-from moviebox_api.constants import SubjectType
-from moviebox_api.helpers import (
-    assert_instance,
-    get_absolute_url,
-    validate_item_page_url,
+from moviebox_api._bases import (
+    BaseContentProvider,
+    BaseContentProviderAndHelper,
 )
-from moviebox_api._bases import BaseContentProvider, BaseContentProviderAndHelper
-from moviebox_api.models import HomepageContentModel, SearchResults, SearchResultsItem
-from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiException
-
+from moviebox_api.constants import SubjectType
+from moviebox_api.exceptions import (
+    ExhaustedSearchResultsError,
+    MovieboxApiException,
+)
 from moviebox_api.extractor._core import (
     JsonDetailsExtractor,
     JsonDetailsExtractorModel,
 )
 from moviebox_api.extractor.models import ItemDetailsModel
-
+from moviebox_api.helpers import (
+    assert_instance,
+    get_absolute_url,
+    validate_item_page_url,
+)
+from moviebox_api.models import (
+    HomepageContentModel,
+    SearchResults,
+    SearchResultsItem,
+)
+from moviebox_api.requests import Session
 
 __all__ = ["Homepage", "Search", "MovieDetails", "TVSeriesDetails"]
 
@@ -39,11 +45,11 @@ class Homepage(BaseContentProviderAndHelper):
         assert_instance(session, Session, "session")
         self._session = session
 
-    async def get_content(self) -> Dict:
+    async def get_content(self) -> dict:
         """Landing page contents
 
         Returns:
-            Dict
+            dict
         """
         content = await self._session.get_from_api(self._url)
         return content
@@ -94,7 +100,7 @@ class Search(BaseContentProvider):
             subject_type (SubjectType, optional): Subject-type filter for performing search. Defaults to SubjectType.ALL.
             page (int, optional): Page number filter. Defaults to 1.
             per_page (int, optional): Maximum number of items per page. Defaults to 24.
-        """
+        """  # noqa: E501
         assert_instance(subject_type, SubjectType, "subject_type")
         assert_instance(session, Session, "session")
 
@@ -160,11 +166,11 @@ class Search(BaseContentProvider):
                 "Current page is the first one try navigating to the next one instead."
             )
 
-    def create_payload(self) -> Dict[str, str | int]:
+    def create_payload(self) -> dict[str, str | int]:
         """Creates post payload from the parameters declared.
 
         Returns:
-            Dict[str, str|int]: Ready payload
+            dict[str, str|int]: Ready payload
         """
 
         return {
@@ -174,15 +180,13 @@ class Search(BaseContentProvider):
             "subjectType": self._subject_type.value,
         }
 
-    async def get_content(self) -> Dict:
+    async def get_content(self) -> dict:
         """Performs search based on the parameters set
 
         Returns:
-            Dict: Search results
+            dict: Search results
         """
-        contents = await self.session.post_to_api(
-            url=self._url, json=self.create_payload()
-        )
+        contents = await self.session.post_to_api(url=self._url, json=self.create_payload())
         return contents
 
     async def get_modelled_content(self) -> SearchResults:
@@ -224,16 +228,18 @@ class BaseItemDetails:
         html_contents = await self.get_html_content()
         return JsonDetailsExtractor(html_contents)
 
-    async def get_modelled_json_extractor(self) -> JsonDetailsExtractorModel:
+    async def get_modelled_json_extractor(
+        self,
+    ) -> JsonDetailsExtractorModel:
         """Fetch content and return instance of `JsonDetailsExtractorModel`"""
         html_contents = await self.get_html_content()
         return JsonDetailsExtractorModel(html_contents)
 
-    async def get_content(self) -> Dict:
+    async def get_content(self) -> dict:
         """Get extracted item details
 
         Returns:
-            Dict: Item details
+            dict: Item details
         """
         extracted_content = await self.get_json_extractor()
         return extracted_content.details
@@ -263,7 +269,8 @@ class MovieDetails(BaseItemDetails, BaseContentProviderAndHelper):
         if isinstance(url_or_item, SearchResultsItem):
             if url_or_item.subjectType != SubjectType.MOVIES:
                 raise ValueError(
-                    f"item needs to be of subjectType {SubjectType.MOVIES.name} not {url_or_item.subjectType.name}"
+                    f"item needs to be of subjectType {SubjectType.MOVIES.name} not"
+                    f" {url_or_item.subjectType.name}"
                 )
 
             page_url = url_or_item.page_url
@@ -289,7 +296,8 @@ class TVSeriesDetails(BaseItemDetails, BaseContentProviderAndHelper):
         if isinstance(url_or_item, SearchResultsItem):
             if url_or_item.subjectType != SubjectType.TV_SERIES:
                 raise ValueError(
-                    f"item needs to be of subjectType {SubjectType.TV_SERIES.name} not {url_or_item.subjectType.name}"
+                    f"item needs to be of subjectType {SubjectType.TV_SERIES.name} not "
+                    f"{url_or_item.subjectType.name}"
                 )
 
             page_url = url_or_item.page_url

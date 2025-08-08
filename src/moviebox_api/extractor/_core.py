@@ -3,19 +3,18 @@
 import typing as t
 from json import loads
 
-from moviebox_api.extractor.helpers import souper
-
 from moviebox_api.extractor.exceptions import DetailsExtractionError
+from moviebox_api.extractor.helpers import souper
 from moviebox_api.extractor.models import (
     ItemDetailsModel,
-    ResDataModel,
-    SubjectModel,
-    PostListItemModel,
     MetadataModel,
-    StarsModel,
+    PostListItemModel,
+    PubParamModel,
+    ResDataModel,
     ResourceModel,
     SeasonsModel,
-    PubParamModel,
+    StarsModel,
+    SubjectModel,
 )
 
 __all__ = [
@@ -48,9 +47,7 @@ class TagDetailsExtractor:
         self.souped_content = souper(content)
         self.souped_content_body = self.souped_content.find("body")
 
-    def extract_headers(
-        self, include_extra: bool = True
-    ) -> dict[str, str | list[str | dict[str, str]]]:
+    def extract_headers(self, include_extra: bool = True) -> dict[str, str | list[str | dict[str, str]]]:
         """Extracts juicy data from the header section
 
         Args:
@@ -76,8 +73,7 @@ class TagDetailsExtractor:
 
         if include_extra:
             resp["dns_prefetch"] = [
-                entry.get("href")
-                for entry in header.find_all("link", {"rel": "dns-prefetch"})
+                entry.get("href") for entry in header.find_all("link", {"rel": "dns-prefetch"})
             ]
 
             resp["images"] = [
@@ -90,9 +86,7 @@ class TagDetailsExtractor:
         """Extracts basic data such as `title`, `duration` etc"""
 
         resp = {}
-        basic_soup = self.souped_content_body.find(
-            "div", {"class": "pc-detail-content"}
-        )
+        basic_soup = self.souped_content_body.find("div", {"class": "pc-detail-content"})
         resp["title"] = basic_soup.find("h1", {"class": "pc-sub-title ellipsis"}).text
 
         # small_details_soup = basic_soup.find(
@@ -107,57 +101,39 @@ class TagDetailsExtractor:
         """Extracts actors/actress details"""
         resp = {}
 
-        cast_soup = self.souped_content_body.find(
-            "div", {"class": "pc-btm-section flx-sta-sta"}
-        )
+        cast_soup = self.souped_content_body.find("div", {"class": "pc-btm-section flx-sta-sta"})
         cast_staff_soup = cast_soup.find("div", {"class": "pc-staff"})
         resp["intro"] = cast_staff_soup.find("div", {"class": "pc-foryou-title"}).text
 
         cast_staff_details = []
 
-        for entry in cast_staff_soup.find_all(
-            "div", {"class": "flx-clm-ce-sta pc-starr-item pointer"}
-        ):
+        for entry in cast_staff_soup.find_all("div", {"class": "flx-clm-ce-sta pc-starr-item pointer"}):
             details = {}
             details["img"] = entry.find("img", {"class": "pc-img"}).get("src")
             details["name"] = entry.find("div", {"class": "pc-starring-name"}).text
-            details["character"] = entry.find(
-                "div", {"class": "pc-starring-director"}
-            ).text
+            details["character"] = entry.find("div", {"class": "pc-starring-director"}).text
             cast_staff_details.append(details)
         resp["casts"] = cast_staff_details
 
         return resp
 
-    def extract_reviews(self) -> dict[str, str | list[dict[str, str]]]:
+    def extract_reviews(
+        self,
+    ) -> dict[str, str | list[dict[str, str]]]:
         """Retrieves review details"""
         resp = {}
         reviews_soup = self.souped_content_body.find("div", {"class": "pc-reviews-box"})
-        resp["intro"] = reviews_soup.find(
-            "h3", {"class": "pc-reviews-tit pc-sec-tit"}
-        ).text
+        resp["intro"] = reviews_soup.find("h3", {"class": "pc-reviews-tit pc-sec-tit"}).text
         review_details = []
 
-        for entry in reviews_soup.find_all(
-            "div", {"class": "pc-list-item flx-clm-sta"}
-        ):
+        for entry in reviews_soup.find_all("div", {"class": "pc-list-item flx-clm-sta"}):
             details = {}
-            details["author_img"] = (
-                entry.find("div", {"class": "pc-avator"}).find("img").get("src")
-            )
+            details["author_img"] = entry.find("div", {"class": "pc-avator"}).find("img").get("src")
             author_info_soup = entry.find("div", {"class": "pc-author-info"})
-            details["author_name"] = author_info_soup.find(
-                "h4", {"class": "author-name"}
-            ).text
-            details["author_time"] = author_info_soup.find(
-                "div", {"class": "author-time"}
-            ).text
-            review_container_soup = entry.find(
-                "div", {"class": "pc-reviews-desc-container"}
-            )
-            details["message"] = review_container_soup.find(
-                "div", {"class": "pc-reviews-desc"}
-            ).text
+            details["author_name"] = author_info_soup.find("h4", {"class": "author-name"}).text
+            details["author_time"] = author_info_soup.find("div", {"class": "author-time"}).text
+            review_container_soup = entry.find("div", {"class": "pc-reviews-desc-container"})
+            details["message"] = review_container_soup.find("div", {"class": "pc-reviews-desc"}).text
             review_details.append(details)
         resp["reviews"] = review_details
         return resp
@@ -215,18 +191,13 @@ class JsonDetailsExtractor:
             dict[str, t.Any]: Extracted item details
         """
         try:
-            from_script = (
-                souper(content).find("script", {"type": "application/json"}).text
-            )
+            from_script = souper(content).find("script", {"type": "application/json"}).text
             data: list = loads(from_script)
             extracts = []
 
             def resolve_value(value):
                 if type(value) is list:
-                    return [
-                        resolve_value(data[index] if type(index) == int else index)
-                        for index in value
-                    ]
+                    return [resolve_value(data[index] if type(index) is int else index) for index in value]
 
                 elif type(value) is dict:
                     processed_value = {}
@@ -257,16 +228,14 @@ class JsonDetailsExtractor:
                     )
             else:
                 raise DetailsExtractionError(
-                    "The extraction process completed without any find. "
-                    "Ensure correct content is passed."
+                    "The extraction process completed without any find. Ensure correct content is passed."
                 )
         except Exception as e:
             if isinstance(e, DetailsExtractionError):
                 raise e
 
             raise DetailsExtractionError(
-                "The extraction process completed without any find. "
-                "Ensure correct content is passed."
+                "The extraction process completed without any find. Ensure correct content is passed."
             ) from e
 
     @property
@@ -321,7 +290,9 @@ class JsonDetailsExtractor:
         return self.data["resource"]
 
     @property
-    def seasons(self) -> list[dict[str, str | int | list[dict[str, int]]]]:
+    def seasons(
+        self,
+    ) -> list[dict[str, str | int | list[dict[str, int]]]]:
         """Season details
 
         - Retrieved from `self.resource["seasons"]`
@@ -361,9 +332,7 @@ class JsonDetailsExtractorModel:
         Args:
             content (str): Html contents of the item page
         """
-        self.json_details_extractor: JsonDetailsExtractor = JsonDetailsExtractor(
-            content
-        )
+        self.json_details_extractor: JsonDetailsExtractor = JsonDetailsExtractor(content)
         self.details: ItemDetailsModel = self.extract(content)
 
     @classmethod

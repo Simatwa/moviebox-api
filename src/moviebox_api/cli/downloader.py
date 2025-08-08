@@ -1,28 +1,26 @@
 """Gets the work done - downloads media with flexible flow control"""
 
 from pathlib import Path
-from moviebox_api.core import Session
-
-from moviebox_api.download import (
-    DownloadableSeriesFilesDetail,
-    DownloadableMovieFilesDetail,
-    MediaFileDownloader,
-    CaptionFileDownloader,
-)
-from moviebox_api.models import SearchResultsItem
-
-from moviebox_api.constants import (
-    SubjectType,
-    DownloadQualitiesType,
-    DEFAULT_CAPTION_LANGUAGE,
-    CURRENT_WORKING_DIR,
-)
-from moviebox_api.download import resolve_media_file_to_be_downloaded
 
 from moviebox_api.cli.helpers import (
-    perform_search_and_get_item,
     get_caption_file_or_raise,
+    perform_search_and_get_item,
 )
+from moviebox_api.constants import (
+    CURRENT_WORKING_DIR,
+    DEFAULT_CAPTION_LANGUAGE,
+    DownloadQualitiesType,
+    SubjectType,
+)
+from moviebox_api.core import Session
+from moviebox_api.download import (
+    CaptionFileDownloader,
+    DownloadableMovieFilesDetail,
+    DownloadableSeriesFilesDetail,
+    MediaFileDownloader,
+    resolve_media_file_to_be_downloaded,
+)
+from moviebox_api.models import SearchResultsItem
 
 
 class Downloader:
@@ -70,13 +68,13 @@ class Downloader:
 
         Returns:
             tuple[Path|None, list[Path]|None]: Path to downloaded movie and downloaded caption files.
-        """
+        """  # noqa: E501
         MediaFileDownloader.movie_filename_template = movie_filename_tmpl
         CaptionFileDownloader.movie_filename_template = caption_filename_tmpl
 
-        assert callable(
-            search_function
-        ), f"Value for search_function must be callable not {type(search_function)}"
+        assert callable(search_function), (
+            f"Value for search_function must be callable not {type(search_function)}"
+        )
 
         target_movie = await search_function(
             self._session,
@@ -90,23 +88,15 @@ class Downloader:
             f"Search function {search_function.__name__} must return an instance of "
             f"{SearchResultsItem} not {type(target_movie)}"
         )
-        downloadable_details_inst = DownloadableMovieFilesDetail(
-            self._session, target_movie
-        )
+        downloadable_details_inst = DownloadableMovieFilesDetail(self._session, target_movie)
         downloadable_details = await downloadable_details_inst.get_modelled_content()
-        target_media_file = resolve_media_file_to_be_downloaded(
-            quality, downloadable_details
-        )
+        target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_details)
         subtitles_saved_to = []
         if download_caption or caption_only:
             for lang in language:
-                target_caption_file = get_caption_file_or_raise(
-                    downloadable_details, lang
-                )
+                target_caption_file = get_caption_file_or_raise(downloadable_details, lang)
                 caption_downloader = CaptionFileDownloader(target_caption_file)
-                subtitle_saved_to = await caption_downloader.run(
-                    target_movie, caption_dir, **kwargs
-                )
+                subtitle_saved_to = await caption_downloader.run(target_movie, caption_dir, **kwargs)
                 subtitles_saved_to.append(subtitle_saved_to)
             if caption_only:
                 # terminate
@@ -157,13 +147,13 @@ class Downloader:
 
         Returns:
             dict[int, dict[str, Path | list[Path]]]: Episode number and path to downloaded episode file and caption files.
-        """
+        """  # noqa: E501
         MediaFileDownloader.series_filename_template = episode_filename_tmpl
         CaptionFileDownloader.series_filename_template = caption_filename_tmpl
 
-        assert callable(
-            search_function
-        ), f"Value for search_function must be callable not {type(search_function)}"
+        assert callable(search_function), (
+            f"Value for search_function must be callable not {type(search_function)}"
+        )
 
         target_tv_series = await search_function(
             self._session,
@@ -177,9 +167,7 @@ class Downloader:
             f"{SearchResultsItem} not {type(target_tv_series)}"
         )
 
-        downloadable_files = DownloadableSeriesFilesDetail(
-            self._session, target_tv_series
-        )
+        downloadable_files = DownloadableSeriesFilesDetail(self._session, target_tv_series)
         response = {}
 
         for episode_count in range(limit):
@@ -192,12 +180,12 @@ class Downloader:
             captions_saved_to = []
             if caption_only or download_caption:
                 for lang in language:
-                    target_caption_file = get_caption_file_or_raise(
-                        downloadable_files_detail, lang
-                    )
+                    target_caption_file = get_caption_file_or_raise(downloadable_files_detail, lang)
                     caption_downloader = CaptionFileDownloader(target_caption_file)
                     caption_filename = caption_downloader.generate_filename(
-                        target_tv_series, season=season, episode=current_episode
+                        target_tv_series,
+                        season=season,
+                        episode=current_episode,
                     )
                     caption_saved_to = await caption_downloader.run(
                         caption_filename, dir=caption_dir, **kwargs
@@ -211,17 +199,15 @@ class Downloader:
 
             current_episode_details["captions_path"] = captions_saved_to
 
-            target_media_file = resolve_media_file_to_be_downloaded(
-                quality, downloadable_files_detail
-            )
+            target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_files_detail)
 
             media_file_downloader = MediaFileDownloader(target_media_file)
             filename = media_file_downloader.generate_filename(
-                target_tv_series, season=season, episode=current_episode
+                target_tv_series,
+                season=season,
+                episode=current_episode,
             )
-            tv_series_saved_to = await media_file_downloader.run(
-                filename, dir=dir, **kwargs
-            )
+            tv_series_saved_to = await media_file_downloader.run(filename, dir=dir, **kwargs)
             current_episode_details["movie_path"] = tv_series_saved_to
             response[current_episode] = current_episode_details
 

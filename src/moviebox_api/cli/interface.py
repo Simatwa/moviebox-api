@@ -1,26 +1,30 @@
 """Contains the actual console commands"""
 
+import logging
 import os
 import sys
-import logging
-import click
-
 from pathlib import Path
 
-from moviebox_api import __version__
-from moviebox_api.constants import DOWNLOAD_QUALITIES, CURRENT_WORKING_DIR
+import click
 
-from moviebox_api.cli.helpers import command_context_settings, loop
+from moviebox_api import __version__
+from moviebox_api.cli.downloader import Downloader
+from moviebox_api.cli.extras import homepage_content, mirror_hosts
 from moviebox_api.cli.helpers import (
+    command_context_settings,
+    loop,
     prepare_start,
     process_download_runner_params,
     show_any_help,
 )
-from moviebox_api.cli.extras import mirror_hosts, homepage_content
-from moviebox_api.cli.downloader import Downloader
-
-from moviebox_api.download import MediaFileDownloader, CaptionFileDownloader
-
+from moviebox_api.constants import (
+    CURRENT_WORKING_DIR,
+    DOWNLOAD_QUALITIES,
+)
+from moviebox_api.download import (
+    CaptionFileDownloader,
+    MediaFileDownloader,
+)
 
 DEBUG = os.getenv("DEBUG", "0") == "1"
 
@@ -97,13 +101,13 @@ def moviebox():
 @click.option(
     "-M",
     "--movie-filename-tmpl",
-    help=f"Template for generating movie filename : [default]",
+    help="Template for generating movie filename : [default]",
     default=MediaFileDownloader.movie_filename_template,
 )
 @click.option(
     "-C",
     "--caption-filename-tmpl",
-    help=f"Template for generating caption filename : [default]",
+    help="Template for generating caption filename : [default]",
     default=CaptionFileDownloader.movie_filename_template,
 )
 @click.option(
@@ -112,10 +116,14 @@ def moviebox():
     default=True,
 )
 @click.option(
-    "--leave/--no-leave", default=True, help="Keep all leaves of the progressbar : True"
+    "--leave/--no-leave",
+    default=True,
+    help="Keep all leaves of the progressbar : True",
 )
 @click.option(
-    "--caption/--no-caption", help="Download caption file : True", default=True
+    "--caption/--no-caption",
+    help="Download caption file : True",
+    default=True,
 )
 @click.option(
     "-O",
@@ -149,7 +157,10 @@ def moviebox():
     help="Disable showing interactive texts on the progress (logs) : False",
 )
 @click.option(
-    "-Y", "--yes", is_flag=True, help="Do not prompt for movie confirmation : False"
+    "-Y",
+    "--yes",
+    is_flag=True,
+    help="Do not prompt for movie confirmation : False",
 )
 @click.help_option("-h", "--help")
 def download_movie(
@@ -266,13 +277,13 @@ def download_movie(
 @click.option(
     "-E",
     "--episode-filename-tmpl",
-    help=f"Template for generating series episode filename : [default]",
+    help="Template for generating series episode filename : [default]",
     default=MediaFileDownloader.series_filename_template,
 )
 @click.option(
     "-C",
     "--caption-filename-tmpl",
-    help=f"Template for generating caption filename : [default]",
+    help="Template for generating caption filename : [default]",
     default=CaptionFileDownloader.series_filename_template,
 )
 @click.option(
@@ -293,10 +304,14 @@ def download_movie(
     default=True,
 )
 @click.option(
-    "--leave/--no-leave", default=True, help="Keep all leaves of the progressbar : True"
+    "--leave/--no-leave",
+    default=True,
+    help="Keep all leaves of the progressbar : True",
 )
 @click.option(
-    "--caption/--no-caption", help="Download caption file : True", default=True
+    "--caption/--no-caption",
+    help="Download caption file : True",
+    default=True,
 )
 @click.option(
     "-O",
@@ -330,7 +345,10 @@ def download_movie(
     help="Disable showing interactive texts on the progress (logs) : False",
 )
 @click.option(
-    "-Y", "--yes", is_flag=True, help="Do not prompt for tv-series confirmation : False"
+    "-Y",
+    "--yes",
+    is_flag=True,
+    help="Do not prompt for tv-series confirmation : False",
 )
 @click.help_option("-h", "--help")
 def download_tv_series(

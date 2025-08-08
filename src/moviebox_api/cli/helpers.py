@@ -1,21 +1,28 @@
 """Contain support functions and constant variables"""
 
-import random
-import click
 import logging
-
+import random
 from asyncio import new_event_loop
 
+import click
 from httpx import ConnectTimeout, HTTPStatusError
 from pydantic import ValidationError
 
-from moviebox_api import logger, __repo__
+from moviebox_api import __repo__, logger
+from moviebox_api.constants import (
+    ENVIRONMENT_HOST_KEY,
+    HOST_URL,
+    MIRROR_HOSTS,
+    DownloadMode,
+    SubjectType,
+)
 from moviebox_api.core import Search, Session
-from moviebox_api.constants import SubjectType, ENVIRONMENT_HOST_KEY
-from moviebox_api.constants import HOST_URL, MIRROR_HOSTS, DownloadMode
-from moviebox_api.models import DownloadableFilesMetadata
-from moviebox_api.models import SearchResultsItem, CaptionFileMetadata
 from moviebox_api.exceptions import ZeroCaptionFileError
+from moviebox_api.models import (
+    CaptionFileMetadata,
+    DownloadableFilesMetadata,
+    SearchResultsItem,
+)
 
 loop = new_event_loop()
 
@@ -54,7 +61,10 @@ async def perform_search_and_get_item(
         f"{len(search_results.items)} {subject_type_name}."
     )
     items = (
-        filter(lambda item: item.releaseDate.year == year, search_results.items)
+        filter(
+            lambda item: item.releaseDate.year == year,
+            search_results.items,
+        )
         if bool(year)
         else search_results.items
     )
@@ -73,9 +83,7 @@ async def perform_search_and_get_item(
                 return item
     if search_results.pager.hasMore:
         next_search: Search = search.next_page(search_results)
-        logging.info(
-            f"Navigating to the search results of page number {next_search._page}"
-        )
+        logging.info(f"Navigating to the search results of page number {next_search._page}")
         return await perform_search_and_get_item(
             session=session,
             title=title,
@@ -87,7 +95,7 @@ async def perform_search_and_get_item(
 
     raise RuntimeError(
         "All items in the search results are exhausted. Try researching with a different keyword"
-        f'{" or different year filter." if year > 0 else ""}'
+        f"{' or different year filter.' if year > 0 else ''}"
     )
 
 
@@ -139,11 +147,7 @@ def prepare_start(quiet: bool, verbose: bool) -> None:
     if verbose > 3:
         verbose = 2
     logging.basicConfig(
-        format=(
-            "[%(asctime)s] : %(levelname)s - %(message)s"
-            if verbose
-            else "[%(module)s] %(message)s"
-        ),
+        format=("[%(asctime)s] : %(levelname)s - %(message)s" if verbose else "[%(module)s] %(message)s"),
         datefmt="%d-%b-%Y %H:%M:%S",
         level=(
             logging.ERROR
@@ -151,7 +155,9 @@ def prepare_start(quiet: bool, verbose: bool) -> None:
             # just a hack to ensure
             #           -v -> INFO
             #           -vv -> DEBUG
-            else (30 - (verbose * 10)) if verbose > 0 else logging.INFO
+            else (30 - (verbose * 10))
+            if verbose > 0
+            else logging.INFO
         ),
     )
     logging.info(f"Using host url - {HOST_URL}")
@@ -188,9 +194,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
     exit_code = 1
 
     if isinstance(exception, ConnectTimeout):
-        logging.info(
-            "Http connect request has timed out. Check your connection and retry."
-        )
+        logging.info("Http connect request has timed out. Check your connection and retry.")
 
     elif isinstance(exception, HTTPStatusError):
         match exception.response.status_code:

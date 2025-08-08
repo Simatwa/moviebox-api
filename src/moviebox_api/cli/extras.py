@@ -2,13 +2,12 @@
 
 import click
 import rich
-
 from rich.table import Table
 
-from moviebox_api.constants import MIRROR_HOSTS
 from moviebox_api.cli.helpers import command_context_settings, loop
-from moviebox_api.requests import Session
+from moviebox_api.constants import MIRROR_HOSTS
 from moviebox_api.core import Homepage
+from moviebox_api.requests import Session
 
 
 @click.command(context_settings=command_context_settings)
@@ -36,10 +35,22 @@ def mirror_hosts(json: bool):
 
 @click.command()
 @click.option(
-    "-j", "--json", is_flag=True, help="Output details in json format : False"
+    "-j",
+    "--json",
+    is_flag=True,
+    help="Output details in json format : False",
 )
-@click.option("-t", "--title", help="Title filter for the contents to list : None")
-@click.option("-b", "--banner", is_flag=True, help="Show banner content only : False")
+@click.option(
+    "-t",
+    "--title",
+    help="Title filter for the contents to list : None",
+)
+@click.option(
+    "-b",
+    "--banner",
+    is_flag=True,
+    help="Show banner content only : False",
+)
 def homepage_content(json: bool, title: str, banner: bool):
     """Show contents displayed at landing page"""
     # TODO: Add automated test for this command
@@ -73,7 +84,6 @@ def homepage_content(json: bool, title: str, banner: bool):
                 for subject in operating.subjects
             )
     if json:
-
         if banner:
             rich.print_json(data=banners, indent=4)
         else:
@@ -85,9 +95,9 @@ def homepage_content(json: bool, title: str, banner: bool):
                 processed_items[key] = item_values
 
             if title is not None:
-                assert (
-                    title in processed_items.keys()
-                ), f"Title filter '{title}' is not one of {list(processed_items.keys())}"
+                assert title in processed_items.keys(), (
+                    f"Title filter '{title}' is not one of {list(processed_items.keys())}"
+                )
 
                 rich.print_json(data={title: processed_items.get(title)}, indent=4)
             else:
@@ -116,9 +126,7 @@ def homepage_content(json: bool, title: str, banner: bool):
         else:
             if title is not None:
                 target_title = items.get(title)
-                assert (
-                    target_title is not None
-                ), f"Title filter '{title}' is not one of {list(items.keys())}"
+                assert target_title is not None, f"Title filter '{title}' is not one of {list(items.keys())}"
                 items = {title: target_title}
 
             for key in items.keys():

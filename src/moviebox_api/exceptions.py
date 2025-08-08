@@ -1,8 +1,9 @@
 """Exceptions module"""
 
-from typing import Dict
 from pathlib import Path
+
 from httpx import Response
+
 from moviebox_api._bases import BaseMovieboxException
 
 
@@ -13,7 +14,7 @@ class MovieboxApiException(BaseMovieboxException):
 class UnsuccessfulResponseError(BaseMovieboxException):
     """Raised when moviebox API serves request with a fail report."""
 
-    def __init__(self, response: Dict, *args, **kwargs):
+    def __init__(self, response: dict, *args, **kwargs):
         self.response = response
         """Unsuccessful response data"""
         super().__init__(*args, **kwargs)

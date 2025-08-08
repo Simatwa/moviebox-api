@@ -2,42 +2,39 @@
 and later performing the actual download as well
 """
 
-import httpx
 import asyncio
-
 import typing as t
 from os import path
 from pathlib import Path
+
+import httpx
 from tqdm import tqdm
 
 from moviebox_api import logger
 from moviebox_api._bases import BaseContentProvider
-from moviebox_api.models import (
-    SearchResultsItem,
-    DownloadableFilesMetadata,
-    MediaFileMetadata,
-    CaptionFileMetadata,
+from moviebox_api.constants import (
+    CURRENT_WORKING_DIR,
+    DOWNLOAD_QUALITIES,
+    DOWNLOAD_REQUEST_HEADERS,
+    DownloadMode,
+    DownloadQualitiesType,
+    DownloadStatus,
+    SubjectType,
 )
-
-from moviebox_api.requests import Session
-
+from moviebox_api.exceptions import DownloadCompletedError
 from moviebox_api.helpers import (
     assert_instance,
     get_absolute_url,
     get_filesize_string,
     sanitize_filename,
 )
-
-from moviebox_api.constants import (
-    SubjectType,
-    DOWNLOAD_REQUEST_HEADERS,
-    DOWNLOAD_QUALITIES,
-    CURRENT_WORKING_DIR,
-    DownloadQualitiesType,
-    DownloadMode,
-    DownloadStatus,
+from moviebox_api.models import (
+    CaptionFileMetadata,
+    DownloadableFilesMetadata,
+    MediaFileMetadata,
+    SearchResultsItem,
 )
-from moviebox_api.exceptions import DownloadCompletedError
+from moviebox_api.requests import Session
 
 __all__ = [
     "MediaFileDownloader",
@@ -49,7 +46,8 @@ __all__ = [
 
 
 def resolve_media_file_to_be_downloaded(
-    quality: DownloadQualitiesType, downloadable_metadata: DownloadableFilesMetadata
+    quality: DownloadQualitiesType,
+    downloadable_metadata: DownloadableFilesMetadata,
 ) -> MediaFileMetadata:
     """Gets media-file-metadata that matches the target quality
 
@@ -71,9 +69,7 @@ def resolve_media_file_to_be_downloaded(
             target_metadata = downloadable_metadata.worst_media_file
         case "_":
             if quality in DOWNLOAD_QUALITIES:
-                quality_downloads_map = (
-                    downloadable_metadata.get_quality_downloads_map()
-                )
+                quality_downloads_map = downloadable_metadata.get_quality_downloads_map()
                 target_metadata = quality_downloads_map.get(quality)
                 if target_metadata is None:
                     raise ValueError(
@@ -82,8 +78,7 @@ def resolve_media_file_to_be_downloaded(
                     )
             else:
                 raise ValueError(
-                    f"Unknown media file quality passed '{quality}'. "
-                    f"Choose from {DOWNLOAD_QUALITIES}"
+                    f"Unknown media file quality passed '{quality}'. Choose from {DOWNLOAD_QUALITIES}"
                 )
     return target_metadata
 
@@ -105,7 +100,7 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
         self.session = session
         self._item = item
 
-    def _create_request_params(self, season: int, episode: int) -> t.Dict:
+    def _create_request_params(self, season: int, episode: int) -> dict:
         """Creates request parameters
 
         Args:
@@ -114,9 +109,13 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
         Returns:
             t.Dict: Request params
         """
-        return {"subjectId": self._item.subjectId, "se": season, "ep": episode}
+        return {
+            "subjectId": self._item.subjectId,
+            "se": season,
+            "ep": episode,
+        }
 
-    async def get_content(self, season: int, episode: int) -> t.Dict:
+    async def get_content(self, season: int, episode: int) -> dict:
         """Performs the actual fetching of files detail.
 
         Args:
@@ -127,9 +126,7 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
             t.Dict: File details
         """
         # Referer
-        request_header = {
-            "Referer": get_absolute_url(f"/movies/{self._item.detailPath}")
-        }
+        request_header = {"Referer": get_absolute_url(f"/movies/{self._item.detailPath}")}
         # Without the referer, empty response will be served.
 
         content = await self.session.get_with_cookies_from_api(
@@ -139,9 +136,7 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
         )
         return content
 
-    async def get_modelled_content(
-        self, season: int, episode: int
-    ) -> DownloadableFilesMetadata:
+    async def get_modelled_content(self, season: int, episode: int) -> DownloadableFilesMetadata:
         """Get modelled version of the downloadable files detail.
 
         Args:
@@ -158,7 +153,7 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
 class DownloadableMovieFilesDetail(BaseDownloadableFilesDetail):
     """Fetches and model movie files detail"""
 
-    async def get_content(self) -> t.Dict:
+    async def get_content(self) -> dict:
         """Actual fetch of files detail"""
         return await super().get_content(season=0, episode=0)
 
@@ -180,9 +175,7 @@ class MediaFileDownloader:
     request_headers = DOWNLOAD_REQUEST_HEADERS
     request_cookies = {}
     movie_filename_template = "%(title)s (%(release_year)d) - %(resolution)dP.%(ext)s"
-    series_filename_template = (
-        "%(title)s S%(season)dE%(episode)d - %(resolution)dP.%(ext)s"
-    )
+    series_filename_template = "%(title)s S%(season)dE%(episode)d - %(resolution)dP.%(ext)s"
     # Should have been named episode_filename_template but for consistency
     # with the subject-types {movie, tv-series, music} it's better as it is
     possible_filename_placeholders = (
@@ -204,9 +197,7 @@ class MediaFileDownloader:
         """
         assert_instance(media_file, MediaFileMetadata, "media_file")
         self._media_file = media_file
-        self.session = httpx.AsyncClient(
-            headers=self.request_headers, cookies=self.request_cookies
-        )
+        self.session = httpx.AsyncClient(headers=self.request_headers, cookies=self.request_cookies)
         """Httpx client session for downloading the file"""
 
     def generate_filename(
@@ -225,7 +216,11 @@ class MediaFileDownloader:
         Returns:
             str: Generated filename
         """
-        assert_instance(search_results_item, SearchResultsItem, "search_results_item")
+        assert_instance(
+            search_results_item,
+            SearchResultsItem,
+            "search_results_item",
+        )
 
         placeholders = dict(
             title=search_results_item.title,
@@ -283,14 +278,14 @@ class MediaFileDownloader:
 
         Returns:
             str|httpx.Response: Path where the media file has been saved to or httpx Response (test).
-        """
+        """  # noqa: E501
 
         assert_instance(mode, DownloadMode, "mode")
 
         if progress_hook is not None:
-            assert callable(
-                progress_hook
-            ), f"Value for progress_hook must be a function not {type(progress_hook)}"
+            assert callable(progress_hook), (
+                f"Value for progress_hook must be a function not {type(progress_hook)}"
+            )
 
         current_downloaded_size = 0
         current_downloaded_size_in_mb = 0
@@ -334,13 +329,12 @@ class MediaFileDownloader:
         if resume:
             if size_in_bytes == current_downloaded_size:
                 if suppress_complete_error:
-                    logger.info(
-                        f"Download already completed for the file in path - {save_to}"
-                    )
+                    logger.info(f"Download already completed for the file in path - {save_to}")
                     return save_to
 
                 raise DownloadCompletedError(
-                    save_to, f"Download completed for the file in path - '{save_to}'"
+                    save_to,
+                    f"Download completed for the file in path - '{save_to}'",
                 )
 
         size_in_mb = (size_in_bytes / 1_000_000) + current_downloaded_size_in_mb
@@ -348,10 +342,7 @@ class MediaFileDownloader:
         chunk_size_in_bytes = chunk_size * 1_000
 
         saving_mode = "ab" if resume else "wb"
-        logger.info(
-            f"Downloading media file ({size_with_unit}, resume - {resume}). "
-            f"Writing to ({save_to})"
-        )
+        logger.info(f"Downloading media file ({size_with_unit}, resume - {resume}). Writing to ({save_to})")
 
         download_progress = {
             "size": self._media_file.size,
@@ -365,7 +356,7 @@ class MediaFileDownloader:
             "download_chunk_size": chunk_size_in_bytes,
         }
 
-        async def call_progress_hook(progress: t.Dict):
+        async def call_progress_hook(progress: dict):
             if progress_hook is not None:
                 if asyncio.iscoroutinefunction(progress_hook):
                     await progress_hook(progress)
@@ -373,15 +364,11 @@ class MediaFileDownloader:
                     progress_hook(progress)
 
         if progress_bar:
-            async with self.session.stream(
-                "GET", str(self._media_file.url)
-            ) as response:
+            async with self.session.stream("GET", str(self._media_file.url)) as response:
                 response.raise_for_status()
 
                 if test:
-                    logger.info(
-                        f"Download test passed successfully {response.__repr__}"
-                    )
+                    logger.info(f"Download test passed successfully {response.__repr__}")
                     return response
 
                 with open(save_to, saving_mode) as fh:
@@ -413,15 +400,11 @@ class MediaFileDownloader:
         else:
             logger.debug(f"Movie file info {self._media_file}")
 
-            async with self.session.stream(
-                "GET", str(self._media_file.url)
-            ) as response:
+            async with self.session.stream("GET", str(self._media_file.url)) as response:
                 response.raise_for_status()
 
                 if test:
-                    logger.info(
-                        f"Download test passed successfully {response.__repr__}"
-                    )
+                    logger.info(f"Download test passed successfully {response.__repr__}")
                     return response
 
                 with open(save_to, saving_mode) as fh:
@@ -472,9 +455,7 @@ class CaptionFileDownloader:
         """
         assert_instance(caption_file, CaptionFileMetadata, "caption_file")
         self._caption_file = caption_file
-        self.session = httpx.AsyncClient(
-            headers=self.request_headers, cookies=self.request_cookies
-        )
+        self.session = httpx.AsyncClient(headers=self.request_headers, cookies=self.request_cookies)
         """Httpx client session for downloading the file"""
 
     def generate_filename(
@@ -498,7 +479,11 @@ class CaptionFileDownloader:
         Returns:
             str: Generated filename
         """
-        assert_instance(search_results_item, SearchResultsItem, "search_results_item")
+        assert_instance(
+            search_results_item,
+            SearchResultsItem,
+            "search_results_item",
+        )
 
         placeholders = dict(
             title=search_results_item.title,
@@ -539,7 +524,7 @@ class CaptionFileDownloader:
 
         Returns:
             Path|httpx.Response: Path where the caption file has been saved to or httpx Response (test).
-        """
+        """  # noqa: E501
         if isinstance(filename, SearchResultsItem):
             # Lets generate filename
             filename = self.generate_filename(filename, **kwargs)
@@ -552,9 +537,7 @@ class CaptionFileDownloader:
 
         size_with_unit = get_filesize_string(self._caption_file.size)
 
-        logger.info(
-            f"Downloading caption file ({size_with_unit}). " f"Writing to ({save_to})"
-        )
+        logger.info(f"Downloading caption file ({size_with_unit}). Writing to ({save_to})")
 
         async with self.session.stream("GET", str(self._caption_file.url)) as response:
             response.raise_for_status()
