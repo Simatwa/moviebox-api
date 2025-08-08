@@ -19,8 +19,6 @@ from moviebox_api.helpers import (
 )
 from moviebox_api.models import MovieboxAppInfo
 
-# TODO : Set timezone and language values based on user's machine
-
 request_cookies = {}
 
 __all__ = ["Session"]

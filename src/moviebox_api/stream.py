@@ -31,8 +31,8 @@ class StreamFilesDetail(BaseContentProvider):
         """Creates request parameters
 
         Args:
-            season (int): Season number of the series.
-            episde (int): Episode number of the series.
+            season (int): Season number of the target item.
+            episde (int): Episode number of the target item.
         Returns:
             dict: Request params
         """
@@ -46,8 +46,8 @@ class StreamFilesDetail(BaseContentProvider):
         """Performs the actual fetching of files detail.
 
         Args:
-            season (int): Season number of the series.
-            episde (int): Episode number of the series.
+            season (int): Season number of the target item.
+            episde (int): Episode number of the target item.
 
         Returns:
             dict: File details
@@ -67,8 +67,8 @@ class StreamFilesDetail(BaseContentProvider):
         """Get modelled version of the streamable files detail.
 
         Args:
-            season (int): Season number of the series.
-            episde (int): Episode number of the series
+            season (int): Season number of the target item.
+            episde (int): Episode number of the target item
 
         Returns:
             StreamFilesMetadata: Modelled stream files details

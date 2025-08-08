@@ -1,4 +1,4 @@
-"""Contains functionalities for fetching and model downloadable files metadata
+"""Contains functionalities for fetching and modelling downloadable files metadata
 and later performing the actual download as well
 """
 

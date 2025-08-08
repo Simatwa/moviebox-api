@@ -43,6 +43,7 @@ from moviebox_api.constants import SubjectType  # noqa: E402
 from moviebox_api.core import (  # noqa: E402
     Homepage,
     MovieDetails,
+    PopularSearch,
     Search,
     TVSeriesDetails,
 )
@@ -63,6 +64,7 @@ __all__ = [
     "Homepage",
     "SubjectType",
     "MovieDetails",
+    "PopularSearch",
     "TVSeriesDetails",
     "MediaFileDownloader",
     "CaptionFileDownloader",

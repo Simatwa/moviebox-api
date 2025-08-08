@@ -30,10 +30,9 @@ __all__ = ["Auto"]
 
 
 class Auto:
-    """Search movie based on a given query
-    and proceed downloading the first one in the results.
-    This is a workaround for writing many lines of code
-    at the expense of flow control.
+    """Search movie based on a given query and proceed to download the first one in the results.
+
+    This is a workaround for writing many lines of code at the expense of flow control.
     """
 
     def __init__(
@@ -82,7 +81,7 @@ class Auto:
             if target_movie is None:
                 raise ZeroSearchResultsError(
                     f"No movie in the search results matched the year filter - {year}. "
-                    "Try a different year filter or ommit the filter completely."
+                    "Try a different year filter or ommit the filter."
                 )
         target_movie = search_results.first_item
         downloadable_movie_file_details_inst = DownloadableMovieFilesDetail(self._session, target_movie)

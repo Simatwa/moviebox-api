@@ -1,5 +1,7 @@
 """
-Main module for the package. Generate models from httpx request responses.
+Main module for the package.
+Generate models from httpx request responses.
+Also provides ORM support for a specific extracted item details
 """
 
 from moviebox_api._bases import (
@@ -25,12 +27,13 @@ from moviebox_api.helpers import (
 )
 from moviebox_api.models import (
     HomepageContentModel,
+    PopularSearchModel,
     SearchResults,
     SearchResultsItem,
 )
 from moviebox_api.requests import Session
 
-__all__ = ["Homepage", "Search", "MovieDetails", "TVSeriesDetails"]
+__all__ = ["Homepage", "Search", "PopularSearch", "MovieDetails", "TVSeriesDetails"]
 
 
 class Homepage(BaseContentProviderAndHelper):
@@ -62,8 +65,8 @@ class Homepage(BaseContentProviderAndHelper):
         return HomepageContentModel(**content)
 
 
-class EveryoneSearches(BaseContentProviderAndHelper):
-    """Movies and tv-series everyone searches"""
+class PopularSearch(BaseContentProviderAndHelper):
+    """Movies and tv-series many people are searching"""
 
     _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/everyone-search")
 
@@ -74,7 +77,17 @@ class EveryoneSearches(BaseContentProviderAndHelper):
             session (Session): MovieboxAPI request session
         """
         assert_instance(session, Session, "session")
-        raise NotImplementedError("Not implemented yet. Check later versions")
+        self._session = session
+
+    async def get_content(self) -> list[dict]:
+        """Discover popular items being searched"""
+        content = await self._session.get_with_cookies_from_api(url=self._url)
+        return content["everyoneSearch"]
+
+    async def get_content_model(self) -> list[PopularSearchModel]:
+        """Discover modelled version of popular items being searched"""
+        contents = await self.get_content()
+        return [PopularSearchModel(**item) for item in contents]
 
     # TODO: Complete this
 
@@ -331,7 +344,7 @@ class TVSeriesDetails(BaseItemDetails, BaseContentProviderAndHelper):
         """Constructor for `TVSeriesDetails`
 
         Args:
-            page_url (str|SearchResultsItem): Url to specific item page or search-results-item.
+            url_or_item: (str|SearchResultsItem): Url to specific item page or search-results-item.
             session (Session): MovieboxAPI request session
         """
         assert_instance(url_or_item, (str, SearchResultsItem), "url_or_item")

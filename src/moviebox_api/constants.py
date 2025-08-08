@@ -1,4 +1,4 @@
-"""This module store constant variables"""
+"""This module stores constant variables"""
 
 import os
 import typing as t

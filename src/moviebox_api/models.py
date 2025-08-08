@@ -209,6 +209,7 @@ class SearchResults(BaseModel):
         value: list[SearchResultsItem],
     ) -> list[SearchResultsItem]:
         if not bool(value):
+            # TODO: Fix this as it's biased to non-modelled responses
             raise ZeroSearchResultsError("Search yielded empty results. Try a different keyword.")
         return value
 
@@ -387,3 +388,9 @@ class StreamFilesMetadata(BaseModel):
                 if stream_file.resolutions < found.resolutions:
                     found = stream_file
             return found
+
+
+class PopularSearchModel(BaseModel):
+    """Item many people are searching"""
+
+    title: str
