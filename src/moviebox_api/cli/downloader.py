@@ -77,9 +77,9 @@ class Downloader:
         MediaFileDownloader.movie_filename_template = movie_filename_tmpl
         CaptionFileDownloader.movie_filename_template = caption_filename_tmpl
 
-        assert callable(search_function), (
-            f"Value for search_function must be callable not {type(search_function)}"
-        )
+        assert callable(
+            search_function
+        ), f"Value for search_function must be callable not {type(search_function)}"
 
         target_movie = await search_function(
             self._session,
@@ -93,15 +93,23 @@ class Downloader:
             f"Search function {search_function.__name__} must return an instance of "
             f"{SearchResultsItem} not {type(target_movie)}"
         )
-        downloadable_details_inst = DownloadableMovieFilesDetail(self._session, target_movie)
+        downloadable_details_inst = DownloadableMovieFilesDetail(
+            self._session, target_movie
+        )
         downloadable_details = await downloadable_details_inst.get_content_model()
-        target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_details)
+        target_media_file = resolve_media_file_to_be_downloaded(
+            quality, downloadable_details
+        )
         subtitles_saved_to = []
         if download_caption or caption_only:
             for lang in language:
-                target_caption_file = get_caption_file_or_raise(downloadable_details, lang)
+                target_caption_file = get_caption_file_or_raise(
+                    downloadable_details, lang
+                )
                 caption_downloader = CaptionFileDownloader(target_caption_file)
-                subtitle_saved_to = await caption_downloader.run(target_movie, caption_dir, **kwargs)
+                subtitle_saved_to = await caption_downloader.run(
+                    target_movie, caption_dir, **kwargs
+                )
                 subtitles_saved_to.append(subtitle_saved_to)
             if caption_only:
                 # terminate
@@ -156,9 +164,9 @@ class Downloader:
         MediaFileDownloader.series_filename_template = episode_filename_tmpl
         CaptionFileDownloader.series_filename_template = caption_filename_tmpl
 
-        assert callable(search_function), (
-            f"Value for search_function must be callable not {type(search_function)}"
-        )
+        assert callable(
+            search_function
+        ), f"Value for search_function must be callable not {type(search_function)}"
 
         target_tv_series = await search_function(
             self._session,
@@ -172,7 +180,9 @@ class Downloader:
             f"{SearchResultsItem} not {type(target_tv_series)}"
         )
 
-        downloadable_files = DownloadableTVSeriesFilesDetail(self._session, target_tv_series)
+        downloadable_files = DownloadableTVSeriesFilesDetail(
+            self._session, target_tv_series
+        )
         response = {}
 
         for episode_count in range(limit):
@@ -185,7 +195,9 @@ class Downloader:
             captions_saved_to = []
             if caption_only or download_caption:
                 for lang in language:
-                    target_caption_file = get_caption_file_or_raise(downloadable_files_detail, lang)
+                    target_caption_file = get_caption_file_or_raise(
+                        downloadable_files_detail, lang
+                    )
                     caption_downloader = CaptionFileDownloader(target_caption_file)
                     caption_filename = caption_downloader.generate_filename(
                         target_tv_series,
@@ -204,7 +216,9 @@ class Downloader:
 
             current_episode_details["captions_path"] = captions_saved_to
 
-            target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_files_detail)
+            target_media_file = resolve_media_file_to_be_downloaded(
+                quality, downloadable_files_detail
+            )
 
             media_file_downloader = MediaFileDownloader(target_media_file)
             filename = media_file_downloader.generate_filename(
@@ -212,7 +226,9 @@ class Downloader:
                 season=season,
                 episode=current_episode,
             )
-            tv_series_saved_to = await media_file_downloader.run(filename, dir=dir, **kwargs)
+            tv_series_saved_to = await media_file_downloader.run(
+                filename, dir=dir, **kwargs
+            )
             current_episode_details["movie_path"] = tv_series_saved_to
             response[current_episode] = current_episode_details
 
@@ -224,7 +240,7 @@ class Downloader:
         **kwargs,
     ) -> tuple[Path | None, list[Path] | None]:
         """Synchronously search movie by name and proceed to download it."""
-        return loop.run_until_complete(*args, **kwargs)
+        return loop.run_until_complete(self.download_movie(*args, **kwargs))
 
     def download_tv_series_sync(
         self,
