@@ -20,7 +20,7 @@ install-in-termux:
 
 # Target to run tests
 test:
-	pytest tests -v -ff
+	pytest tests -v --ff
 
 # target to build dist
 build:

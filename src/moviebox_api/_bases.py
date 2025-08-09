@@ -62,7 +62,7 @@ class FileDownloaderHelper:
         self, *args, **kwargs
     ) -> Path | httpx.Response | tuple[Path | httpx.Response | None, Path | httpx.Response | None]:
         """Sychronously performs the actual download"""
-        return loop.run_until_complete(*args, **kwargs)
+        return loop.run_until_complete(self.run(*args, **kwargs))
 
 
 class BaseFileDownloaderAndHelper(FileDownloaderHelper, BaseFileDownloader):
