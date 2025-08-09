@@ -24,7 +24,7 @@ test:
 
 # target to build dist
 build:
-	rm build/ disr/ -rf
+	rm build/ dist/ -rf
 	uv build
 	
 # Target to publish dist to pypi
