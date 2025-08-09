@@ -335,7 +335,7 @@ Options:
 > [!TIP]
 > Shorthand for `$ python -m moviebox_api` is simply `$ moviebox`
 
-**Moviebox.ph** has several other mirror hosts, in order to set specific one to be used by the script simply expose it as environment variable using name `MOVIEBOX_API_HOST`. For instance, in Linux systems one might need to run `$ export MOVIEBOX_API_HOST="h5.aoneroom.com"`
+**Moviebox.ph** has [several other mirror hosts](https://github.com/Simatwa/moviebox-api/issues/27), in order to set specific one to be used by the script simply expose it as environment variable using name `MOVIEBOX_API_HOST`. For instance, in Linux systems one might need to run `$ export MOVIEBOX_API_HOST="h5.aoneroom.com"`
 
 
 ## Disclaimer
