@@ -153,13 +153,13 @@ if __name__ == "__main__":
 
 ```json
     {
-      1: {
+      "1": {
         "captions_path" : ["/..S1E1 - english.srt"],
-        "movie_path" : "/..S1E1.mp4",
+        "movie_path" : "/..S1E1.mp4"
       },
-      2: {
+      "2": {
         "captions_path" : ["/..S1E1 - english.srt"],
-        "movie_path" : "/..S1E2.mp4",
+        "movie_path" : "/..S1E2.mp4"
       }
     }
 ```
