@@ -5,6 +5,7 @@ from pathlib import Path
 
 from httpx import Response
 
+from moviebox_api._bases import BaseFileDownloaderAndHelper
 from moviebox_api.constants import (
     DEFAULT_CAPTION_LANGUAGE,
     DOWNLOAD_QUALITIES,
@@ -29,7 +30,7 @@ from moviebox_api.requests import Session
 __all__ = ["Auto"]
 
 
-class Auto:
+class Auto(BaseFileDownloaderAndHelper):
     """Search movie based on a given query and proceed to download the first one in the results.
 
     This is a workaround for writing many lines of code at the expense of flow control.
@@ -105,7 +106,7 @@ class Auto:
         Returns:
             Path : Downloaded movie file location.
             Response : if test=true
-        """
+        """  # noqa: E501
         assert_membership(quality, DOWNLOAD_QUALITIES, "quality")
         target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_movie_file_details)
         downloader = MediaFileDownloader(target_media_file)

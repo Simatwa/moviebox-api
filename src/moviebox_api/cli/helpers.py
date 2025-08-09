@@ -2,7 +2,6 @@
 
 import logging
 import random
-from asyncio import new_event_loop
 
 import click
 from httpx import ConnectTimeout, HTTPStatusError
@@ -23,8 +22,6 @@ from moviebox_api.models import (
     DownloadableFilesMetadata,
     SearchResultsItem,
 )
-
-loop = new_event_loop()
 
 command_context_settings = dict(auto_envvar_prefix="MOVIEBOX")
 
@@ -78,7 +75,8 @@ async def perform_search_and_get_item(
     else:
         for pos, item in enumerate(items, start=1):
             if click.confirm(
-                f"> Download ({pos}/{len(items)}) : {item.title} {item.releaseDate.year, item.imdbRatingValue}"
+                f"> Download ({pos}/{len(items)}) : {item.title} "
+                f"{item.releaseDate.year, item.imdbRatingValue}"
             ):
                 return item
     if search_results.pager.hasMore:
@@ -200,7 +198,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
         match exception.response.status_code:
             case 403:
                 logging.info(
-                    f"Looks like you're in a region that Moviebox doesn't offer their services to. "
+                    "Looks like you're in a region that Moviebox doesn't offer their services to. "
                     "Use a proxy or a VPN from a different geographical location to bypass this restriction."
                 )
 

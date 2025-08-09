@@ -11,7 +11,7 @@ import httpx
 from tqdm import tqdm
 
 from moviebox_api import logger
-from moviebox_api._bases import BaseContentProvider
+from moviebox_api._bases import BaseContentProviderAndHelper, BaseFileDownloaderAndHelper
 from moviebox_api.constants import (
     CURRENT_WORKING_DIR,
     DOWNLOAD_QUALITIES,
@@ -60,7 +60,7 @@ def resolve_media_file_to_be_downloaded(
         downloadable_metadata (DownloadableFilesMetadata): Downloadable files metadata
 
     Raises:
-        ValueError: Incase media file matching target quality not found
+        RuntimeError: Incase media file matching target quality not found
         ValueError: Unexpected target media quality
 
     Returns:
@@ -76,7 +76,7 @@ def resolve_media_file_to_be_downloaded(
                 quality_downloads_map = downloadable_metadata.get_quality_downloads_map()
                 target_metadata = quality_downloads_map.get(quality)
                 if target_metadata is None:
-                    raise ValueError(
+                    raise RuntimeError(
                         f"Media file for quality {quality} does not exists. "
                         f"Try other qualities from {target_metadata.keys()}"
                     )
@@ -87,7 +87,7 @@ def resolve_media_file_to_be_downloaded(
     return target_metadata
 
 
-class BaseDownloadableFilesDetail(BaseContentProvider):
+class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
     """Base class for fetching and modelling downloadable files detail"""
 
     _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/download")
@@ -175,7 +175,7 @@ class DownloadableTVSeriesFilesDetail(BaseDownloadableFilesDetail):
     # NOTE: Already implemented by parent class - BaseDownloadableFilesDetail
 
 
-class MediaFileDownloader:
+class MediaFileDownloader(BaseFileDownloaderAndHelper):
     """Download movie and tv-series files"""
 
     request_headers = DOWNLOAD_REQUEST_HEADERS
@@ -429,7 +429,7 @@ class MediaFileDownloader:
         return save_to
 
 
-class CaptionFileDownloader:
+class CaptionFileDownloader(BaseFileDownloaderAndHelper):
     """Creates a local copy of a remote subtitle/caption file"""
 
     request_headers = DOWNLOAD_REQUEST_HEADERS

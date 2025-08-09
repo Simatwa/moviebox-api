@@ -1,11 +1,15 @@
 """This module stores constant variables"""
 
+import asyncio
 import os
 import typing as t
 from enum import IntEnum, StrEnum
 from pathlib import Path
 
 from moviebox_api import logger
+
+loop = asyncio.new_event_loop()
+"""asyncio event loop"""
 
 MIRROR_HOSTS = (
     # "moviebox.ng",

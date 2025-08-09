@@ -48,7 +48,7 @@ class TagDetailsExtractor:
     """
 
     def __init__(self, content: str):
-        """Constructor for `BaseMovieDetailsExtractor`
+        """Constructor for `TagDetailsExtractor`
 
         Args:
             content (str): Html formatted text
@@ -56,6 +56,13 @@ class TagDetailsExtractor:
         self._content = content
         self.souped_content = souper(content)
         self.souped_content_body = self.souped_content.find("body")
+
+    def __repr__(self) -> str:
+        headers = self.extract_headers()
+        return (
+            f"<{self.__module__}.{self.__class__.__name__} "
+            f'title="{headers["title"]}" url="{headers["absolute_url"]}">'
+        )
 
     def __call__(self) -> dict[str, list[str] | dict[str, t.Any]]:
         """Extract all possible contents from the page"""
@@ -81,7 +88,7 @@ class TagDetailsExtractor:
         resp = {}
         header = self.souped_content.find("head")
         resp["absolute_url"] = header.find("link", {"hreflang": "en"}).get("href")
-        resp["title"] = header.find("title").text
+        resp["title"] = header.find("title").getText(strip=True)
 
         def get_meta_content(name: str) -> str:
             return header.find("meta", {"name": name}).get("content")
@@ -183,7 +190,7 @@ class JsonDetailsExtractor:
     """Exracts specific item details from json-formatted data appended on the page
 
     - Pros : Extracts whole details available.
-    - Cons : Kinda slower than `TagDetailsExtractor`
+    - Cons : Slightly slower than `TagDetailsExtractor`
     """
 
     def __init__(self, content: str):
@@ -195,6 +202,11 @@ class JsonDetailsExtractor:
         self._content = content
         self.details: dict[str, t.Any] = self.extract(content)
         """Whole important extracted details"""
+
+    def __repr__(self) -> str:
+        title = self.details["resData"]["metadata"]["title"]
+        url = self.details["resData"]["metadata"]["url"]
+        return rf'{self.__module__}.{self.__class__.__name__} title="{title}" url="{url}">'
 
     def __call__(self) -> dict[str, t.Any]:
         """Whole important extracted details"""

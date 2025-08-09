@@ -12,8 +12,8 @@ from moviebox_api import Auto
 
 async def main():
     auto = Auto()
-    movie_saved_to, subtitle_saved_to = await auto.run("Avatar")
-    print(movie_saved_to, subtitle_saved_to, sep="\n")
+    movie_path, subtitle_path = await auto.run("Avatar")
+    print(movie_path, subtitle_path, sep="\n")
     # Output
     # /.../Avatar - 1080P.mp4
     # /.../Avatar - English.srt
@@ -23,6 +23,65 @@ if __name__ == "__main__":
 
     asyncio.run(main())
 
+```
+
+## More Control
+Prompt for movie confirmation prior to download
+
+### Movie
+
+```python
+# $ pip install 'moviebox-api[cli]'
+
+from moviebox_api.cli import Downloader
+
+async def main():
+    downloader = Downloader()
+    movie_path, subtitle_path = await downloader.download_movie("avatar")
+    print(movie_path, subtitle_path, sep="\n")
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
+```
+
+### TV-Series
+
+```python
+from moviebox_api.cli import Downloader
+
+async def main():
+    downloader = Downloader()
+    episodes_content_map = await downloader.download_tv_series(
+        "Merlin",
+        season=1,
+        episode=1,
+        limit=2,
+        # limit=13 # This will download entire 13 episodes of season 1
+    )
+
+    print(episodes_content_map)
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
+
+    # output
+```
+
+```json
+    {
+      1: {
+        "captions_path" : ["/..S1E1 - english.srt"],
+        "movie_path" : "/..S1E1.mp4",
+      },
+      2: {
+        "captions_path" : ["/..S1E1 - english.srt"],
+        "movie_path" : "/..S1E2.mp4",
+      }
+    }
 ```
 """
 

@@ -19,7 +19,7 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 
 - Search & download movies, tv-series and their subtitles.
 - Native pydantic modelling of responses
-- Fully asynchronous
+- Fully asynchronous with synchronous support for major operations
 
 ## Installation
 
@@ -102,6 +102,70 @@ if __name__=="__main__":
         )
 ```
 
+
+
+#### More Control
+
+Prompt for item confirmation prior to download
+
+##### Movie
+
+```python
+# $ pip install 'moviebox-api[cli]'
+
+from moviebox_api.cli import Downloader
+
+async def main():
+    downloader = Downloader()
+    movie_path, subtitle_path = await downloader.download_movie("avatar")
+    print(movie_path, subtitle_path, sep="\n")
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
+```
+
+##### TV-Series
+
+```python
+from moviebox_api.cli import Downloader
+
+async def main():
+    downloader = Downloader()
+    episodes_content_map = await downloader.download_tv_series(
+        "Merlin",
+        season=1,
+        episode=1,
+        limit=2,
+        # limit=13 # This will download entire 13 episodes of season 1
+    )
+
+    print(episodes_content_map)
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
+
+    # output
+```
+
+```json
+    {
+      1: {
+        "captions_path" : ["/..S1E1 - english.srt"],
+        "movie_path" : "/..S1E1.mp4",
+      },
+      2: {
+        "captions_path" : ["/..S1E1 - english.srt"],
+        "movie_path" : "/..S1E2.mp4",
+      }
+    }
+```
+
+For more details youn can go through the [full documentation](./docs/README.md)
+
 </details>
 
 
@@ -111,10 +175,10 @@ if __name__=="__main__":
 
 ### Commandline
 
-```
+```sh
 # $ python -m moviebox_api --help
 
-Usage: python -m moviebox_api [OPTIONS] COMMAND [ARGS]...
+Usage: moviebox [OPTIONS] COMMAND [ARGS]...
 
   Search and download movies/tv-series and their subtitles. envvar-prefix :
   MOVIEBOX
@@ -128,6 +192,7 @@ Commands:
   download-series   Search and download tv series.
   homepage-content  Show contents displayed at landing page
   mirror-hosts      Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST]
+  popular-search    Movies/tv-series many people are searching now
 ```
 
 </summary>
@@ -145,7 +210,7 @@ $ python -m moviebox_api download-movie <Movie title>
 
 </summary>
 
-```
+```sh
 # python -m moviebox_api download-movie --help
 
 Usage: moviebox download-movie [OPTIONS] TITLE
@@ -206,7 +271,7 @@ $ python -m moviebox_api download-series <Series title> -s <season number> -e <e
 
 </summary>
 
-```
+```sh
 # python -m moviebox_api download-series --help
 
 Usage: moviebox download-series [OPTIONS] TITLE

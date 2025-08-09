@@ -9,22 +9,30 @@ import click
 
 from moviebox_api import __version__
 from moviebox_api.cli.downloader import Downloader
-from moviebox_api.cli.extras import homepage_content, mirror_hosts, popular_search
+from moviebox_api.cli.extras import (
+    homepage_content_command,
+    mirror_hosts_command,
+    popular_search_command,
+)
 from moviebox_api.cli.helpers import (
     command_context_settings,
-    loop,
     prepare_start,
     process_download_runner_params,
     show_any_help,
 )
-from moviebox_api.constants import (
-    CURRENT_WORKING_DIR,
-    DOWNLOAD_QUALITIES,
-)
+from moviebox_api.constants import CURRENT_WORKING_DIR, DOWNLOAD_QUALITIES, loop
 from moviebox_api.download import (
     CaptionFileDownloader,
     MediaFileDownloader,
 )
+
+__all__ = [
+    "download_movie_command",
+    "download_tv_series_command",
+    "mirror_hosts_command",
+    "homepage_content_command",
+    "popular_search_command",
+]
 
 DEBUG = os.getenv("DEBUG", "0") == "1"
 
@@ -163,7 +171,7 @@ def moviebox():
     help="Do not prompt for movie confirmation : False",
 )
 @click.help_option("-h", "--help")
-def download_movie(
+def download_movie_command(
     title: str,
     year: int,
     quality: str,
@@ -351,7 +359,7 @@ def download_movie(
     help="Do not prompt for tv-series confirmation : False",
 )
 @click.help_option("-h", "--help")
-def download_tv_series(
+def download_tv_series_command(
     title: str,
     year: int,
     season: int,
@@ -399,11 +407,11 @@ def download_tv_series(
 def main():
     """Entry point"""
     try:
-        moviebox.add_command(download_movie, "download-movie")
-        moviebox.add_command(download_tv_series, "download-series")
-        moviebox.add_command(mirror_hosts, "mirror-hosts")
-        moviebox.add_command(homepage_content, "homepage-content")
-        moviebox.add_command(popular_search, "popular-search")
+        moviebox.add_command(download_movie_command, "download-movie")
+        moviebox.add_command(download_tv_series_command, "download-series")
+        moviebox.add_command(mirror_hosts_command, "mirror-hosts")
+        moviebox.add_command(homepage_content_command, "homepage-content")
+        moviebox.add_command(popular_search_command, "popular-search")
         return moviebox()
 
     except Exception as e:

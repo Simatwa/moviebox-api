@@ -122,7 +122,7 @@ class PostListItemSubjectModel(BaseModel):
     rate: int
     releaseDate: date
     sniffUrl: HttpUrl | str
-    sourceUrl: HttpUrl
+    sourceUrl: HttpUrl | str
     subjectId: str
     subjectType: SubjectType
     title: str

@@ -11,6 +11,7 @@ from moviebox_api.constants import (
     DEFAULT_CAPTION_LANGUAGE,
     DownloadQualitiesType,
     SubjectType,
+    loop,
 )
 from moviebox_api.core import Session
 from moviebox_api.download import (
@@ -20,7 +21,10 @@ from moviebox_api.download import (
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
+from moviebox_api.helpers import assert_instance
 from moviebox_api.models import SearchResultsItem
+
+__all__ = ["Downloader"]
 
 
 class Downloader:
@@ -32,6 +36,7 @@ class Downloader:
         Args:
             session (Session, optional): MovieboxAPI httpx request session . Defaults to Session().
         """
+        assert_instance(session, Session, "session")
         self._session = session
 
     async def download_movie(
@@ -212,3 +217,19 @@ class Downloader:
             response[current_episode] = current_episode_details
 
         return response
+
+    def download_movie_sync(
+        self,
+        *args,
+        **kwargs,
+    ) -> tuple[Path | None, list[Path] | None]:
+        """Synchronously search movie by name and proceed to download it."""
+        return loop.run_until_complete(*args, **kwargs)
+
+    def download_tv_series_sync(
+        self,
+        *args,
+        **kwargs,
+    ) -> dict[int, dict[str, Path | list[Path]]]:
+        """Synchronously search tv-series by name and proceed to download its episodes."""
+        return loop.run_until_complete(self.download_tv_series(*args, **kwargs))

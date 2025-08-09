@@ -1,6 +1,6 @@
 [project]
 name = "moviebox-api"
-version = "0.1.6"
+version = "0.1.7"
 description = "Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-series and their subtitles."
 readme = "README.md"
 license="Unlicense"
@@ -27,8 +27,8 @@ dependencies = [
 ]
 
 [project.scripts]
-moviebox-api = "moviebox_api.cli:main"
-moviebox = "moviebox_api.cli:main"
+moviebox-api = "moviebox_api.cli.interface:main"
+moviebox = "moviebox_api.cli.interface:main"
 
 [project.urls]
 homepage = "https://github.com/Simatwa/moviebox-api"

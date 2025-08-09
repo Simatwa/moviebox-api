@@ -4,15 +4,15 @@ import click
 import rich
 from rich.table import Table
 
-from moviebox_api.cli.helpers import command_context_settings, loop
-from moviebox_api.constants import MIRROR_HOSTS
+from moviebox_api.cli.helpers import command_context_settings
+from moviebox_api.constants import MIRROR_HOSTS, loop
 from moviebox_api.core import Homepage, PopularSearch
 from moviebox_api.requests import Session
 
 
 @click.command(context_settings=command_context_settings)
 @click.option("-J", "--json", is_flag=True, help="Output details in json format")
-def mirror_hosts(json: bool):
+def mirror_hosts_command(json: bool):
     """Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST]"""
 
     if json:
@@ -48,7 +48,7 @@ def mirror_hosts(json: bool):
     is_flag=True,
     help="Show banner content only : False",
 )
-def homepage_content(json: bool, title: str, banner: bool):
+def homepage_content_command(json: bool, title: str, banner: bool):
     """Show contents displayed at landing page"""
     # TODO: Add automated test for this command
     session = Session()
@@ -154,7 +154,7 @@ def homepage_content(json: bool, title: str, banner: bool):
     is_flag=True,
     help="Output details in json format : False",
 )
-def popular_search(json: bool):
+def popular_search_command(json: bool):
     """Movies/tv-series many people are searching now"""
     search = PopularSearch(Session())
     items = loop.run_until_complete(search.get_content_model())

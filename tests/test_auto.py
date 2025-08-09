@@ -12,6 +12,13 @@ async def test_movie_auto():
     assert caption_response.is_success
 
 
+def test_movie_auto_sync():
+    auto = Auto()
+    movie_response, caption_response = auto.run_sync(query=MOVIE_KEYWORD, test=True)
+    assert movie_response.is_success
+    assert caption_response.is_success
+
+
 # TODO: Make this test work
 
 """
