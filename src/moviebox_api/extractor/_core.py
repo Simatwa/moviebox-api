@@ -36,12 +36,9 @@ __all__ = [
 
 
 class TagDetailsExtractor:
-    """Extracts specific item details from html tags of the page
+    """Extracts specific-item details from html tags of the page
 
-    #### Pros
-    - It's super fast than `JsonDetailsExtractor`
-
-    #### Cons
+    #### Note:
     - Does not extract season details. Use `JsonDetailsExtractor` instead.
     - Also this extraction method suffers from content restriction
     - e.g "This content is not available on the website. Please download our Android app to access it."
@@ -187,10 +184,10 @@ class TagDetailsExtractor:
 
 
 class JsonDetailsExtractor:
-    """Exracts specific item details from json-formatted data appended on the page
+    """Exracts specific-item details from json-formatted data appended on the page
 
-    - Pros : Extracts whole details available.
-    - Cons : Slightly slower than `TagDetailsExtractor`
+    #### Note:
+    - Extracts whole details available.
     """
 
     def __init__(self, content: str):

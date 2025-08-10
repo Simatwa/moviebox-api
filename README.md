@@ -50,9 +50,6 @@ pip install rich click httpx tqdm bs4
 
 ## Usage
 
-> [!NOTE]
-> Much focus right now is on implementing more features. The docs will be updated as time goes by. Otherwise, I cannot document this any better than the code itself, so take a look at [moviebox_api](src/moviebox_api/) package or its [tests](tests).
-
 <details open>
 
 <summary>
@@ -203,7 +200,7 @@ Commands:
 
 #### Download Movie
 
-```
+```sh
 $ python -m moviebox_api download-movie <Movie title>
 # e.g python -m moviebox_api download-movie Avatar
 ```
@@ -264,7 +261,7 @@ Options:
 
 #### Download Series
 
-```
+```sh
 $ python -m moviebox_api download-series <Series title> -s <season number> -e <episode number>
 # e.g python -m moviebox_api download-series Merlin -s 1 -e 1
 ```
@@ -342,6 +339,6 @@ Options:
 
 > "All videos and pictures on MovieBox are from the Internet, and their copyrights belong to the original creators. We only provide webpage services and do not store, record, or upload any content." - moviebox.ph as on *Sunday 13th, July 2025*
 
-Long live Moviebox spirit
+Long live Moviebox spirit.
 
 <p align="center"> Made with ❤️</p>
