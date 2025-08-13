@@ -39,7 +39,7 @@ def assert_membership(value: t.Any, elements: t.Iterable, identity="Value"):
     Args:
         value (t.Any): member to be checked against.
         elements (t.Iterable): Iterables of members.
-        identity (str, optional):. Defaults to "Value".
+        identity (str, optional): Defaults to "Value".
     """
     assert value in elements, f"{identity} '{value}' is not one of {elements}"
 
@@ -48,7 +48,7 @@ def assert_instance(obj: object, class_or_tuple, name: str = "Parameter") -> t.N
     """assert obj an instance of class_or_tuple"""
 
     assert isinstance(obj, class_or_tuple), (
-        f"{name} value needs to be an instace of/any of {class_or_tuple} not {type(obj)}"
+        f"{name} value needs to be an instance of/any of {class_or_tuple} not {type(obj)}"
     )
 
 
