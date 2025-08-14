@@ -12,20 +12,6 @@ async def main():
     )
 
     print(episodes_content_map)
-    # output
-
-    """
-    {
-      1: {
-        "captions_path" : ["/..S1E1 - english.srt"],
-        "movie_path" : "/..S1E1.mp4",
-      },
-      2: {
-        "captions_path" : ["/..S1E1 - english.srt"],
-        "movie_path" : "/..S1E2.mp4",
-      }
-    }
-    """
 
 
 if __name__ == "__main__":
