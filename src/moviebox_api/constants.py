@@ -1,14 +1,20 @@
 """This module stores constant variables"""
 
-import asyncio
 import os
 import typing as t
 from enum import IntEnum, StrEnum
 from pathlib import Path
 
+from throttlebuster.constants import (
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_THREADS,
+    DEFAULT_THREADS_LIMIT,
+    DOWNLOAD_PART_EXTENSION,
+    DownloadMode,
+)
+
 from moviebox_api import logger
 
-loop = asyncio.new_event_loop()
 """asyncio event loop"""
 
 MIRROR_HOSTS = (
@@ -78,7 +84,7 @@ DOWNLOAD_QUALITIES = (
 
 DEFAULT_CAPTION_LANGUAGE = "English"
 
-DEFAULT_SHORT_CAPTION_LANGUAGE = "en"
+DEFAULT_CAPTION_LANGUAGE_SHORT = "en"
 
 CURRENT_WORKING_DIR = Path(os.getcwd())
 """Directory where contents will be saved to by default"""

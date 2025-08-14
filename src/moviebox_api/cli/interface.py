@@ -1,16 +1,12 @@
 """Contains the actual console commands"""
 
+import asyncio
 import logging
 import os
 import sys
 from pathlib import Path
 
 import click
-from throttlebuster.constants import (
-    THREADS_LIMIT,
-    DOWNLOAD_PART_EXTENSION,
-    DownloadMode,
-)
 
 from moviebox_api import __version__
 from moviebox_api.cli.downloader import Downloader
@@ -25,7 +21,15 @@ from moviebox_api.cli.helpers import (
     process_download_runner_params,
     show_any_help,
 )
-from moviebox_api.constants import CURRENT_WORKING_DIR, DOWNLOAD_QUALITIES, loop
+from moviebox_api.constants import (
+    CURRENT_WORKING_DIR,
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_THREADS,
+    DEFAULT_THREADS_LIMIT,
+    DOWNLOAD_PART_EXTENSION,
+    DOWNLOAD_QUALITIES,
+    DownloadMode,
+)
 from moviebox_api.download import (
     CaptionFileDownloader,
     MediaFileDownloader,
@@ -54,160 +58,170 @@ def moviebox():
     "-y",
     "--year",
     type=click.INT,
-    help="Year filter for the movie to proceed with : 0",
+    help="Year filter for the movie to proceed with",
     default=0,
+    show_default=True,
 )
 @click.option(
     "-q",
     "--quality",
-    help="Media quality to be downloaded : BEST",
+    help="Media quality to be downloaded",
     type=click.Choice(DOWNLOAD_QUALITIES, case_sensitive=False),
     default="BEST",
+    show_default=True,
 )
 @click.option(
     "-d",
     "--dir",
-    help="Directory for saving the movie to : PWD",
+    help="Directory for saving the movie to",
     type=click.Path(exists=True, file_okay=False),
     default=CURRENT_WORKING_DIR,
+    show_default=True,
 )
 @click.option(
     "-D",
     "--caption-dir",
-    help="Directory for saving the caption file to : PWD",
+    help="Directory for saving the caption file to",
     type=click.Path(exists=True, file_okay=False),
     default=CURRENT_WORKING_DIR,
-)
-@click.option(
-    "-Z",
-    "--chunk-size",
-    type=click.IntRange(min=1, max=10000),
-    help="Chunk-size for downloading files in KB : 256",
-    default=256,
+    show_default=True,
 )
 @click.option(
     "-m",
-    "--download-mode",
+    "--mode",
     type=click.Choice(DownloadMode.map().keys(), case_sensitive=False),
-    help="Start the download, resume or set automatically : AUTO",
+    help="Start the download, resume or set automatically",
     default=DownloadMode.AUTO.value,
-)
-@click.option(
-    "-c",
-    "--colour",
-    help="Progress bar display colour : cyan",
-    default="cyan",
-)
-@click.option(
-    "-A",
-    "--ascii",
-    is_flag=True,
-    help="Use unicode (smooth blocks) to fill the progress-bar meter : False",
+    show_default=True,
 )
 @click.option(
     "-x",
     "--language",
-    help="Caption language filter : [English]",
+    help="Caption language filter",
     multiple=True,
     default=["English"],
+    show_default=True,
 )
 @click.option(
     "-M",
     "--movie-filename-tmpl",
-    help="Template for generating movie filename : [default]",
+    help="Template for generating movie filename",
     default=MediaFileDownloader.movie_filename_template,
+    show_default=True,
 )
 @click.option(
     "-C",
     "--caption-filename-tmpl",
-    help="Template for generating caption filename : [default]",
+    help="Template for generating caption filename",
     default=CaptionFileDownloader.movie_filename_template,
+    show_default=True,
 )
 @click.option(
     "-t",
     "--threads",
-    type=click.IntRange(1, THREADS_LIMIT),
-    help="Number of threads to carry out the download : 2",
-    default=2,
+    type=click.IntRange(1, DEFAULT_THREADS_LIMIT),
+    help="Number of threads to carry out the download",
+    default=DEFAULT_THREADS,
+    show_default=True,
 )
 @click.option(
     "-P",
     "--part-dir",
-    help="Directory for temporarily saving the downloaded file-parts to : PWD",
+    help="Directory for temporarily saving the downloaded file-parts to",
     type=click.Path(exists=True, file_okay=False, writable=True, resolve_path=True),
     default=CURRENT_WORKING_DIR,
+    show_default=True,
 )
 @click.option(
     "-E",
     "--part-extension",
-    help=f"Filename extension for download parts : {DOWNLOAD_PART_EXTENSION}",
+    help="Filename extension for download parts",
     default=DOWNLOAD_PART_EXTENSION,
+    show_default=True,
 )
 @click.option(
     "-N",
     "--chunk-size",
     type=click.INT,
-    help="Streaming download chunk size in kilobytes : 256",
-    default=256,
+    help="Streaming download chunk size in kilobytes",
+    default=DEFAULT_CHUNK_SIZE,
+    show_default=True,
 )
 @click.option(
     "-B",
     "--merge-buffer-size",
     type=click.IntRange(1, 102400),
-    default=256,
-    help="Buffer size for merging the separated files in kilobytes : 256",
+    help="Buffer size for merging the separated files in kilobytes [default : CHUNK_SIZE]",
+    show_default=True,
 )
 @click.option(
-    "--progress-bar/--no-progress-bar",
-    help="Display or disable progress-bar : True",
+    "-c",
+    "--colour",
+    help="Progress bar display colour",
+    default="cyan",
+    show_default=True,
+)
+@click.option(
+    "-A",
+    "--ascii",
+    is_flag=True,
+    help="Use unicode (smooth blocks) to fill the progress-bar meter",
+)
+@click.option(
+    "-z",
+    "--disable-progress-bar",
+    is_flag=True,
+    help="Do not show download progress-bar",
     default=True,
 )
 @click.option(
     "--leave/--no-leave",
     default=True,
-    help="Keep all leaves of the progressbar : True",
+    help="Keep all leaves of the progress-bar",
+    show_default=True,
 )
 @click.option(
     "--caption/--no-caption",
-    help="Download caption file : True",
+    help="Download caption file",
     default=True,
+    show_default=True,
 )
 @click.option(
     "-O",
     "--caption-only",
     is_flag=True,
-    help="Download caption file only and ignore movie : False",
+    help="Download caption file only and ignore movie",
 )
 @click.option(
     "-S",
     "--simple",
     is_flag=True,
-    help="Show download percentage and bar only in progressbar : False",
+    help="Show download percentage and bar only in progressbar",
 )
 @click.option(
     "-T",
     "--test",
     is_flag=True,
-    help="Just test if download is possible but do not actually download : False",
+    help="Just test if download is possible but do not actually download",
 )
 @click.option(
     "-V",
     "--verbose",
     count=True,
-    help="Show more detailed interactive texts : False",
+    help="Show more detailed interactive texts",
     default=0,
 )
 @click.option(
     "-Q",
     "--quiet",
     is_flag=True,
-    help="Disable showing interactive texts on the progress (logs) : False",
+    help="Disable showing interactive texts on the progress (logs)",
 )
 @click.option(
     "-Y",
     "--yes",
     is_flag=True,
-    help="Do not prompt for movie confirmation : False",
+    help="Do not prompt for movie confirmation",
 )
 @click.help_option("-h", "--help")
 def download_movie_command(
@@ -231,7 +245,7 @@ def download_movie_command(
     prepare_start(quiet, verbose=verbose)
 
     downloader = Downloader()
-    loop.run_until_complete(
+    asyncio.get_event_loop().run_until_complete(
         downloader.download_movie(
             title,
             year=year,
@@ -257,6 +271,7 @@ def download_movie_command(
     type=click.INT,
     help="Year filter for the series to proceed with : 0",
     default=0,
+    show_default=True,
 )
 @click.option(
     "-s",
@@ -276,160 +291,170 @@ def download_movie_command(
     "-l",
     "--limit",
     type=click.IntRange(1, 1000),
-    help="Total number of episodes to download in the season : 1",
+    help="Total number of episodes to download in the season",
     default=1,
+    show_default=True,
 )
 @click.option(
     "-q",
     "--quality",
-    help="Media quality to be downloaded : BEST",
+    help="Media quality to be downloaded",
     type=click.Choice(DOWNLOAD_QUALITIES, case_sensitive=False),
     default="BEST",
+    show_default=True,
 )
 @click.option(
     "-x",
     "--language",
-    help="Caption language filter : [English]",
+    help="Caption language filter",
     multiple=True,
     default=["English"],
+    show_default=True,
 )
 @click.option(
     "-d",
     "--dir",
-    help="Directory for saving the series file to : PWD",
+    help="Directory for saving the series file to",
     type=click.Path(exists=True, file_okay=False),
     default=CURRENT_WORKING_DIR,
+    show_default=True,
 )
 @click.option(
     "-D",
     "--caption-dir",
-    help="Directory for saving the caption file to : PWD",
+    help="Directory for saving the caption file to",
     type=click.Path(exists=True, file_okay=False),
     default=CURRENT_WORKING_DIR,
-)
-@click.option(
-    "-Z",
-    "--chunk-size",
-    type=click.IntRange(min=1, max=10000),
-    help="Chunk-size for downloading files in KB : 256",
-    default=256,
+    show_default=True,
 )
 @click.option(
     "-m",
     "--mode",
-    type=click.Choice(["START", "RESUME", "AUTO"], case_sensitive=False),
-    help="Start new download, resume or set automatically : AUTO",
-    default="AUTO",
+    type=click.Choice(DownloadMode.map().keys(), case_sensitive=False),
+    help="Start new download, resume or set automatically",
+    default=DownloadMode.AUTO.value,
+    show_default=True,
 )
 @click.option(
-    "-E",
+    "-L",
     "--episode-filename-tmpl",
-    help="Template for generating series episode filename : [default]",
+    help="Template for generating series episode filename",
     default=MediaFileDownloader.series_filename_template,
+    show_default=True,
 )
 @click.option(
     "-C",
     "--caption-filename-tmpl",
-    help="Template for generating caption filename : [default]",
+    help="Template for generating caption filename",
     default=CaptionFileDownloader.series_filename_template,
-)
-@click.option(
-    "-c",
-    "--colour",
-    help="Progress bar display color : cyan",
-    default="cyan",
-)
-@click.option(
-    "-A",
-    "--ascii",
-    is_flag=True,
-    help="Use unicode (smooth blocks) to fill the progress-bar meter : False",
+    show_default=True,
 )
 @click.option(
     "-t",
     "--threads",
-    type=click.IntRange(1, THREADS_LIMIT),
-    help="Number of threads to carry out the download : 2",
-    default=2,
+    type=click.IntRange(1, DEFAULT_THREADS_LIMIT),
+    help="Number of threads to carry out the download",
+    default=DEFAULT_THREADS,
+    show_default=True,
 )
 @click.option(
     "-P",
     "--part-dir",
-    help="Directory for temporarily saving the downloaded file-parts to : PWD",
+    help="Directory for temporarily saving the downloaded file-parts to",
     type=click.Path(exists=True, file_okay=False, writable=True, resolve_path=True),
     default=CURRENT_WORKING_DIR,
+    show_default=True,
 )
 @click.option(
     "-E",
     "--part-extension",
-    help=f"Filename extension for download parts : {DOWNLOAD_PART_EXTENSION}",
+    help="Filename extension for download parts",
     default=DOWNLOAD_PART_EXTENSION,
+    show_default=True,
 )
 @click.option(
     "-N",
     "--chunk-size",
     type=click.INT,
-    help="Streaming download chunk size in kilobytes : 256",
-    default=256,
+    help="Streaming download chunk size in kilobytes",
+    default=DEFAULT_CHUNK_SIZE,
+    show_default=True,
 )
 @click.option(
     "-B",
     "--merge-buffer-size",
     type=click.IntRange(1, 102400),
-    default=256,
-    help="Buffer size for merging the separated files in kilobytes : 256",
+    help="Buffer size for merging the separated files in kilobytes [default : CHUNK_SIZE]",
+    show_default=True,
 )
 @click.option(
-    "--progress-bar/--no-progress-bar",
-    help="Display or disable progress-bar : True",
+    "-c",
+    "--colour",
+    help="Progress bar display color",
+    default="cyan",
+    show_default=True,
+)
+@click.option(
+    "-A",
+    "--ascii",
+    is_flag=True,
+    help="Use unicode (smooth blocks) to fill the progress-bar meter",
+)
+@click.option(
+    "-z",
+    "--disable-progress-bar",
+    is_flag=True,
+    help="Do not show download progress-bar",
     default=True,
 )
 @click.option(
     "--leave/--no-leave",
     default=True,
-    help="Keep all leaves of the progressbar : True",
+    help="Keep all leaves of the progressbar",
+    show_default=True,
 )
 @click.option(
     "--caption/--no-caption",
-    help="Download caption file : True",
+    help="Download caption file",
     default=True,
+    show_default=True,
 )
 @click.option(
     "-O",
     "--caption-only",
     is_flag=True,
-    help="Download caption file only and ignore movie : False",
+    help="Download caption file only and ignore movie",
 )
 @click.option(
     "-S",
     "--simple",
     is_flag=True,
-    help="Show download percentage and bar only in progressbar : False",
+    help="Show download percentage and bar only in progressbar",
 )
 @click.option(
     "-T",
     "--test",
     is_flag=True,
-    help="Just test if download is possible but do not actually download : False",
+    help="Just test if download is possible but do not actually download",
 )
 @click.option(
     "-V",
     "--verbose",
     count=True,
-    help="Show more detailed interactive texts : False",
+    help="Show more detailed interactive texts",
     default=0,
 )
 @click.option(
     "-Q",
     "--quiet",
     is_flag=True,
-    help="Disable showing interactive texts on the progress (logs) : False",
+    help="Disable showing interactive texts on the progress (logs)",
 )
 @click.option(
     "-Y",
     "--yes",
     is_flag=True,
-    help="Do not prompt for tv-series confirmation : False",
+    help="Do not prompt for tv-series confirmation",
 )
 @click.help_option("-h", "--help")
 def download_tv_series_command(
@@ -456,7 +481,7 @@ def download_tv_series_command(
     prepare_start(quiet, verbose=verbose)
 
     downloader = Downloader()
-    loop.run_until_complete(
+    asyncio.get_event_loop().run_until_complete(
         downloader.download_tv_series(
             title,
             year=year,

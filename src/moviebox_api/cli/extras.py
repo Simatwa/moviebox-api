@@ -1,11 +1,13 @@
 """Contains non-essential cli-commands"""
 
+import asyncio
+
 import click
 import rich
 from rich.table import Table
 
 from moviebox_api.cli.helpers import command_context_settings
-from moviebox_api.constants import MIRROR_HOSTS, loop
+from moviebox_api.constants import MIRROR_HOSTS
 from moviebox_api.core import Homepage, PopularSearch
 from moviebox_api.requests import Session
 
@@ -53,7 +55,7 @@ def homepage_content_command(json: bool, title: str, banner: bool):
     # TODO: Add automated test for this command
     session = Session()
     homepage = Homepage(session)
-    homepage_contents = loop.run_until_complete(homepage.get_content_model())
+    homepage_contents = asyncio.get_event_loop().run_until_complete(homepage.get_content_model())
     banners: dict[str, list[list[str]]] = {}
     items: dict[str, list[list[str]]] = {}
     for operating in homepage_contents.operatingList:
@@ -157,7 +159,7 @@ def homepage_content_command(json: bool, title: str, banner: bool):
 def popular_search_command(json: bool):
     """Movies/tv-series many people are searching now"""
     search = PopularSearch(Session())
-    items = loop.run_until_complete(search.get_content_model())
+    items = asyncio.get_event_loop().run_until_complete(search.get_content_model())
 
     if json:
         processed_items = [item.title for item in items]

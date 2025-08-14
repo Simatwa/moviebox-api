@@ -2,23 +2,24 @@
 and later performing the actual download as well
 """
 
-from os import path
 from pathlib import Path
 
 import httpx
 from throttlebuster import DownloadedFile, ThrottleBuster
-from throttlebuster.constants import DOWNLOAD_PART_EXTENSION, DownloadMode
 from throttlebuster.helpers import get_filesize_string, sanitize_filename
 
-from moviebox_api import logger
 from moviebox_api._bases import (
     BaseContentProviderAndHelper,
     BaseFileDownloaderAndHelper,
 )
 from moviebox_api.constants import (
     CURRENT_WORKING_DIR,
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_THREADS,
+    DOWNLOAD_PART_EXTENSION,
     DOWNLOAD_QUALITIES,
     DOWNLOAD_REQUEST_HEADERS,
+    DownloadMode,
     DownloadQualitiesType,
     SubjectType,
 )
@@ -55,7 +56,7 @@ def resolve_media_file_to_be_downloaded(
         downloadable_metadata (DownloadableFilesMetadata): Downloadable files metadata
 
     Raises:
-        RuntimeError: Incase media file matching target quality not found
+        RuntimeError: Incase no media file matched the target quality
         ValueError: Unexpected target media quality
 
     Returns:
@@ -193,27 +194,27 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
     def __init__(
         self,
         dir: Path | str = CURRENT_WORKING_DIR,
-        chunk_size: int = 256,
-        threads: int = 2,
+        chunk_size: int = DEFAULT_CHUNK_SIZE,
+        threads: int = DEFAULT_THREADS,
         part_dir: Path | str = CURRENT_WORKING_DIR,
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
-        **kwargs,
+        **httpx_kwargs,
     ):
         """Constructor for `MediaFileDownloader`
 
         Args:
-            dir (Path | str, optional): Directory for saving the downloaded file to. Defaults to CURRENT_WORKING_DIR.
-            chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to 256.
-            threads (int, optional): Number of threads to carry out the download. Defaults to 2.
-            part_dir (Path | str, optional): Directory for temporarily saving the downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
+            dir (Path | str, optional): Directory for downloaded files to. Defaults to CURRENT_WORKING_DIR.
+            chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
+            threads (int, optional): Number of threads to carry out the download. Defaults to DEFAULT_THREADS.
+            part_dir (Path | str, optional): Directory for temporarily saving downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
 
-        kwargs : Keyword arguments for `httpx.AsyncClient`
+        httpx_kwargs : Keyword arguments for `httpx.AsyncClient`
         """  # noqa: E501
 
-        kwargs.setdefault("cookies", self.request_cookies)
+        httpx_kwargs.setdefault("cookies", self.request_cookies)
 
         self.throttle_buster = ThrottleBuster(
             dir=dir,
@@ -223,7 +224,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
             part_extension=part_extension,
             merge_buffer_size=merge_buffer_size,
             request_headers=self.request_headers,
-            **kwargs,
+            **httpx_kwargs,
         )
 
     @classmethod
@@ -277,7 +278,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         media_file: MediaFileMetadata,
         filename: str | SearchResultsItem,
         progress_hook: callable = None,
-        download_mode: DownloadMode = DownloadMode.AUTO,
+        mode: DownloadMode = DownloadMode.AUTO,
         disable_progress_bar: bool = None,
         file_size: int = None,
         keep_parts: bool = False,
@@ -294,7 +295,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
             media_file (MediaFileMetadata): Movie/tv-series/music to be downloaded.
             filename (str, optional): Filename for the downloaded content. Defaults to None.
             progress_hook (callable, optional): Function to call with the download progress information. Defaults to None.
-            download_mode (DownloadMode, optional): Whether to start or resume incomplete download. Defaults DownloadMode.AUTO.
+            mode (DownloadMode, optional): Whether to start or resume incomplete download. Defaults DownloadMode.AUTO.
             disable_progress_bar (bool, optional): Do not show progress_bar. Defaults to None (decide based on progress_hook).
             file_size (int, optional): Size of the file to be downloaded. Defaults to None.
             keep_parts (bool, optional): Whether to retain the separate download parts. Defaults to False.
@@ -317,11 +318,11 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
                 search_results_item=filename, media_file=media_file, **filename_kwargs
             )
 
-        response = await self.throttle_buster.run(
+        return await self.throttle_buster.run(
             url=str(media_file.url),
             filename=filename,
             progress_hook=progress_hook,
-            download_mode=download_mode,
+            mode=mode,
             disable_progress_bar=disable_progress_bar,
             file_size=file_size,
             keep_parts=keep_parts,
@@ -331,7 +332,6 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
             leave=leave,
             ascii=ascii,
         )
-        return response
 
 
 class CaptionFileDownloader(BaseFileDownloaderAndHelper):
@@ -360,19 +360,38 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
 
     def __init__(
         self,
-        dir: str = CURRENT_WORKING_DIR,
-        chunk_size: int = 16,
+        dir: Path | str = CURRENT_WORKING_DIR,
+        chunk_size: int = DEFAULT_CHUNK_SIZE,
+        threads: int = DEFAULT_THREADS,
+        part_dir: Path | str = CURRENT_WORKING_DIR,
+        part_extension: str = DOWNLOAD_PART_EXTENSION,
+        merge_buffer_size: int | None = None,
+        **httpx_kwargs,
     ):
         """Constructor for `CaptionFileDownloader`
         Args:
-            dir (str, optional): Directory for saving the contents under. Defaults to cwd.
-            chunk_size (int, optional): Chunk_size for downloading files in KB. Defaults to 16.
+            dir (Path | str, optional): Directory for downloaded files to. Defaults to CURRENT_WORKING_DIR.
+            chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
+            threads (int, optional): Number of threads to carry out the download. Defaults to DEFAULT_THREADS.
+            part_dir (Path | str, optional): Directory for temporarily saving downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
+            part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
+            merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
 
-        """
-        self.dir = dir
-        self.chunk_size = chunk_size * 1_024
-        self.session = httpx.AsyncClient(headers=self.request_headers, cookies=self.request_cookies)
-        """Httpx client session for downloading the file"""
+        httpx_kwargs : Keyword arguments for `httpx.AsyncClient`
+        """  # noqa: E501
+
+        httpx_kwargs.setdefault("cookies", self.request_cookies)
+
+        self.throttle_buster = ThrottleBuster(
+            dir=dir,
+            chunk_size=chunk_size,
+            threads=threads,
+            part_dir=part_dir,
+            part_extension=part_extension,
+            merge_buffer_size=merge_buffer_size,
+            request_headers=self.request_headers,
+            **httpx_kwargs,
+        )
 
     @classmethod
     def generate_filename(
@@ -428,48 +447,32 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         self,
         caption_file: CaptionFileMetadata,
         filename: str | SearchResultsItem,
-        test: bool = False,
-        **filename_kwargs,
-    ) -> Path | httpx.Response:
+        season: int = 0,
+        episode: int = 0,
+        **run_kwargs,
+    ) -> DownloadedFile | httpx.Response:
         """Performs the actual download, incase already downloaded then return its Path.
 
         Args:
             caption_file (CaptionFileMetadata): Movie/tv-series/music caption file details.
             filename (str|SearchResultsItem): Movie filename
-            test (bool, optional): Just test if download is possible but do not actually download. Defaults to False.
+            season (int): Season number of the series. Defaults to 0.
+            episde (int): Episode number of the series. Defaults to 0.
 
-        filename_kwargs: Keyworded arguments for generating filename incase instance of filename is SearchResultsItem.
+        run_kwargs: Keyword arguments for `ThrottleBuster.run`
 
         Returns:
-            Path|httpx.Response: Path where the caption file has been saved to or httpx Response (test).
-        """  # noqa: E501
+            Path | httpx.Response: Path where the caption file has been saved to or httpx Response (test).
+        """
 
         assert_instance(caption_file, CaptionFileMetadata, "caption_file")
 
         if isinstance(filename, SearchResultsItem):
             # Lets generate filename
-            filename = self.generate_filename(filename, **filename_kwargs)
-
-        save_to = Path(dir) / filename
-
-        if save_to.exists() and path.getsize(save_to) == caption_file.size:
-            logger.warning(f"Caption file already downloaded - {save_to}.")
-            return save_to
-
-        size_with_unit = get_filesize_string(caption_file.size)
-
-        logger.info(f"Downloading caption file ({size_with_unit}). Writing to ({save_to})")
-
-        async with self.session.stream("GET", str(caption_file.url)) as response:
-            response.raise_for_status()
-
-            if test:
-                logger.info(f"Download test passed successfully {response.__repr__}")
-                return response
-
-            with open(save_to, mode="wb") as fh:
-                async for chunk in response.aiter_bytes(self.chunk_size):
-                    fh.write(chunk)
-
-        logger.info(f"{filename} - {size_with_unit} ✅")
-        return save_to
+            filename = self.generate_filename(
+                search_results_item=filename,
+                caption_file=caption_file,
+                season=season,
+                episode=episode,
+            )
+        return await self.throttle_buster.run(url=str(caption_file.url), filename=filename, **run_kwargs)

@@ -1,7 +1,9 @@
 """Gets the work done - downloads media with flexible flow control"""
 
+import asyncio
 from pathlib import Path
 
+import httpx
 from throttlebuster import DownloadedFile
 from throttlebuster.constants import DOWNLOAD_PART_EXTENSION
 
@@ -12,9 +14,11 @@ from moviebox_api.cli.helpers import (
 from moviebox_api.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CAPTION_LANGUAGE,
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_THREADS,
+    DOWNLOAD_QUALITIES,
     DownloadQualitiesType,
     SubjectType,
-    loop,
 )
 from moviebox_api.core import Session
 from moviebox_api.download import (
@@ -24,7 +28,7 @@ from moviebox_api.download import (
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
-from moviebox_api.helpers import assert_instance
+from moviebox_api.helpers import assert_instance, assert_membership
 from moviebox_api.models import SearchResultsItem
 
 __all__ = ["Downloader"]
@@ -52,17 +56,20 @@ class Downloader:
         quality: DownloadQualitiesType = "BEST",
         movie_filename_tmpl: str = MediaFileDownloader.movie_filename_template,
         caption_filename_tmpl: str = CaptionFileDownloader.movie_filename_template,
-        language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
+        language: tuple[str] = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
         search_function: callable = perform_search_and_get_item,
-        chunk_size: int = 256,
-        threads: int = 2,
+        chunk_size: int = DEFAULT_CHUNK_SIZE,
+        threads: int = DEFAULT_THREADS,
         part_dir: Path | str = CURRENT_WORKING_DIR,
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
         **run_kwargs,
-    ) -> tuple[DownloadedFile | None, list[Path] | None]:
+    ) -> tuple[
+        DownloadedFile | httpx.Response | None,
+        list[DownloadedFile | httpx.Response] | None,
+    ]:
         """Search movie by name and proceed to download it.
 
         Args:
@@ -78,8 +85,8 @@ class Downloader:
             download_caption (bool, optional): Whether to download caption or not. Defaults to False.
             caption_only (bool, optional): Whether to ignore movie file or not. Defaults to False.
             search_function (callable, optional): Accepts `session`, `title`, `year`, `subject_type` & `yes` and returns `SearchResultsItem`.
-            chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to 256.
-            threads (int, optional): Number of threads to carry out the download. Defaults to 2.
+            chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
+            threads (int, optional): Number of threads to carry out the download. Defaults to DEFAULT_THREADS.
             part_dir (Path | str, optional): Directory for temporarily saving the downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
@@ -87,14 +94,17 @@ class Downloader:
         run_kwargs: Other keyword arguments for `MediaFileDownloader.run`
 
         Returns:
-            tuple[DownloadedFile | None, list[Path] | None]: Path to downloaded movie and downloaded caption files.
+            tuple[DownloadedFile | httpx.Response  | None, list[DownloadedFile | httpx.Response ] | None]: Path to downloaded movie and downloaded caption files.
         """  # noqa: E501
-        MediaFileDownloader.movie_filename_template = movie_filename_tmpl
-        CaptionFileDownloader.movie_filename_template = caption_filename_tmpl
+
+        assert_membership(quality, DOWNLOAD_QUALITIES)
 
         assert callable(search_function), (
             f"Value for search_function must be callable not {type(search_function)}"
         )
+
+        MediaFileDownloader.movie_filename_template = movie_filename_tmpl
+        CaptionFileDownloader.movie_filename_template = caption_filename_tmpl
 
         target_movie = await search_function(
             self._session,
@@ -108,23 +118,38 @@ class Downloader:
             f"Search function {search_function.__name__} must return an instance of "
             f"{SearchResultsItem} not {type(target_movie)}"
         )
+
         downloadable_details_inst = DownloadableMovieFilesDetail(self._session, target_movie)
+
         downloadable_details = await downloadable_details_inst.get_content_model()
+
         target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_details)
-        subtitles_saved_to = []
+
+        subtitle_details_items = []
+
         if download_caption or caption_only:
             for lang in language:
                 target_caption_file = get_caption_file_or_raise(downloadable_details, lang)
-                caption_downloader = CaptionFileDownloader(dir=caption_dir, chunk_size=chunk_size)
-                subtitle_saved_to = await caption_downloader.run(
+                caption_downloader = CaptionFileDownloader(
+                    dir=caption_dir,
+                    chunk_size=chunk_size,
+                    threads=threads,
+                    part_dir=part_dir,
+                    part_extension=part_extension,
+                    merge_buffer_size=merge_buffer_size,
+                )
+
+                subtitle_details = await caption_downloader.run(
                     caption_file=target_caption_file,
                     filename=target_movie,
-                    test=run_kwargs.get("test", False),
+                    **run_kwargs,
                 )
-                subtitles_saved_to.append(subtitle_saved_to)
+
+                subtitle_details_items.append(subtitle_details)
+
             if caption_only:
                 # terminate
-                return (None, subtitles_saved_to)
+                return (None, subtitle_details_items)
 
         movie_downloader = MediaFileDownloader(
             dir=dir,
@@ -138,7 +163,7 @@ class Downloader:
         movie_details = await movie_downloader.run(
             media_file=target_media_file, filename=target_movie, **run_kwargs
         )
-        return (movie_details, subtitles_saved_to)
+        return (movie_details, subtitle_details_items)
 
     async def download_tv_series(
         self,
@@ -157,13 +182,16 @@ class Downloader:
         caption_only: bool = False,
         limit: int = 1,
         search_function: callable = perform_search_and_get_item,
-        chunk_size: int = 256,
-        threads: int = 2,
+        chunk_size: int = DEFAULT_CHUNK_SIZE,
+        threads: int = DEFAULT_THREADS,
         part_dir: Path | str = CURRENT_WORKING_DIR,
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
         **run_kwargs,
-    ) -> dict[int, dict[str, DownloadedFile | list[Path]]]:
+    ) -> dict[
+        int,
+        dict[str, DownloadedFile | httpx.Response | list[DownloadedFile | httpx.Response]],
+    ]:
         """Search tv-series by name and proceed to download its episodes.
 
         Args:
@@ -182,8 +210,8 @@ class Downloader:
             caption_only (bool, optional): Whether to ignore episode files or not. Defaults to False.
             limit (int, optional): Number of episodes to download including the offset episode. Defaults to 1.
             search_function (callable, optional): Accepts `session`, `title`, `year`, `subject_type` & `yes` and returns item.
-            chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to 256.
-            threads (int, optional): Number of threads to carry out the download. Defaults to 2.
+            chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
+            threads (int, optional): Number of threads to carry out the download. Defaults to DEFAULT_THREADS.
             part_dir (Path | str, optional): Directory for temporarily saving the downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
@@ -191,14 +219,17 @@ class Downloader:
         run_kwargs: Other keyword arguments for `MediaFileDownloader.run`
 
         Returns:
-             dict[int, dict[str, DownloadedFile | list[Path]]]: Episode number and downloaded episode file details and caption files.
+             dict[int, dict[str, DownloadedFile | httpx.Response  | list[DownloadedFile | httpx.Response ]]]: Episode number and downloaded episode file details and caption files.
         """  # noqa: E501
-        MediaFileDownloader.series_filename_template = episode_filename_tmpl
-        CaptionFileDownloader.series_filename_template = caption_filename_tmpl
+
+        assert_membership(quality, DOWNLOAD_QUALITIES)
 
         assert callable(search_function), (
             f"Value for search_function must be callable not {type(search_function)}"
         )
+
+        MediaFileDownloader.series_filename_template = episode_filename_tmpl
+        CaptionFileDownloader.series_filename_template = caption_filename_tmpl
 
         target_tv_series = await search_function(
             self._session,
@@ -215,7 +246,14 @@ class Downloader:
         downloadable_files = DownloadableTVSeriesFilesDetail(self._session, target_tv_series)
         response = {}
 
-        caption_downloader = CaptionFileDownloader(dir=caption_dir, chunk_size=chunk_size)
+        caption_downloader = CaptionFileDownloader(
+            dir=caption_dir,
+            chunk_size=chunk_size,
+            threads=threads,
+            part_dir=part_dir,
+            part_extension=part_extension,
+            merge_buffer_size=merge_buffer_size,
+        )
 
         media_file_downloader = MediaFileDownloader(
             dir=dir,
@@ -234,9 +272,10 @@ class Downloader:
             )
 
             # TODO: Iterate over seasons as well
+            # - With regard to season details
 
             current_episode_details = {}
-            captions_saved_to = []
+            caption_details_items = []
 
             if caption_only or download_caption:
                 for lang in language:
@@ -244,15 +283,18 @@ class Downloader:
 
                     caption_filename = caption_downloader.generate_filename(
                         target_tv_series,
+                        caption_file=target_caption_file,
                         season=season,
                         episode=current_episode,
                     )
-                    caption_saved_to = await caption_downloader.run(
+
+                    caption_details = await caption_downloader.run(
                         caption_file=target_caption_file,
                         filename=caption_filename,
-                        test=run_kwargs.get("test", False),
+                        **run_kwargs,
                     )
-                    captions_saved_to.append(caption_saved_to)
+
+                    caption_details_items.append(caption_details)
 
                 if caption_only:
                     # Avoid downloading tv-series
@@ -260,15 +302,17 @@ class Downloader:
 
             # Download series
 
-            current_episode_details["captions"] = captions_saved_to
+            current_episode_details["captions"] = caption_details_items
 
             target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_files_detail)
 
             filename = media_file_downloader.generate_filename(
                 target_tv_series,
+                media_file=target_media_file,
                 season=season,
                 episode=current_episode,
             )
+
             tv_series_details = await media_file_downloader.run(
                 media_file=target_media_file, filename=filename, **run_kwargs
             )
@@ -282,14 +326,20 @@ class Downloader:
         self,
         *args,
         **kwargs,
-    ) -> tuple[Path | None, list[Path] | None]:
+    ) -> tuple[
+        DownloadedFile | httpx.Response | None,
+        list[DownloadedFile | httpx.Response] | None,
+    ]:
         """Synchronously search movie by name and proceed to download it."""
-        return loop.run_until_complete(self.download_movie(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(self.download_movie(*args, **kwargs))
 
     def download_tv_series_sync(
         self,
         *args,
         **kwargs,
-    ) -> dict[int, dict[str, Path | list[Path]]]:
+    ) -> dict[
+        int,
+        dict[str, DownloadedFile | httpx.Response | list[DownloadedFile | httpx.Response]],
+    ]:
         """Synchronously search tv-series by name and proceed to download its episodes."""
-        return loop.run_until_complete(self.download_tv_series(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(self.download_tv_series(*args, **kwargs))

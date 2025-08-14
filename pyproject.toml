@@ -1,6 +1,6 @@
 [project]
 name = "moviebox-api"
-version = "0.1.9"
+version = "0.2.0"
 description = "Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-series and their subtitles."
 readme = "README.md"
 license="Unlicense"
@@ -20,11 +20,10 @@ classifiers = [
     "Topic :: Communications :: File Sharing",
 ]
 dependencies = [
-    "aiofiles>=24.1.0",
     "bs4>=0.0.2",
     "httpx>=0.28.1",
     "pydantic>=2.11.7",
-    "throttlebuster>=0.1.1",
+    "throttlebuster>=0.1.2",
 ]
 
 [project.scripts]
@@ -65,7 +64,10 @@ select = [
     "UP",     # https://docs.astral.sh/ruff/rules/#pyupgrade-up
     "RUF100", # https://docs.astral.sh/ruff/rules/#ruff-specific-rules-ruf
 ]
-ignore = ["UP031"] # https://docs.astral.sh/ruff/rules/printf-string-formatting/
+ignore = [
+    "UP031",  # https://docs.astral.sh/ruff/rules/printf-string-formatting/
+    "F401"    # https://docs.astral.sh/ruff/rules/unused-import
+]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true

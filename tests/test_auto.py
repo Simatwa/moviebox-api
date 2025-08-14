@@ -1,19 +1,19 @@
 import pytest
 
-from moviebox_api import Auto
+from moviebox_api import MovieAuto
 from tests import MOVIE_KEYWORD
 
 
 @pytest.mark.asyncio
 async def test_movie_auto():
-    auto = Auto()
+    auto = MovieAuto()
     movie_response, caption_response = await auto.run(query=MOVIE_KEYWORD, test=True)
     assert movie_response.is_success
     assert caption_response.is_success
 
 
 def test_movie_auto_sync():
-    auto = Auto()
+    auto = MovieAuto()
     movie_response, caption_response = auto.run_sync(query=MOVIE_KEYWORD, test=True)
     assert movie_response.is_success
     assert caption_response.is_success

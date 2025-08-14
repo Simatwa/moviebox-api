@@ -33,8 +33,10 @@ def test_download_movie_caption_file():
     downloadable_files_detail: DownloadableFilesMetadata = downloadable_files.get_content_model_sync()
     target_caption_file = downloadable_files_detail.english_subtitle_file
 
-    caption_file_downloader = CaptionFileDownloader(target_caption_file)
-    response = caption_file_downloader.run_sync(filename=target_movie.title + "- English.srt", test=True)
+    caption_file_downloader = CaptionFileDownloader()
+    response = caption_file_downloader.run_sync(
+        target_caption_file, filename=target_movie.title + "- English.srt", test=True
+    )
     assert response.is_success
 
 
@@ -52,8 +54,10 @@ def test_download_movie_file():
     downloadable_files_detail: DownloadableFilesMetadata = downloadable_files.get_content_model_sync()
     target_media_file = downloadable_files_detail.best_media_file
 
-    media_file_downloader = MediaFileDownloader(target_media_file)
-    response = media_file_downloader.run_sync(filename=target_movie.title + ".mp4", test=True)
+    media_file_downloader = MediaFileDownloader()
+    response = media_file_downloader.run_sync(
+        target_media_file, filename=target_movie.title + ".mp4", test=True
+    )
     assert response.is_success
 
 
@@ -74,8 +78,8 @@ def test_download_tv_series_caption_file():
     )
     target_caption_file = downloadable_files_detail.english_subtitle_file
 
-    caption_file_downloader = CaptionFileDownloader(target_caption_file)
-    response = caption_file_downloader.run_sync(filename=target_series, test=True)
+    caption_file_downloader = CaptionFileDownloader()
+    response = caption_file_downloader.run_sync(target_caption_file, filename=target_series, test=True)
     assert response.is_success
 
 
@@ -95,6 +99,6 @@ def test_download_tv_series_file():
     )
     target_media_file = downloadable_files_detail.best_media_file
 
-    media_file_downloader = MediaFileDownloader(target_media_file)
-    response = media_file_downloader.run_sync(filename=target_series, test=True)
+    media_file_downloader = MediaFileDownloader()
+    response = media_file_downloader.run_sync(target_media_file, filename=target_series, test=True)
     assert response.is_success

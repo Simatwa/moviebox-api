@@ -4,12 +4,13 @@ Generate models from httpx request responses.
 Also provides object mapping support to specific extracted item details
 """
 
+import asyncio
 import typing as t
 
 from moviebox_api._bases import (
     BaseContentProviderAndHelper,
 )
-from moviebox_api.constants import SubjectType, loop
+from moviebox_api.constants import SubjectType
 from moviebox_api.exceptions import (
     ExhaustedSearchResultsError,
     MovieboxApiException,
@@ -638,23 +639,27 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         Returns:
             str: html formatted contents of the page
         """
-        return loop.run_until_complete(self.get_html_content(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(self.get_html_content(*args, **kwargs))
 
     def get_tag_details_extractor_sync(self, *args, **kwargs) -> TagDetailsExtractor:
         """Synchronously fetch content and return object that provide ways to extract details from html tags of the page"""  # noqa: E501
-        return loop.run_until_complete(self.get_tag_details_extractor(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(self.get_tag_details_extractor(*args, **kwargs))
 
     def get_json_details_extractor_sync(self, *args, **kwargs) -> JsonDetailsExtractor:
         """Synchronously fetch content and return object that extract details from json-formatted data in the page"""  # noqa: E501
-        return loop.run_until_complete(self.get_json_details_extractor(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(self.get_json_details_extractor(*args, **kwargs))
 
     def get_tag_details_extractor_model_sync(self, *args, **kwargs) -> TagDetailsExtractorModel:
         """Synchronously fetch content and return object that provide ways to model extracted details from html tags"""  # noqa: E501
-        return loop.run_until_complete(self.get_tag_details_extractor_model(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(
+            self.get_tag_details_extractor_model(*args, **kwargs)
+        )
 
     def get_json_details_extractor_model_sync(self, *args, **kwargs) -> JsonDetailsExtractorModel:
         """Synchronously fetch content and return object that models extracted details from json-formatted data in the page"""  # noqa: E501
-        return loop.run_until_complete(self.get_json_details_extractor_model(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(
+            self.get_json_details_extractor_model(*args, **kwargs)
+        )
 
 
 class MovieDetails(BaseItemDetails):

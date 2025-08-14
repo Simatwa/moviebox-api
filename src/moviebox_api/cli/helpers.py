@@ -174,7 +174,8 @@ def process_download_runner_params(params: dict) -> dict:
     Returns:
         dict: Processed parameters
     """
-    params["download_mode"] = DownloadMode.map().get(params.get("mode").lower())
+    params["mode"] = DownloadMode.map().get(params.get("mode").lower())
+
     return params
 
 

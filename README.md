@@ -44,7 +44,7 @@ $ pip install moviebox-api
 ```sh
 pip install moviebox-api --no-deps
 pip install 'pydantic==2.9.2'
-pip install rich click httpx tqdm bs4
+pip install rich click bs4 httpx throttlebuster
 ```
 </details>
 
@@ -59,12 +59,12 @@ pip install rich click httpx tqdm bs4
 </summary>
 
 ```python
-from moviebox_api import Auto
+from moviebox_api import MovieAuto
 
 async def main():
-    auto = Auto()
-    movie_saved_to, subtitle_saved_to = await auto.run("Avatar")
-    print(movie_saved_to, subtitle_saved_to, sep="\n")
+    auto = MovieAuto()
+    movie_file, subtitle_file = await auto.run("Avatar")
+    print(movie_file.saved_to, subtitle_file.saved_to, sep="\n")
     # Output
     # /.../Avatar - 1080P.mp4
     # /.../Avatar - English.srt
@@ -73,30 +73,31 @@ if __name__ == "__main__":
     import asyncio
 
     asyncio.run(main())
-
 ```
 
 Perform download with progress hook
 
 ```python
-from moviebox_api import Auto
+from moviebox_api import MovieAuto
+
 
 async def callback_function(progress: dict):
     percent = (progress["downloaded_size"] / progress["size"]) * 100
 
     print(f">>[{percent:.2f}%] Downloading {progress["filename"]}", end="\r")
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     import asyncio
 
-    auto = Auto(caption_language=None)
+    auto = MovieAuto(caption_language=None)
     asyncio.run(
         auto.run(
-            query="Avatar",
+            query="Avatar", 
             progress_hook=callback_function,
             progress_bar=False
-            )
         )
+    )
 ```
 
 
@@ -112,10 +113,14 @@ Prompt for item confirmation prior to download
 
 from moviebox_api.cli import Downloader
 
+
 async def main():
     downloader = Downloader()
-    movie_path, subtitle_path = await downloader.download_movie("avatar")
-    print(movie_path, subtitle_path, sep="\n")
+    movie_file, subtitle_files = await downloader.download_movie(
+        "avatar",
+    )
+    print(movie_file, subtitle_files, sep="\n")
+
 
 if __name__ == "__main__":
     import asyncio
@@ -144,21 +149,6 @@ if __name__ == "__main__":
     import asyncio
 
     asyncio.run(main())
-
-    # output
-```
-
-```json
-    {
-      "1": {
-        "captions_path" : ["/..S1E1 - english.srt"],
-        "movie_path" : "/..S1E1.mp4"
-      },
-      "2": {
-        "captions_path" : ["/..S1E1 - english.srt"],
-        "movie_path" : "/..S1E2.mp4"
-      }
-    }
 ```
 
 For more details youn can go through the [full documentation](./docs/README.md)
@@ -175,7 +165,7 @@ For more details youn can go through the [full documentation](./docs/README.md)
 ```sh
 # $ python -m moviebox_api --help
 
-Usage: moviebox [OPTIONS] COMMAND [ARGS]...
+Usage: python -m moviebox_api [OPTIONS] COMMAND [ARGS]...
 
   Search and download movies/tv-series and their subtitles. envvar-prefix :
   MOVIEBOX
@@ -210,47 +200,61 @@ $ python -m moviebox_api download-movie <Movie title>
 ```sh
 # python -m moviebox_api download-movie --help
 
-Usage: moviebox download-movie [OPTIONS] TITLE
+Usage: python -m moviebox_api download-movie [OPTIONS] TITLE
 
   Search and download movie.
 
 Options:
-  -y, --year INTEGER              Year filter for the movie to proceed with :
-                                  0
+  -y, --year INTEGER              Year filter for the movie to proceed with
+                                  [default: 0]
   -q, --quality [worst|best|360p|480p|720p|1080p]
-                                  Media quality to be downloaded : BEST
-  -d, --dir DIRECTORY             Directory for saving the movie to : PWD
-  -D, --caption-dir DIRECTORY     Directory for saving the caption file to :
-                                  PWD
-  -Z, --chunk-size INTEGER RANGE  Chunk-size for downloading files in KB : 512
-                                  [1<=x<=10000]
+                                  Media quality to be downloaded  [default:
+                                  BEST]
+  -d, --dir DIRECTORY             Directory for saving the movie to  [default:
+                                  /home/...]
+  -D, --caption-dir DIRECTORY     Directory for saving the caption file to
+                                  [default:
+                                  /home/...]
   -m, --mode [start|resume|auto]  Start the download, resume or set
-                                  automatically : AUTO
-  -c, --colour TEXT               Progress bar display colour : cyan
-  -A, --ascii                     Use unicode (smooth blocks) to fill the
-                                  progress-bar meter : False
-  -x, --language TEXT             Caption language filter : [English]
-  -M, --movie-filename-tmpl TEXT  Template for generating movie filename :
-                                  [default]
+                                  automatically  [default: auto]
+  -x, --language TEXT             Caption language filter  [default: English]
+  -M, --movie-filename-tmpl TEXT  Template for generating movie filename
+                                  [default: %(title)s (%(release_year)d) -
+                                  %(resolution)dP.%(ext)s]
   -C, --caption-filename-tmpl TEXT
-                                  Template for generating caption filename :
-                                  [default]
-  --progress-bar / --no-progress-bar
-                                  Display or disable progress-bar : True
-  --leave / --no-leave            Keep all leaves of the progressbar : True
-  --caption / --no-caption        Download caption file : True
+                                  Template for generating caption filename
+                                  [default: %(title)s (%(release_year)d) -
+                                  %(lanName)s.%(ext)s]
+  -t, --threads INTEGER RANGE     Number of threads to carry out the download
+                                  [default: 2; 1<=x<=1000]
+  -P, --part-dir DIRECTORY        Directory for temporarily saving the
+                                  downloaded file-parts to  [default:
+                                  /home/...]
+  -E, --part-extension TEXT       Filename extension for download parts
+                                  [default: .part]
+  -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes
+                                  [default: 256]
+  -B, --merge-buffer-size INTEGER RANGE
+                                  Buffer size for merging the separated files
+                                  in kilobytes [default : CHUNK_SIZE]
+                                  [1<=x<=102400]
+  -c, --colour TEXT               Progress bar display colour  [default: cyan]
+  -A, --ascii                     Use unicode (smooth blocks) to fill the
+                                  progress-bar meter
+  -z, --disable-progress-bar      Do not show download progress-bar
+  --leave / --no-leave            Keep all leaves of the progress-bar
+                                  [default: leave]
+  --caption / --no-caption        Download caption file  [default: caption]
   -O, --caption-only              Download caption file only and ignore movie
-                                  : False
   -S, --simple                    Show download percentage and bar only in
-                                  progressbar : False
+                                  progressbar
   -T, --test                      Just test if download is possible but do not
-                                  actually download : False
-  -V, --verbose                   Show more detailed interactive texts : False
+                                  actually download
+  -V, --verbose                   Show more detailed interactive texts
   -Q, --quiet                     Disable showing interactive texts on the
-                                  progress (logs) : False
-  -Y, --yes                       Do not prompt for movie confirmation : False
+                                  progress (logs)
+  -Y, --yes                       Do not prompt for movie confirmation
   -h, --help                      Show this message and exit.
-
 ```
 
 </details>
@@ -271,54 +275,67 @@ $ python -m moviebox_api download-series <Series title> -s <season number> -e <e
 ```sh
 # python -m moviebox_api download-series --help
 
-Usage: moviebox download-series [OPTIONS] TITLE
+Usage: python -m moviebox_api download-series [OPTIONS] TITLE
 
   Search and download tv series.
 
 Options:
   -y, --year INTEGER              Year filter for the series to proceed with :
-                                  0
+                                  0  [default: 0]
   -s, --season INTEGER RANGE      TV Series season filter  [1<=x<=1000;
                                   required]
   -e, --episode INTEGER RANGE     Episode offset of the tv-series season
                                   [1<=x<=1000; required]
   -l, --limit INTEGER RANGE       Total number of episodes to download in the
-                                  season : 1  [1<=x<=1000]
+                                  season  [default: 1; 1<=x<=1000]
   -q, --quality [worst|best|360p|480p|720p|1080p]
-                                  Media quality to be downloaded : BEST
-  -x, --language TEXT             Caption language filter : [English]
-  -d, --dir DIRECTORY             Directory for saving the series file to :
-                                  PWD
-  -D, --caption-dir DIRECTORY     Directory for saving the caption file to :
-                                  PWD
-  -Z, --chunk-size INTEGER RANGE  Chunk-size for downloading files in KB : 512
-                                  [1<=x<=10000]
+                                  Media quality to be downloaded  [default:
+                                  BEST]
+  -x, --language TEXT             Caption language filter  [default: English]
+  -d, --dir DIRECTORY             Directory for saving the series file to
+                                  [default: /home/...]
+  -D, --caption-dir DIRECTORY     Directory for saving the caption file to
+                                  [default: /home/...]
   -m, --mode [start|resume|auto]  Start new download, resume or set
-                                  automatically : AUTO
-  -E, --episode-filename-tmpl TEXT
+                                  automatically  [default: auto]
+  -L, --episode-filename-tmpl TEXT
                                   Template for generating series episode
-                                  filename : [default]
+                                  filename  [default: %(title)s
+                                  S%(season)dE%(episode)d -
+                                  %(resolution)dP.%(ext)s]
   -C, --caption-filename-tmpl TEXT
-                                  Template for generating caption filename :
-                                  [default]
-  -c, --colour TEXT               Progress bar display color : cyan
+                                  Template for generating caption filename
+                                  [default: %(title)s S%(season)dE%(episode)d
+                                  - %(lanName)s.%(ext)s]
+  -t, --threads INTEGER RANGE     Number of threads to carry out the download
+                                  [default: 2; 1<=x<=1000]
+  -P, --part-dir DIRECTORY        Directory for temporarily saving the
+                                  downloaded file-parts to  [default:
+                                  /home/...]
+  -E, --part-extension TEXT       Filename extension for download parts
+                                  [default: .part]
+  -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes
+                                  [default: 256]
+  -B, --merge-buffer-size INTEGER RANGE
+                                  Buffer size for merging the separated files
+                                  in kilobytes [default : CHUNK_SIZE]
+                                  [1<=x<=102400]
+  -c, --colour TEXT               Progress bar display color  [default: cyan]
   -A, --ascii                     Use unicode (smooth blocks) to fill the
-                                  progress-bar meter : False
-  --progress-bar / --no-progress-bar
-                                  Display or disable progress-bar : True
-  --leave / --no-leave            Keep all leaves of the progressbar : True
-  --caption / --no-caption        Download caption file : True
+                                  progress-bar meter
+  -z, --disable-progress-bar      Do not show download progress-bar
+  --leave / --no-leave            Keep all leaves of the progressbar
+                                  [default: leave]
+  --caption / --no-caption        Download caption file  [default: caption]
   -O, --caption-only              Download caption file only and ignore movie
-                                  : False
   -S, --simple                    Show download percentage and bar only in
-                                  progressbar : False
+                                  progressbar
   -T, --test                      Just test if download is possible but do not
-                                  actually download : False
-  -V, --verbose                   Show more detailed interactive texts : False
+                                  actually download
+  -V, --verbose                   Show more detailed interactive texts
   -Q, --quiet                     Disable showing interactive texts on the
-                                  progress (logs) : False
-  -Y, --yes                       Do not prompt for tv-series confirmation :
-                                  False
+                                  progress (logs)
+  -Y, --yes                       Do not prompt for tv-series confirmation
   -h, --help                      Show this message and exit.
 
 ```

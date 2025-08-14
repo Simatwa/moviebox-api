@@ -1,7 +1,5 @@
 """Exceptions module"""
 
-from pathlib import Path
-
 from httpx import Response
 
 from moviebox_api._bases import BaseMovieboxException

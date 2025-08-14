@@ -1,13 +1,17 @@
 """Extra functionalities for movies"""
 
+import asyncio
 import warnings
-from pathlib import Path
 
-from httpx import Response
+import httpx
+from throttlebuster import DownloadedFile
 
-from moviebox_api._bases import BaseFileDownloaderAndHelper
 from moviebox_api.constants import (
+    CURRENT_WORKING_DIR,
     DEFAULT_CAPTION_LANGUAGE,
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_THREADS,
+    DOWNLOAD_PART_EXTENSION,
     DOWNLOAD_QUALITIES,
     DownloadQualitiesType,
     SubjectType,
@@ -27,10 +31,10 @@ from moviebox_api.models import (
 )
 from moviebox_api.requests import Session
 
-__all__ = ["Auto"]
+__all__ = ["MovieAuto"]
 
 
-class Auto(BaseFileDownloaderAndHelper):
+class MovieAuto:
     """Search movie based on a given query and proceed to download the first one in the results.
 
     This is a workaround for writing many lines of code at the expense of flow control.
@@ -40,17 +44,42 @@ class Auto(BaseFileDownloaderAndHelper):
         self,
         session: Session = Session(),
         caption_language: str = DEFAULT_CAPTION_LANGUAGE,
+        dir: DownloadedFile | str = CURRENT_WORKING_DIR,
+        caption_dir: DownloadedFile | str = CURRENT_WORKING_DIR,
+        chunk_size: int = DEFAULT_CHUNK_SIZE,
+        threads: int = DEFAULT_THREADS,
+        part_dir: DownloadedFile | str = CURRENT_WORKING_DIR,
+        part_extension: str = DOWNLOAD_PART_EXTENSION,
+        merge_buffer_size: int | None = None,
+        **httpx_kwargs,
     ):
-        """Constructor for `Auto`
+        """Constructor for `MovieAuto`
 
         Args:
             session (Session, optional): MovieboxAPI requests session. Defaults to Session().
             caption_language (str, optional): Caption language filter. Defaults to DEFAULT_CAPTION_LANGUAGE.
+            dir (DownloadedFile | str, optional): Directory for saving downloaded media files to. Defaults to CURRENT_WORKING_DIR.
+            caption_dir (DownloadedFile | str, optional): Directory for saving caption files to. Defaults to CURRENT_WORKING_DIR.
+            chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
+            threads (int, optional): Number of threads to carry out the download. Defaults to DEFAULT_THREADS.
+            part_dir (DownloadedFile | str, optional): Directory for temporarily saving downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
+            part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
+            merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
 
-         - Pass None as caption_language to disable downloading subtitle.
-        """
+         httpx_kwargs : Keyword arguments for `httpx.AsyncClient`
+        """  # noqa: E501
         self._session = session
         self._caption_language = caption_language
+        self.media_file_downloader = MediaFileDownloader(
+            dir=dir,
+            chunk_size=chunk_size,
+            threads=threads,
+            part_dir=part_dir,
+            part_extension=part_extension,
+            merge_buffer_size=merge_buffer_size,
+            **httpx_kwargs,
+        )
+        self.caption_file_downloader = CaptionFileDownloader(dir=caption_dir, chunk_size=chunk_size)
 
     async def _search_handler(
         self, query: str, year: int | None
@@ -70,7 +99,7 @@ class Auto(BaseFileDownloaderAndHelper):
             self._session,
             query=query,
             subject_type=SubjectType.MOVIES,
-            per_page=1,
+            per_page=30,
         )
         search_results = await search.get_content_model()
         if year is not None:
@@ -82,7 +111,7 @@ class Auto(BaseFileDownloaderAndHelper):
             if target_movie is None:
                 raise ZeroSearchResultsError(
                     f"No movie in the search results matched the year filter - {year}. "
-                    "Try a different year filter or ommit the filter."
+                    "Try a different value or ommit the filter."
                 )
         target_movie = search_results.first_item
         downloadable_movie_file_details_inst = DownloadableMovieFilesDetail(self._session, target_movie)
@@ -93,47 +122,51 @@ class Auto(BaseFileDownloaderAndHelper):
         self,
         downloadable_movie_file_details: DownloadableFilesMetadata,
         quality: DownloadQualitiesType = "BEST",
-        **kwargs,
-    ) -> Path | Response:
+        **run_kwargs,
+    ) -> DownloadedFile | httpx.Response:
         """Downloads movie
 
         Args:
             downloadable_movie_file_details (DownloadableFilesMetadata): Primarily served from `self._search_handler`.
             quality: Video resolution postpixed with 'P' or simple 'BEST' | 'WORST'. Defaults to 'BEST'
 
-        Kwargs : Keyworded arguments for `MediaFileDownloader.run` method.
+        run_kwargs : Keyword arguments for `MediaFileDownloader.run` method.
 
         Returns:
-            Path : Downloaded movie file location.
-            Response : if test=true
+            DownloadedFile : Downloaded movie file location.
+            httpx.Response : if test=true
         """  # noqa: E501
         assert_membership(quality, DOWNLOAD_QUALITIES, "quality")
+
         target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_movie_file_details)
-        downloader = MediaFileDownloader(target_media_file)
-        saved_to_or_response = await downloader.run(**kwargs)
+
+        saved_to_or_response = await self.media_file_downloader.run(target_media_file, **run_kwargs)
+
         return saved_to_or_response
 
     async def _caption_download_handler(
         self,
         downloadable_movie_file_details: DownloadableFilesMetadata,
         caption_language: str,
-        **kwargs,
-    ) -> Path | Response:
+        **run_kwargs,
+    ) -> DownloadedFile | httpx.Response:
         """Download caption file.
 
         Args:
             downloadable_movie_file_details (DownloadableFilesMetadata): Primarily served from `self._search_handler`.
             caption_language: Subtitle language e.g 'English' or simply 'en'.
 
+        run_kwargs : Keyword arguments for `CaptionFileDownloader.run` method.
+
         Returns:
-            Path: Location under which caption file is saved.
-            Response : if test=true
+            DownloadedFile: Location under which caption file is saved.
+            httpx.Response : if test=true
         """  # noqa: E501
 
         target_subtitle = downloadable_movie_file_details.get_subtitle_by_language(caption_language)
-        downloader = CaptionFileDownloader(target_subtitle)
+
         if target_subtitle:
-            saved_to_or_response = await downloader.run(**kwargs)
+            saved_to_or_response = await self.caption_file_downloader.run(target_subtitle, **run_kwargs)
             return saved_to_or_response
         else:
             raise ValueError(f"No caption file matched that language - {caption_language}")
@@ -146,7 +179,7 @@ class Auto(BaseFileDownloaderAndHelper):
         caption_language: str = None,
         caption_only: bool = False,
         **kwargs,
-    ) -> tuple[Path | Response | None, Path | Response | None]:
+    ) -> tuple[DownloadedFile | httpx.Response | None, DownloadedFile | httpx.Response | None]:
         """Perform movie search and download first item in the search results.
 
         Args:
@@ -159,7 +192,7 @@ class Auto(BaseFileDownloaderAndHelper):
         Kwargs : Keyworded arguments for `MediaFileDownloader.run` method.
 
         Returns:
-            tuple[Path|Response|None, Path |Response| None]: Path to downloaded movie or httpx response
+            tuple[DownloadedFile|httpx.Response|None, DownloadedFile |httpx.Response| None]: Downloaded movie details or httpx response
              and caption file or httpx response respectively.
 
         """  # noqa: E501
@@ -168,9 +201,12 @@ class Auto(BaseFileDownloaderAndHelper):
             target_movie,
             downloadable_movie_file_details,
         ) = await self._search_handler(query, year)
+
         kwargs.setdefault("filename", target_movie)  # SearchResultsItem - auto-filename generation
+
         caption_language = caption_language or self._caption_language
-        movie_saved_to = caption_saved_to = None
+        movie_details_or_httpx_response = caption_details_or_httpx_response = None
+
         if caption_only:
             if not caption_language:
                 warnings.warn(
@@ -179,20 +215,32 @@ class Auto(BaseFileDownloaderAndHelper):
                     f"Defaulting to caption language - {DEFAULT_CAPTION_LANGUAGE}"
                 )
                 caption_language = DEFAULT_CAPTION_LANGUAGE
-            caption_saved_to = await self._caption_download_handler(
+            caption_details_or_httpx_response = await self._caption_download_handler(
                 downloadable_movie_file_details,
                 caption_language,
                 **kwargs,
             )
+
         else:
             # Download subtitle first
             if caption_language:
-                caption_saved_to = await self._caption_download_handler(
+                caption_details_or_httpx_response = await self._caption_download_handler(
                     downloadable_movie_file_details,
                     caption_language,
                     **kwargs,
                 )
-            movie_saved_to = await self._movie_download_handler(
+            movie_details_or_httpx_response = await self._movie_download_handler(
                 downloadable_movie_file_details, quality, **kwargs
             )
-        return (movie_saved_to, caption_saved_to)
+
+        return (movie_details_or_httpx_response, caption_details_or_httpx_response)
+
+    def run_sync(
+        self, *args, **kwargs
+    ) -> tuple[DownloadedFile | httpx.Response | None, DownloadedFile | httpx.Response | None]:
+        """Synchronously perform movie search and download first item in the search results."""
+        return asyncio.get_event_loop().run_until_complete(self.run(*args, **kwargs))
+
+
+class TVSeriesAuto:
+    pass

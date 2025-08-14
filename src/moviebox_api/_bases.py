@@ -2,13 +2,11 @@
 This module contains base classes for the entire package
 """
 
+import asyncio
 from abc import ABC, abstractmethod
-from pathlib import Path
 
 import httpx
 from throttlebuster import DownloadedFile
-
-from moviebox_api.constants import loop
 
 
 class BaseMovieboxException(Exception):
@@ -34,11 +32,11 @@ class ContentProviderHelper:
 
     def get_content_sync(self, *args, **kwargs) -> dict | list[dict]:
         """Get content `synchronously`"""
-        return loop.run_until_complete(self.get_content(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(self.get_content(*args, **kwargs))
 
     def get_content_model_sync(self, *args, **kwargs) -> object | list[object]:
         """Get content model `synchronously`"""
-        return loop.run_until_complete(self.get_content_model(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(self.get_content_model(*args, **kwargs))
 
 
 class BaseContentProviderAndHelper(BaseContentProvider, ContentProviderHelper):
@@ -49,9 +47,7 @@ class BaseFileDownloader(ABC):
     """Base class for media and caption files downloader"""
 
     @abstractmethod
-    async def run(
-        self, *args, **kwargs
-    ) -> DownloadedFile | Path | httpx.Response | tuple[DownloadedFile | Path | httpx.Response | None]:
+    async def run(self, *args, **kwargs) -> DownloadedFile | httpx.Response:
         """Downloads a movie or caption file"""
         raise NotImplementedError("Function needs to be implemented in subclass.")
 
@@ -59,11 +55,9 @@ class BaseFileDownloader(ABC):
 class FileDownloaderHelper:
     """Provide common method to file downloaders"""
 
-    def run_sync(
-        self, *args, **kwargs
-    ) -> DownloadedFile | Path | httpx.Response | tuple[DownloadedFile | Path | httpx.Response | None]:
+    def run_sync(self, *args, **kwargs) -> DownloadedFile | httpx.Response:
         """Sychronously performs the actual download"""
-        return loop.run_until_complete(self.run(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(self.run(*args, **kwargs))
 
 
 class BaseFileDownloaderAndHelper(FileDownloaderHelper, BaseFileDownloader):
