@@ -42,15 +42,6 @@ class ZeroSearchResultsError(BaseMovieboxException):
     """Raised when empty search results is encountered."""
 
 
-class DownloadCompletedError(BaseMovieboxException):
-    """Raised whren attempting to resume a complete download."""
-
-    def __init__(self, saved_to: Path, *args, **kwargs):
-        self.saved_to = saved_to
-        """Path to the already downloaded movie/tv-series file"""
-        super().__init__(*args, **kwargs)
-
-
 class ZeroCaptionFileError(BaseMovieboxException):
     """Raised when caption file is required but the item lacks any"""
 

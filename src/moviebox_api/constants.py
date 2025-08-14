@@ -111,29 +111,6 @@ class SubjectType(IntEnum):
         return resp
 
 
-class DownloadMode(StrEnum):
-    START = "start"
-    RESUME = "resume"
-    AUTO = "auto"
-
-    @classmethod
-    def map(cls) -> dict[str, str]:
-        """Modes mapped to their string representatives"""
-        resp = {}
-        for entry in cls:
-            resp[entry.name] = entry.value
-        return resp
-
-    @classmethod
-    def map_cls(cls) -> dict:
-        """Names in lower case mapped to their values"""
-        return {
-            "start": cls.START,
-            "resume": cls.RESUME,
-            "auto": cls.AUTO,
-        }
-
-
 class DownloadStatus(StrEnum):
     DOWNLOADING = "downloading"
     FINISHED = "finished"

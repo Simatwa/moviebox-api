@@ -74,18 +74,6 @@ def process_api_response(json: dict) -> dict | list:
 extract_data_field_value = process_api_response
 
 
-def get_filesize_string(size_in_bytes: int) -> str:
-    """Get something like `343 MB` or `1.25 GB` depending on size_in_bytes."""
-    units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
-    for unit in units:
-        # 1024 or 1000 ?
-        if size_in_bytes >= 1000.0:
-            size_in_bytes /= 1000.0
-        else:
-            break
-    return f"{size_in_bytes:.2f} {unit}"
-
-
 def get_file_extension(url: str) -> str | None:
     """Extracts extension from file url e.g `mp4` or `srt`
 
@@ -96,11 +84,6 @@ def get_file_extension(url: str) -> str | None:
     all = re.findall(FILE_EXT_PATTERN, str(url))
     if all:
         return all[0]
-
-
-def sanitize_filename(filename: str) -> str:
-    """Remove illegal characters from a filename"""
-    return re.sub(ILLEGAL_CHARACTERS_PATTERN, "", filename.replace(":", "-"))
 
 
 def validate_item_page_url(url: str) -> str:

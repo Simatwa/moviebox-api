@@ -6,13 +6,13 @@ import random
 import click
 from httpx import ConnectTimeout, HTTPStatusError
 from pydantic import ValidationError
+from throttlebuster import DownloadMode
 
 from moviebox_api import __repo__, logger
 from moviebox_api.constants import (
     ENVIRONMENT_HOST_KEY,
     HOST_URL,
     MIRROR_HOSTS,
-    DownloadMode,
     SubjectType,
 )
 from moviebox_api.core import Search, Session
@@ -174,8 +174,7 @@ def process_download_runner_params(params: dict) -> dict:
     Returns:
         dict: Processed parameters
     """
-    params["mode"] = DownloadMode.map_cls().get(params.get("mode").lower())
-    params["suppress_complete_error"] = True
+    params["download_mode"] = DownloadMode.map().get(params.get("mode").lower())
     return params
 
 

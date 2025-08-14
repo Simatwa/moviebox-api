@@ -6,6 +6,11 @@ import sys
 from pathlib import Path
 
 import click
+from throttlebuster.constants import (
+    THREADS_LIMIT,
+    DOWNLOAD_PART_EXTENSION,
+    DownloadMode,
+)
 
 from moviebox_api import __version__
 from moviebox_api.cli.downloader import Downloader
@@ -77,15 +82,15 @@ def moviebox():
     "-Z",
     "--chunk-size",
     type=click.IntRange(min=1, max=10000),
-    help="Chunk-size for downloading files in KB : 512",
-    default=512,
+    help="Chunk-size for downloading files in KB : 256",
+    default=256,
 )
 @click.option(
     "-m",
-    "--mode",
-    type=click.Choice(["START", "RESUME", "AUTO"], case_sensitive=False),
+    "--download-mode",
+    type=click.Choice(DownloadMode.map().keys(), case_sensitive=False),
     help="Start the download, resume or set automatically : AUTO",
-    default="AUTO",
+    default=DownloadMode.AUTO.value,
 )
 @click.option(
     "-c",
@@ -117,6 +122,40 @@ def moviebox():
     "--caption-filename-tmpl",
     help="Template for generating caption filename : [default]",
     default=CaptionFileDownloader.movie_filename_template,
+)
+@click.option(
+    "-t",
+    "--threads",
+    type=click.IntRange(1, THREADS_LIMIT),
+    help="Number of threads to carry out the download : 2",
+    default=2,
+)
+@click.option(
+    "-P",
+    "--part-dir",
+    help="Directory for temporarily saving the downloaded file-parts to : PWD",
+    type=click.Path(exists=True, file_okay=False, writable=True, resolve_path=True),
+    default=CURRENT_WORKING_DIR,
+)
+@click.option(
+    "-E",
+    "--part-extension",
+    help=f"Filename extension for download parts : {DOWNLOAD_PART_EXTENSION}",
+    default=DOWNLOAD_PART_EXTENSION,
+)
+@click.option(
+    "-N",
+    "--chunk-size",
+    type=click.INT,
+    help="Streaming download chunk size in kilobytes : 256",
+    default=256,
+)
+@click.option(
+    "-B",
+    "--merge-buffer-size",
+    type=click.IntRange(1, 102400),
+    default=256,
+    help="Buffer size for merging the separated files in kilobytes : 256",
 )
 @click.option(
     "--progress-bar/--no-progress-bar",
@@ -272,8 +311,8 @@ def download_movie_command(
     "-Z",
     "--chunk-size",
     type=click.IntRange(min=1, max=10000),
-    help="Chunk-size for downloading files in KB : 512",
-    default=512,
+    help="Chunk-size for downloading files in KB : 256",
+    default=256,
 )
 @click.option(
     "-m",
@@ -305,6 +344,40 @@ def download_movie_command(
     "--ascii",
     is_flag=True,
     help="Use unicode (smooth blocks) to fill the progress-bar meter : False",
+)
+@click.option(
+    "-t",
+    "--threads",
+    type=click.IntRange(1, THREADS_LIMIT),
+    help="Number of threads to carry out the download : 2",
+    default=2,
+)
+@click.option(
+    "-P",
+    "--part-dir",
+    help="Directory for temporarily saving the downloaded file-parts to : PWD",
+    type=click.Path(exists=True, file_okay=False, writable=True, resolve_path=True),
+    default=CURRENT_WORKING_DIR,
+)
+@click.option(
+    "-E",
+    "--part-extension",
+    help=f"Filename extension for download parts : {DOWNLOAD_PART_EXTENSION}",
+    default=DOWNLOAD_PART_EXTENSION,
+)
+@click.option(
+    "-N",
+    "--chunk-size",
+    type=click.INT,
+    help="Streaming download chunk size in kilobytes : 256",
+    default=256,
+)
+@click.option(
+    "-B",
+    "--merge-buffer-size",
+    type=click.IntRange(1, 102400),
+    default=256,
+    help="Buffer size for merging the separated files in kilobytes : 256",
 )
 @click.option(
     "--progress-bar/--no-progress-bar",

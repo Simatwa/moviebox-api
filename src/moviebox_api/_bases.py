@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 
 import httpx
+from throttlebuster import DownloadedFile
 
 from moviebox_api.constants import loop
 
@@ -50,7 +51,7 @@ class BaseFileDownloader(ABC):
     @abstractmethod
     async def run(
         self, *args, **kwargs
-    ) -> Path | httpx.Response | tuple[Path | httpx.Response | None, Path | httpx.Response | None]:
+    ) -> DownloadedFile | Path | httpx.Response | tuple[DownloadedFile | Path | httpx.Response | None]:
         """Downloads a movie or caption file"""
         raise NotImplementedError("Function needs to be implemented in subclass.")
 
@@ -60,7 +61,7 @@ class FileDownloaderHelper:
 
     def run_sync(
         self, *args, **kwargs
-    ) -> Path | httpx.Response | tuple[Path | httpx.Response | None, Path | httpx.Response | None]:
+    ) -> DownloadedFile | Path | httpx.Response | tuple[DownloadedFile | Path | httpx.Response | None]:
         """Sychronously performs the actual download"""
         return loop.run_until_complete(self.run(*args, **kwargs))
 
