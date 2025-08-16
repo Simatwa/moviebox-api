@@ -105,8 +105,13 @@ class SubjectType(IntEnum):
     MUSIC = 6
     """Music contents only"""
 
+    UNKNOWN_1 = 5
+    """Yet to be known"""
+
     UNKNOWN = 7
     """Yet to be known"""
+
+    # TODO: Research and update UNKNOWNS
 
     @classmethod
     def map(cls) -> dict[str, int]:

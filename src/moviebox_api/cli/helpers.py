@@ -78,8 +78,8 @@ async def perform_search_and_get_item(
         for pos, item in enumerate(items, start=1):
             if click.confirm(
                 f"> {message} ({pos}/{len(items)}) : "
-                f"{'[' + item.subjectType.name + '] ' if subject_type is SubjectType.ALL else ''}{item.title} "
-                f"{item.releaseDate.year, item.imdbRatingValue}"
+                f"{'[' + item.subjectType.name + '] ' if subject_type is SubjectType.ALL else ''}{item.title}"
+                f" {item.releaseDate.year, item.imdbRatingValue}"
             ):
                 return item
 
@@ -141,7 +141,7 @@ def get_caption_file_or_raise(
     return target_caption_file
 
 
-def prepare_start(quiet: bool, verbose: bool) -> None:
+def prepare_start(quiet: bool = False, verbose: int = 0) -> None:
     """Set up some stuff for better CLI usage such as:
 
     - Set higher logging level for some packages.
