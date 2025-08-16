@@ -30,7 +30,7 @@ def get_absolute_url(relative_url: str) -> str:
         str: Complete url with host
     """
 
-    return urljoin(HOST_URL, re.sub(SCHEME_HOST_PATTERN, "", relative_url))
+    return urljoin(HOST_URL, SCHEME_HOST_PATTERN.sub("", relative_url))
 
 
 def assert_membership(value: t.Any, elements: t.Iterable, identity="Value"):
@@ -81,14 +81,14 @@ def get_file_extension(url: str) -> str | None:
         url : https://valiw.hakunaymatata.com/resource/537977caa8c13703185d26471ce7de9f.mp4s?auth_key=1753024153-0-0-c824d3b5a5c8acc294bfd41de43c51ef"
         returns 'mp4'
     """
-    all = re.findall(FILE_EXT_PATTERN, str(url))
+    all = FILE_EXT_PATTERN.findall(str(url))
     if all:
         return all[0]
 
 
 def validate_item_page_url(url: str) -> str:
     """Checks whether specific item page url is valid"""
-    finds = re.findall(VALID_ITEM_PAGE_URL_PATTERN, url)
+    finds = VALID_ITEM_PAGE_URL_PATTERN.findall(url)
 
     if finds:
         if finds[0] == url:
