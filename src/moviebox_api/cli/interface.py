@@ -177,7 +177,7 @@ def moviebox():
 )
 @click.option(
     "--leave/--no-leave",
-    default=True,
+    default=False,
     help="Keep all leaves of the progress-bar",
     show_default=True,
 )
@@ -411,7 +411,7 @@ def download_movie_command(
 )
 @click.option(
     "--leave/--no-leave",
-    default=True,
+    default=False,
     help="Keep all leaves of the progressbar",
     show_default=True,
 )

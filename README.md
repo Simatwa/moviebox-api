@@ -240,7 +240,7 @@ Options:
                                   progress-bar meter
   -z, --disable-progress-bar      Do not show download progress-bar
   --leave / --no-leave            Keep all leaves of the progress-bar
-                                  [default: leave]
+                                  [default: no-leave]
   --caption / --no-caption        Download caption file  [default: caption]
   -O, --caption-only              Download caption file only and ignore movie
   -S, --simple                    Show download percentage and bar only in
@@ -324,7 +324,7 @@ Options:
                                   progress-bar meter
   -z, --disable-progress-bar      Do not show download progress-bar
   --leave / --no-leave            Keep all leaves of the progressbar
-                                  [default: leave]
+                                  [default: no-leave]
   --caption / --no-caption        Download caption file  [default: caption]
   -O, --caption-only              Download caption file only and ignore movie
   -S, --simple                    Show download percentage and bar only in
@@ -336,7 +336,6 @@ Options:
                                   progress (logs)
   -Y, --yes                       Do not prompt for tv-series confirmation
   -h, --help                      Show this message and exit.
-
 ```
 
 </details>

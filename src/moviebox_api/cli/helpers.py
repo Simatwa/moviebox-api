@@ -198,7 +198,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
     exit_code = 1
 
     if isinstance(exception, ConnectTimeout):
-        logging.info("Http connect request has timed out. Check your connection and retry.")
+        logging.info("Internet connection request has timed out. Check your connection and retry.")
 
     elif isinstance(exception, HTTPStatusError):
         match exception.response.status_code:
