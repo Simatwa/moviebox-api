@@ -24,8 +24,8 @@ from moviebox_api.cli.helpers import (
 from moviebox_api.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CHUNK_SIZE,
-    DEFAULT_THREADS,
-    DEFAULT_THREADS_LIMIT,
+    DEFAULT_TASKS,
+    DEFAULT_TASKS_LIMIT,
     DOWNLOAD_PART_EXTENSION,
     DOWNLOAD_QUALITIES,
     DownloadMode,
@@ -118,10 +118,10 @@ def moviebox():
 )
 @click.option(
     "-t",
-    "--threads",
-    type=click.IntRange(1, DEFAULT_THREADS_LIMIT),
-    help="Number of threads to carry out the download",
-    default=DEFAULT_THREADS,
+    "--tasks",
+    type=click.IntRange(1, DEFAULT_TASKS_LIMIT),
+    help="Number of tasks to carry out the download",
+    default=DEFAULT_TASKS,
     show_default=True,
 )
 @click.option(
@@ -172,7 +172,6 @@ def moviebox():
     "--disable-progress-bar",
     is_flag=True,
     help="Do not show download progress-bar",
-    default=True,
 )
 @click.option(
     "--leave/--no-leave",
@@ -351,10 +350,10 @@ def download_movie_command(
 )
 @click.option(
     "-t",
-    "--threads",
-    type=click.IntRange(1, DEFAULT_THREADS_LIMIT),
-    help="Number of threads to carry out the download",
-    default=DEFAULT_THREADS,
+    "--tasks",
+    type=click.IntRange(1, DEFAULT_TASKS_LIMIT),
+    help="Number of tasks to carry out the download",
+    default=DEFAULT_TASKS,
     show_default=True,
 )
 @click.option(
@@ -405,7 +404,6 @@ def download_movie_command(
     "--disable-progress-bar",
     is_flag=True,
     help="Do not show download progress-bar",
-    default=True,
 )
 @click.option(
     "--leave/--no-leave",

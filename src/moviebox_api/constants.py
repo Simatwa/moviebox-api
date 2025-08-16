@@ -7,8 +7,8 @@ from pathlib import Path
 
 from throttlebuster.constants import (
     DEFAULT_CHUNK_SIZE,
-    DEFAULT_THREADS,
-    DEFAULT_THREADS_LIMIT,
+    DEFAULT_TASKS,
+    DEFAULT_TASKS_LIMIT,
     DOWNLOAD_PART_EXTENSION,
     DownloadMode,
 )

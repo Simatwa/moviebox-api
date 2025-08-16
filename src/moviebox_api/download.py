@@ -15,7 +15,7 @@ from moviebox_api._bases import (
 from moviebox_api.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CHUNK_SIZE,
-    DEFAULT_THREADS,
+    DEFAULT_TASKS,
     DOWNLOAD_PART_EXTENSION,
     DOWNLOAD_QUALITIES,
     DOWNLOAD_REQUEST_HEADERS,
@@ -195,7 +195,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         self,
         dir: Path | str = CURRENT_WORKING_DIR,
         chunk_size: int = DEFAULT_CHUNK_SIZE,
-        threads: int = DEFAULT_THREADS,
+        tasks: int = DEFAULT_TASKS,
         part_dir: Path | str = CURRENT_WORKING_DIR,
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
@@ -206,7 +206,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         Args:
             dir (Path | str, optional): Directory for downloaded files to. Defaults to CURRENT_WORKING_DIR.
             chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
-            threads (int, optional): Number of threads to carry out the download. Defaults to DEFAULT_THREADS.
+            tasks (int, optional): Number of tasks to carry out the download. Defaults to DEFAULT_TASKS.
             part_dir (Path | str, optional): Directory for temporarily saving downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
@@ -219,7 +219,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         self.throttle_buster = ThrottleBuster(
             dir=dir,
             chunk_size=chunk_size,
-            threads=threads,
+            tasks=tasks,
             part_dir=part_dir,
             part_extension=part_extension,
             merge_buffer_size=merge_buffer_size,
@@ -362,7 +362,7 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         self,
         dir: Path | str = CURRENT_WORKING_DIR,
         chunk_size: int = DEFAULT_CHUNK_SIZE,
-        threads: int = DEFAULT_THREADS,
+        tasks: int = DEFAULT_TASKS,
         part_dir: Path | str = CURRENT_WORKING_DIR,
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
@@ -372,7 +372,7 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         Args:
             dir (Path | str, optional): Directory for downloaded files to. Defaults to CURRENT_WORKING_DIR.
             chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
-            threads (int, optional): Number of threads to carry out the download. Defaults to DEFAULT_THREADS.
+            tasks (int, optional): Number of tasks to carry out the download. Defaults to DEFAULT_TASKS.
             part_dir (Path | str, optional): Directory for temporarily saving downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
@@ -385,7 +385,7 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         self.throttle_buster = ThrottleBuster(
             dir=dir,
             chunk_size=chunk_size,
-            threads=threads,
+            tasks=tasks,
             part_dir=part_dir,
             part_extension=part_extension,
             merge_buffer_size=merge_buffer_size,

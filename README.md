@@ -78,11 +78,11 @@ if __name__ == "__main__":
 Perform download with progress hook
 
 ```python
-from moviebox_api import MovieAuto
+from moviebox_api import DownloadTracker, MovieAuto
 
 
-async def callback_function(progress: dict):
-    percent = (progress["downloaded_size"] / progress["size"]) * 100
+async def callback_function(progress: DownloadTracker):
+    percent = (progress.downloaded_size / progress.expected_size) * 100
 
     print(f">>[{percent:.2f}%] Downloading {progress["filename"]}", end="\r")
 
@@ -92,11 +92,7 @@ if __name__ == "__main__":
 
     auto = MovieAuto(caption_language=None)
     asyncio.run(
-        auto.run(
-            query="Avatar", 
-            progress_hook=callback_function,
-            progress_bar=False
-        )
+        auto.run(query="Avatar", progress_hook=callback_function, progress_bar=False)
     )
 ```
 
@@ -200,7 +196,7 @@ $ python -m moviebox_api download-movie <Movie title>
 ```sh
 # python -m moviebox_api download-movie --help
 
-Usage: python -m moviebox_api download-movie [OPTIONS] TITLE
+Usage: moviebox download-movie [OPTIONS] TITLE
 
   Search and download movie.
 
@@ -211,10 +207,10 @@ Options:
                                   Media quality to be downloaded  [default:
                                   BEST]
   -d, --dir DIRECTORY             Directory for saving the movie to  [default:
-                                  /home/...]
+                                  /home/smartwa/git/smartwa/moviebox-api]
   -D, --caption-dir DIRECTORY     Directory for saving the caption file to
                                   [default:
-                                  /home/...]
+                                  /home/smartwa/git/smartwa/moviebox-api]
   -m, --mode [start|resume|auto]  Start the download, resume or set
                                   automatically  [default: auto]
   -x, --language TEXT             Caption language filter  [default: English]
@@ -225,11 +221,11 @@ Options:
                                   Template for generating caption filename
                                   [default: %(title)s (%(release_year)d) -
                                   %(lanName)s.%(ext)s]
-  -t, --threads INTEGER RANGE     Number of threads to carry out the download
+  -t, --tasks INTEGER RANGE       Number of tasks to carry out the download
                                   [default: 2; 1<=x<=1000]
   -P, --part-dir DIRECTORY        Directory for temporarily saving the
                                   downloaded file-parts to  [default:
-                                  /home/...]
+                                  /home/smartwa/git/smartwa/moviebox-api]
   -E, --part-extension TEXT       Filename extension for download parts
                                   [default: .part]
   -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes
@@ -275,7 +271,7 @@ $ python -m moviebox_api download-series <Series title> -s <season number> -e <e
 ```sh
 # python -m moviebox_api download-series --help
 
-Usage: python -m moviebox_api download-series [OPTIONS] TITLE
+Usage: moviebox download-series [OPTIONS] TITLE
 
   Search and download tv series.
 
@@ -293,9 +289,11 @@ Options:
                                   BEST]
   -x, --language TEXT             Caption language filter  [default: English]
   -d, --dir DIRECTORY             Directory for saving the series file to
-                                  [default: /home/...]
+                                  [default:
+                                  /home/smartwa/git/smartwa/moviebox-api]
   -D, --caption-dir DIRECTORY     Directory for saving the caption file to
-                                  [default: /home/...]
+                                  [default:
+                                  /home/smartwa/git/smartwa/moviebox-api]
   -m, --mode [start|resume|auto]  Start new download, resume or set
                                   automatically  [default: auto]
   -L, --episode-filename-tmpl TEXT
@@ -307,11 +305,11 @@ Options:
                                   Template for generating caption filename
                                   [default: %(title)s S%(season)dE%(episode)d
                                   - %(lanName)s.%(ext)s]
-  -t, --threads INTEGER RANGE     Number of threads to carry out the download
+  -t, --tasks INTEGER RANGE       Number of tasks to carry out the download
                                   [default: 2; 1<=x<=1000]
   -P, --part-dir DIRECTORY        Directory for temporarily saving the
                                   downloaded file-parts to  [default:
-                                  /home/...]
+                                  /home/smartwa/git/smartwa/moviebox-api]
   -E, --part-extension TEXT       Filename extension for download parts
                                   [default: .part]
   -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes

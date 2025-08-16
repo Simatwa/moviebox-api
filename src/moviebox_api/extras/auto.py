@@ -10,7 +10,7 @@ from moviebox_api.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CAPTION_LANGUAGE,
     DEFAULT_CHUNK_SIZE,
-    DEFAULT_THREADS,
+    DEFAULT_TASKS,
     DOWNLOAD_PART_EXTENSION,
     DOWNLOAD_QUALITIES,
     DownloadQualitiesType,
@@ -47,7 +47,7 @@ class MovieAuto:
         dir: DownloadedFile | str = CURRENT_WORKING_DIR,
         caption_dir: DownloadedFile | str = CURRENT_WORKING_DIR,
         chunk_size: int = DEFAULT_CHUNK_SIZE,
-        threads: int = DEFAULT_THREADS,
+        tasks: int = DEFAULT_TASKS,
         part_dir: DownloadedFile | str = CURRENT_WORKING_DIR,
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
@@ -61,7 +61,7 @@ class MovieAuto:
             dir (DownloadedFile | str, optional): Directory for saving downloaded media files to. Defaults to CURRENT_WORKING_DIR.
             caption_dir (DownloadedFile | str, optional): Directory for saving caption files to. Defaults to CURRENT_WORKING_DIR.
             chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
-            threads (int, optional): Number of threads to carry out the download. Defaults to DEFAULT_THREADS.
+            tasks (int, optional): Number of tasks to carry out the download. Defaults to DEFAULT_TASKS.
             part_dir (DownloadedFile | str, optional): Directory for temporarily saving downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
@@ -73,7 +73,7 @@ class MovieAuto:
         self.media_file_downloader = MediaFileDownloader(
             dir=dir,
             chunk_size=chunk_size,
-            threads=threads,
+            tasks=tasks,
             part_dir=part_dir,
             part_extension=part_extension,
             merge_buffer_size=merge_buffer_size,

@@ -85,7 +85,7 @@ __repo__ = "https://github.com/Simatwa/moviebox-api"
 
 logger = logging.getLogger(__name__)
 
-from throttlebuster import DownloadedFile  # noqa: E402
+from throttlebuster import DownloadedFile, DownloadMode, DownloadTracker  # noqa: E402
 
 from moviebox_api.constants import (  # noqa: E402
     DOWNLOAD_QUALITIES,
@@ -141,4 +141,6 @@ __all__ = [
     "SubjectType",
     # Others
     "DownloadedFile",
+    "DownloadMode",
+    "DownloadTracker",
 ]
