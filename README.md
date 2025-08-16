@@ -161,7 +161,7 @@ For more details youn can go through the [full documentation](./docs/README.md)
 ```sh
 # $ python -m moviebox_api --help
 
-Usage: python -m moviebox_api [OPTIONS] COMMAND [ARGS]...
+Usage: moviebox [OPTIONS] COMMAND [ARGS]...
 
   Search and download movies/tv-series and their subtitles. envvar-prefix :
   MOVIEBOX
@@ -174,6 +174,7 @@ Commands:
   download-movie    Search and download movie.
   download-series   Search and download tv series.
   homepage-content  Show contents displayed at landing page
+  item-details      Show details for a particular movie/tv-series
   mirror-hosts      Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST]
   popular-search    Movies/tv-series many people are searching now
 ```
