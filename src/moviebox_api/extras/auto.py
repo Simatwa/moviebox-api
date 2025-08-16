@@ -68,8 +68,10 @@ class MovieAuto:
 
          httpx_kwargs : Keyword arguments for `httpx.AsyncClient`
         """  # noqa: E501
+
         self._session = session
         self._caption_language = caption_language
+
         self.media_file_downloader = MediaFileDownloader(
             dir=dir,
             chunk_size=chunk_size,
@@ -79,6 +81,7 @@ class MovieAuto:
             merge_buffer_size=merge_buffer_size,
             **httpx_kwargs,
         )
+
         self.caption_file_downloader = CaptionFileDownloader(dir=caption_dir, chunk_size=chunk_size)
 
     async def _search_handler(
@@ -101,21 +104,28 @@ class MovieAuto:
             subject_type=SubjectType.MOVIES,
             per_page=30,
         )
+
         search_results = await search.get_content_model()
+
         if year is not None:
             target_movie = None
+
             for item in search_results.items:
                 if item.releaseDate.year == year:
                     target_movie = item
                     break
+
             if target_movie is None:
                 raise ZeroSearchResultsError(
                     f"No movie in the search results matched the year filter - {year}. "
                     "Try a different value or ommit the filter."
                 )
+
         target_movie = search_results.first_item
         downloadable_movie_file_details_inst = DownloadableMovieFilesDetail(self._session, target_movie)
+
         downloadable_movie_file_details = await downloadable_movie_file_details_inst.get_content_model()
+
         return target_movie, downloadable_movie_file_details
 
     async def _movie_download_handler(
@@ -167,7 +177,9 @@ class MovieAuto:
 
         if target_subtitle:
             saved_to_or_response = await self.caption_file_downloader.run(target_subtitle, **run_kwargs)
+
             return saved_to_or_response
+
         else:
             raise ValueError(f"No caption file matched that language - {caption_language}")
 
@@ -215,6 +227,7 @@ class MovieAuto:
                     f"Defaulting to caption language - {DEFAULT_CAPTION_LANGUAGE}"
                 )
                 caption_language = DEFAULT_CAPTION_LANGUAGE
+
             caption_details_or_httpx_response = await self._caption_download_handler(
                 downloadable_movie_file_details,
                 caption_language,
@@ -229,6 +242,7 @@ class MovieAuto:
                     caption_language,
                     **kwargs,
                 )
+
             movie_details_or_httpx_response = await self._movie_download_handler(
                 downloadable_movie_file_details, quality, **kwargs
             )
@@ -239,7 +253,7 @@ class MovieAuto:
         self, *args, **kwargs
     ) -> tuple[DownloadedFile | httpx.Response | None, DownloadedFile | httpx.Response | None]:
         """Synchronously perform movie search and download first item in the search results."""
-        return asyncio.get_event_loop().run_until_complete(self.run(*args, **kwargs))
+        return asyncio.run(self.run(*args, **kwargs))
 
 
 class TVSeriesAuto:
