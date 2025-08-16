@@ -280,6 +280,7 @@ def download_movie_command(
     type=click.IntRange(1, 1000),
     help="TV Series season filter",
     required=True,
+    prompt="> Enter season number",
 )
 @click.option(
     "-e",
@@ -287,6 +288,7 @@ def download_movie_command(
     type=click.IntRange(1, 1000),
     help="Episode offset of the tv-series season",
     required=True,
+    prompt="> Enter episode number",
 )
 @click.option(
     "-l",
