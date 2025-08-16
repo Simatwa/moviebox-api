@@ -188,7 +188,7 @@ wheels = [
 
 [[package]]
 name = "moviebox-api"
-version = "0.2.0"
+version = "0.2.1"
 source = { editable = "." }
 dependencies = [
     { name = "bs4" },
@@ -217,7 +217,7 @@ requires-dist = [
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "pydantic", specifier = ">=2.11.7" },
     { name = "rich", marker = "extra == 'cli'", specifier = ">=14.1.0" },
-    { name = "throttlebuster", specifier = ">=0.1.3" },
+    { name = "throttlebuster", specifier = ">=0.1.4" },
 ]
 
 [package.metadata.requires-dev]
@@ -445,16 +445,16 @@ wheels = [
 
 [[package]]
 name = "throttlebuster"
-version = "0.1.3"
+version = "0.1.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiofiles" },
     { name = "httpx" },
     { name = "tqdm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/31/34/b65b6c526343fabe7a3a40257c24dfe14bb6260b32a31ed53d2219f2d3ed/throttlebuster-0.1.3.tar.gz", hash = "sha256:eb6ee6074ac9a8b37edce772da23fdbc2e08d90b5d0c7f0cff1ae751ce765bb4", size = 31510 }
+sdist = { url = "https://files.pythonhosted.org/packages/1b/dd/50c61b1865d5924ece1f29a2a292155e3352405be7c6f17482ef14560d39/throttlebuster-0.1.4.tar.gz", hash = "sha256:5cb1802c4327ff82eea57de733bcbe2eaa843df7602623d681a39bd5bdfd67de", size = 31649 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2a/52/a4e18770bed279c2e3117bb768eb0ad5b3cb7e93b17b4dad56550a890d98/throttlebuster-0.1.3-py3-none-any.whl", hash = "sha256:23b04ce1480bd8b614f59491b9167a9eccc3c55c5c88cee2da68a23b096ad9f6", size = 20736 },
+    { url = "https://files.pythonhosted.org/packages/df/82/4b67b812b692bb3726f94ad2876083b6881380d125f2a9a297c07c7d44ea/throttlebuster-0.1.4-py3-none-any.whl", hash = "sha256:0a8754861e69d50bdff6627b2c9df5dcca177b8419eaeb47b2c0c74e2db86f73", size = 20880 },
 ]
 
 [[package]]
