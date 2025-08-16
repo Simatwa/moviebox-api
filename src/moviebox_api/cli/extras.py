@@ -6,10 +6,14 @@ import click
 import rich
 from rich.table import Table
 
-from moviebox_api.cli.helpers import command_context_settings
-from moviebox_api.constants import MIRROR_HOSTS
-from moviebox_api.core import Homepage, PopularSearch
+from moviebox_api.cli.helpers import (
+    command_context_settings,
+    perform_search_and_get_item,
+)
+from moviebox_api.constants import MIRROR_HOSTS, SubjectType
+from moviebox_api.core import Homepage, PopularSearch, MovieDetails, TVSeriesDetails
 from moviebox_api.requests import Session
+from moviebox_api.extractor import JsonDetailsExtractor
 
 
 @click.command(context_settings=command_context_settings)
@@ -32,7 +36,7 @@ def mirror_hosts_command(json: bool):
         rich.print(table)
 
 
-@click.command()
+@click.command(context_settings=command_context_settings)
 @click.option(
     "-J",
     "--json",
@@ -149,7 +153,7 @@ def homepage_content_command(json: bool, title: str, banner: bool):
                 rich.print(table)
 
 
-@click.command()
+@click.command(context_settings=command_context_settings)
 @click.option(
     "-J",
     "--json",
@@ -170,4 +174,84 @@ def popular_search_command(json: bool):
         table.add_column("Title")
         for pos, item in enumerate(items, start=1):
             table.add_row(str(pos), item.title)
+        rich.print(table)
+
+
+@click.command(context_settings=command_context_settings)
+@click.argument("title")
+@click.option(
+    "-y",
+    "--year",
+    type=click.INT,
+    help="Year filter for the item to proceed with",
+    default=0,
+    show_default=True,
+)
+@click.option(
+    "-s",
+    "--subject-type",
+    type=click.Choice(SubjectType.map().keys()),
+    help="Item subject-type filter",
+    default=SubjectType.ALL.name,
+    show_default=True,
+)
+@click.option(
+    "-Y",
+    "--yes",
+    is_flag=True,
+    help="Do not prompt for item confirmation",
+)
+@click.option(
+    "-J",
+    "--json",
+    is_flag=True,
+    help="Output details in json format instead of tabulated",
+)
+@click.option("-F", "--full", is_flag=True, help="Show all details of the item")
+def item_details_command(json: bool, full: bool, **item_kwargs):
+    """Show details for a particular movie/tv-series"""
+
+    item_kwargs["subject_type"] = getattr(SubjectType, item_kwargs.get("subject_type"))
+    session = Session()
+
+    target_item = asyncio.get_event_loop().run_until_complete(
+        perform_search_and_get_item(session=session, **item_kwargs)
+    )
+
+    subject_type_item_details_map = {
+        SubjectType.MOVIES: MovieDetails,
+        SubjectType.TV_SERIES: TVSeriesDetails,
+    }
+
+    ItemDetails: MovieDetails | TVSeriesDetails = subject_type_item_details_map.get(target_item.subjectType)
+
+    assert ItemDetails, f"Item subjectType must be one of {list(subject_type_item_details_map.keys())}"
+
+    item_details = ItemDetails(target_item, session=session)
+
+    extractor = JsonDetailsExtractor(item_details.get_html_content_sync())
+
+    details = target_item.model_dump() if full else {}
+
+    details.update(extractor.metadata)
+
+    season_items = []
+    for season in extractor.seasons:
+        season_string = (
+            f"Season: {season['se']} "
+            f"Episodes: {season['maxEp']} "
+            f"Resolutions: {[res['resolution'] for res in season['resolutions']]}"
+        )
+        season_items.append(season_string)
+
+    details["seasons"] = season_items
+
+    if json:
+        rich.print_json(data=details, indent=4)
+
+    else:
+        table = Table("Key", "Value", title=f"{details['title']} - details", show_lines=True)
+        for key, value in details.items():
+            table.add_row(key, "\n".join(value) if type(value) is list else str(value))
+
         rich.print(table)

@@ -33,6 +33,7 @@ def test_version():
         ["mirror-hosts --help"],
         ["homepage-content --help"],
         ["popular-search --help"],
+        ["item-details --help"],
     ],
 )
 def test_help(command):
@@ -83,5 +84,16 @@ def test_homepage(command):
     argvalues=(["popular-search"], ["popular-search --json"]),
 )
 def test_popular_search(command):
+    returncode = run_system_command(command)
+    assert returncode <= 0
+
+
+@pytest.mark.parametrize(
+    argnames=[
+        "command",
+    ],
+    argvalues=(["item-details Merlin --yes --json"], ["item-details Avatar -s MOVIES -Y -F"]),
+)
+def test_item_details(command):
     returncode = run_system_command(command)
     assert returncode <= 0

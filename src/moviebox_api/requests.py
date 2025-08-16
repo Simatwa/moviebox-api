@@ -37,6 +37,7 @@ class Session:
         cookies: CookieTypes | None = request_cookies,
         timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
         proxy: ProxyTypes | None = None,
+        **httpx_kwargs,
     ):
         """Constructor for `Session`
 
@@ -45,6 +46,8 @@ class Session:
             cookies (CookieTypes | None , optional): Http request cookies. Defaults to request_cookies.
             timeout (TimeoutTypes, optional): Http request timeout in seconds. Defaults to DEFAULT_TIMEOUT_CONFIG.
             proxy (ProxyTypes | None, optional): Http requests proxy. Defaults to None.
+
+        httpx_kwargs : Other keyword arguments for `httpx.AsyncClient`
         """  # noqa: E501
         self._headers = headers
         self._cookies = cookies
@@ -55,6 +58,7 @@ class Session:
             cookies=cookies,
             timeout=timeout,
             proxy=proxy,
+            **httpx_kwargs,
         )
         self.moviebox_app_info: MovieboxAppInfo | None = None
         self.__moviebox_app_info_fetched: bool = False

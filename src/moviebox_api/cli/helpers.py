@@ -33,6 +33,7 @@ async def perform_search_and_get_item(
     subject_type: SubjectType,
     yes: bool,
     search: Search = None,
+    message: str = "Select",
 ) -> SearchResultsItem:
     """Search movie/tv-series and return target search results item
 
@@ -43,6 +44,7 @@ async def perform_search_and_get_item(
         subject_type (SubjectType): Movie or tv-series.
         yes (bool): Proceed with the first item instead of prompting confirmation.
         search (Search, optional): Search object. Defaults to None.
+        message (str, optional): Prefix message for the prompt. Defaults to "select".
 
     Raises:
         RuntimeError: When all items are exhausted without a match.
@@ -75,12 +77,16 @@ async def perform_search_and_get_item(
     else:
         for pos, item in enumerate(items, start=1):
             if click.confirm(
-                f"> Download ({pos}/{len(items)}) : {item.title} "
+                f"> {message} ({pos}/{len(items)}) : "
+                f"{'[' + item.subjectType.name + '] ' if subject_type is SubjectType.ALL else ''}{item.title} "
                 f"{item.releaseDate.year, item.imdbRatingValue}"
             ):
                 return item
+
     if search_results.pager.hasMore:
         next_search: Search = search.next_page(search_results)
+        print(f" Loading next page ({next_search._page}) ...", end="\r")
+
         logging.info(f"Navigating to the search results of page number {next_search._page}")
         return await perform_search_and_get_item(
             session=session,

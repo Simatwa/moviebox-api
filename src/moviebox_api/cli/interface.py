@@ -12,6 +12,7 @@ from moviebox_api import __version__
 from moviebox_api.cli.downloader import Downloader
 from moviebox_api.cli.extras import (
     homepage_content_command,
+    item_details_command,
     mirror_hosts_command,
     popular_search_command,
 )
@@ -41,6 +42,7 @@ __all__ = [
     "mirror_hosts_command",
     "homepage_content_command",
     "popular_search_command",
+    "item_details_command",
 ]
 
 DEBUG = os.getenv("DEBUG", "0") == "1"
@@ -508,6 +510,7 @@ def main():
         moviebox.add_command(mirror_hosts_command, "mirror-hosts")
         moviebox.add_command(homepage_content_command, "homepage-content")
         moviebox.add_command(popular_search_command, "popular-search")
+        moviebox.add_command(item_details_command, "item-details")
         return moviebox()
 
     except Exception as e:
