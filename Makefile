@@ -10,7 +10,7 @@ default: install test
 
 # Target to install package
 install:
-	uv pip install -e .
+	uv pip install -e ".[cli]"
 
 # Target to install in termux
 install-in-termux:
