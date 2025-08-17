@@ -5,9 +5,10 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 
 [![PyPI version](https://badge.fury.io/py/moviebox-api.svg)](https://pypi.org/project/moviebox-api)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/moviebox-api)](https://pypi.org/project/moviebox-api)
+![Coverage](./assets/coverage.svg)
 [![PyPI - License](https://img.shields.io/pypi/l/moviebox-api)](https://pypi.org/project/moviebox-api)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Hits](https://hits.sh/github.com/Simatwa/moviebox-api.svg?label=Total%20hits&logo=dotenv)](https://github.com/Simatwa/moviebox-api "Total hits")
+[![Hits](https://hits.sh/github.com/Simatwa/moviebox-api.svg?label=Total%20hits&logo=eye)](https://github.com/Simatwa/moviebox-api "Total hits")
 [![Downloads](https://pepy.tech/badge/moviebox-api)](https://pepy.tech/project/moviebox-api)
 <!-- 
 [![Code Coverage](https://img.shields.io/codecov/c/github/Simatwa/moviebox-api)](https://codecov.io/gh/Simatwa/moviebox-api)

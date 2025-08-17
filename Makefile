@@ -1,5 +1,5 @@
 # Define targets
-.PHONY: install test build publish install-in-termux
+.PHONY: install coverage coverage-badge
 
 # Define variables
 PYTHON := python
@@ -20,7 +20,11 @@ install-in-termux:
 
 # Target to run tests
 test:
-	pytest tests -v --ff
+	coverage run -m pytest -v
+
+# Target to generate coverage-badge
+coverage-badge:
+	coverage-badge -o assets/coverage.svg
 
 # target to build dist
 build:
