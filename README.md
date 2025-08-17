@@ -7,13 +7,8 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/moviebox-api)](https://pypi.org/project/moviebox-api)
 ![Coverage](./assets/coverage.svg)
 [![PyPI - License](https://img.shields.io/pypi/l/moviebox-api)](https://pypi.org/project/moviebox-api)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Hits](https://hits.sh/github.com/Simatwa/moviebox-api.svg?label=Total%20hits&logo=eye)](https://github.com/Simatwa/moviebox-api "Total hits")
 [![Downloads](https://pepy.tech/badge/moviebox-api)](https://pepy.tech/project/moviebox-api)
-<!-- 
-[![Code Coverage](https://img.shields.io/codecov/c/github/Simatwa/moviebox-api)](https://codecov.io/gh/Simatwa/moviebox-api)
--->
-<!-- TODO: Add logo & wakatime-->
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 </div>
 
 ## Features
@@ -85,16 +80,14 @@ from moviebox_api import DownloadTracker, MovieAuto
 async def callback_function(progress: DownloadTracker):
     percent = (progress.downloaded_size / progress.expected_size) * 100
 
-    print(f">>[{percent:.2f}%] Downloading {progress["filename"]}", end="\r")
+    print(f">>[{percent:.2f}%] Downloading {progress.saved_to.name}", end="\r")
 
 
 if __name__ == "__main__":
     import asyncio
 
     auto = MovieAuto(caption_language=None)
-    asyncio.run(
-        auto.run(query="Avatar", progress_hook=callback_function, progress_bar=False)
-    )
+    asyncio.run(auto.run(query="Avatar", progress_hook=callback_function))
 ```
 
 
@@ -128,6 +121,8 @@ if __name__ == "__main__":
 ##### TV-Series
 
 ```python
+# $ pip install 'moviebox-api[cli]'
+
 from moviebox_api.cli import Downloader
 
 async def main():

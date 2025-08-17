@@ -217,3 +217,4 @@ test.py
 *.srt
 commit-msg*
 *.html
+*.part
