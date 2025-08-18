@@ -1,6 +1,6 @@
 [project]
 name = "moviebox-api"
-version = "0.2.3"
+version = "0.2.4"
 description = "Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-series and their subtitles."
 readme = "README.md"
 license="Unlicense"
@@ -23,7 +23,7 @@ dependencies = [
     "bs4>=0.0.2",
     "httpx>=0.28.1",
     "pydantic>=2.11.7",
-    "throttlebuster>=0.1.4",
+    "throttlebuster>=0.1.5",
 ]
 
 [project.scripts]

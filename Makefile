@@ -1,5 +1,5 @@
 # Define targets
-.PHONY: install coverage coverage-badge
+.PHONY: install test coverage-badge
 
 # Define variables
 PYTHON := python
@@ -24,7 +24,7 @@ test:
 
 # Target to generate coverage-badge
 coverage-badge:
-	coverage-badge -o assets/coverage.svg
+	coverage-badge -o assets/coverage.svg -f
 
 # target to build dist
 build:
