@@ -15,6 +15,7 @@ from moviebox_api._bases import (
 from moviebox_api.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CHUNK_SIZE,
+    DEFAULT_READ_TIMEOUT_ATTEMPTS,
     DEFAULT_TASKS,
     DOWNLOAD_PART_EXTENSION,
     DOWNLOAD_QUALITIES,
@@ -282,6 +283,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         disable_progress_bar: bool = None,
         file_size: int = None,
         keep_parts: bool = False,
+        timeout_retry_attempts: int = DEFAULT_READ_TIMEOUT_ATTEMPTS,
         colour: str = "cyan",
         simple: bool = False,
         test: bool = False,
@@ -299,6 +301,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
             disable_progress_bar (bool, optional): Do not show progress_bar. Defaults to None (decide based on progress_hook).
             file_size (int, optional): Size of the file to be downloaded. Defaults to None.
             keep_parts (bool, optional): Whether to retain the separate download parts. Defaults to False.
+            timeout_retry_attempts (int, optional): Number of times to retry download upon read request timing out. Defaults to DEFAULT_READ_TIMEOUT_ATTEMPTS.
             leave (bool, optional): Keep all leaves of the progressbar. Defaults to True.
             colour (str, optional): Progress bar display color. Defaults to "cyan".
             simple (bool, optional): Show percentage and bar only in progressbar. Deafults to False.
@@ -326,6 +329,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
             disable_progress_bar=disable_progress_bar,
             file_size=file_size,
             keep_parts=keep_parts,
+            timeout_retry_attempts=timeout_retry_attempts,
             colour=colour,
             simple=simple,
             test=test,

@@ -25,6 +25,7 @@ from moviebox_api.cli.helpers import (
 from moviebox_api.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CHUNK_SIZE,
+    DEFAULT_READ_TIMEOUT_ATTEMPTS,
     DEFAULT_TASKS,
     DEFAULT_TASKS_LIMIT,
     DOWNLOAD_PART_EXTENSION,
@@ -148,6 +149,14 @@ def moviebox():
     help="Streaming download chunk size in kilobytes",
     default=DEFAULT_CHUNK_SIZE,
     show_default=True,
+)
+@click.option(
+    "-R",
+    "--timeout-retry-attempts",
+    type=click.INT,
+    help="Number of times to retry download upon read request timing out",
+    show_default=True,
+    default=DEFAULT_READ_TIMEOUT_ATTEMPTS,
 )
 @click.option(
     "-B",
@@ -382,6 +391,14 @@ def download_movie_command(
     help="Streaming download chunk size in kilobytes",
     default=DEFAULT_CHUNK_SIZE,
     show_default=True,
+)
+@click.option(
+    "-R",
+    "--timeout-retry-attempts",
+    type=click.INT,
+    help="Number of times to retry download upon read request timing out",
+    show_default=True,
+    default=DEFAULT_READ_TIMEOUT_ATTEMPTS,
 )
 @click.option(
     "-B",
