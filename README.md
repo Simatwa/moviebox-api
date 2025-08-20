@@ -170,7 +170,7 @@ Commands:
   download-movie    Search and download movie.
   download-series   Search and download tv series.
   homepage-content  Show contents displayed at landing page
-  item-details      Show details for a particular movie/tv-series
+  item-details      Show details of a particular movie/tv-series
   mirror-hosts      Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST]
   popular-search    Movies/tv-series many people are searching now
 ```

@@ -254,7 +254,7 @@ def popular_search_command(json: bool):
     help="Disable showing interactive texts on the progress (logs)",
 )
 def item_details_command(json: bool, full: bool, verbose: int, quiet: bool, **item_kwargs):
-    """Show details for a particular movie/tv-series"""
+    """Show details of a particular movie/tv-series"""
     prepare_start(quiet=quiet, verbose=verbose)
 
     item_kwargs["subject_type"] = getattr(SubjectType, item_kwargs.get("subject_type"))
