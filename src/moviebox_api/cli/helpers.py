@@ -222,4 +222,6 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
             f"For instance: In Linux system you might run 'export {ENVIRONMENT_HOST_KEY}=\"{example_host}\"'"
         )
 
+    logging.info(f"Incase the error persist then feel free to submit the issue at {__repo__}/issues/new")
+
     return exit_code
