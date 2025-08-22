@@ -3,6 +3,7 @@ This module provide functions for performing common and frequently required task
 across the package.
 """
 
+import asyncio
 import re
 import typing as t
 from urllib.parse import urljoin
@@ -95,3 +96,12 @@ def validate_item_page_url(url: str) -> str:
             return url
 
     raise ValueError(f"Invalid url for a specific item page - '{url}'")
+
+
+def get_event_loop():
+    try:
+        event_loop = asyncio.get_event_loop()
+    except RuntimeError:
+        event_loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(event_loop)
+    return event_loop

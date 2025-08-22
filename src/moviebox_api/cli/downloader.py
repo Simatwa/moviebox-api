@@ -1,6 +1,5 @@
 """Gets the work done - downloads media with flexible flow control"""
 
-import asyncio
 from pathlib import Path
 
 import httpx
@@ -28,7 +27,7 @@ from moviebox_api.download import (
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
-from moviebox_api.helpers import assert_instance, assert_membership
+from moviebox_api.helpers import assert_instance, assert_membership, get_event_loop
 from moviebox_api.models import SearchResultsItem
 
 __all__ = ["Downloader"]
@@ -331,7 +330,7 @@ class Downloader:
         list[DownloadedFile | httpx.Response] | None,
     ]:
         """Synchronously search movie by name and proceed to download it."""
-        return asyncio.get_event_loop().run_until_complete(self.download_movie(*args, **kwargs))
+        return get_event_loop().run_until_complete(self.download_movie(*args, **kwargs))
 
     def download_tv_series_sync(
         self,
@@ -342,4 +341,4 @@ class Downloader:
         dict[str, DownloadedFile | httpx.Response | list[DownloadedFile | httpx.Response]],
     ]:
         """Synchronously search tv-series by name and proceed to download its episodes."""
-        return asyncio.get_event_loop().run_until_complete(self.download_tv_series(*args, **kwargs))
+        return get_event_loop().run_until_complete(self.download_tv_series(*args, **kwargs))

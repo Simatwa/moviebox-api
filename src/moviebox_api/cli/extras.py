@@ -14,6 +14,7 @@ from moviebox_api.cli.helpers import (
 from moviebox_api.constants import MIRROR_HOSTS, SubjectType
 from moviebox_api.core import Homepage, MovieDetails, PopularSearch, TVSeriesDetails
 from moviebox_api.extractor import JsonDetailsExtractor
+from moviebox_api.helpers import get_event_loop
 from moviebox_api.requests import Session
 
 
@@ -89,7 +90,7 @@ def homepage_content_command(json: bool, title: str, banner: bool, **start_kwarg
 
     session = Session()
     homepage = Homepage(session)
-    homepage_contents = asyncio.get_event_loop().run_until_complete(homepage.get_content_model())
+    homepage_contents = get_event_loop().run_until_complete(homepage.get_content_model())
     banners: dict[str, list[list[str]]] = {}
     items: dict[str, list[list[str]]] = {}
     for operating in homepage_contents.operatingList:
@@ -195,7 +196,7 @@ def popular_search_command(json: bool):
     prepare_start()
 
     search = PopularSearch(Session())
-    items = asyncio.get_event_loop().run_until_complete(search.get_content_model())
+    items = get_event_loop().run_until_complete(search.get_content_model())
 
     if json:
         processed_items = [item.title for item in items]
@@ -260,7 +261,7 @@ def item_details_command(json: bool, full: bool, verbose: int, quiet: bool, **it
     item_kwargs["subject_type"] = getattr(SubjectType, item_kwargs.get("subject_type"))
     session = Session()
 
-    target_item = asyncio.get_event_loop().run_until_complete(
+    target_item = get_event_loop().run_until_complete(
         perform_search_and_get_item(session=session, **item_kwargs)
     )
 

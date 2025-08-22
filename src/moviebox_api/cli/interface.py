@@ -36,6 +36,7 @@ from moviebox_api.download import (
     CaptionFileDownloader,
     MediaFileDownloader,
 )
+from moviebox_api.helpers import get_event_loop
 
 __all__ = [
     "download_movie_command",
@@ -255,7 +256,7 @@ def download_movie_command(
     prepare_start(quiet, verbose=verbose)
 
     downloader = Downloader()
-    asyncio.get_event_loop().run_until_complete(
+    get_event_loop().run_until_complete(
         downloader.download_movie(
             title,
             year=year,
@@ -500,7 +501,7 @@ def download_tv_series_command(
     prepare_start(quiet, verbose=verbose)
 
     downloader = Downloader()
-    asyncio.get_event_loop().run_until_complete(
+    get_event_loop().run_until_complete(
         downloader.download_tv_series(
             title,
             year=year,

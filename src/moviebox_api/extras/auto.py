@@ -1,6 +1,5 @@
 """Extra functionalities for movies"""
 
-import asyncio
 import warnings
 
 import httpx
@@ -24,7 +23,7 @@ from moviebox_api.download import (
     resolve_media_file_to_be_downloaded,
 )
 from moviebox_api.exceptions import ZeroSearchResultsError
-from moviebox_api.helpers import assert_membership
+from moviebox_api.helpers import assert_membership, get_event_loop
 from moviebox_api.models import (
     DownloadableFilesMetadata,
     SearchResultsItem,
@@ -253,7 +252,7 @@ class MovieAuto:
         self, *args, **kwargs
     ) -> tuple[DownloadedFile | httpx.Response | None, DownloadedFile | httpx.Response | None]:
         """Synchronously perform movie search and download first item in the search results."""
-        return asyncio.run(self.run(*args, **kwargs))
+        return get_event_loop().run_until_complete(self.run(*args, **kwargs))
 
 
 class TVSeriesAuto:
