@@ -8,7 +8,6 @@ from pathlib import Path
 from throttlebuster.constants import (
     DEFAULT_CHUNK_SIZE,
     DEFAULT_READ_TIMEOUT_ATTEMPTS,
-    DEFAULT_TASKS,
     DEFAULT_TASKS_LIMIT,
     DOWNLOAD_PART_EXTENSION,
     DownloadMode,
@@ -96,6 +95,8 @@ ITEM_DETAILS_PATH = "/detail"
 """Immediate path to particular item details page"""
 
 
+DEFAULT_TASKS = 5
+"""Default number of connections for download"""
 class SubjectType(IntEnum):
     """Content types mapped to their integer representatives"""
 
