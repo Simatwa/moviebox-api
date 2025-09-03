@@ -97,6 +97,8 @@ ITEM_DETAILS_PATH = "/detail"
 
 DEFAULT_TASKS = 5
 """Default number of connections for download"""
+
+
 class SubjectType(IntEnum):
     """Content types mapped to their integer representatives"""
 

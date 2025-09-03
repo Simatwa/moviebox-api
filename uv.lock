@@ -318,7 +318,7 @@ requires-dist = [
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "pydantic", specifier = ">=2.11.7" },
     { name = "rich", marker = "extra == 'cli'", specifier = ">=14.1.0" },
-    { name = "throttlebuster", specifier = "==0.1.8" },
+    { name = "throttlebuster", specifier = ">=0.1.9.post1" },
 ]
 provides-extras = ["cli"]
 
@@ -559,16 +559,16 @@ wheels = [
 
 [[package]]
 name = "throttlebuster"
-version = "0.1.8"
+version = "0.1.9.post1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiofiles" },
     { name = "httpx" },
     { name = "tqdm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cf/ef/f4fd89b7892593173f1b0f18f84b6ac5317521a1e72233f8a6f7c68eb9a5/throttlebuster-0.1.8.tar.gz", hash = "sha256:fe4fd1e8432c902dfeaa87577d81f6bc91d7013822cbab4e816d5be11b0b1aeb", size = 44088, upload-time = "2025-08-20T13:36:25.273Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bf/c7/95998cf6203aee5bf556f1e04fbd7ee0ceb20714e030b8eb2f73a5fac87f/throttlebuster-0.1.9.post1.tar.gz", hash = "sha256:6bf339b1753eaaffc18512349a5c924af5c9759e0d897317acecc62327dfb144", size = 44512, upload-time = "2025-09-03T00:26:45.485Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b0/a3/97471b5af1b1ace2346306ad6846462b3fd589b2a7916393b518798b65cd/throttlebuster-0.1.8-py3-none-any.whl", hash = "sha256:eabd2b92131c18e4343042c3b627bb61f72e9685662c19cf2b7e1738d1366eba", size = 22014, upload-time = "2025-08-20T13:36:22.916Z" },
+    { url = "https://files.pythonhosted.org/packages/3b/07/c2c794f8a5e18e12fbb5b3b55b2e645f3acd21d8eb92802d03f988518df0/throttlebuster-0.1.9.post1-py3-none-any.whl", hash = "sha256:17b6fb3c7b70654389994ea61e36229e4746f9cc15e05b78c11c99391439fd0b", size = 22528, upload-time = "2025-09-03T00:26:42.971Z" },
 ]
 
 [[package]]
