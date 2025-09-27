@@ -16,6 +16,7 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 - Search & download movies, tv-series and their subtitles.
 - Native pydantic modelling of responses
 - Fully asynchronous with synchronous support for major operations
+- Increased download speed - **over 5 times faster** than usual. 
 
 ## Installation
 
