@@ -234,6 +234,11 @@ def moviebox():
     is_flag=True,
     help="Do not prompt for movie confirmation",
 )
+@click.option(
+    "--stream",
+    is_flag=True,
+    help="Stream directly in VLC instead of downloading",
+)
 @click.help_option("-h", "--help")
 def download_movie_command(
     title: str,
@@ -249,6 +254,7 @@ def download_movie_command(
     verbose: int,
     quiet: bool,
     yes: bool,
+    stream: bool = False,
     **download_runner_params,
 ):
     """Search and download movie."""
@@ -269,6 +275,7 @@ def download_movie_command(
             caption_only=caption_only,
             movie_filename_tmpl=movie_filename_tmpl,
             caption_filename_tmpl=caption_filename_tmpl,
+            stream=stream,
             **process_download_runner_params(download_runner_params),
         )
     )
@@ -476,6 +483,11 @@ def download_movie_command(
     is_flag=True,
     help="Do not prompt for tv-series confirmation",
 )
+@click.option(
+    "--stream",
+    is_flag=True,
+    help="Stream directly in VLC instead of downloading",
+)
 @click.help_option("-h", "--help")
 def download_tv_series_command(
     title: str,
@@ -494,6 +506,7 @@ def download_tv_series_command(
     verbose: int,
     quiet: bool,
     yes: bool,
+    stream: bool = False,
     **download_runner_params,
 ):
     """Search and download tv series."""
@@ -517,6 +530,7 @@ def download_tv_series_command(
             limit=limit,
             episode_filename_tmpl=episode_filename_tmpl,
             caption_filename_tmpl=caption_filename_tmpl,
+            stream=stream,
             **process_download_runner_params(download_runner_params),
         )
     )

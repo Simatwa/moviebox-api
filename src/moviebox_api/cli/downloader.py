@@ -1,5 +1,7 @@
 """Gets the work done - downloads media with flexible flow control"""
 
+import logging
+import subprocess
 from pathlib import Path
 
 import httpx
@@ -16,6 +18,7 @@ from moviebox_api.constants import (
     DEFAULT_CHUNK_SIZE,
     DEFAULT_TASKS,
     DOWNLOAD_QUALITIES,
+    DOWNLOAD_REQUEST_HEADERS,
     DownloadQualitiesType,
     SubjectType,
 )
@@ -58,6 +61,7 @@ class Downloader:
         language: tuple[str] = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
+        stream: bool = False,
         search_function: callable = perform_search_and_get_item,
         chunk_size: int = DEFAULT_CHUNK_SIZE,
         tasks: int = DEFAULT_TASKS,
@@ -69,7 +73,7 @@ class Downloader:
         DownloadedFile | httpx.Response | None,
         list[DownloadedFile | httpx.Response] | None,
     ]:
-        """Search movie by name and proceed to download it.
+        """Search movie by name and proceed to download it or stream it in VLC.
 
         Args:
             title (str): Complete or partial movie name
@@ -83,6 +87,7 @@ class Downloader:
             language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
             download_caption (bool, optional): Whether to download caption or not. Defaults to False.
             caption_only (bool, optional): Whether to ignore movie file or not. Defaults to False.
+            stream (bool, optional): Whether to stream directly in VLC instead of downloading. Defaults to False.
             search_function (callable, optional): Accepts `session`, `title`, `year`, `subject_type` & `yes` and returns `SearchResultsItem`.
             chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
             tasks (int, optional): Number of tasks to carry out the download. Defaults to DEFAULT_TASKS.
@@ -124,6 +129,74 @@ class Downloader:
 
         target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_details)
 
+        # Handle streaming option
+        if stream:
+            import subprocess
+            import logging
+            import tempfile
+            import os
+            
+            print(f"[stream-url] {target_media_file.url}")
+            
+            subtitle_files = []
+            # If user wants captions, download them first for streaming
+            if download_caption:
+                try:
+                    for lang in language:
+                        target_caption_file = get_caption_file_or_raise(downloadable_details, lang)
+                        
+                        # Create a temporary file to store the subtitle
+                        with tempfile.NamedTemporaryFile(mode='wb', suffix=f'.{lang}.srt', delete=False) as temp_sub:
+                            # Download the subtitle content
+                            async with self._session.client_session.stream('GET', target_caption_file.url) as response:
+                                async for chunk in response.aiter_bytes():
+                                    temp_sub.write(chunk)
+                            
+                            subtitle_files.append(temp_sub.name)
+                            print(f"[subtitle] Downloaded {lang} subtitle for streaming")
+                except Exception as e:
+                    logging.error(f"Error downloading subtitles for streaming: {e}")
+            
+            try:
+                # Create an MPV command with properly formatted headers
+                # MPV handles HTTP headers more directly than VLC
+                
+                # Start with base MPV command
+                mpv_cmd = ["mpv"]
+                
+                # Add each header as an MPV parameter
+                for header_name, header_value in DOWNLOAD_REQUEST_HEADERS.items():
+                    mpv_cmd.append(f"--http-header-fields={header_name}: {header_value}")
+                
+                # Add subtitle files if available
+                for sub_file in subtitle_files:
+                    mpv_cmd.append(f"--sub-file={sub_file}")
+                
+                # Auto-select the first subtitle track if available
+                if subtitle_files:
+                    mpv_cmd.append("--sid=1")
+                
+                # Add the URL at the end
+                mpv_cmd.append(str(target_media_file.url))
+                
+                print("Launching MPV with required headers and subtitles...")
+                subprocess.run(mpv_cmd)
+                
+                # Clean up subtitle temp files
+                for sub_file in subtitle_files:
+                    try:
+                        os.unlink(sub_file)
+                    except:
+                        pass
+                
+                return (None, None)
+            except FileNotFoundError:
+                logging.error("MPV player not found. Please install MPV to use streaming feature.")
+                return (None, None)
+            except Exception as e:
+                logging.error(f"Error launching MPV: {e}")
+                return (None, None)
+                
         subtitle_details_items = []
 
         if download_caption or caption_only:
@@ -179,6 +252,7 @@ class Downloader:
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
+        stream: bool = False,
         limit: int = 1,
         search_function: callable = perform_search_and_get_item,
         chunk_size: int = DEFAULT_CHUNK_SIZE,
@@ -191,7 +265,7 @@ class Downloader:
         int,
         dict[str, DownloadedFile | httpx.Response | list[DownloadedFile | httpx.Response]],
     ]:
-        """Search tv-series by name and proceed to download its episodes.
+        """Search tv-series by name and proceed to download or stream its episodes.
 
         Args:
             title (str): Complete or partial tv-series name.
@@ -207,6 +281,7 @@ class Downloader:
             language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
             download_caption (bool, optional): Whether to download caption or not. Defaults to False.
             caption_only (bool, optional): Whether to ignore episode files or not. Defaults to False.
+            stream (bool, optional): Whether to stream directly in VLC instead of downloading. Defaults to False.
             limit (int, optional): Number of episodes to download including the offset episode. Defaults to 1.
             search_function (callable, optional): Accepts `session`, `title`, `year`, `subject_type` & `yes` and returns item.
             chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
@@ -299,11 +374,79 @@ class Downloader:
                     # Avoid downloading tv-series
                     continue
 
-            # Download series
+            # Download or stream series
 
             current_episode_details["captions"] = caption_details_items
 
             target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_files_detail)
+
+            # Handle streaming option
+            if stream:
+                import subprocess
+                import logging
+                import tempfile
+                import os
+                
+                print(f"[stream-url] {target_media_file.url}")
+                
+                subtitle_files = []
+                # If user wants captions, download them first for streaming
+                if download_caption:
+                    try:
+                        for lang in language:
+                            target_caption_file = get_caption_file_or_raise(downloadable_files_detail, lang)
+                            
+                            # Create a temporary file to store the subtitle
+                            with tempfile.NamedTemporaryFile(mode='wb', suffix=f'.{lang}.srt', delete=False) as temp_sub:
+                                # Download the subtitle content
+                                async with self._session.client_session.stream('GET', target_caption_file.url) as response:
+                                    async for chunk in response.aiter_bytes():
+                                        temp_sub.write(chunk)
+                                
+                                subtitle_files.append(temp_sub.name)
+                                print(f"[subtitle] Downloaded {lang} subtitle for streaming")
+                    except Exception as e:
+                        logging.error(f"Error downloading subtitles for streaming: {e}")
+                
+                try:
+                    # Create an MPV command with properly formatted headers
+                    # MPV handles HTTP headers more directly than VLC
+                    
+                    # Start with base MPV command
+                    mpv_cmd = ["mpv"]
+                    
+                    # Add each header as an MPV parameter
+                    for header_name, header_value in DOWNLOAD_REQUEST_HEADERS.items():
+                        mpv_cmd.append(f"--http-header-fields={header_name}: {header_value}")
+                    
+                    # Add subtitle files if available
+                    for sub_file in subtitle_files:
+                        mpv_cmd.append(f"--sub-file={sub_file}")
+                    
+                    # Auto-select the first subtitle track if available
+                    if subtitle_files:
+                        mpv_cmd.append("--sid=1")
+                    
+                    # Add the URL at the end
+                    mpv_cmd.append(str(target_media_file.url))
+                    
+                    print("Launching MPV with required headers and subtitles...")
+                    subprocess.run(mpv_cmd)
+                    
+                    # Clean up subtitle temp files
+                    for sub_file in subtitle_files:
+                        try:
+                            os.unlink(sub_file)
+                        except:
+                            pass
+                    
+                    return {}  # Return empty dict as we're not downloading anything
+                except FileNotFoundError:
+                    logging.error("MPV player not found. Please install MPV to use streaming feature.")
+                    return {}
+                except Exception as e:
+                    logging.error(f"Error launching MPV: {e}")
+                    return {}
 
             filename = media_file_downloader.generate_filename(
                 target_tv_series,
@@ -329,7 +472,7 @@ class Downloader:
         DownloadedFile | httpx.Response | None,
         list[DownloadedFile | httpx.Response] | None,
     ]:
-        """Synchronously search movie by name and proceed to download it."""
+        """Synchronously search movie by name and proceed to download or stream it."""
         return get_event_loop().run_until_complete(self.download_movie(*args, **kwargs))
 
     def download_tv_series_sync(
@@ -340,5 +483,5 @@ class Downloader:
         int,
         dict[str, DownloadedFile | httpx.Response | list[DownloadedFile | httpx.Response]],
     ]:
-        """Synchronously search tv-series by name and proceed to download its episodes."""
+        """Synchronously search tv-series by name and proceed to download or stream its episodes."""
         return get_event_loop().run_until_complete(self.download_tv_series(*args, **kwargs))
