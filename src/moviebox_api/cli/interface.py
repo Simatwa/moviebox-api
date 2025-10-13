@@ -237,7 +237,7 @@ def moviebox():
 @click.option(
     "--stream",
     is_flag=True,
-    help="Stream directly in VLC instead of downloading",
+    help="Stream directly in MPV instead of downloading",
 )
 @click.help_option("-h", "--help")
 def download_movie_command(
@@ -486,7 +486,7 @@ def download_movie_command(
 @click.option(
     "--stream",
     is_flag=True,
-    help="Stream directly in VLC instead of downloading",
+    help="Stream directly in MPV instead of downloading",
 )
 @click.help_option("-h", "--help")
 def download_tv_series_command(
