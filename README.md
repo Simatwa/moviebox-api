@@ -90,28 +90,6 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-#### Stream Media with MPV Player
-
-Instead of downloading, you can directly stream media with MPV player, with proper headers and subtitle support:
-
-```python
-from moviebox_api.cli import Downloader
-
-async def main():
-    downloader = Downloader()
-    # Stream movie with subtitles
-    await downloader.download_movie(
-        "Avatar",
-        stream=True,          # Enable streaming
-        download_caption=True # Include subtitles in the stream
-    )
-
-if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
-```
-
 Perform download with progress hook
 
 ```python
@@ -381,9 +359,9 @@ Options:
 
 </details>
 
-## Streaming with MPV
+## Streaming with MPV (CLI only)
 
-You can stream media directly using the MPV player instead of downloading it:
+You can stream media directly using the MPV player instead of downloading it (Command-line interface only):
 
 ```bash
 # Stream a movie
@@ -403,6 +381,7 @@ moviebox download-series "Game of Thrones" -s 1 -e 1 --stream --caption
 ```
 
 The streaming feature:
+- CLI-only feature (requires `moviebox-api[cli]` installation)
 - Uses MPV player (must be installed on your system)
 - Passes all necessary HTTP headers for proper authentication
 - Downloads and includes subtitles when requested with `--caption`
