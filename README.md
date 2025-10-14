@@ -361,7 +361,7 @@ Options:
 
 ## Streaming with MPV (CLI only)
 
-You can stream media directly using the MPV player instead of downloading it (Command-line interface only):
+You can stream media directly using the [MPV player](https://mpv.io/installation/) instead of downloading it (Command-line interface only):
 
 ```bash
 # Stream a movie

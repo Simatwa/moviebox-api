@@ -258,7 +258,7 @@ def download_movie_command(
     stream: bool = False,
     **download_runner_params,
 ):
-    """Search and download movie."""
+    """Search and download or stream movie."""
 
     prepare_start(quiet, verbose=verbose)
 
