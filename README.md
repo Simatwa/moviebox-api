@@ -1,7 +1,9 @@
 <div align="center">
 
 # moviebox-api
-Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-series and their subtitles.
+
+**Unofficial Python wrapper for moviebox.ph**  
+Search, discover, download, and stream movies & TV series with subtitles
 
 [![PyPI version](https://badge.fury.io/py/moviebox-api.svg)](https://pypi.org/project/moviebox-api)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/moviebox-api)](https://pypi.org/project/moviebox-api)
@@ -9,30 +11,72 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 [![PyPI - License](https://img.shields.io/pypi/l/moviebox-api)](https://pypi.org/project/moviebox-api)
 [![Downloads](https://pepy.tech/badge/moviebox-api)](https://pepy.tech/project/moviebox-api)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+[Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [Usage](#-usage) • [Documentation](#-documentation)
+
 </div>
 
-## Features
+---
 
-- Search & download movies, tv-series and their subtitles.
-- Stream media directly with MPV player including subtitle support
-- Native pydantic modelling of responses
-- Fully asynchronous with synchronous support for major operations
-- Increased download speed - **over 5 times faster** than usual. 
+## 📋 Table of Contents
 
-## Installation
+- [✨ Features](#-features)
+- [📦 Installation](#-installation)
+  - [For Users (CLI)](#for-users-cli)
+  - [For Developers](#for-developers)
+  - [MPV Player (Optional)](#mpv-player-optional-for-streaming)
+  - [Termux Support](#termux-support)
+- [🚀 Quick Start](#-quick-start)
+  - [Interactive Menu (Easiest)](#interactive-menu-easiest)
+  - [Command Line](#command-line-examples)
+  - [Python API](#python-api-example)
+- [📖 Usage](#-usage)
+  - [🖥️ Command Line Interface](#️-command-line-interface)
+  - [🐍 Python API](#-python-api)
+- [📚 Documentation](#-documentation)
+- [⚙️ Advanced Configuration](#️-advanced-configuration)
+- [⚠️ Disclaimer](#️-disclaimer)
 
-Run the following command in your terminal:
+---
+
+## ✨ Features
+
+- 🎬 **Download Movies & TV Series** - High-quality downloads with multiple resolution options
+- 📝 **Subtitle Support** - Download subtitles in multiple languages
+- 🎥 **Stream with MPV** - Watch directly without downloading (CLI only)
+- ⚡ **Super Fast Downloads** - Over 5x faster than standard downloads
+- 🔄 **Async & Sync Support** - Fully asynchronous with synchronous fallback
+- 🎯 **Interactive Menu** - User-friendly TUI for easy navigation
+- 🔍 **Search & Discovery** - Find movies, trending content, and popular searches
+- 🛠️ **Developer-Friendly** - Clean Python API with Pydantic models 
+
+
+---
+
+## 📦 Installation
+
+### For Users (CLI)
+
+Install with command-line interface support:
 
 ```sh
-$ pip install "moviebox-api[cli]"
-
-# For developers
-$ pip install moviebox-api
+pip install "moviebox-api[cli]"
 ```
 
-### MPV Player (for streaming)
+### For Developers
 
-To use the streaming feature, you need to have MPV player installed:
+Install base package for Python integration:
+
+```sh
+pip install moviebox-api
+```
+
+### MPV Player (Optional, for Streaming)
+
+To stream content directly without downloading, install MPV player:
+
+<details>
+<summary><b>Linux</b></summary>
 
 ```sh
 # Ubuntu/Debian
@@ -43,18 +87,28 @@ sudo dnf install mpv
 
 # Arch Linux
 sudo pacman -S mpv
-
-# macOS with Homebrew
-brew install mpv
 ```
+</details>
 
 <details>
+<summary><b>macOS</b></summary>
 
-<summary>
+```sh
+# Using Homebrew
+brew install mpv
+```
+</details>
 
-### Termux 
+<details>
+<summary><b>Windows</b></summary>
 
-</summary>
+Download from [mpv.io/installation](https://mpv.io/installation/)
+</details>
+
+### Termux Support
+
+<details>
+<summary>Installation for Termux (Android)</summary>
 
 ```sh
 pip install moviebox-api --no-deps
@@ -63,151 +117,231 @@ pip install rich click bs4 httpx throttlebuster
 ```
 </details>
 
-## Usage
+---
 
-<details open>
+## 🚀 Quick Start
 
-<summary>
+### Interactive Menu (Easiest)
 
-### Developers
+Launch the interactive menu for a user-friendly experience:
 
-</summary>
+```sh
+moviebox-interactive
+```
 
+Or:
+
+```sh
+moviebox interactive
+```
+
+The interactive menu provides:
+- 🎬 Download Movies
+- 📺 Download TV Series  
+- 🎥 Stream Movies with MPV
+- 📡 Stream TV Series with MPV
+- 🔍 Discover & Search Content
+
+### Command Line Examples
+
+**Download a movie:**
+```sh
+moviebox download-movie "Avatar"
+```
+
+**Download a TV series episode:**
+```sh
+moviebox download-series "Game of Thrones" -s 1 -e 1
+```
+
+**Stream a movie (requires MPV):**
+```sh
+moviebox download-movie "Avatar" --stream
+```
+
+### Python API Example
+
+**Simple download:**
 ```python
 from moviebox_api import MovieAuto
+import asyncio
 
 async def main():
     auto = MovieAuto()
     movie_file, subtitle_file = await auto.run("Avatar")
-    print(movie_file.saved_to, subtitle_file.saved_to, sep="\n")
-    # Output
-    # /.../Avatar - 1080P.mp4
-    # /.../Avatar - English.srt
+    print(f"Movie: {movie_file.saved_to}")
+    print(f"Subtitle: {subtitle_file.saved_to}")
 
-if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
+asyncio.run(main())
 ```
 
-Perform download with progress hook
+---
 
-```python
-from moviebox_api import DownloadTracker, MovieAuto
+## 📖 Usage
 
+## 🖥️ Command Line Interface
 
-async def callback_function(progress: DownloadTracker):
-    percent = (progress.downloaded_size / progress.expected_size) * 100
+### Available Commands
 
-    print(f">>[{percent:.2f}%] Downloading {progress.saved_to.name}", end="\r")
-
-
-if __name__ == "__main__":
-    import asyncio
-
-    auto = MovieAuto(caption_language=None)
-    asyncio.run(auto.run(query="Avatar", progress_hook=callback_function))
+```sh
+moviebox --help
 ```
 
+**Commands:**
+- `download-movie` - Search and download a movie
+- `download-series` - Search and download TV series episodes
+- `interactive` - Launch interactive menu interface
+- `homepage-content` - Show trending content
+- `popular-search` - Show popular searches
+- `item-details` - Get details about a movie/series
+- `mirror-hosts` - Discover available mirror hosts
 
+### Interactive Menu Guide
 
-#### More Control
+### Interactive Menu Guide
 
-Prompt for item confirmation prior to download
+The interactive menu offers a clean, numbered interface:
 
-##### Movie
+```text
+┌┬┐┌─┐┬  ┬┬┌─┐┌┐ ┌─┐─┐ ┬ 
+││││ │└┐┌┘│├┤ ├┴┐│ │┌┴┬┘ 
+┴ ┴└─┘ └┘ ┴└─┘└─┘└─┘┴ └─ 
 
-```python
-# $ pip install 'moviebox-api[cli]'
+DOWNLOAD OPTIONS
+[1] Download Movie
+[2] Download TV Series
 
-from moviebox_api.cli import Downloader
+STREAMING OPTIONS
+[3] Stream Movie
+[4] Stream TV Series
 
+DISCOVER & INFO
+[5] Show Homepage Content
+[6] Show Popular Searches
+[7] Show Mirror Hosts
 
-async def main():
-    downloader = Downloader()
-    movie_file, subtitle_files = await downloader.download_movie(
-        "avatar",
-    )
-    print(movie_file, subtitle_files, sep="\n")
-
-
-if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
+[0] Exit
 ```
 
-##### TV-Series
+<details>
+<summary><b>Navigation Tips</b></summary>
 
-```python
-# $ pip install 'moviebox-api[cli]'
-
-from moviebox_api.cli import Downloader
-
-async def main():
-    downloader = Downloader()
-    episodes_content_map = await downloader.download_tv_series(
-        "Merlin",
-        season=1,
-        episode=1,
-        limit=2,
-        # limit=13 # This will download entire 13 episodes of season 1
-    )
-
-    print(episodes_content_map)
-
-if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
-```
-
-For more details youn can go through the [full documentation](./docs/README.md)
+- Type a number (0-7) and press Enter
+- Follow on-screen prompts
+- Press `Ctrl+C` to exit anytime
+- Press Enter without typing to use defaults
 
 </details>
 
+<details>
+<summary><b>Quality Options</b></summary>
+
+- `Best` - Highest available quality (recommended)
+- `1080p` - Full HD (1920×1080)
+- `720p` - HD (1280×720)
+- `480p` - Standard Definition
+- `360p` - Low quality, smaller file size
+- `Worst` - Lowest available quality
+
+</details>
 
 <details>
+<summary><b>Subtitle Options</b></summary>
 
-<summary>
+- `Yes` - Download with subtitles (default)
+- `No` - Download without subtitles
+- `Subtitles only` - Download only subtitle files
 
-### Commandline
+</details>
 
-```sh
-# $ python -m moviebox_api --help
-
-Usage: moviebox [OPTIONS] COMMAND [ARGS]...
-
-  Search and download movies/tv-series and their subtitles. envvar-prefix :
-  MOVIEBOX
-
-Options:
-  --version  Show the version and exit.
-  --help     Show this message and exit.
-
-Commands:
-  download-movie    Search and download movie.
-  download-series   Search and download tv series.
-  homepage-content  Show contents displayed at landing page
-  item-details      Show details of a particular movie/tv-series
-  mirror-hosts      Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST]
-  popular-search    Movies/tv-series many people are searching now
-```
-
-</summary>
+### Download Commands
 
 <details>
+<summary><b>Download Movie</b></summary>
 
-<summary>
-
-#### Download Movie
-
+**Basic usage:**
 ```sh
-$ python -m moviebox_api download-movie <Movie title>
-# e.g python -m moviebox_api download-movie Avatar
+moviebox download-movie "Avatar"
 ```
 
-</summary>
+**With options:**
+```sh
+# Specific quality
+moviebox download-movie "Avatar" --quality 1080p
+
+# With year filter
+moviebox download-movie "Avatar" --year 2009
+
+# Custom directory
+moviebox download-movie "Avatar" --dir ~/Movies
+
+# Without subtitles
+moviebox download-movie "Avatar" --no-caption
+
+# Auto-confirm (no prompts)
+moviebox download-movie "Avatar" --yes
+```
+
+**Common options:**
+- `-y, --year` - Filter by release year
+- `-q, --quality` - Video quality (best, 1080p, 720p, 480p, 360p, worst)
+- `-d, --dir` - Download directory
+- `-x, --language` - Subtitle language (default: English)
+- `--no-caption` - Skip subtitle download
+- `-Y, --yes` - Auto-confirm without prompts
+
+[View all options](#download-movie-full-options)
+
+</details>
+
+<details>
+<summary><b>Download TV Series</b></summary>
+
+**Basic usage:**
+```sh
+moviebox download-series "Game of Thrones" -s 1 -e 1
+```
+
+**Download multiple episodes:**
+```sh
+# Download 5 episodes starting from S01E01
+moviebox download-series "Game of Thrones" -s 1 -e 1 -l 5
+
+# Download entire season
+moviebox download-series "Game of Thrones" -s 1 -e 1 -l 100
+```
+
+**With options:**
+```sh
+# Specific quality
+moviebox download-series "Merlin" -s 1 -e 1 --quality 720p
+
+# Auto-confirm
+moviebox download-series "Merlin" -s 1 -e 1 --yes
+
+# Custom directory
+moviebox download-series "Merlin" -s 1 -e 1 --dir ~/Series
+```
+
+**Required options:**
+- `-s, --season` - Season number (required)
+- `-e, --episode` - Starting episode number (required)
+
+**Common options:**
+- `-l, --limit` - Number of episodes to download (default: 1)
+- `-q, --quality` - Video quality
+- `-x, --language` - Subtitle language
+- `--no-caption` - Skip subtitles
+- `-Y, --yes` - Auto-confirm
+
+[View all options](#download-series-full-options)
+
+</details>
+
+---
+
+<details id="download-movie-full-options">
+<summary><b>Download Movie - All Options</b></summary>
 
 ```sh
 # python -m moviebox_api download-movie --help
@@ -272,18 +406,8 @@ Options:
 
 </details>
 
-<details>
-
-<summary>
-
-#### Download Series
-
-```sh
-$ python -m moviebox_api download-series <Series title> -s <season number> -e <episode number>
-# e.g python -m moviebox_api download-series Merlin -s 1 -e 1
-```
-
-</summary>
+<details id="download-series-full-options">
+<summary><b>Download Series - All Options</b></summary>
 
 ```sh
 # python -m moviebox_api download-series --help
@@ -357,48 +481,254 @@ Options:
 
 </details>
 
-</details>
+---
 
-## Streaming with MPV (CLI only)
+### Streaming with MPV
 
-You can stream media directly using the [MPV player](https://mpv.io/installation/) instead of downloading it (Command-line interface only):
+Stream content directly without downloading (requires MPV player):
 
-```bash
+<details>
+<summary><b>Stream Movies</b></summary>
+
+```sh
 # Stream a movie
 moviebox download-movie "Avatar" --stream
 
-# Stream a movie with subtitles
+# Stream with subtitles
 moviebox download-movie "Avatar" --stream --caption
 
-# Stream a movie with specific language subtitles
+# Stream with specific language subtitles
 moviebox download-movie "Avatar" --stream --caption --language French
 
-# Stream a TV series episode
-moviebox download-series "Game of Thrones" -s 1 -e 1 --stream
-
-# Stream a TV series episode with subtitles
-moviebox download-series "Game of Thrones" -s 1 -e 1 --stream --caption
+# Stream specific quality
+moviebox download-movie "Avatar" --stream --quality 720p
 ```
 
-The streaming feature:
-- CLI-only feature (requires `moviebox-api[cli]` installation)
-- Uses MPV player (must be installed on your system)
-- Passes all necessary HTTP headers for proper authentication
-- Downloads and includes subtitles when requested with `--caption`
-- Automatically cleans up temporary subtitle files after playback
+</details>
 
-## Further info
+<details>
+<summary><b>Stream TV Series</b></summary>
 
-> [!TIP]
-> Shorthand for `$ python -m moviebox_api` is simply `$ moviebox`
+```sh
+# Stream an episode
+moviebox download-series "Game of Thrones" -s 1 -e 1 --stream
 
-**Moviebox.ph** has [several other mirror hosts](https://github.com/Simatwa/moviebox-api/issues/27), in order to set specific one to be used by the script simply expose it as environment variable using name `MOVIEBOX_API_HOST`. For instance, in Linux systems one might need to run `$ export MOVIEBOX_API_HOST="h5.aoneroom.com"`
+# Stream with subtitles
+moviebox download-series "Game of Thrones" -s 1 -e 1 --stream --caption
 
+# Stream specific quality
+moviebox download-series "Breaking Bad" -s 1 -e 1 --stream --quality 1080p
+```
 
-## Disclaimer
+</details>
 
-> "All videos and pictures on MovieBox are from the Internet, and their copyrights belong to the original creators. We only provide webpage services and do not store, record, or upload any content." - moviebox.ph as on *Sunday 13th, July 2025*
+**Streaming Features:**
+- ✅ No download required - watch immediately
+- ✅ Automatic subtitle integration
+- ✅ Proper HTTP header handling
+- ✅ Auto-cleanup of temporary files
+- ⚠️ Requires `moviebox-api[cli]` installation
+- ⚠️ Requires MPV player installed
 
-Long live Moviebox spirit.
+---
 
-<p align="center"> Made with ❤️</p>
+## 🐍 Python API
+
+### Simple Auto-Download
+
+The easiest way to download content:
+
+```python
+from moviebox_api import MovieAuto
+import asyncio
+
+async def main():
+    auto = MovieAuto()
+    
+    # Download movie with subtitle
+    movie_file, subtitle_file = await auto.run("Avatar")
+    print(f"Movie saved to: {movie_file.saved_to}")
+    print(f"Subtitle saved to: {subtitle_file.saved_to}")
+
+asyncio.run(main())
+```
+
+### Download with Progress Tracking
+
+Monitor download progress in real-time:
+
+```python
+from moviebox_api import DownloadTracker, MovieAuto
+import asyncio
+
+async def progress_callback(progress: DownloadTracker):
+    percent = (progress.downloaded_size / progress.expected_size) * 100
+    print(f"[{percent:.2f}%] Downloading {progress.saved_to.name}", end="\r")
+
+async def main():
+    auto = MovieAuto()
+    await auto.run("Avatar", progress_hook=progress_callback)
+
+asyncio.run(main())
+```
+
+### Advanced Control with Downloader
+
+For more control over the download process:
+
+<details>
+<summary><b>Download Movie with Confirmation</b></summary>
+
+```python
+from moviebox_api.cli import Downloader
+import asyncio
+
+async def main():
+    downloader = Downloader()
+    
+    # User will be prompted to confirm the movie
+    movie_file, subtitle_files = await downloader.download_movie("Avatar")
+    
+    print(f"Downloaded: {movie_file}")
+    print(f"Subtitles: {subtitle_files}")
+
+asyncio.run(main())
+```
+
+</details>
+
+<details>
+<summary><b>Download TV Series Episodes</b></summary>
+
+```python
+from moviebox_api.cli import Downloader
+import asyncio
+
+async def main():
+    downloader = Downloader()
+    
+    # Download first 2 episodes of season 1
+    episodes_map = await downloader.download_tv_series(
+        "Merlin",
+        season=1,
+        episode=1,
+        limit=2
+    )
+    
+    print(f"Downloaded episodes: {episodes_map}")
+
+asyncio.run(main())
+```
+
+</details>
+
+### Custom Configuration
+
+```python
+from moviebox_api import MovieAuto
+import asyncio
+
+async def main():
+    # Customize download behavior
+    auto = MovieAuto(
+        caption_language="Spanish",  # Change subtitle language
+        quality="720p",              # Set default quality
+        download_dir="~/Downloads"   # Custom download directory
+    )
+    
+    movie_file, subtitle_file = await auto.run("Avatar")
+
+asyncio.run(main())
+```
+
+---
+
+## 📚 Documentation
+
+For comprehensive documentation with more examples:
+
+- **[Full API Documentation](./docs/README.md)**
+- **[Example Scripts](./docs/examples/)**
+  - [Download Movie CLI](./docs/examples/download-movie-cli.py)
+  - [Download Series CLI](./docs/examples/download-series-cli.py)
+  - [Extractor Benchmark](./docs/examples/extractors-benchmark.py)
+
+---
+
+## ⚙️ Advanced Configuration
+
+### Using Mirror Hosts
+
+Moviebox.ph has [multiple mirror hosts](https://github.com/Simatwa/moviebox-api/issues/27). To use a specific mirror:
+
+```sh
+# Linux/macOS
+export MOVIEBOX_API_HOST="h5.aoneroom.com"
+
+# Windows (CMD)
+set MOVIEBOX_API_HOST=h5.aoneroom.com
+
+# Windows (PowerShell)
+$env:MOVIEBOX_API_HOST="h5.aoneroom.com"
+```
+
+Or discover available mirrors:
+
+```sh
+moviebox mirror-hosts
+```
+
+### Command Shortcuts
+
+```sh
+# Instead of:
+python -m moviebox_api download-movie "Avatar"
+
+# Use:
+moviebox download-movie "Avatar"
+```
+
+---
+
+## ⚠️ Disclaimer
+
+> "All videos and pictures on MovieBox are from the Internet, and their copyrights belong to the original creators. We only provide webpage services and do not store, record, or upload any content."  
+> — *moviebox.ph (Sunday, July 13th, 2025)*
+
+This is an unofficial API wrapper. Use responsibly and respect copyright laws in your jurisdiction.
+
+---
+
+## 👥 Contributors
+
+We appreciate all contributions to this project! Thank you to everyone who has helped improve moviebox-api.
+
+<div align="center">
+
+<a href="https://github.com/Simatwa/moviebox-api/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Simatwa/moviebox-api" />
+</a>
+
+</div>
+
+### How to Contribute
+
+Contributions are welcome! Here's how you can help:
+
+1. 🐛 **Report Bugs** - Open an issue describing the bug
+2. 💡 **Suggest Features** - Share your ideas for improvements
+3. 🔧 **Submit Pull Requests** - Fix bugs or add new features
+4. 📖 **Improve Documentation** - Help make the docs better
+5. ⭐ **Star the Project** - Show your support!
+
+Please read our contribution guidelines before submitting a PR.
+
+---
+
+<div align="center">
+
+**Made with ❤️**
+
+[Report Bug](https://github.com/Simatwa/moviebox-api/issues) • [Request Feature](https://github.com/Simatwa/moviebox-api/issues) • [⭐ Star on GitHub](https://github.com/Simatwa/moviebox-api)
+
+</div>
