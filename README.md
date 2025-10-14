@@ -338,6 +338,151 @@ moviebox download-series "Merlin" -s 1 -e 1 --dir ~/Series
 
 </details>
 
+---
+
+<details id="download-movie-full-options">
+<summary><b>Download Movie - All Options</b></summary>
+
+```sh
+# python -m moviebox_api download-movie --help
+
+Usage: moviebox download-movie [OPTIONS] TITLE
+
+  Search and download movie.
+
+Options:
+  -y, --year INTEGER              Year filter for the movie to proceed with
+                                  [default: 0]
+  -q, --quality [worst|best|360p|480p|720p|1080p]
+                                  Media quality to be downloaded  [default:
+                                  BEST]
+  -d, --dir DIRECTORY             Directory for saving the movie to  [default:
+                                  /home/smartwa/git/smartwa/moviebox-api]
+  -D, --caption-dir DIRECTORY     Directory for saving the caption file to
+                                  [default:
+                                  /home/smartwa/git/smartwa/moviebox-api]
+  -m, --mode [start|resume|auto]  Start the download, resume or set
+                                  automatically  [default: auto]
+  -x, --language TEXT             Caption language filter  [default: English]
+  -M, --movie-filename-tmpl TEXT  Template for generating movie filename
+                                  [default: %(title)s (%(release_year)d) -
+                                  %(resolution)dP.%(ext)s]
+  -C, --caption-filename-tmpl TEXT
+                                  Template for generating caption filename
+                                  [default: %(title)s (%(release_year)d) -
+                                  %(lanName)s.%(ext)s]
+  -t, --tasks INTEGER RANGE       Number of tasks to carry out the download
+                                  [default: 2; 1<=x<=1000]
+  -P, --part-dir DIRECTORY        Directory for temporarily saving the
+                                  downloaded file-parts to  [default:
+                                  /home/smartwa/git/smartwa/moviebox-api]
+  -E, --part-extension TEXT       Filename extension for download parts
+                                  [default: .part]
+  -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes
+                                  [default: 256]
+  -B, --merge-buffer-size INTEGER RANGE
+                                  Buffer size for merging the separated files
+                                  in kilobytes [default : CHUNK_SIZE]
+                                  [1<=x<=102400]
+  -c, --colour TEXT               Progress bar display colour  [default: cyan]
+  -A, --ascii                     Use unicode (smooth blocks) to fill the
+                                  progress-bar meter
+  -z, --disable-progress-bar      Do not show download progress-bar
+  --leave / --no-leave            Keep all leaves of the progress-bar
+                                  [default: no-leave]
+  --caption / --no-caption        Download caption file  [default: caption]
+  -O, --caption-only              Download caption file only and ignore movie
+  --stream                        Stream directly in MPV player instead of downloading
+  -S, --simple                    Show download percentage and bar only in
+                                  progressbar
+  -T, --test                      Just test if download is possible but do not
+                                  actually download
+  -V, --verbose                   Show more detailed interactive texts
+  -Q, --quiet                     Disable showing interactive texts on the
+                                  progress (logs)
+  -Y, --yes                       Do not prompt for movie confirmation
+  -h, --help                      Show this message and exit.
+```
+
+</details>
+
+<details id="download-series-full-options">
+<summary><b>Download Series - All Options</b></summary>
+
+```sh
+# python -m moviebox_api download-series --help
+
+Usage: moviebox download-series [OPTIONS] TITLE
+
+  Search and download tv series.
+
+Options:
+  -y, --year INTEGER              Year filter for the series to proceed with :
+                                  0  [default: 0]
+  -s, --season INTEGER RANGE      TV Series season filter  [1<=x<=1000;
+                                  required]
+  -e, --episode INTEGER RANGE     Episode offset of the tv-series season
+                                  [1<=x<=1000; required]
+  -l, --limit INTEGER RANGE       Total number of episodes to download in the
+                                  season  [default: 1; 1<=x<=1000]
+  -q, --quality [worst|best|360p|480p|720p|1080p]
+                                  Media quality to be downloaded  [default:
+                                  BEST]
+  -x, --language TEXT             Caption language filter  [default: English]
+  -d, --dir DIRECTORY             Directory for saving the series file to
+                                  [default:
+                                  /home/smartwa/git/smartwa/moviebox-api]
+  -D, --caption-dir DIRECTORY     Directory for saving the caption file to
+                                  [default:
+                                  /home/smartwa/git/smartwa/moviebox-api]
+  -m, --mode [start|resume|auto]  Start new download, resume or set
+                                  automatically  [default: auto]
+  -L, --episode-filename-tmpl TEXT
+                                  Template for generating series episode
+                                  filename  [default: %(title)s
+                                  S%(season)dE%(episode)d -
+                                  %(resolution)dP.%(ext)s]
+  -C, --caption-filename-tmpl TEXT
+                                  Template for generating caption filename
+                                  [default: %(title)s S%(season)dE%(episode)d
+                                  - %(lanName)s.%(ext)s]
+  -t, --tasks INTEGER RANGE       Number of tasks to carry out the download
+                                  [default: 2; 1<=x<=1000]
+  -P, --part-dir DIRECTORY        Directory for temporarily saving the
+                                  downloaded file-parts to  [default:
+                                  /home/smartwa/git/smartwa/moviebox-api]
+  -E, --part-extension TEXT       Filename extension for download parts
+                                  [default: .part]
+  -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes
+                                  [default: 256]
+  -B, --merge-buffer-size INTEGER RANGE
+                                  Buffer size for merging the separated files
+                                  in kilobytes [default : CHUNK_SIZE]
+                                  [1<=x<=102400]
+  -c, --colour TEXT               Progress bar display color  [default: cyan]
+  -A, --ascii                     Use unicode (smooth blocks) to fill the
+                                  progress-bar meter
+  -z, --disable-progress-bar      Do not show download progress-bar
+  --leave / --no-leave            Keep all leaves of the progressbar
+                                  [default: no-leave]
+  --caption / --no-caption        Download caption file  [default: caption]
+  -O, --caption-only              Download caption file only and ignore movie
+  --stream                        Stream directly in MPV player instead of downloading
+  -S, --simple                    Show download percentage and bar only in
+                                  progressbar
+  -T, --test                      Just test if download is possible but do not
+                                  actually download
+  -V, --verbose                   Show more detailed interactive texts
+  -Q, --quiet                     Disable showing interactive texts on the
+                                  progress (logs)
+  -Y, --yes                       Do not prompt for tv-series confirmation
+  -h, --help                      Show this message and exit.
+```
+
+</details>
+
+---
+
 ### Streaming with MPV
 
 Stream content directly without downloading (requires MPV player):
@@ -553,153 +698,6 @@ moviebox download-movie "Avatar"
 This is an unofficial API wrapper. Use responsibly and respect copyright laws in your jurisdiction.
 
 ---
-
-<div align="center">
-
-### Appendix: Full Command Options
-
-</div>
-
-<details id="download-movie-full-options">
-<summary><b>Download Movie - All Options</b></summary>
-
-```sh
-# python -m moviebox_api download-movie --help
-
-Usage: moviebox download-movie [OPTIONS] TITLE
-
-  Search and download movie.
-
-Options:
-  -y, --year INTEGER              Year filter for the movie to proceed with
-                                  [default: 0]
-  -q, --quality [worst|best|360p|480p|720p|1080p]
-                                  Media quality to be downloaded  [default:
-                                  BEST]
-  -d, --dir DIRECTORY             Directory for saving the movie to  [default:
-                                  /home/smartwa/git/smartwa/moviebox-api]
-  -D, --caption-dir DIRECTORY     Directory for saving the caption file to
-                                  [default:
-                                  /home/smartwa/git/smartwa/moviebox-api]
-  -m, --mode [start|resume|auto]  Start the download, resume or set
-                                  automatically  [default: auto]
-  -x, --language TEXT             Caption language filter  [default: English]
-  -M, --movie-filename-tmpl TEXT  Template for generating movie filename
-                                  [default: %(title)s (%(release_year)d) -
-                                  %(resolution)dP.%(ext)s]
-  -C, --caption-filename-tmpl TEXT
-                                  Template for generating caption filename
-                                  [default: %(title)s (%(release_year)d) -
-                                  %(lanName)s.%(ext)s]
-  -t, --tasks INTEGER RANGE       Number of tasks to carry out the download
-                                  [default: 2; 1<=x<=1000]
-  -P, --part-dir DIRECTORY        Directory for temporarily saving the
-                                  downloaded file-parts to  [default:
-                                  /home/smartwa/git/smartwa/moviebox-api]
-  -E, --part-extension TEXT       Filename extension for download parts
-                                  [default: .part]
-  -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes
-                                  [default: 256]
-  -B, --merge-buffer-size INTEGER RANGE
-                                  Buffer size for merging the separated files
-                                  in kilobytes [default : CHUNK_SIZE]
-                                  [1<=x<=102400]
-  -c, --colour TEXT               Progress bar display colour  [default: cyan]
-  -A, --ascii                     Use unicode (smooth blocks) to fill the
-                                  progress-bar meter
-  -z, --disable-progress-bar      Do not show download progress-bar
-  --leave / --no-leave            Keep all leaves of the progress-bar
-                                  [default: no-leave]
-  --caption / --no-caption        Download caption file  [default: caption]
-  -O, --caption-only              Download caption file only and ignore movie
-  --stream                        Stream directly in MPV player instead of downloading
-  -S, --simple                    Show download percentage and bar only in
-                                  progressbar
-  -T, --test                      Just test if download is possible but do not
-                                  actually download
-  -V, --verbose                   Show more detailed interactive texts
-  -Q, --quiet                     Disable showing interactive texts on the
-                                  progress (logs)
-  -Y, --yes                       Do not prompt for movie confirmation
-  -h, --help                      Show this message and exit.
-
-</details>
-
-<details id="download-series-full-options">
-<summary><b>Download Series - All Options</b></summary>
-
-```sh
-# python -m moviebox_api download-series --help
-
-Usage: moviebox download-series [OPTIONS] TITLE
-
-  Search and download tv series.
-
-Options:
-  -y, --year INTEGER              Year filter for the series to proceed with :
-                                  0  [default: 0]
-  -s, --season INTEGER RANGE      TV Series season filter  [1<=x<=1000;
-                                  required]
-  -e, --episode INTEGER RANGE     Episode offset of the tv-series season
-                                  [1<=x<=1000; required]
-  -l, --limit INTEGER RANGE       Total number of episodes to download in the
-                                  season  [default: 1; 1<=x<=1000]
-  -q, --quality [worst|best|360p|480p|720p|1080p]
-                                  Media quality to be downloaded  [default:
-                                  BEST]
-  -x, --language TEXT             Caption language filter  [default: English]
-  -d, --dir DIRECTORY             Directory for saving the series file to
-                                  [default:
-                                  /home/smartwa/git/smartwa/moviebox-api]
-  -D, --caption-dir DIRECTORY     Directory for saving the caption file to
-                                  [default:
-                                  /home/smartwa/git/smartwa/moviebox-api]
-  -m, --mode [start|resume|auto]  Start new download, resume or set
-                                  automatically  [default: auto]
-  -L, --episode-filename-tmpl TEXT
-                                  Template for generating series episode
-                                  filename  [default: %(title)s
-                                  S%(season)dE%(episode)d -
-                                  %(resolution)dP.%(ext)s]
-  -C, --caption-filename-tmpl TEXT
-                                  Template for generating caption filename
-                                  [default: %(title)s S%(season)dE%(episode)d
-                                  - %(lanName)s.%(ext)s]
-  -t, --tasks INTEGER RANGE       Number of tasks to carry out the download
-                                  [default: 2; 1<=x<=1000]
-  -P, --part-dir DIRECTORY        Directory for temporarily saving the
-                                  downloaded file-parts to  [default:
-                                  /home/smartwa/git/smartwa/moviebox-api]
-  -E, --part-extension TEXT       Filename extension for download parts
-                                  [default: .part]
-  -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes
-                                  [default: 256]
-  -B, --merge-buffer-size INTEGER RANGE
-                                  Buffer size for merging the separated files
-                                  in kilobytes [default : CHUNK_SIZE]
-                                  [1<=x<=102400]
-  -c, --colour TEXT               Progress bar display color  [default: cyan]
-  -A, --ascii                     Use unicode (smooth blocks) to fill the
-                                  progress-bar meter
-  -z, --disable-progress-bar      Do not show download progress-bar
-  --leave / --no-leave            Keep all leaves of the progressbar
-                                  [default: no-leave]
-  --caption / --no-caption        Download caption file  [default: caption]
-  -O, --caption-only              Download caption file only and ignore movie
-  --stream                        Stream directly in MPV player instead of downloading
-  -S, --simple                    Show download percentage and bar only in
-                                  progressbar
-  -T, --test                      Just test if download is possible but do not
-                                  actually download
-  -V, --verbose                   Show more detailed interactive texts
-  -Q, --quiet                     Disable showing interactive texts on the
-                                  progress (logs)
-  -Y, --yes                       Do not prompt for tv-series confirmation
-  -h, --help                      Show this message and exit.
-
-</details>
-
-```
 
 ## 👥 Contributors
 
