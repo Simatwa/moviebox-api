@@ -231,22 +231,20 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
 
 
 def stream_video_via_mpv(url: str, subtitle_details_items: list[DownloadedFile], subtitles_dir: str):
-    logging.info(f"Stream url - {url}")
-
     try:
         # Create an MPV command with properly formatted headers
-        # MPV handles HTTP headers more directly than VLC
-
         mpv_cmd = ["mpv"]
-
+        # Disable youtube-dl/yt-dlp since we're streaming a direct video URL
+        mpv_cmd.append("--no-ytdl")
         for header_name, header_value in DOWNLOAD_REQUEST_HEADERS.items():
-            mpv_cmd.append(f'--http-header-fields="{header_name}: {header_value}"')
+            mpv_cmd.append(f"--http-header-fields={header_name}: {header_value}")
 
         for index, sub_file in enumerate(subtitle_details_items):
             if index == 0:
                 mpv_cmd.append("--sid=1")
-
-            mpv_cmd.append(f'--sub-file="{sub_file.saved_to.as_posix()}"')
+            # Convert to absolute path for mpv compatibility
+            subtitle_path = sub_file.saved_to.resolve().as_posix()
+            mpv_cmd.append(f"--sub-file={subtitle_path}")
 
         mpv_cmd.append(str(url))
 
