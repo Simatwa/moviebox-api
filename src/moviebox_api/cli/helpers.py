@@ -2,14 +2,17 @@
 
 import logging
 import random
+import shutil
+import subprocess
 
 import click
 from httpx import ConnectTimeout, HTTPStatusError
 from pydantic import ValidationError
-from throttlebuster import DownloadMode
+from throttlebuster import DownloadedFile, DownloadMode
 
 from moviebox_api import __repo__, logger
 from moviebox_api.constants import (
+    DOWNLOAD_REQUEST_HEADERS,
     ENVIRONMENT_HOST_KEY,
     HOST_URL,
     MIRROR_HOSTS,
@@ -225,3 +228,46 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
     logging.info(f"Incase the error persist then feel free to submit the issue at {__repo__}/issues/new")
 
     return exit_code
+
+
+def stream_video_via_mpv(url: str, subtitle_details_items: list[DownloadedFile], subtitles_dir: str):
+    logging.info(f"Stream url - {url}")
+
+    try:
+        # Create an MPV command with properly formatted headers
+        # MPV handles HTTP headers more directly than VLC
+
+        mpv_cmd = ["mpv"]
+
+        for header_name, header_value in DOWNLOAD_REQUEST_HEADERS.items():
+            mpv_cmd.append(f'--http-header-fields="{header_name}: {header_value}"')
+
+        for index, sub_file in enumerate(subtitle_details_items):
+            if index == 0:
+                mpv_cmd.append("--sid=1")
+
+            mpv_cmd.append(f'--sub-file="{sub_file.saved_to.as_posix()}"')
+
+        mpv_cmd.append(str(url))
+
+        logging.info("Launching MPV with required headers and subtitles...")
+
+        logging.debug(f"MPV launch commands :  {' '.join(mpv_cmd)}")
+
+        subprocess.run(mpv_cmd)
+
+        shutil.rmtree(subtitles_dir, ignore_errors=True)
+
+        return (None, None)
+
+    except FileNotFoundError:
+        logging.error(
+            "MPV player not found. Please install MPV from https://mpv.io/installation/ "
+            "to use streaming feature. "
+        )
+
+        return (None, None)
+
+    except Exception as e:
+        logging.error(f"Error launching MPV: {e}")
+        return (None, None)

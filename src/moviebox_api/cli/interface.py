@@ -235,6 +235,7 @@ def moviebox():
     help="Do not prompt for movie confirmation",
 )
 @click.option(
+    "-X",
     "--stream",
     is_flag=True,
     help="Stream directly in MPV instead of downloading",
@@ -484,6 +485,7 @@ def download_movie_command(
     help="Do not prompt for tv-series confirmation",
 )
 @click.option(
+    "-X",
     "--stream",
     is_flag=True,
     help="Stream directly in MPV instead of downloading",
@@ -509,7 +511,7 @@ def download_tv_series_command(
     stream: bool = False,
     **download_runner_params,
 ):
-    """Search and download tv series."""
+    """Search and download or stream tv series."""
 
     prepare_start(quiet, verbose=verbose)
 
