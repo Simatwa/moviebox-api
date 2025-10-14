@@ -14,6 +14,7 @@ Unofficial wrapper for moviebox.ph - search, discover and download movies, tv-se
 ## Features
 
 - Search & download movies, tv-series and their subtitles.
+- Stream media directly with MPV player including subtitle support
 - Native pydantic modelling of responses
 - Fully asynchronous with synchronous support for major operations
 - Increased download speed - **over 5 times faster** than usual. 
@@ -27,7 +28,24 @@ $ pip install "moviebox-api[cli]"
 
 # For developers
 $ pip install moviebox-api
+```
 
+### MPV Player (for streaming)
+
+To use the streaming feature, you need to have MPV player installed:
+
+```sh
+# Ubuntu/Debian
+sudo apt install mpv
+
+# Fedora/RHEL
+sudo dnf install mpv
+
+# Arch Linux
+sudo pacman -S mpv
+
+# macOS with Homebrew
+brew install mpv
 ```
 
 <details>
@@ -240,6 +258,7 @@ Options:
                                   [default: no-leave]
   --caption / --no-caption        Download caption file  [default: caption]
   -O, --caption-only              Download caption file only and ignore movie
+  --stream                        Stream directly in MPV player instead of downloading
   -S, --simple                    Show download percentage and bar only in
                                   progressbar
   -T, --test                      Just test if download is possible but do not
@@ -324,6 +343,7 @@ Options:
                                   [default: no-leave]
   --caption / --no-caption        Download caption file  [default: caption]
   -O, --caption-only              Download caption file only and ignore movie
+  --stream                        Stream directly in MPV player instead of downloading
   -S, --simple                    Show download percentage and bar only in
                                   progressbar
   -T, --test                      Just test if download is possible but do not
@@ -338,6 +358,34 @@ Options:
 </details>
 
 </details>
+
+## Streaming with MPV (CLI only)
+
+You can stream media directly using the MPV player instead of downloading it (Command-line interface only):
+
+```bash
+# Stream a movie
+moviebox download-movie "Avatar" --stream
+
+# Stream a movie with subtitles
+moviebox download-movie "Avatar" --stream --caption
+
+# Stream a movie with specific language subtitles
+moviebox download-movie "Avatar" --stream --caption --language French
+
+# Stream a TV series episode
+moviebox download-series "Game of Thrones" -s 1 -e 1 --stream
+
+# Stream a TV series episode with subtitles
+moviebox download-series "Game of Thrones" -s 1 -e 1 --stream --caption
+```
+
+The streaming feature:
+- CLI-only feature (requires `moviebox-api[cli]` installation)
+- Uses MPV player (must be installed on your system)
+- Passes all necessary HTTP headers for proper authentication
+- Downloads and includes subtitles when requested with `--caption`
+- Automatically cleans up temporary subtitle files after playback
 
 ## Further info
 
