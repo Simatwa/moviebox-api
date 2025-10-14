@@ -115,7 +115,7 @@ class BaseSearch(BaseContentProviderAndHelper):
                 return MovieDetails(item, self.session)
             case SubjectType.TV_SERIES:
                 return TVSeriesDetails(item, self.session)
-            case "_":
+            case _:
                 raise NotImplementedError(
                     f"Currently only items of {SubjectType.MOVIES.name} and {SubjectType.TV_SERIES.name} "
                     "subject-types are supported. Check later versions for possible support of other "

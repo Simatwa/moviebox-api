@@ -68,7 +68,7 @@ def resolve_media_file_to_be_downloaded(
             target_metadata = downloadable_metadata.best_media_file
         case "WORST":
             target_metadata = downloadable_metadata.worst_media_file
-        case "_":
+        case _:
             if quality in DOWNLOAD_QUALITIES:
                 quality_downloads_map = downloadable_metadata.get_quality_downloads_map()
                 target_metadata = quality_downloads_map.get(quality)
@@ -177,19 +177,19 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
 
     request_headers = DOWNLOAD_REQUEST_HEADERS
     request_cookies = {}
-    movie_filename_template = "%(title)s (%(release_year)d) - %(resolution)dP.%(ext)s"
-    series_filename_template = "%(title)s S%(season)dE%(episode)d - %(resolution)dP.%(ext)s"
+    movie_filename_template = "{title} {release_year} - {resolution}P.{ext}"
+    series_filename_template = "{title} S{season}E{episode} - {resolution}P.{ext}"
     # Should have been named episode_filename_template but for consistency
     # with the subject-types {movie, tv-series, music} it's better as it is
     possible_filename_placeholders = (
-        "%(title)s",
-        "%(release_year)d",
-        "%(release_date)s",
-        "%(resolution)d",
-        "%(ext)s",
-        "%(size_string)s",
-        "%(season)d",
-        "%(episode)d",
+        "{title}",
+        "{release_year}",
+        "{release_date}",
+        "{resolution}",
+        "{ext}",
+        "{size_string}",
+        "{season}",
+        "{episode}",
     )
 
     def __init__(
@@ -266,13 +266,13 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
             episode=episode,
         )
 
-        filename_template = (
+        filename_template: str = (
             cls.series_filename_template
             if search_results_item.subjectType == SubjectType.TV_SERIES
             else cls.movie_filename_template
         )
 
-        return filename_template % placeholders
+        return filename_template.format(**placeholders)
 
     async def run(
         self,
@@ -344,22 +344,22 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
     request_headers = DOWNLOAD_REQUEST_HEADERS
     request_cookies = {}
     movie_filename_template = (
-        "%(title)s (%(release_year)d) - %(lanName)s.%(ext)s"
-        # "%(title)s (%(release_year)d) - %(lanName)s [delay - %(delay)d].%(ext)s"
+        "{title} ({release_year}) - {lanName}.{ext}"
+        # "{title} ({release_year}) - {lanName} [delay - {delay}].{ext}"
     )
-    series_filename_template = "%(title)s S%(season)dE%(episode)d - %(lanName)s.%(ext)s"
+    series_filename_template = "{title} S{season}E{episode} - {lanName}.{ext}"
     possible_filename_placeholders = (
-        "%(title)s",
-        "%(release_year)d",
-        "%(release_date)s",
-        "%(ext)s",
-        "%(size_string)s",
-        "%(id)s",
-        "%(lan)s",
-        "%(lanName)s",
-        "%(delay)d",
-        "%(season)d",
-        "%(episode)d",
+        "{title}",
+        "{release_year}",
+        "{release_date}",
+        "{ext}",
+        "{size_string}",
+        "{id}",
+        "{lan}",
+        "{lanName}",
+        "{delay}",
+        "{season}",
+        "{episode}",
     )
 
     def __init__(
@@ -440,12 +440,12 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
             episode=episode,
         )
 
-        filename_template = (
+        filename_template: str = (
             cls.series_filename_template
             if search_results_item.subjectType == SubjectType.TV_SERIES
             else cls.movie_filename_template
         )
-        return sanitize_filename(filename_template % placeholders)
+        return sanitize_filename(filename_template.format(**placeholders))
 
     async def run(
         self,
