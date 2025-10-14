@@ -560,12 +560,6 @@ This is an unofficial API wrapper. Use responsibly and respect copyright laws in
 
 </div>
 
-<div align="center">
-
-### Appendix: Full Command Options
-
-</div>
-
 <details id="download-movie-full-options">
 <summary><b>Download Movie - All Options</b></summary>
 
