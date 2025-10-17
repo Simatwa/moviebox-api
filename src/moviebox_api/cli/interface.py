@@ -184,7 +184,7 @@ def moviebox():
     show_default=True,
 )
 @click.option(
-    "-A",
+    "-U",
     "--ascii",
     is_flag=True,
     help="Use unicode (smooth blocks) to fill the progress-bar meter",
@@ -194,6 +194,13 @@ def moviebox():
     "--disable-progress-bar",
     is_flag=True,
     help="Do not show download progress-bar",
+)
+@click.option(
+    "-I",
+    "--ignore-missing-caption",
+    is_flag=True,
+    help="Proceed to download movie file even when caption file is missing",
+    show_default=True,
 )
 @click.option(
     "--leave/--no-leave",
@@ -256,6 +263,7 @@ def download_movie_command(
     caption_filename_tmpl: str,
     caption: bool,
     caption_only: bool,
+    ignore_missing_caption,
     verbose: int,
     quiet: bool,
     yes: bool,
@@ -281,6 +289,7 @@ def download_movie_command(
             movie_filename_tmpl=movie_filename_tmpl,
             caption_filename_tmpl=caption_filename_tmpl,
             stream_via=stream_via,
+            ignore_missing_caption=ignore_missing_caption,
             **process_download_runner_params(download_runner_params),
         )
     )
@@ -436,7 +445,7 @@ def download_movie_command(
     show_default=True,
 )
 @click.option(
-    "-A",
+    "-U",
     "--ascii",
     is_flag=True,
     help="Use unicode (smooth blocks) to fill the progress-bar meter",
@@ -446,6 +455,13 @@ def download_movie_command(
     "--disable-progress-bar",
     is_flag=True,
     help="Do not show download progress-bar",
+)
+@click.option(
+    "-I",
+    "--ignore-missing-caption",
+    is_flag=True,
+    help="Proceed to download episode file even when caption file is missing",
+    show_default=True,
 )
 @click.option(
     "--leave/--no-leave",
@@ -464,6 +480,12 @@ def download_movie_command(
     "--caption-only",
     is_flag=True,
     help="Download caption file only and ignore movie",
+)
+@click.option(
+    "-A",
+    "--auto-mode",
+    is_flag=True,
+    help="When limit is 1 (default), download entire remaining seasons.",
 )
 @click.option(
     "-S",
@@ -511,10 +533,12 @@ def download_tv_series_command(
     caption_dir: Path,
     caption: bool,
     caption_only: bool,
+    ignore_missing_caption: bool,
     verbose: int,
     quiet: bool,
     yes: bool,
     stream_via: str | None,
+    auto_mode: bool,
     **download_runner_params,
 ):
     """Search and download or stream tv series."""
@@ -539,6 +563,8 @@ def download_tv_series_command(
             episode_filename_tmpl=episode_filename_tmpl,
             caption_filename_tmpl=caption_filename_tmpl,
             stream_via=stream_via,
+            ignore_missing_caption=ignore_missing_caption,
+            auto_mode=auto_mode,
             **process_download_runner_params(download_runner_params),
         )
     )

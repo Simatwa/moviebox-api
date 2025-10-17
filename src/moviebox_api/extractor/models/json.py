@@ -69,6 +69,17 @@ class ResourceModel(BaseModel):
     source: str
     uploadBy: str
 
+    @property
+    def total_seasons(self) -> int:
+        return len(self.seasons)
+
+    def get_season_by_number(self, number: int) -> SeasonsModel:
+        for season in self.seasons:
+            if season.se == number:
+                return season
+
+        raise ValueError(f"The item does not have that season number {number}")
+
 
 class StarsModel(BaseModel):
     """`.resData.stars.0`"""

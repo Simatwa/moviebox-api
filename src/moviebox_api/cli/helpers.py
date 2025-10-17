@@ -226,7 +226,8 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
             f' while in Windows : "set MOVIEBOX_API_HOST={example_host}'
         )
 
-    logging.info(f"Incase the error persist then feel free to submit the issue at {__repo__}/issues/new")
+    if not isinstance(exception, (ValueError, AssertionError, RuntimeError)):
+        logging.info(f"Incase the error persist then feel free to submit the issue at {__repo__}/issues/new")
 
     return exit_code
 

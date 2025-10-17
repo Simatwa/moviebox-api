@@ -1,7 +1,5 @@
 """Contains non-essential cli-commands"""
 
-import asyncio
-
 import click
 import rich
 from rich.table import Table

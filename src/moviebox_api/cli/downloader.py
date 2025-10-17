@@ -1,5 +1,6 @@
 """Gets the work done - downloads media with flexible flow control"""
 
+import logging
 import tempfile
 from pathlib import Path
 from typing import Literal
@@ -22,7 +23,7 @@ from moviebox_api.constants import (
     DownloadQualitiesType,
     SubjectType,
 )
-from moviebox_api.core import Session
+from moviebox_api.core import Session, TVSeriesDetails
 from moviebox_api.download import (
     CaptionFileDownloader,
     DownloadableMovieFilesDetail,
@@ -30,6 +31,7 @@ from moviebox_api.download import (
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
+from moviebox_api.exceptions import ZeroCaptionFileError
 from moviebox_api.helpers import assert_instance, assert_membership, get_event_loop
 from moviebox_api.models import SearchResultsItem
 
@@ -68,6 +70,7 @@ class Downloader:
         part_dir: Path | str = CURRENT_WORKING_DIR,
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
+        ignore_missing_caption: bool = False,
         **run_kwargs,
     ) -> tuple[
         DownloadedFile | httpx.Response | None,
@@ -135,7 +138,14 @@ class Downloader:
 
         if download_caption or caption_only:
             for lang in language:
-                target_caption_file = get_caption_file_or_raise(downloadable_details, lang)
+                try:
+                    target_caption_file = get_caption_file_or_raise(downloadable_details, lang)
+
+                except (ZeroCaptionFileError, ValueError):
+                    if ignore_missing_caption:
+                        continue
+                    raise
+
                 caption_downloader = CaptionFileDownloader(
                     dir=subtitles_dir,
                     chunk_size=chunk_size,
@@ -199,10 +209,15 @@ class Downloader:
         part_dir: Path | str = CURRENT_WORKING_DIR,
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
+        ignore_missing_caption: bool = False,
+        auto_mode: bool = False,
         **run_kwargs,
     ) -> dict[
         int,
-        dict[str, DownloadedFile | httpx.Response | list[DownloadedFile | httpx.Response]],
+        dict[
+            int,
+            dict[str, DownloadedFile | httpx.Response | list[DownloadedFile | httpx.Response]],
+        ],
     ]:
         """Search tv-series by name and proceed to download or stream its episodes.
 
@@ -228,6 +243,7 @@ class Downloader:
             part_dir (Path | str, optional): Directory for temporarily saving the downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
+            auto_mode (bool, optional). Iterate over seasons as well. When limit is 1 (default), download entire tv series. Defaults to False.
 
         run_kwargs: Other keyword arguments for `MediaFileDownloader.run`
 
@@ -257,7 +273,6 @@ class Downloader:
         )
 
         downloadable_files = DownloadableTVSeriesFilesDetail(self._session, target_tv_series)
-        response = {}
 
         subtitles_dir = tempfile.mkdtemp() if stream_via else caption_dir
 
@@ -279,70 +294,187 @@ class Downloader:
             merge_buffer_size=merge_buffer_size,
         )
 
-        for episode_count in range(limit):
-            current_episode = episode + episode_count
+        core_tv_series_details = TVSeriesDetails(target_tv_series, self._session)
 
-            downloadable_files_detail = await downloadable_files.get_content_model(
-                season=season, episode=current_episode
-            )
+        tv_series_details_model = await core_tv_series_details.get_json_details_extractor_model()
+        series_resource = tv_series_details_model.resource
 
-            # TODO: Iterate over seasons as well
-            # - With regard to season details
+        async def download_episodes_per_season(
+            season_number: int,
+            first_episode_number: int,
+            episode_limit: int,
+        ):
+            response = {}
+            for episode_count in range(episode_limit):
+                current_episode = first_episode_number + episode_count
 
-            current_episode_details = {}
-            caption_details_items: list[DownloadedFile] = []
-
-            if caption_only or download_caption:
-                for lang in language:
-                    target_caption_file = get_caption_file_or_raise(downloadable_files_detail, lang)
-
-                    caption_filename = caption_downloader.generate_filename(
-                        target_tv_series,
-                        caption_file=target_caption_file,
-                        season=season,
-                        episode=current_episode,
-                    )
-
-                    caption_details = await caption_downloader.run(
-                        caption_file=target_caption_file,
-                        filename=caption_filename,
-                        **run_kwargs,
-                    )
-
-                    caption_details_items.append(caption_details)
-
-                if caption_only and not stream_via:
-                    # Avoid downloading tv-series
-                    continue
-
-            # Download or stream series
-
-            current_episode_details["captions"] = caption_details_items
-
-            target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_files_detail)
-
-            if stream_via:
-                media_player_name_func_map[stream_via](
-                    str(target_media_file.url), caption_details_items, subtitles_dir
+                downloadable_files_detail = await downloadable_files.get_content_model(
+                    season=season_number, episode=current_episode
                 )
 
-                continue
+                current_episode_details = {}
+                caption_details_items: list[DownloadedFile] = []
 
-            filename = media_file_downloader.generate_filename(
-                target_tv_series,
-                media_file=target_media_file,
-                season=season,
-                episode=current_episode,
+                if caption_only or download_caption:
+                    for lang in language:
+                        try:
+                            target_caption_file = get_caption_file_or_raise(downloadable_files_detail, lang)
+
+                        except (ZeroCaptionFileError, ValueError):
+                            if ignore_missing_caption:
+                                continue
+                            raise
+
+                        caption_filename = caption_downloader.generate_filename(
+                            target_tv_series,
+                            caption_file=target_caption_file,
+                            season=season_number,
+                            episode=current_episode,
+                        )
+
+                        caption_details = await caption_downloader.run(
+                            caption_file=target_caption_file,
+                            filename=caption_filename,
+                            **run_kwargs,
+                        )
+
+                        caption_details_items.append(caption_details)
+
+                    if caption_only and not stream_via:
+                        # Avoid downloading tv-series
+                        continue
+
+                # Download or stream series
+
+                current_episode_details["captions"] = caption_details_items
+
+                target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_files_detail)
+
+                if stream_via:
+                    media_player_name_func_map[stream_via](
+                        str(target_media_file.url), caption_details_items, subtitles_dir
+                    )
+
+                    continue
+
+                filename = media_file_downloader.generate_filename(
+                    target_tv_series,
+                    media_file=target_media_file,
+                    season=season_number,
+                    episode=current_episode,
+                )
+
+                tv_series_details = await media_file_downloader.run(
+                    media_file=target_media_file, filename=filename, **run_kwargs
+                )
+
+                current_episode_details["movie"] = tv_series_details
+                response[current_episode] = current_episode_details
+
+            return response
+
+        if auto_mode:
+            if series_resource.total_seasons < season:
+                raise RuntimeError(
+                    f"The targeted season {season} exceeds the available "
+                    f"tv series seasons {series_resource.total_seasons}."
+                )
+
+            total_episodes = 0
+            downloaded_episodes_count = 0
+            response_jar = {}
+
+            target_seasons = series_resource.seasons[season - 1 :]
+
+            for index, series_season in enumerate(target_seasons):
+                new_episodes_count = series_season.maxEp
+
+                if index == 0:
+                    # episode offset
+                    if series_season.maxEp < episode:
+                        raise RuntimeError(
+                            f"The targeted episode offset {episode} for season {series_season.se}"
+                            f" is greater than the available episodes {series_season.maxEp}"
+                        )
+
+                    else:
+                        new_episodes_count -= episode - 1
+
+                total_episodes += new_episodes_count
+
+            if limit != 1:
+                if limit > total_episodes:
+                    logging.warning(
+                        f"You have set total episodes limit to {limit} but only {total_episodes} "
+                        f"episodes are available starting from the offset (season={season}, episode={episode}"
+                        "). The former will be ignored."
+                    )
+                    limit = total_episodes
+
+            else:
+                limit = total_episodes
+
+            logging.info(
+                f"Process overview - Seasons: {len(target_seasons)}, total episodes: {total_episodes}, "
+                f"episodes download limit: {limit} "
             )
 
-            tv_series_details = await media_file_downloader.run(
-                media_file=target_media_file, filename=filename, **run_kwargs
+            for index, target_season in enumerate(target_seasons):
+                if index == 0:
+                    first_episode_number = episode  # declared by user
+                    episodes_limit = target_season.maxEp - (episode - 1)  # 1 = index 0
+
+                    if episodes_limit > limit:
+                        episodes_limit = limit
+
+                else:
+                    first_episode_number = 1
+
+                    remaining_episodes_amount = limit - downloaded_episodes_count
+
+                    if target_season.maxEp > remaining_episodes_amount:
+                        episodes_limit = remaining_episodes_amount
+
+                    else:
+                        episodes_limit = target_season.maxEp
+
+                downloaded_episodes_details = await download_episodes_per_season(
+                    season_number=target_season.se,
+                    first_episode_number=first_episode_number,
+                    episode_limit=episodes_limit,
+                )
+                response_jar[target_season.se] = downloaded_episodes_details
+
+                downloaded_episodes_count += episodes_limit
+
+            return response_jar
+
+        else:
+            target_season = series_resource.get_season_by_number(season)
+
+            assert episode <= target_season.maxEp, (
+                f"The chosen episode offset {episode} exceeds the available episodes {target_season.maxEp}"
             )
 
-            current_episode_details["movie"] = tv_series_details
-            response[current_episode] = current_episode_details
+            available_episodes = target_season.maxEp - (episode - 1)  # offset
 
-        return response
+            if limit > available_episodes:
+                logging.warning(
+                    f"You have set episodes limit to {limit} but only {available_episodes} "
+                    f"episodes are available starting from the offset {episode}. The former will be ignored."
+                )
+                limit = available_episodes
+
+            logging.info(
+                f"Season {target_season.se} details - Total episodes: {target_season.maxEp}, "
+                f"episodes download limit: {limit}"
+            )
+
+            downloaded_tv_series_details = await download_episodes_per_season(
+                season_number=season, first_episode_number=episode, episode_limit=limit
+            )
+
+            return {season: downloaded_tv_series_details}
 
     def download_movie_sync(
         self,
