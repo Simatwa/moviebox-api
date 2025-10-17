@@ -343,7 +343,7 @@ moviebox download-series "Merlin" -s 1 -e 1 --dir ~/Series
 <details id="download-movie-full-options">
 <summary><b>Download Movie - All Options</b></summary>
 
-```sh
+```text
 # python -m moviebox_api download-movie --help
 
 Usage: moviebox download-movie [OPTIONS] TITLE
@@ -413,7 +413,7 @@ Options:
 <details id="download-series-full-options">
 <summary><b>Download Series - All Options</b></summary>
 
-```sh
+```text
 # python -m moviebox_api download-series --help
 
 Usage: moviebox download-series [OPTIONS] TITLE
@@ -468,13 +468,17 @@ Options:
   -X, --stream-via [mpv|vlc]      Stream directly using the chosen media
                                   player instead of downloading
   -c, --colour TEXT               Progress bar display color  [default: cyan]
-  -A, --ascii                     Use unicode (smooth blocks) to fill the
+  -U, --ascii                     Use unicode (smooth blocks) to fill the
                                   progress-bar meter
   -z, --disable-progress-bar      Do not show download progress-bar
+  -I, --ignore-missing-caption    Proceed to download episode file even when
+                                  caption file is missing
   --leave / --no-leave            Keep all leaves of the progressbar
                                   [default: no-leave]
   --caption / --no-caption        Download caption file  [default: caption]
   -O, --caption-only              Download caption file only and ignore movie
+  -A, --auto-mode                 When limit is 1 (default), download entire
+                                  remaining seasons.
   -S, --simple                    Show download percentage and bar only in
                                   progressbar
   -T, --test                      Just test if download is possible but do not
@@ -490,7 +494,7 @@ Options:
 
 ---
 
-### Streaming with MPV
+### Streaming via Media Players
 
 Stream content directly without downloading (requires MPV or VLC player):
 
@@ -535,7 +539,7 @@ moviebox download-series "Breaking Bad" -s 1 -e 1 --stream-via vlc --quality 108
 - ✅ Proper HTTP header handling
 - ✅ Auto-cleanup of temporary files
 - ⚠️ Requires `moviebox-api[cli]` installation
-- ⚠️ Requires MPV player installed
+- ⚠️ Requires MPV/VLC media player installed
 
 ---
 
@@ -620,6 +624,8 @@ async def main():
         season=1,
         episode=1,
         limit=2
+        # limit = 1 
+        # auto_mode = True # Download entire remaining seasons when limit=1
     )
     
     print(f"Downloaded episodes: {episodes_map}")
