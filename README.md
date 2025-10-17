@@ -24,7 +24,7 @@ Search, discover, download, and stream movies & TV series with subtitles
 - [📦 Installation](#-installation)
   - [For Users (CLI)](#for-users-cli)
   - [For Developers](#for-developers)
-  - [MPV Player (Optional)](#mpv-player-optional-for-streaming)
+  - [Media Player (Optional)](#media-players-optional-for-streaming)
   - [Termux Support](#termux-support)
 - [🚀 Quick Start](#-quick-start)
   - [Interactive Menu (Easiest)](#interactive-menu-easiest)
@@ -71,9 +71,9 @@ Install base package for Python integration:
 pip install moviebox-api
 ```
 
-### MPV Player (Optional, for Streaming)
+### Media Players (Optional, for Streaming)
 
-To stream content directly without downloading, install MPV player:
+To stream content directly without downloading, install [MPV](https://mpv.io/installation) or [VLC](https://www.videolan.org) media players:
 
 <details>
 <summary><b>Linux</b></summary>
@@ -348,7 +348,7 @@ moviebox download-series "Merlin" -s 1 -e 1 --dir ~/Series
 
 Usage: moviebox download-movie [OPTIONS] TITLE
 
-  Search and download movie.
+  Search and download or stream movie.
 
 Options:
   -y, --year INTEGER              Year filter for the movie to proceed with
@@ -365,14 +365,14 @@ Options:
                                   automatically  [default: auto]
   -x, --language TEXT             Caption language filter  [default: English]
   -M, --movie-filename-tmpl TEXT  Template for generating movie filename
-                                  [default: %(title)s (%(release_year)d) -
-                                  %(resolution)dP.%(ext)s]
+                                  [default: {title} {release_year} -
+                                  {resolution}P.{ext}]
   -C, --caption-filename-tmpl TEXT
                                   Template for generating caption filename
-                                  [default: %(title)s (%(release_year)d) -
-                                  %(lanName)s.%(ext)s]
+                                  [default: {title} ({release_year}) -
+                                  {lanName}.{ext}]
   -t, --tasks INTEGER RANGE       Number of tasks to carry out the download
-                                  [default: 2; 1<=x<=1000]
+                                  [default: 5; 1<=x<=1000]
   -P, --part-dir DIRECTORY        Directory for temporarily saving the
                                   downloaded file-parts to  [default:
                                   /home/smartwa/git/smartwa/moviebox-api]
@@ -380,10 +380,15 @@ Options:
                                   [default: .part]
   -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes
                                   [default: 256]
+  -R, --timeout-retry-attempts INTEGER
+                                  Number of times to retry download upon read
+                                  request timing out  [default: 10]
   -B, --merge-buffer-size INTEGER RANGE
                                   Buffer size for merging the separated files
                                   in kilobytes [default : CHUNK_SIZE]
                                   [1<=x<=102400]
+  -X, --stream-via [mpv|vlc]      Stream directly using the chosen media
+                                  player instead of downloading
   -c, --colour TEXT               Progress bar display colour  [default: cyan]
   -A, --ascii                     Use unicode (smooth blocks) to fill the
                                   progress-bar meter
@@ -392,7 +397,6 @@ Options:
                                   [default: no-leave]
   --caption / --no-caption        Download caption file  [default: caption]
   -O, --caption-only              Download caption file only and ignore movie
-  --stream                        Stream directly in MPV player instead of downloading
   -S, --simple                    Show download percentage and bar only in
                                   progressbar
   -T, --test                      Just test if download is possible but do not
@@ -414,7 +418,7 @@ Options:
 
 Usage: moviebox download-series [OPTIONS] TITLE
 
-  Search and download tv series.
+  Search and download or stream tv series.
 
 Options:
   -y, --year INTEGER              Year filter for the series to proceed with :
@@ -439,15 +443,14 @@ Options:
                                   automatically  [default: auto]
   -L, --episode-filename-tmpl TEXT
                                   Template for generating series episode
-                                  filename  [default: %(title)s
-                                  S%(season)dE%(episode)d -
-                                  %(resolution)dP.%(ext)s]
+                                  filename  [default: {title}
+                                  S{season}E{episode} - {resolution}P.{ext}]
   -C, --caption-filename-tmpl TEXT
                                   Template for generating caption filename
-                                  [default: %(title)s S%(season)dE%(episode)d
-                                  - %(lanName)s.%(ext)s]
+                                  [default: {title} S{season}E{episode} -
+                                  {lanName}.{ext}]
   -t, --tasks INTEGER RANGE       Number of tasks to carry out the download
-                                  [default: 2; 1<=x<=1000]
+                                  [default: 5; 1<=x<=1000]
   -P, --part-dir DIRECTORY        Directory for temporarily saving the
                                   downloaded file-parts to  [default:
                                   /home/smartwa/git/smartwa/moviebox-api]
@@ -455,10 +458,15 @@ Options:
                                   [default: .part]
   -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes
                                   [default: 256]
+  -R, --timeout-retry-attempts INTEGER
+                                  Number of times to retry download upon read
+                                  request timing out  [default: 10]
   -B, --merge-buffer-size INTEGER RANGE
                                   Buffer size for merging the separated files
                                   in kilobytes [default : CHUNK_SIZE]
                                   [1<=x<=102400]
+  -X, --stream-via [mpv|vlc]      Stream directly using the chosen media
+                                  player instead of downloading
   -c, --colour TEXT               Progress bar display color  [default: cyan]
   -A, --ascii                     Use unicode (smooth blocks) to fill the
                                   progress-bar meter
@@ -467,7 +475,6 @@ Options:
                                   [default: no-leave]
   --caption / --no-caption        Download caption file  [default: caption]
   -O, --caption-only              Download caption file only and ignore movie
-  --stream                        Stream directly in MPV player instead of downloading
   -S, --simple                    Show download percentage and bar only in
                                   progressbar
   -T, --test                      Just test if download is possible but do not
@@ -485,23 +492,23 @@ Options:
 
 ### Streaming with MPV
 
-Stream content directly without downloading (requires MPV player):
+Stream content directly without downloading (requires MPV or VLC player):
 
 <details>
 <summary><b>Stream Movies</b></summary>
 
 ```sh
 # Stream a movie
-moviebox download-movie "Avatar" --stream
+moviebox download-movie "Avatar" --stream-via vlc
 
 # Stream with subtitles
-moviebox download-movie "Avatar" --stream --caption
+moviebox download-movie "Avatar" --stream-via mpv --caption
 
 # Stream with specific language subtitles
-moviebox download-movie "Avatar" --stream --caption --language French
+moviebox download-movie "Avatar" --stream-via vlc --caption --language French
 
 # Stream specific quality
-moviebox download-movie "Avatar" --stream --quality 720p
+moviebox download-movie "Avatar" --stream-via mpv --quality 720p
 ```
 
 </details>
@@ -511,13 +518,13 @@ moviebox download-movie "Avatar" --stream --quality 720p
 
 ```sh
 # Stream an episode
-moviebox download-series "Game of Thrones" -s 1 -e 1 --stream
+moviebox download-series "Game of Thrones" -s 1 -e 1 --stream-via vlc
 
 # Stream with subtitles
-moviebox download-series "Game of Thrones" -s 1 -e 1 --stream --caption
+moviebox download-series "Game of Thrones" -s 1 -e 1 --stream-via vlc --caption
 
 # Stream specific quality
-moviebox download-series "Breaking Bad" -s 1 -e 1 --stream --quality 1080p
+moviebox download-series "Breaking Bad" -s 1 -e 1 --stream-via vlc --quality 1080p
 ```
 
 </details>
