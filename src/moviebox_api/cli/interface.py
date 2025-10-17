@@ -1,6 +1,5 @@
 """Contains the actual console commands"""
 
-import asyncio
 import logging
 import os
 import sys
@@ -18,6 +17,7 @@ from moviebox_api.cli.extras import (
 )
 from moviebox_api.cli.helpers import (
     command_context_settings,
+    media_player_name_func_map,
     prepare_start,
     process_download_runner_params,
     show_any_help,
@@ -169,6 +169,14 @@ def moviebox():
     show_default=True,
 )
 @click.option(
+    "-X",
+    "--stream-via",
+    type=click.Choice(media_player_name_func_map.keys()),
+    default=None,
+    show_default=True,
+    help="Stream directly using the chosen media player instead of downloading",
+)
+@click.option(
     "-c",
     "--colour",
     help="Progress bar display colour",
@@ -236,12 +244,6 @@ def moviebox():
     is_flag=True,
     help="Do not prompt for movie confirmation",
 )
-@click.option(
-    "-X",
-    "--stream",
-    is_flag=True,
-    help="Stream directly in MPV instead of downloading",
-)
 @click.help_option("-h", "--help")
 def download_movie_command(
     title: str,
@@ -257,7 +259,7 @@ def download_movie_command(
     verbose: int,
     quiet: bool,
     yes: bool,
-    stream: bool = False,
+    stream_via: bool = False,
     **download_runner_params,
 ):
     """Search and download or stream movie."""
@@ -278,7 +280,7 @@ def download_movie_command(
             caption_only=caption_only,
             movie_filename_tmpl=movie_filename_tmpl,
             caption_filename_tmpl=caption_filename_tmpl,
-            stream=stream,
+            stream_via=stream_via,
             **process_download_runner_params(download_runner_params),
         )
     )
@@ -419,6 +421,14 @@ def download_movie_command(
     show_default=True,
 )
 @click.option(
+    "-X",
+    "--stream-via",
+    type=click.Choice(media_player_name_func_map.keys()),
+    default=None,
+    show_default=True,
+    help="Stream directly using the chosen media player instead of downloading",
+)
+@click.option(
     "-c",
     "--colour",
     help="Progress bar display color",
@@ -486,12 +496,6 @@ def download_movie_command(
     is_flag=True,
     help="Do not prompt for tv-series confirmation",
 )
-@click.option(
-    "-X",
-    "--stream",
-    is_flag=True,
-    help="Stream directly in MPV instead of downloading",
-)
 @click.help_option("-h", "--help")
 def download_tv_series_command(
     title: str,
@@ -510,7 +514,7 @@ def download_tv_series_command(
     verbose: int,
     quiet: bool,
     yes: bool,
-    stream: bool = False,
+    stream_via: str | None,
     **download_runner_params,
 ):
     """Search and download or stream tv series."""
@@ -534,7 +538,7 @@ def download_tv_series_command(
             limit=limit,
             episode_filename_tmpl=episode_filename_tmpl,
             caption_filename_tmpl=caption_filename_tmpl,
-            stream=stream,
+            stream_via=stream_via,
             **process_download_runner_params(download_runner_params),
         )
     )

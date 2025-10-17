@@ -1,6 +1,7 @@
 """Interactive menu interface for moviebox-api"""
 
 import platform
+import readline
 import shutil
 import subprocess
 import sys
@@ -332,11 +333,15 @@ def stream_movie():
     clear_screen()
     print("\nMOVIE STREAMING WIZARD")
 
-    # Check if MPV is installed
-    if not check_mpv():
-        print("\nERROR: MPV player is required for streaming. Please install it first.")
-        input("\nPress Enter to return to main menu...")
-        return
+    media_player = click.prompt(
+        "Enter media player", type=click.Choice(["vlc", "mpv"]), show_choices=True, default="mpv"
+    )
+
+    if media_player == "mpv":
+        if not check_mpv():
+            print("\nERROR: MPV player is required for streaming. Please install it first.")
+            input("\nPress Enter to return to main menu...")
+            return
 
     title = input("\nEnter movie title: ").strip()
     if not title:
@@ -359,7 +364,16 @@ def stream_movie():
         language = input("Subtitle language (leave empty for English): ").strip()
 
     # Build command
-    command = [sys.executable, "-m", "moviebox_api", "download-movie", title, "--stream", "-Y"]
+    command = [
+        sys.executable,
+        "-m",
+        "moviebox_api",
+        "download-movie",
+        title,
+        "--stream-via",
+        media_player,
+        "-Y",
+    ]
 
     # Add options based on user input
     if year:

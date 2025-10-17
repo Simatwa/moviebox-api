@@ -2,6 +2,7 @@
 
 import tempfile
 from pathlib import Path
+from typing import Literal
 
 import httpx
 from throttlebuster import DownloadedFile
@@ -9,8 +10,8 @@ from throttlebuster.constants import DOWNLOAD_PART_EXTENSION
 
 from moviebox_api.cli.helpers import (
     get_caption_file_or_raise,
+    media_player_name_func_map,
     perform_search_and_get_item,
-    stream_video_via_mpv,
 )
 from moviebox_api.constants import (
     CURRENT_WORKING_DIR,
@@ -60,7 +61,7 @@ class Downloader:
         language: tuple[str] = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
-        stream: bool = False,
+        stream_via: Literal["mpv", "vlc"] | None = None,
         search_function: callable = perform_search_and_get_item,
         chunk_size: int = DEFAULT_CHUNK_SIZE,
         tasks: int = DEFAULT_TASKS,
@@ -72,7 +73,7 @@ class Downloader:
         DownloadedFile | httpx.Response | None,
         list[DownloadedFile | httpx.Response] | None,
     ]:
-        """Search movie by name and proceed to download it or stream it in VLC.
+        """Search movie by name and proceed to download it or stream it.
 
         Args:
             title (str): Complete or partial movie name
@@ -86,7 +87,7 @@ class Downloader:
             language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
             download_caption (bool, optional): Whether to download caption or not. Defaults to False.
             caption_only (bool, optional): Whether to ignore movie file or not. Defaults to False.
-            stream (bool, optional): Whether to stream directly in VLC instead of downloading. Defaults to False.
+            stream_via (Literal["mpv", "vlc"] | None = None, optional): Stream directly in chosen media_player instead of downloading. Defaults to None.
             search_function (callable, optional): Accepts `session`, `title`, `year`, `subject_type` & `yes` and returns `SearchResultsItem`.
             chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
             tasks (int, optional): Number of tasks to carry out the download. Defaults to DEFAULT_TASKS.
@@ -130,7 +131,7 @@ class Downloader:
 
         subtitle_details_items: list[DownloadedFile] = []
 
-        subtitles_dir = tempfile.mkdtemp() if stream else caption_dir
+        subtitles_dir = tempfile.mkdtemp() if stream_via else caption_dir
 
         if download_caption or caption_only:
             for lang in language:
@@ -152,12 +153,14 @@ class Downloader:
 
                 subtitle_details_items.append(subtitle_details)
 
-            if caption_only and not stream:
+            if caption_only and not stream_via:
                 # terminate
                 return (None, subtitle_details_items)
 
-        if stream:
-            return stream_video_via_mpv(str(target_media_file.url), subtitle_details_items, subtitles_dir)
+        if stream_via:
+            return media_player_name_func_map[stream_via](
+                str(target_media_file.url), subtitle_details_items, subtitles_dir
+            )
 
         movie_downloader = MediaFileDownloader(
             dir=dir,
@@ -188,7 +191,7 @@ class Downloader:
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
         download_caption: bool = False,
         caption_only: bool = False,
-        stream: bool = False,
+        stream_via: Literal["mpv", "vlc"] | None = None,
         limit: int = 1,
         search_function: callable = perform_search_and_get_item,
         chunk_size: int = DEFAULT_CHUNK_SIZE,
@@ -217,7 +220,7 @@ class Downloader:
             language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
             download_caption (bool, optional): Whether to download caption or not. Defaults to False.
             caption_only (bool, optional): Whether to ignore episode files or not. Defaults to False.
-            stream (bool, optional): Whether to stream directly in VLC instead of downloading. Defaults to False.
+            stream_via (Literal["mpv", "vlc"] | None = None, optional): Stream directly in chosen media played instead of downloading. Defaults to None.
             limit (int, optional): Number of episodes to download including the offset episode. Defaults to 1.
             search_function (callable, optional): Accepts `session`, `title`, `year`, `subject_type` & `yes` and returns item.
             chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
@@ -256,7 +259,7 @@ class Downloader:
         downloadable_files = DownloadableTVSeriesFilesDetail(self._session, target_tv_series)
         response = {}
 
-        subtitles_dir = tempfile.mkdtemp() if stream else caption_dir
+        subtitles_dir = tempfile.mkdtemp() if stream_via else caption_dir
 
         caption_downloader = CaptionFileDownloader(
             dir=subtitles_dir,
@@ -308,7 +311,7 @@ class Downloader:
 
                     caption_details_items.append(caption_details)
 
-                if caption_only and not stream:
+                if caption_only and not stream_via:
                     # Avoid downloading tv-series
                     continue
 
@@ -318,8 +321,10 @@ class Downloader:
 
             target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_files_detail)
 
-            if stream:
-                stream_video_via_mpv(str(target_media_file.url), caption_details_items, subtitles_dir)
+            if stream_via:
+                media_player_name_func_map[stream_via](
+                    str(target_media_file.url), caption_details_items, subtitles_dir
+                )
 
                 continue
 

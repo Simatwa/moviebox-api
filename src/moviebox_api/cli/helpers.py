@@ -222,7 +222,8 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
         logging.info(
             'Run "moviebox mirror-hosts" command to check available mirror hosts and '
             f'then export it to the environment using name "{ENVIRONMENT_HOST_KEY}".\n'
-            f"For instance: In Linux system you might run 'export {ENVIRONMENT_HOST_KEY}=\"{example_host}\"'"
+            f"For instance: In *nix systems you might run 'export {ENVIRONMENT_HOST_KEY}=\"{example_host}\"'"
+            f' while in Windows : "set MOVIEBOX_API_HOST={example_host}'
         )
 
     logging.info(f"Incase the error persist then feel free to submit the issue at {__repo__}/issues/new")
@@ -258,14 +259,47 @@ def stream_video_via_mpv(url: str, subtitle_details_items: list[DownloadedFile],
 
         return (None, None)
 
-    except FileNotFoundError:
-        logging.error(
-            "MPV player not found. Please install MPV from https://mpv.io/installation/ "
-            "to use streaming feature. "
-        )
-
-        return (None, None)
+    except FileNotFoundError as e:
+        raise Exception(
+            "MPV player not found. Please install it from https://mpv.io/installation/ "
+            'to use streaming feature or retry using "--stream-via vlc" instead.'
+        ) from e
 
     except Exception as e:
-        logging.error(f"Error launching MPV: {e}")
+        raise Exception(f"Error launching MPV: {e}") from e
+
+
+def stream_video_via_vlc(url: str, subtitle_details_items: list[DownloadedFile], subtitles_dir: str):
+    try:
+        user_agent = DOWNLOAD_REQUEST_HEADERS["User-Agent"]
+        referrer = DOWNLOAD_REQUEST_HEADERS["Referer"]
+
+        mpv_cmd = ["vlc", f":http-user-agent={user_agent}", f"--http-referrer={referrer}"]
+
+        for sub_file in subtitle_details_items:
+            subtitle_path = sub_file.saved_to.resolve().as_posix()
+            mpv_cmd.append(f"--sub-file={subtitle_path}")
+
+        mpv_cmd.append(str(url))
+
+        logging.info("Launching VLC with required headers and subtitles...")
+
+        logging.debug(f"VLC launch commands :  {' '.join(mpv_cmd)}")
+
+        subprocess.run(mpv_cmd)
+
+        shutil.rmtree(subtitles_dir, ignore_errors=True)
+
         return (None, None)
+
+    except FileNotFoundError as e:
+        raise Exception(
+            "VLC media player not found. Please install it from https://www.videolan.org "
+            'to use streaming feature or retry using "--stream-via mpv" instead.'
+        ) from e
+
+    except Exception as e:
+        raise Exception(f"Error launching VLC: {e}") from e
+
+
+media_player_name_func_map = {"mpv": stream_video_via_mpv, "vlc": stream_video_via_vlc}
