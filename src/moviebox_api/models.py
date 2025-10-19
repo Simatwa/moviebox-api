@@ -322,7 +322,7 @@ class DownloadableFilesMetadata(BaseModel):
     def get_quality_downloads_map(
         self,
     ) -> dict[DownloadQualitiesType, MediaFileMetadata]:
-        """Maps media file quality to their equivalent media files object
+        """Maps media file qualities to their equivalent media files object
 
         Returns:
             dict[DownloadQualitiesType, MediaFileMetadata]

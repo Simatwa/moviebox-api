@@ -265,7 +265,7 @@ class JsonDetailsExtractor:
                 )
         except Exception as e:
             if isinstance(e, DetailsExtractionError):
-                raise e
+                raise
 
             raise DetailsExtractionError(
                 "The extraction process completed without any find. Ensure correct content is passed."

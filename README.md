@@ -43,7 +43,7 @@ Search, discover, download, and stream movies & TV series with subtitles
 
 - 🎬 **Download Movies & TV Series** - High-quality downloads with multiple resolution options
 - 📝 **Subtitle Support** - Download subtitles in multiple languages
-- 🎥 **Stream with MPV** - Watch directly without downloading (CLI only)
+- 🎥 **Stream with MPV or VLC** - Watch directly without downloading (CLI only)
 - ⚡ **Super Fast Downloads** - Over 5x faster than standard downloads
 - 🔄 **Async & Sync Support** - Fully asynchronous with synchronous fallback
 - 🎯 **Interactive Menu** - User-friendly TUI for easy navigation
