@@ -323,6 +323,13 @@ moviebox download-series "Merlin" -s 1 -e 1 --yes
 moviebox download-series "Merlin" -s 1 -e 1 --dir ~/Series
 ```
 
+**Download entire tv-series**
+
+```sh
+moviebox download-series "Merlin" -s 1 -e 1 --auto-mode
+# This will download episodes across all available seasons
+```
+
 **Required options:**
 - `-s, --season` - Season number (required)
 - `-e, --episode` - Starting episode number (required)

@@ -156,7 +156,7 @@ class Session:
         return process_api_response(response.json())
 
     async def ensure_cookies_are_assigned(self) -> bool:
-        """Checks if the essential cookies are available if not it update.
+        """Checks if the essential cookies are available if not update it.
 
         Returns:
             bool: `account` cookie availability status.
