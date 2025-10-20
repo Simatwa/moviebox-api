@@ -10,6 +10,7 @@ import click
 
 
 def clear_screen():
+    
     """Clear the terminal screen"""
     click.clear()
 
@@ -215,17 +216,16 @@ def download_movie():
 
     subtitle_choice = get_subtitle_choice()
 
-    # Build command
-    command = [sys.executable, "-m", "moviebox_api", "download-movie", title, "-Y"]
-
-    # Add options based on user input
-    if year:
+    command = [sys.executable, "-m", "moviebox_api", "download-movie", title]
+    
+    if year and year.strip():
         command.extend(["-y", year])
+        command.append("-Y")
     if quality:
         command.extend(["-q", quality])
-    if download_dir:
+    if download_dir and download_dir.strip():
         command.extend(["-d", download_dir])
-    if language:
+    if language and language.strip():
         command.extend(["-x", language])
 
     if subtitle_choice == "2":
@@ -296,19 +296,18 @@ def download_series():
         season,
         "-e",
         episode,
-        "-Y",
     ]
 
-    # Add options based on user input
-    if year:
+    if year and year.strip():
         command.extend(["-y", year])
+        command.append("-Y")
     if quality:
         command.extend(["-q", quality])
-    if download_dir:
+    if download_dir and download_dir.strip():
         command.extend(["-d", download_dir])
-    if language:
+    if language and language.strip():
         command.extend(["-x", language])
-    if limit:
+    if limit and limit.strip():
         command.extend(["-l", limit])
 
     if subtitle_choice == "2":
@@ -372,12 +371,11 @@ def stream_movie():
         title,
         "--stream-via",
         media_player,
-        "-Y",
     ]
 
-    # Add options based on user input
-    if year:
+    if year and year.strip():
         command.extend(["-y", year])
+        command.append("-Y")
     if quality:
         command.extend(["-q", quality])
 
@@ -456,12 +454,11 @@ def stream_series():
         "-e",
         episode,
         "--stream",
-        "-Y",
     ]
 
-    # Add options based on user input
-    if year:
+    if year and year.strip():
         command.extend(["-y", year])
+        command.append("-Y")
     if quality:
         command.extend(["-q", quality])
 
