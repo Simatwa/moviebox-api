@@ -191,7 +191,7 @@ class PostListItemModel(BaseModel):
     group: PostListItemGroupModel | None
     groupId: str
     isSubjectRate: bool
-    link: str | None
+    link: str | dict | None
     media: PostListMediaModel | None
     mediaType: str
     poiName: str
