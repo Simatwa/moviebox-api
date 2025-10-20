@@ -461,7 +461,8 @@ class Downloader:
             if limit > available_episodes:
                 logging.warning(
                     f"You have set episodes limit to {limit} but only {available_episodes} "
-                    f"episodes are available starting from the offset {episode}. The former will be ignored."
+                    f"episodes are available for season {season}, starting from the offset {episode}. "
+                    "The former will be ignored."
                 )
                 limit = available_episodes
 
