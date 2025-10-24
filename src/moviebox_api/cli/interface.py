@@ -410,6 +410,18 @@ def download_movie_command(
     show_default=True,
 )
 @click.option(
+    "-f",
+    "--format",
+    type=click.Choice(["filename", "group", "struct"]),
+    default=None,
+    help=(
+        "Ways of formating filename and saving the episodes.\n"
+        "  filename -> Use same filename format for episodes and filename ie. {title} S{season}E{episode}.{ext}\n"
+        "  group -> Separate episodes based on season with respect to 'filename' e.g Merlin/S1/Merlin S1E2.mp4\n"
+        "  struct -> Group filenames in a directory like structure e.g Merlin (2009)/S1/E1.mp4"
+    ),
+)
+@click.option(
     "-E",
     "--part-extension",
     help="Filename extension for download parts",
@@ -486,14 +498,6 @@ def download_movie_command(
     show_default=True,
 )
 @click.option(
-    "-Z",
-    "--optimize",
-    is_flag=True,
-    help="Make movie and subtitle filenames have same format",
-    default=False,
-    show_default=True,
-)
-@click.option(
     "-O",
     "--caption-only",
     is_flag=True,
@@ -550,7 +554,7 @@ def download_tv_series_command(
     caption_filename_tmpl: str,
     caption_dir: Path,
     caption: bool,
-    optimize: bool,
+    format: str | None,
     caption_only: bool,
     ignore_missing_caption: bool,
     verbose: int,
@@ -584,7 +588,7 @@ def download_tv_series_command(
             stream_via=stream_via,
             ignore_missing_caption=ignore_missing_caption,
             auto_mode=auto_mode,
-            optimize=optimize,
+            format=format,
             **process_download_runner_params(download_runner_params),
         )
     )

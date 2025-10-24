@@ -2,6 +2,7 @@
 and later performing the actual download as well
 """
 
+import os
 from pathlib import Path
 
 import httpx
@@ -200,22 +201,25 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         part_dir: Path | str = CURRENT_WORKING_DIR,
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
+        group_series: bool = False,
         **httpx_kwargs,
     ):
         """Constructor for `MediaFileDownloader`
 
         Args:
-            dir (Path | str, optional): Directory for downloaded files to. Defaults to CURRENT_WORKING_DIR.
+            dir (Path | str, optional): Directory for saving downloaded files to. Defaults to CURRENT_WORKING_DIR.
             chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
             tasks (int, optional): Number of tasks to carry out the download. Defaults to DEFAULT_TASKS.
             part_dir (Path | str, optional): Directory for temporarily saving downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
+            group_series(bool, optional): Create directory for a series & group episodes based on season number. Defaults to False.
 
         httpx_kwargs : Keyword arguments for `httpx.AsyncClient`
         """  # noqa: E501
 
         httpx_kwargs.setdefault("cookies", self.request_cookies)
+        self.group_series = group_series
 
         self.throttle_buster = ThrottleBuster(
             dir=dir,
@@ -228,15 +232,16 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
             **httpx_kwargs,
         )
 
-    @classmethod
     def generate_filename(
-        cls,
+        self,
         search_results_item: SearchResultsItem,
         media_file: MediaFileMetadata,
         season: int = 0,
         episode: int = 0,
+        test: bool = False,
     ) -> str:
-        """Generates filename in the format as in `self.*filename_template`
+        """Generates filename in the format as in `self.*filename_template` and updates
+        final directory for saving contents
 
         Args:
             search_results_item (SearchResultsItem)
@@ -267,10 +272,21 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         )
 
         filename_template: str = (
-            cls.series_filename_template
+            self.series_filename_template
             if search_results_item.subjectType == SubjectType.TV_SERIES
-            else cls.movie_filename_template
+            else self.movie_filename_template
         )
+
+        final_dir = self.create_final_dir(
+            working_dir=self.throttle_buster.dir,
+            search_results_item=search_results_item,
+            season=season,
+            episode=episode,
+            test=test,
+            group=self.group_series,
+        )
+
+        self.throttle_buster.dir = final_dir
 
         return filename_template.format(**placeholders)
 
@@ -318,7 +334,13 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
 
         if isinstance(filename, SearchResultsItem):
             filename = self.generate_filename(
-                search_results_item=filename, media_file=media_file, **filename_kwargs
+                search_results_item=filename, media_file=media_file, test=test, **filename_kwargs
+            )
+
+        elif self.group_series:
+            raise ValueError(
+                f"Value for filename should be an instance of {SearchResultsItem} "
+                "when group_series is activated"
             )
 
         return await self.throttle_buster.run(
@@ -370,6 +392,7 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         part_dir: Path | str = CURRENT_WORKING_DIR,
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
+        group_series: bool = False,
         **httpx_kwargs,
     ):
         """Constructor for `CaptionFileDownloader`
@@ -380,11 +403,13 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
             part_dir (Path | str, optional): Directory for temporarily saving downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
+            group_series(bool, optional): Create directory for a series & group episodes based on season number. Defaults to False.
 
         httpx_kwargs : Keyword arguments for `httpx.AsyncClient`
         """  # noqa: E501
 
         httpx_kwargs.setdefault("cookies", self.request_cookies)
+        self.group_series = group_series
 
         self.throttle_buster = ThrottleBuster(
             dir=dir,
@@ -397,13 +422,13 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
             **httpx_kwargs,
         )
 
-    @classmethod
     def generate_filename(
-        cls,
+        self,
         search_results_item: SearchResultsItem,
         caption_file: CaptionFileMetadata,
         season: int = 0,
         episode: int = 0,
+        test: bool = False,
         **kwargs,
     ) -> str:
         """Generates filename in the format as in `self.*filename_template`
@@ -413,6 +438,7 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
             caption_file (CaptionFileMetadata): Movie/tv-series/music caption file details.
             season (int): Season number of the series.
             episde (int): Episode number of the series.
+            test (bool, optional): whether to create final directory
 
         Kwargs: Nothing much folk.
                 It's just here so that `MediaFileDownloader.run` and `CaptionFileDownloader.run`
@@ -441,10 +467,22 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         )
 
         filename_template: str = (
-            cls.series_filename_template
+            self.series_filename_template
             if search_results_item.subjectType == SubjectType.TV_SERIES
-            else cls.movie_filename_template
+            else self.movie_filename_template
         )
+
+        final_dir = self.create_final_dir(
+            working_dir=self.throttle_buster.dir,
+            search_results_item=search_results_item,
+            season=season,
+            episode=episode,
+            test=test,
+            group=self.group_series,
+        )
+
+        self.throttle_buster.dir = final_dir
+
         return sanitize_filename(filename_template.format(**placeholders))
 
     async def run(
@@ -478,5 +516,6 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
                 caption_file=caption_file,
                 season=season,
                 episode=episode,
+                test=run_kwargs.get("test", False),
             )
         return await self.throttle_buster.run(url=str(caption_file.url), filename=filename, **run_kwargs)

@@ -225,7 +225,7 @@ class Downloader:
         merge_buffer_size: int | None = None,
         ignore_missing_caption: bool = False,
         auto_mode: bool = False,
-        optimize: bool = False,
+        format: Literal["filename", "group", "struct"] | None = None,
         **run_kwargs,
     ) -> dict[
         int,
@@ -259,7 +259,10 @@ class Downloader:
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
             auto_mode (bool, optional). Iterate over seasons as well. When limit is 1 (default), download entire tv series. Defaults to False.
-            optimize(bool, optional): Make movie and subtitle filenames have same format. Defaults to False.
+            format(Literal["filename", "group", "struct"] | None, optional): Ways of formating filename and saving the episodes. Defaults to None
+                filename -> Use same filename format for episodes and filename ie. {title} S{season}E{episode}.{ext}
+                group -> Separate episodes based on season with respect to 'filename' e.g Merlin/S1/Merlin S1E2.mp4
+                struct -> Group filenames in a directory like structure e.g Merlin (2009)/S1/E1.mp4
 
         run_kwargs: Other keyword arguments for `MediaFileDownloader.run`
 
@@ -276,17 +279,27 @@ class Downloader:
         MediaFileDownloader.series_filename_template = episode_filename_tmpl
         CaptionFileDownloader.series_filename_template = caption_filename_tmpl
 
-        if optimize:
-            if len(language) > 1:
-                language = language[:1]
-
-                logging.warning(
-                    f"Only one (first) caption file will be processed in --optimize mode - {language[0]}"
-                )
-
-            MediaFileDownloader.series_filename_template = CaptionFileDownloader.series_filename_template = (
-                "{title} S{season}E{episode}.{ext}"
+        if format and len(language) > 1:
+            logging.warning(
+                f"Only one (first) caption file will be processed when --format has a value - {language[0]}"
             )
+
+            language = language[:1]
+
+        group = False
+
+        match format:
+            case "filename" | "group":
+                filename_fmt = "{title} S{season}E{episode}.{ext}"
+                MediaFileDownloader.series_filename_template = filename_fmt
+                CaptionFileDownloader.series_filename_template = filename_fmt
+                group = format == "group"
+
+            case "struct":
+                filename_fmt = "E{episode}.{ext}"
+                MediaFileDownloader.series_filename_template = filename_fmt
+                CaptionFileDownloader.series_filename_template = filename_fmt
+                group = True
 
         target_tv_series = await search_function(
             self._session,
@@ -305,12 +318,13 @@ class Downloader:
         subtitles_dir = tempfile.mkdtemp() if stream_via else caption_dir
 
         caption_downloader = CaptionFileDownloader(
-            dir=subtitles_dir,
+            dir=dir if group else subtitles_dir,
             chunk_size=chunk_size,
             tasks=tasks,
             part_dir=part_dir,
             part_extension=part_extension,
             merge_buffer_size=merge_buffer_size,
+            group_series=group,
         )
 
         media_file_downloader = MediaFileDownloader(
@@ -320,6 +334,7 @@ class Downloader:
             part_dir=part_dir,
             part_extension=part_extension,
             merge_buffer_size=merge_buffer_size,
+            group_series=group,
         )
 
         core_tv_series_details = TVSeriesDetails(target_tv_series, self._session)
@@ -353,16 +368,11 @@ class Downloader:
                                 continue
                             raise
 
-                        caption_filename = caption_downloader.generate_filename(
-                            target_tv_series,
-                            caption_file=target_caption_file,
-                            season=season_number,
-                            episode=current_episode,
-                        )
-
                         caption_details = await caption_downloader.run(
                             caption_file=target_caption_file,
-                            filename=caption_filename,
+                            filename=target_tv_series,
+                            season=season_number,
+                            episode=current_episode,
                             **run_kwargs,
                         )
 
@@ -385,15 +395,12 @@ class Downloader:
 
                     continue
 
-                filename = media_file_downloader.generate_filename(
-                    target_tv_series,
+                tv_series_details = await media_file_downloader.run(
                     media_file=target_media_file,
+                    filename=target_tv_series,
                     season=season_number,
                     episode=current_episode,
-                )
-
-                tv_series_details = await media_file_downloader.run(
-                    media_file=target_media_file, filename=filename, **run_kwargs
+                    **run_kwargs,
                 )
 
                 current_episode_details["movie"] = tv_series_details

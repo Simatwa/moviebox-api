@@ -10,7 +10,6 @@ import click
 
 
 def clear_screen():
-    
     """Clear the terminal screen"""
     click.clear()
 
@@ -217,7 +216,7 @@ def download_movie():
     subtitle_choice = get_subtitle_choice()
 
     command = [sys.executable, "-m", "moviebox_api", "download-movie", title]
-    
+
     if year and year.strip():
         command.extend(["-y", year])
         command.append("-Y")

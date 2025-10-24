@@ -3,10 +3,14 @@ This module contains base classes for the entire package
 """
 
 import asyncio
+import os
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 import httpx
 from throttlebuster import DownloadedFile
+
+# from moviebox_api.models import SearchResultsItem
 
 
 class BaseMovieboxException(Exception):
@@ -62,3 +66,29 @@ class FileDownloaderHelper:
 
 class BaseFileDownloaderAndHelper(FileDownloaderHelper, BaseFileDownloader):
     """Inherits both `FileDownloaderHelper` and `BaseFileDownloader`"""
+
+    @classmethod
+    def create_final_dir(
+        cls,
+        working_dir: Path,
+        search_results_item: object,  # "SearchResultsItem",
+        season: int,
+        episode: int,
+        test: bool,
+        group: bool,
+    ):
+        if group and season and episode:
+            # series it is
+            working_dir = Path(working_dir)
+            assert working_dir.exists(), f"The chosen working directory does not exist - {working_dir}"
+
+            final_dir = working_dir.joinpath(
+                f"{search_results_item.title} ({search_results_item.releaseDate.year})", f"S{season}"
+            )
+
+            if not test:
+                os.makedirs(final_dir, exist_ok=True)
+
+            return final_dir
+
+        return working_dir
