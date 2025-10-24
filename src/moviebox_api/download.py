@@ -239,7 +239,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         season: int = 0,
         episode: int = 0,
         test: bool = False,
-    ) -> str:
+    ) -> tuple[str, Path]:
         """Generates filename in the format as in `self.*filename_template` and updates
         final directory for saving contents
 
@@ -249,8 +249,6 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
             season (int): Season number of the series.
             episde (int): Episode number of the series.
 
-        Returns:
-            str: Generated filename
         """
         assert_instance(
             search_results_item,
@@ -286,9 +284,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
             group=self.group_series,
         )
 
-        self.throttle_buster.dir = final_dir
-
-        return filename_template.format(**placeholders)
+        return filename_template.format(**placeholders), final_dir
 
     async def run(
         self,
@@ -332,8 +328,10 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
 
         assert_instance(media_file, MediaFileMetadata, "media_file")
 
+        dir = None
+
         if isinstance(filename, SearchResultsItem):
-            filename = self.generate_filename(
+            filename, dir = self.generate_filename(
                 search_results_item=filename, media_file=media_file, test=test, **filename_kwargs
             )
 
@@ -357,6 +355,7 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
             test=test,
             leave=leave,
             ascii=ascii,
+            dir=dir,
         )
 
 
@@ -430,7 +429,7 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         episode: int = 0,
         test: bool = False,
         **kwargs,
-    ) -> str:
+    ) -> tuple[str, Path]:
         """Generates filename in the format as in `self.*filename_template`
 
         Args:
@@ -443,9 +442,6 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         Kwargs: Nothing much folk.
                 It's just here so that `MediaFileDownloader.run` and `CaptionFileDownloader.run`
                 will accept similar parameters in `moviebox_api.extra.movies.Auto.run` method.
-
-        Returns:
-            str: Generated filename
         """
         assert_instance(
             search_results_item,
@@ -481,9 +477,7 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
             group=self.group_series,
         )
 
-        self.throttle_buster.dir = final_dir
-
-        return sanitize_filename(filename_template.format(**placeholders))
+        return sanitize_filename(filename_template.format(**placeholders)), final_dir
 
     async def run(
         self,
@@ -509,13 +503,17 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
 
         assert_instance(caption_file, CaptionFileMetadata, "caption_file")
 
+        dir = None
+
         if isinstance(filename, SearchResultsItem):
             # Lets generate filename
-            filename = self.generate_filename(
+            filename, dir = self.generate_filename(
                 search_results_item=filename,
                 caption_file=caption_file,
                 season=season,
                 episode=episode,
                 test=run_kwargs.get("test", False),
             )
-        return await self.throttle_buster.run(url=str(caption_file.url), filename=filename, **run_kwargs)
+        return await self.throttle_buster.run(
+            url=str(caption_file.url), filename=filename, dir=dir, **run_kwargs
+        )
