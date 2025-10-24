@@ -250,7 +250,7 @@ class Downloader:
             language (tuple, optional): Languages to download captions in. Defaults to (DEFAULT_CAPTION_LANGUAGE,).
             download_caption (bool, optional): Whether to download caption or not. Defaults to False.
             caption_only (bool, optional): Whether to ignore episode files or not. Defaults to False.
-            stream_via (Literal["mpv", "vlc"] | None = None, optional): Stream directly in chosen media played instead of downloading. Defaults to None.
+            stream_via (Literal["mpv", "vlc"], optional): Stream directly in chosen media played instead of downloading. Defaults to None.
             limit (int, optional): Number of episodes to download including the offset episode. Defaults to 1.
             search_function (callable, optional): Accepts `session`, `title`, `year`, `subject_type` & `yes` and returns item.
             chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
@@ -293,7 +293,7 @@ class Downloader:
                 filename_fmt = "{title} S{season}E{episode}.{ext}"
                 MediaFileDownloader.series_filename_template = filename_fmt
                 CaptionFileDownloader.series_filename_template = filename_fmt
-                group = format == "group"
+                group = (format == "group")
 
             case "struct":
                 filename_fmt = "E{episode}.{ext}"
@@ -411,7 +411,7 @@ class Downloader:
         if auto_mode:
             if series_resource.total_seasons < season:
                 raise RuntimeError(
-                    f"The targeted season {season} exceeds the available "
+                    f"The target season {season} exceeds the available "
                     f"tv series seasons {series_resource.total_seasons}."
                 )
 
@@ -428,7 +428,7 @@ class Downloader:
                     # episode offset
                     if series_season.maxEp < episode:
                         raise RuntimeError(
-                            f"The targeted episode offset {episode} for season {series_season.se}"
+                            f"The target episode offset {episode} for season {series_season.se}"
                             f" is greater than the available episodes {series_season.maxEp}"
                         )
 
@@ -441,7 +441,7 @@ class Downloader:
                 if limit > total_episodes:
                     logging.warning(
                         f"You have set total episodes limit to {limit} but only {total_episodes} "
-                        f"episodes are available starting from the offset (season={season}, episode={episode}"
+                        f"episodes are available starting from the offset ({season=}, {episode=}"
                         "). The former will be ignored."
                     )
                     limit = total_episodes
