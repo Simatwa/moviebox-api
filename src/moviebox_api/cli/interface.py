@@ -215,6 +215,14 @@ def moviebox():
     show_default=True,
 )
 @click.option(
+    "-Z",
+    "--optimize",
+    is_flag=True,
+    help="Make movie and subtitle filenames have same format",
+    default=False,
+    show_default=True,
+)
+@click.option(
     "-O",
     "--caption-only",
     is_flag=True,
@@ -262,6 +270,7 @@ def download_movie_command(
     movie_filename_tmpl: str,
     caption_filename_tmpl: str,
     caption: bool,
+    optimize: bool,
     caption_only: bool,
     ignore_missing_caption,
     verbose: int,
@@ -290,6 +299,7 @@ def download_movie_command(
             caption_filename_tmpl=caption_filename_tmpl,
             stream_via=stream_via,
             ignore_missing_caption=ignore_missing_caption,
+            optimize=optimize,
             **process_download_runner_params(download_runner_params),
         )
     )
@@ -476,6 +486,14 @@ def download_movie_command(
     show_default=True,
 )
 @click.option(
+    "-Z",
+    "--optimize",
+    is_flag=True,
+    help="Make movie and subtitle filenames have same format",
+    default=False,
+    show_default=True,
+)
+@click.option(
     "-O",
     "--caption-only",
     is_flag=True,
@@ -532,6 +550,7 @@ def download_tv_series_command(
     caption_filename_tmpl: str,
     caption_dir: Path,
     caption: bool,
+    optimize: bool,
     caption_only: bool,
     ignore_missing_caption: bool,
     verbose: int,
@@ -565,6 +584,7 @@ def download_tv_series_command(
             stream_via=stream_via,
             ignore_missing_caption=ignore_missing_caption,
             auto_mode=auto_mode,
+            optimize=optimize,
             **process_download_runner_params(download_runner_params),
         )
     )

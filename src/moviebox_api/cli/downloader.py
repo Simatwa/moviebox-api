@@ -71,6 +71,7 @@ class Downloader:
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
         ignore_missing_caption: bool = False,
+        optimize: bool = False,
         **run_kwargs,
     ) -> tuple[
         DownloadedFile | httpx.Response | None,
@@ -97,6 +98,7 @@ class Downloader:
             part_dir (Path | str, optional): Directory for temporarily saving the downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
+            optimize(bool, optional): Make movie and subtitle filenames have same format. Defaults to False.
 
         run_kwargs: Other keyword arguments for `MediaFileDownloader.run`
 
@@ -112,6 +114,18 @@ class Downloader:
 
         MediaFileDownloader.movie_filename_template = movie_filename_tmpl
         CaptionFileDownloader.movie_filename_template = caption_filename_tmpl
+
+        if optimize:
+            if len(language) > 1:
+                language = language[:1]
+
+                logging.warning(
+                    f"Only one (first) caption file will be processed in --optimize mode - {language[0]}"
+                )
+
+            MediaFileDownloader.movie_filename_template = CaptionFileDownloader.movie_filename_template = (
+                "{title} ({release_year}).{ext}"
+            )
 
         target_movie = await search_function(
             self._session,
@@ -211,6 +225,7 @@ class Downloader:
         merge_buffer_size: int | None = None,
         ignore_missing_caption: bool = False,
         auto_mode: bool = False,
+        optimize: bool = False,
         **run_kwargs,
     ) -> dict[
         int,
@@ -244,6 +259,7 @@ class Downloader:
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
             auto_mode (bool, optional). Iterate over seasons as well. When limit is 1 (default), download entire tv series. Defaults to False.
+            optimize(bool, optional): Make movie and subtitle filenames have same format. Defaults to False.
 
         run_kwargs: Other keyword arguments for `MediaFileDownloader.run`
 
@@ -259,6 +275,18 @@ class Downloader:
 
         MediaFileDownloader.series_filename_template = episode_filename_tmpl
         CaptionFileDownloader.series_filename_template = caption_filename_tmpl
+
+        if optimize:
+            if len(language) > 1:
+                language = language[:1]
+
+                logging.warning(
+                    f"Only one (first) caption file will be processed in --optimize mode - {language[0]}"
+                )
+
+            MediaFileDownloader.series_filename_template = CaptionFileDownloader.series_filename_template = (
+                "{title} S{season}E{episode}.{ext}"
+            )
 
         target_tv_series = await search_function(
             self._session,
