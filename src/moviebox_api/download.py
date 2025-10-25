@@ -178,8 +178,8 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
 
     request_headers = DOWNLOAD_REQUEST_HEADERS
     request_cookies = {}
-    movie_filename_template = "{title} {release_year} - {resolution}P.{ext}"
-    series_filename_template = "{title} S{season}E{episode} - {resolution}P.{ext}"
+    movie_filename_template = "{title} ({release_year}).{ext}"
+    series_filename_template = "{title} S{season}E{episode}.{ext}"
     # Should have been named episode_filename_template but for consistency
     # with the subject-types {movie, tv-series, music} it's better as it is
     possible_filename_placeholders = (
@@ -364,11 +364,8 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
 
     request_headers = DOWNLOAD_REQUEST_HEADERS
     request_cookies = {}
-    movie_filename_template = (
-        "{title} ({release_year}) - {lanName}.{ext}"
-        # "{title} ({release_year}) - {lanName} [delay - {delay}].{ext}"
-    )
-    series_filename_template = "{title} S{season}E{episode} - {lanName}.{ext}"
+    movie_filename_template = "{title} ({release_year}).{lan}.{ext}"
+    series_filename_template = "{title} S{season}E{episode}.{lan}.{ext}"
     possible_filename_placeholders = (
         "{title}",
         "{release_year}",

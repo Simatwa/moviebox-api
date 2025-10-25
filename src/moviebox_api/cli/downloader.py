@@ -71,7 +71,6 @@ class Downloader:
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
         ignore_missing_caption: bool = False,
-        optimize: bool = False,
         **run_kwargs,
     ) -> tuple[
         DownloadedFile | httpx.Response | None,
@@ -98,7 +97,6 @@ class Downloader:
             part_dir (Path | str, optional): Directory for temporarily saving the downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
-            optimize(bool, optional): Make movie and subtitle filenames have same format. Defaults to False.
 
         run_kwargs: Other keyword arguments for `MediaFileDownloader.run`
 
@@ -114,18 +112,6 @@ class Downloader:
 
         MediaFileDownloader.movie_filename_template = movie_filename_tmpl
         CaptionFileDownloader.movie_filename_template = caption_filename_tmpl
-
-        if optimize:
-            if len(language) > 1:
-                language = language[:1]
-
-                logging.warning(
-                    f"Only one (first) caption file will be processed in --optimize mode - {language[0]}"
-                )
-
-            MediaFileDownloader.movie_filename_template = CaptionFileDownloader.movie_filename_template = (
-                "{title} ({release_year}).{ext}"
-            )
 
         target_movie = await search_function(
             self._session,
@@ -225,7 +211,7 @@ class Downloader:
         merge_buffer_size: int | None = None,
         ignore_missing_caption: bool = False,
         auto_mode: bool = False,
-        format: Literal["filename", "group", "struct"] | None = None,
+        format: Literal["group", "struct"] | None = None,
         **run_kwargs,
     ) -> dict[
         int,
@@ -260,9 +246,8 @@ class Downloader:
             merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
             auto_mode (bool, optional). Iterate over seasons as well. When limit is 1 (default), download entire tv series. Defaults to False.
             format(Literal["filename", "group", "struct"] | None, optional): Ways of formating filename and saving the episodes. Defaults to None
-                filename -> Use same filename format for episodes and filename ie. {title} S{season}E{episode}.{ext}
-                group -> Separate episodes based on season with respect to 'filename' e.g Merlin/S1/Merlin S1E2.mp4
-                struct -> Group filenames in a directory like structure e.g Merlin (2009)/S1/E1.mp4
+                group -> Organize episodes into separate folders based on seasons e.g Merlin/S1/Merlin S1E2.mp4
+                struct -> Save episodes in a hierarchical directory structure e.g Merlin (2009)/S1/E1.mp4
 
         run_kwargs: Other keyword arguments for `MediaFileDownloader.run`
 
@@ -279,26 +264,15 @@ class Downloader:
         MediaFileDownloader.series_filename_template = episode_filename_tmpl
         CaptionFileDownloader.series_filename_template = caption_filename_tmpl
 
-        if format and len(language) > 1:
-            logging.warning(
-                f"Only one (first) caption file will be processed when --format has a value - {language[0]}"
-            )
-
-            language = language[:1]
-
         group = False
 
         match format:
-            case "filename" | "group":
-                filename_fmt = "{title} S{season}E{episode}.{ext}"
-                MediaFileDownloader.series_filename_template = filename_fmt
-                CaptionFileDownloader.series_filename_template = filename_fmt
-                group = format == "group"
+            case "group":
+                group = True
 
             case "struct":
-                filename_fmt = "E{episode}.{ext}"
-                MediaFileDownloader.series_filename_template = filename_fmt
-                CaptionFileDownloader.series_filename_template = filename_fmt
+                MediaFileDownloader.series_filename_template = "E{episode}.{ext}"
+                CaptionFileDownloader.series_filename_template = "E{episode}.{lan}.{ext}"
                 group = True
 
         target_tv_series = await search_function(

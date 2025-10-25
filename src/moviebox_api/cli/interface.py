@@ -215,14 +215,6 @@ def moviebox():
     show_default=True,
 )
 @click.option(
-    "-Z",
-    "--optimize",
-    is_flag=True,
-    help="Make movie and subtitle filenames have same format",
-    default=False,
-    show_default=True,
-)
-@click.option(
     "-O",
     "--caption-only",
     is_flag=True,
@@ -270,7 +262,6 @@ def download_movie_command(
     movie_filename_tmpl: str,
     caption_filename_tmpl: str,
     caption: bool,
-    optimize: bool,
     caption_only: bool,
     ignore_missing_caption,
     verbose: int,
@@ -299,7 +290,6 @@ def download_movie_command(
             caption_filename_tmpl=caption_filename_tmpl,
             stream_via=stream_via,
             ignore_missing_caption=ignore_missing_caption,
-            optimize=optimize,
             **process_download_runner_params(download_runner_params),
         )
     )
@@ -412,13 +402,12 @@ def download_movie_command(
 @click.option(
     "-f",
     "--format",
-    type=click.Choice(["filename", "group", "struct"]),
+    type=click.Choice(["standard", "group", "struct"]),
     default=None,
     help=(
-        "Ways of formating filename and saving the episodes.\n"
-        "  filename -> Use same filename format for episodes and filename ie. {title} S{season}E{episode}.{ext}\n"
-        "  group -> Separate episodes based on season with respect to 'filename' e.g Merlin/S1/Merlin S1E2.mp4\n"
-        "  struct -> Group filenames in a directory like structure e.g Merlin (2009)/S1/E1.mp4"
+        "Ways of formating filename and saving the episodes. "
+        " group -> Organize episodes into separate folders based on seasons e.g Merlin/S1/Merlin S1E2.mp4\n"
+        " struct -> Save episodes in a hierarchical directory structure e.g Merlin (2009)/S1/E1.mp4"
     ),
 )
 @click.option(
