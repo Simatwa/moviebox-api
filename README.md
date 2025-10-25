@@ -352,6 +352,7 @@ moviebox download-series "Merlin" -s 1 -e 1 --auto-mode
 
 ```text
 # python -m moviebox_api download-movie --help
+
 Usage: python -m moviebox_api download-movie [OPTIONS] TITLE
 
   Search and download or stream movie.
@@ -371,12 +372,11 @@ Options:
                                   automatically  [default: auto]
   -x, --language TEXT             Caption language filter  [default: English]
   -M, --movie-filename-tmpl TEXT  Template for generating movie filename
-                                  [default: {title} {release_year} -
-                                  {resolution}P.{ext}]
+                                  [default: {title} ({release_year}).{ext}]
   -C, --caption-filename-tmpl TEXT
                                   Template for generating caption filename
-                                  [default: {title} ({release_year}) -
-                                  {lanName}.{ext}]
+                                  [default: {title}
+                                  ({release_year}).{lan}.{ext}]
   -t, --tasks INTEGER RANGE       Number of tasks to carry out the download
                                   [default: 5; 1<=x<=1000]
   -P, --part-dir DIRECTORY        Directory for temporarily saving the
@@ -404,8 +404,6 @@ Options:
   --leave / --no-leave            Keep all leaves of the progress-bar
                                   [default: no-leave]
   --caption / --no-caption        Download caption file  [default: caption]
-  -Z, --optimize                  Make movie and subtitle filenames have same
-                                  format
   -O, --caption-only              Download caption file only and ignore movie
   -S, --simple                    Show download percentage and bar only in
                                   progressbar
@@ -454,25 +452,23 @@ Options:
   -L, --episode-filename-tmpl TEXT
                                   Template for generating series episode
                                   filename  [default: {title}
-                                  S{season}E{episode} - {resolution}P.{ext}]
+                                  S{season}E{episode}.{ext}]
   -C, --caption-filename-tmpl TEXT
                                   Template for generating caption filename
-                                  [default: {title} S{season}E{episode} -
-                                  {lanName}.{ext}]
+                                  [default: {title}
+                                  S{season}E{episode}.{lan}.{ext}]
   -t, --tasks INTEGER RANGE       Number of tasks to carry out the download
                                   [default: 5; 1<=x<=1000]
   -P, --part-dir DIRECTORY        Directory for temporarily saving the
                                   downloaded file-parts to  [default:
                                   /home/smartwa/git/smartwa/moviebox-api]
-  -f, --format [filename|group|struct]
+  -f, --format [standard|group|struct]
                                   Ways of formating filename and saving the
-                                  episodes. filename -> Use same filename
-                                  format for episodes and filename ie. {title}
-                                  S{season}E{episode}.{ext} group -> Separate
-                                  episodes based on season with respect to
-                                  'filename' e.g Merlin/S1/Merlin S1E2.mp4
-                                  struct -> Group filenames in a directory
-                                  like structure e.g Merlin (2009)/S1/E1.mp4
+                                  episodes.  group -> Organize episodes into
+                                  separate folders based on seasons e.g
+                                  Merlin/S1/Merlin S1E2.mp4 struct -> Save
+                                  episodes in a hierarchical directory
+                                  structure e.g Merlin (2009)/S1/E1.mp4
   -E, --part-extension TEXT       Filename extension for download parts
                                   [default: .part]
   -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes
