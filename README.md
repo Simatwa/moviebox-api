@@ -198,8 +198,6 @@ moviebox --help
 
 ### Interactive Menu Guide
 
-### Interactive Menu Guide
-
 The interactive menu offers a clean, numbered interface:
 
 ```text
@@ -717,6 +715,51 @@ moviebox download-movie "Avatar"
 ```
 
 ---
+
+## Usage Tips
+
+### Grouping Episodes
+
+Organize episodes into separate folders based on seasons:
+
+```sh
+$ moviebox download-series Merlin -s 1 -e 1 --auto-mode --format group
+```
+
+```
+./
+  Merlin/
+    S1/  # Season 1 folder
+      Merlin S1E1.mp4
+      Merlin S1E2.mp4
+    S2/  # Season 2 folder
+      Merlin S2E1.mp4
+      Merlin S2E2.mp4
+```
+
+This structure keeps related episodes together within their season folders.
+
+### Directory Structure
+
+Save episodes in a hierarchical directory structure:
+
+```sh
+$ moviebox download-series Merlin -s 1 -e 1 --auto-mode --format struct
+```
+
+```
+./
+  Merlin (2009)/
+    S1/
+      E1.mp4
+      E2.mp4
+    S2/
+      E1.mp4
+      E2.mp4
+```
+
+This layout mirrors the TV series' episode order, making it easy to navigate and find specific episodes.
+
 
 ## ⚠️ Disclaimer
 
