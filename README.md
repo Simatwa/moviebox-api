@@ -723,7 +723,7 @@ $ moviebox download-series Merlin -s 1 -e 1 --auto-mode --format group
 
 ```
 ./
-  Merlin/
+  Merlin (2009)/
     S1/
       Merlin S1E1.mp4
       Merlin S1E2.mp4
