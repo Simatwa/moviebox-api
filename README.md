@@ -16,7 +16,7 @@ Search, discover, download, and stream movies & TV series with subtitles
 
 </div>
 
----
+
 
 ## 📋 Table of Contents
 
@@ -37,7 +37,7 @@ Search, discover, download, and stream movies & TV series with subtitles
 - [⚙️ Advanced Configuration](#️-advanced-configuration)
 - [⚠️ Disclaimer](#️-disclaimer)
 
----
+
 
 ## ✨ Features
 
@@ -51,7 +51,7 @@ Search, discover, download, and stream movies & TV series with subtitles
 - 🛠️ **Developer-Friendly** - Clean Python API with Pydantic models 
 
 
----
+
 
 ## 📦 Installation
 
@@ -117,7 +117,7 @@ pip install rich click bs4 httpx throttlebuster
 ```
 </details>
 
----
+
 
 ## 🚀 Quick Start
 
@@ -175,7 +175,7 @@ async def main():
 asyncio.run(main())
 ```
 
----
+
 
 ## 📖 Usage
 
@@ -554,7 +554,7 @@ moviebox download-series "Breaking Bad" -s 1 -e 1 --stream-via vlc --quality 108
 - ⚠️ Requires `moviebox-api[cli]` installation
 - ⚠️ Requires MPV/VLC media player installed
 
----
+
 
 ## 🐍 Python API
 
@@ -667,8 +667,6 @@ async def main():
 asyncio.run(main())
 ```
 
----
-
 ## 📚 Documentation
 
 For comprehensive documentation with more examples:
@@ -679,7 +677,6 @@ For comprehensive documentation with more examples:
   - [Download Series CLI](./docs/examples/download-series-cli.py)
   - [Extractor Benchmark](./docs/examples/extractors-benchmark.py)
 
----
 
 ## ⚙️ Advanced Configuration
 
@@ -714,8 +711,6 @@ python -m moviebox_api download-movie "Avatar"
 moviebox download-movie "Avatar"
 ```
 
----
-
 ## Usage Tips
 
 ### Grouping Episodes
@@ -729,10 +724,10 @@ $ moviebox download-series Merlin -s 1 -e 1 --auto-mode --format group
 ```
 ./
   Merlin/
-    S1/  # Season 1 folder
+    S1/
       Merlin S1E1.mp4
       Merlin S1E2.mp4
-    S2/  # Season 2 folder
+    S2/
       Merlin S2E1.mp4
       Merlin S2E2.mp4
 ```
@@ -768,7 +763,6 @@ This layout mirrors the TV series' episode order, making it easy to navigate and
 
 This is an unofficial API wrapper. Use responsibly and respect copyright laws in your jurisdiction.
 
----
 
 ## 👥 Contributors
 
