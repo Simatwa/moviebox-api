@@ -138,8 +138,8 @@ moviebox interactive
 The interactive menu provides:
 - 🎬 Download Movies
 - 📺 Download TV Series  
-- 🎥 Stream Movies with MPV
-- 📡 Stream TV Series with MPV
+- 🎥 Stream Movies with MPV/VLC
+- 📡 Stream TV Series with MPV/VLC
 - 🔍 Discover & Search Content
 
 ### Command Line Examples
@@ -352,8 +352,7 @@ moviebox download-series "Merlin" -s 1 -e 1 --auto-mode
 
 ```text
 # python -m moviebox_api download-movie --help
-
-Usage: moviebox download-movie [OPTIONS] TITLE
+Usage: python -m moviebox_api download-movie [OPTIONS] TITLE
 
   Search and download or stream movie.
 
@@ -397,12 +396,16 @@ Options:
   -X, --stream-via [mpv|vlc]      Stream directly using the chosen media
                                   player instead of downloading
   -c, --colour TEXT               Progress bar display colour  [default: cyan]
-  -A, --ascii                     Use unicode (smooth blocks) to fill the
+  -U, --ascii                     Use unicode (smooth blocks) to fill the
                                   progress-bar meter
   -z, --disable-progress-bar      Do not show download progress-bar
+  -I, --ignore-missing-caption    Proceed to download movie file even when
+                                  caption file is missing
   --leave / --no-leave            Keep all leaves of the progress-bar
                                   [default: no-leave]
   --caption / --no-caption        Download caption file  [default: caption]
+  -Z, --optimize                  Make movie and subtitle filenames have same
+                                  format
   -O, --caption-only              Download caption file only and ignore movie
   -S, --simple                    Show download percentage and bar only in
                                   progressbar
@@ -423,7 +426,7 @@ Options:
 ```text
 # python -m moviebox_api download-series --help
 
-Usage: moviebox download-series [OPTIONS] TITLE
+Usage: python -m moviebox_api download-series [OPTIONS] TITLE
 
   Search and download or stream tv series.
 
@@ -461,6 +464,15 @@ Options:
   -P, --part-dir DIRECTORY        Directory for temporarily saving the
                                   downloaded file-parts to  [default:
                                   /home/smartwa/git/smartwa/moviebox-api]
+  -f, --format [filename|group|struct]
+                                  Ways of formating filename and saving the
+                                  episodes. filename -> Use same filename
+                                  format for episodes and filename ie. {title}
+                                  S{season}E{episode}.{ext} group -> Separate
+                                  episodes based on season with respect to
+                                  'filename' e.g Merlin/S1/Merlin S1E2.mp4
+                                  struct -> Group filenames in a directory
+                                  like structure e.g Merlin (2009)/S1/E1.mp4
   -E, --part-extension TEXT       Filename extension for download parts
                                   [default: .part]
   -N, --chunk-size INTEGER        Streaming download chunk size in kilobytes

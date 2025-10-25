@@ -203,7 +203,7 @@ class PostListItemModel(BaseModel):
     subjectRate: int
     title: str
     updatedAt: str
-    user: PostListItemUserModel
+    user: PostListItemUserModel | None
     userId: str
 
 

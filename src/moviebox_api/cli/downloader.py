@@ -293,7 +293,7 @@ class Downloader:
                 filename_fmt = "{title} S{season}E{episode}.{ext}"
                 MediaFileDownloader.series_filename_template = filename_fmt
                 CaptionFileDownloader.series_filename_template = filename_fmt
-                group = (format == "group")
+                group = format == "group"
 
             case "struct":
                 filename_fmt = "E{episode}.{ext}"
