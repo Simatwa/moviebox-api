@@ -1,8 +1,6 @@
 """Contains functionalities for fetching and modelling downloadable files metadata
 and later performing the actual download as well
 """
-
-import os
 from pathlib import Path
 
 import httpx
