@@ -16,9 +16,9 @@ FILE_EXT_PATTERN = re.compile(r".+\.(\w+)\?.+")
 
 ILLEGAL_CHARACTERS_PATTERN = re.compile(r"[^\w\-_\.\s()&|]")
 
-VALID_ITEM_PAGE_URL_PATTERN = re.compile(r".*" + ITEM_DETAILS_PATH + r"/[\w-]+\?id\=\d{17,}.*")
+VALID_ITEM_PAGE_URL_PATTERN = re.compile(r"^.*" + ITEM_DETAILS_PATH + r"/[\w-]+(?:\?id\=\d{17,}.*)?$")
 
-SCHEME_HOST_PATTERN = re.compile(r"https?://[-_\.\w]+")
+SCHEME_HOST_PATTERN = re.compile(r"^https?://[-_\.\w]+$")
 
 
 def get_absolute_url(relative_url: str) -> str:
@@ -79,21 +79,19 @@ def get_file_extension(url: str) -> str | None:
     """Extracts extension from file url e.g `mp4` or `srt`
 
     For example:
-        url : https://valiw.hakunaymatata.com/resource/537977caa8c13703185d26471ce7de9f.mp4s?auth_key=1753024153-0-0-c824d3b5a5c8acc294bfd41de43c51ef"
+        url : https://valiw.hakunaymatata.com/resource/537977caa8c13703185d26471ce7de9f.mp4?auth_key=1753024153-0-0-c824d3b5a5c8acc294bfd41de43c51ef"
         returns 'mp4'
     """
-    all = FILE_EXT_PATTERN.findall(str(url))
-    if all:
-        return all[0]
+    ext_match = FILE_EXT_PATTERN.match(str(url))
+
+    if ext_match:
+        return ext_match.groups()[0]
 
 
 def validate_item_page_url(url: str) -> str:
     """Checks whether specific item page url is valid"""
-    finds = VALID_ITEM_PAGE_URL_PATTERN.findall(url)
-
-    if finds:
-        if finds[0] == url:
-            return url
+    if VALID_ITEM_PAGE_URL_PATTERN.match(url):
+        return url
 
     raise ValueError(f"Invalid url for a specific item page - '{url}'")
 
