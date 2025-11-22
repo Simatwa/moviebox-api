@@ -191,7 +191,7 @@ class Downloader:
         title: str,
         season: int,
         episode: int,
-        year: int | None = False,
+        year: int | None = None,
         yes: bool = False,
         dir: Path | str = CURRENT_WORKING_DIR,
         caption_dir: Path | str = CURRENT_WORKING_DIR,
