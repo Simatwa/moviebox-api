@@ -24,7 +24,6 @@ dependencies = [
     "bs4>=0.0.2",
     "httpx>=0.28.1",
     "pydantic>=2.11.7",
-    "readline>=6.2.4.2 ; sys_platform == 'win32'",
     "throttlebuster>=0.1.11",
 ]
 
@@ -42,6 +41,7 @@ documentation = "https://github.com/Simatwa/moviebox-api"
 cli = [
     "click>=8.2.1",
     "rich>=14.1.0",
+    "readline>=6.2.4.2 ; sys_platform == 'win32'",
 ]
 
 [build-system]
