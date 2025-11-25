@@ -139,7 +139,7 @@ def get_caption_file_or_raise(
         else:
             raise ZeroCaptionFileError(
                 "The target item has no any caption file. Use --no-caption or --ignore-missing-caption flags"
-                 " if you're using the commandline interface to suppress this error."
+                " if you're using the commandline interface to suppress this error."
             )
     return target_caption_file
 

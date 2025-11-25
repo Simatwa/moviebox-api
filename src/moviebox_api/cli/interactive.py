@@ -1,12 +1,17 @@
 """Interactive menu interface for moviebox-api"""
 
 import platform
-import readline
 import shutil
 import subprocess
 import sys
 
 import click
+
+try: # Resolves #51
+    import gnureadline as readline
+except ImportError:
+    import readline
+
 
 
 def clear_screen():
