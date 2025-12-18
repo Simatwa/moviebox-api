@@ -24,7 +24,7 @@ SERIES_NAME_WITH_SEASON_NUMBER_PATTERN = re.compile(r"^.*\sS\d{1,}$")
 
 SERIES_NAME_WITH_SEASON_NUMBER_ONE_PATTERN = re.compile(r"^.*\sS1$")
 
-UNWANTED_ITEM_NAME_PATTERN = re.compile(r"(\sS\d{1,}|-S\d{1,})")
+UNWANTED_ITEM_NAME_PATTERN = re.compile(r"(\sS\d{1,}|\sS\d{1,}-S\d{1,}|-S\d{1,})")
 
 
 def get_absolute_url(relative_url: str) -> str:
