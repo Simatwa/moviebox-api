@@ -20,7 +20,7 @@ def test_download_movie_caption_file():
     # It would make much sense when you cached the item-page so you'll not
     # required to start afresh come next time, rather proceed where you stopped from.
 
-    # To make this test future proof to changes on the frontend side,
+    # To make this test future proof to changes on the backend side,
     # we just have to fetch them from the server instead of using the offline one.
 
     target_movie_details_instance = MovieDetails(target_movie, session)

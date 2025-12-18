@@ -58,6 +58,7 @@ async def perform_search_and_get_item(
     search = search or Search(session, title, subject_type)
     search_results = await search.get_content_model()
     subject_type_name = " ".join(subject_type.name.lower().split("_"))
+
     logger.info(
         f"Query '{title}' yielded {'over ' if search_results.pager.hasMore else ''}"
         f"{len(search_results.items)} {subject_type_name}."
@@ -123,6 +124,7 @@ def get_caption_file_or_raise(
         CaptionFileMetadata: Target caption file details
     """
     target_caption_file = downloadable_details.get_subtitle_by_language(language)
+
     if target_caption_file is None:
         language_subtitle_map = (
             downloadable_details.get_language_short_subtitle_map
@@ -153,6 +155,7 @@ def prepare_start(quiet: bool = False, verbose: int = 0) -> None:
     """
     if verbose > 3:
         verbose = 2
+
     logging.basicConfig(
         format=("[%(asctime)s] : %(levelname)s - %(message)s" if verbose else "[%(module)s] %(message)s"),
         datefmt="%d-%b-%Y %H:%M:%S",
@@ -168,7 +171,9 @@ def prepare_start(quiet: bool = False, verbose: int = 0) -> None:
         ),
     )
     logging.info(f"Using host url - {HOST_URL}")
+
     packages = ("httpx",)
+
     for package_name in packages:
         package_logger = logging.getLogger(package_name)
         package_logger.setLevel(logging.WARNING)

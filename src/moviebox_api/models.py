@@ -10,10 +10,7 @@ from uuid import UUID
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 from moviebox_api.constants import ITEM_DETAILS_PATH, DownloadQualitiesType, SubjectType
-from moviebox_api.exceptions import (
-    ZeroMediaFileError,
-    ZeroSearchResultsError,
-)
+from moviebox_api.exceptions import ZeroMediaFileError
 from moviebox_api.helpers import get_file_extension
 
 
@@ -268,7 +265,7 @@ class DownloadableFilesMetadata(BaseModel):
     hasResource: bool
 
     def _check_downloads(self) -> bool:
-        """Checks whethere there are downloadable media file.
+        """Checks whether there are downloadable media file.
 
         Raises:
             ZeroMediaFileError: Incase the downloads list is empty

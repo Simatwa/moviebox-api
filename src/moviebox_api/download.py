@@ -72,6 +72,7 @@ def resolve_media_file_to_be_downloaded(
             if quality in DOWNLOAD_QUALITIES:
                 quality_downloads_map = downloadable_metadata.get_quality_downloads_map()
                 target_metadata = quality_downloads_map.get(quality)
+
                 if target_metadata is None:
                     raise RuntimeError(
                         f"Media file for quality {quality} does not exists. "
@@ -98,6 +99,7 @@ class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
         """
         assert_instance(session, Session, "session")
         assert_instance(item, (SearchResultsItem, ItemJsonDetailsModel), "item")
+
         self.session = session
         self._item: SearchResultsItem | PostListItemSubjectModel = (
             item.resData.postList.items[0].subject if isinstance(item, ItemJsonDetailsModel) else item
@@ -177,8 +179,10 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
 
     request_headers = DOWNLOAD_REQUEST_HEADERS
     request_cookies = {}
+
     movie_filename_template = "{title} ({release_year}).{ext}"
     series_filename_template = "{title} S{season}E{episode}.{ext}"
+
     # Should have been named episode_filename_template but for consistency
     # with the subject-types {movie, tv-series, music} it's better as it is
     possible_filename_placeholders = (

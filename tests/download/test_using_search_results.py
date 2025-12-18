@@ -52,6 +52,7 @@ async def test_download_tv_series_caption_file():
     search = Search(session, "Merlin", subject_type=SubjectType.TV_SERIES)
     search_results = await search.get_content_model()
     target_series = search_results.first_item
+
     downloadable_files = DownloadableTVSeriesFilesDetail(session, target_series)
     downloadable_files_detail = await downloadable_files.get_content_model(season=1, episode=1)
     target_caption_file = downloadable_files_detail.english_subtitle_file
@@ -67,6 +68,7 @@ async def test_download_tv_series_file():
     search = Search(session, "Merlin", subject_type=SubjectType.TV_SERIES)
     search_results = await search.get_content_model()
     target_series = search_results.first_item
+
     downloadable_files = DownloadableTVSeriesFilesDetail(session, target_series)
     downloadable_files_detail = await downloadable_files.get_content_model(season=1, episode=1)
     target_media_file = downloadable_files_detail.best_media_file

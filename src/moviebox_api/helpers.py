@@ -21,7 +21,9 @@ VALID_ITEM_PAGE_URL_PATTERN = re.compile(r"^.*" + ITEM_DETAILS_PATH + r"/[\w-]+(
 SCHEME_HOST_PATTERN = re.compile(r"^https?://[-_\.\w]+$")
 
 SERIES_NAME_WITH_SEASON_NUMBER_PATTERN = re.compile(r"^.*\sS\d{1,2}$")
+
 SERIES_NAME_WITH_SEASON_NUMBER_ONE_PATTERN = re.compile(r"^.*\sS1$")
+
 UNWANTED_ITEM_NAME_PATTERN = re.compile(r"\sS\d{1,2}")
 
 

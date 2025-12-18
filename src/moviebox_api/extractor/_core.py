@@ -174,7 +174,7 @@ class TagDetailsExtractor:
             "headers": self.extract_headers(),
             "basics": self.extract_basics(),
             "casts": self.extract_casts(),
-            "reviews": self.extract_others(),
+            "reviews": self.extract_reviews(),
             "others": self.extract_others(),
         }
 

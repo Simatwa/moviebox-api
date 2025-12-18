@@ -41,14 +41,14 @@ __all__ = ["Downloader"]
 class Downloader:
     """Controls the movie/series download process"""
 
-    def __init__(self, session: Session = Session()):
+    def __init__(self, session: Session = None):
         """Constructor for `Downloader`
 
         Args:
             session (Session, optional): MovieboxAPI httpx request session . Defaults to Session().
         """
         assert_instance(session, Session, "session")
-        self._session = session
+        self._session = session if session else Session()
 
     async def download_movie(
         self,

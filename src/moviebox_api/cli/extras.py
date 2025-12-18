@@ -47,6 +47,7 @@ def mirror_hosts_command(json: bool, **start_kwargs):
 
         for no, mirror_host in enumerate(MIRROR_HOSTS, 1):
             table.add_row(str(no), mirror_host)
+
         rich.print(table)
 
 
@@ -89,8 +90,10 @@ def homepage_content_command(json: bool, title: str, banner: bool, **start_kwarg
     session = Session()
     homepage = Homepage(session)
     homepage_contents = get_event_loop().run_until_complete(homepage.get_content_model())
+
     banners: dict[str, list[list[str]]] = {}
     items: dict[str, list[list[str]]] = {}
+
     for operating in homepage_contents.operatingList:
         if operating.type == "BANNER":
             banners[operating.title] = [
@@ -103,6 +106,7 @@ def homepage_content_command(json: bool, title: str, banner: bool, **start_kwarg
                 for item in operating.banner.items
                 if item.subject is not None
             ]
+
         elif operating.type == "SUBJECTS_MOVIE":
             items[operating.title] = (
                 [
@@ -118,10 +122,13 @@ def homepage_content_command(json: bool, title: str, banner: bool, **start_kwarg
     if json:
         if banner:
             rich.print_json(data=banners, indent=4)
+
         else:
             processed_items = {}
+
             for key, value in items.items():
                 item_values = []
+
                 for item in value:
                     item_values.append(item)
                 processed_items[key] = item_values
@@ -145,6 +152,7 @@ def homepage_content_command(json: bool, title: str, banner: bool, **start_kwarg
                 table.add_column("Pos")
                 table.add_column("Subject type", style="white")  # justify="center")
                 table.add_column("Title", style="cyan")
+
                 table.add_column("Genre")
                 table.add_column("Release date")
                 table.add_column("IMDB Rating")
@@ -170,8 +178,10 @@ def homepage_content_command(json: bool, title: str, banner: bool, **start_kwarg
                 table.add_column("Pos")
                 table.add_column("Subject type", style="white")
                 table.add_column("Title")
+
                 table.add_column("Genre")
                 table.add_column("IMDB Rating")
+
                 table.add_column("Country name")
                 table.add_column("Release date")
 
@@ -199,12 +209,16 @@ def popular_search_command(json: bool):
     if json:
         processed_items = [item.title for item in items]
         rich.print_json(data=dict(popular=processed_items), indent=4)
+
     else:
         table = Table(title="Popular Searches Now", show_lines=True)
+
         table.add_column("Pos")
         table.add_column("Title")
+
         for pos, item in enumerate(items, start=1):
             table.add_row(str(pos), item.title)
+
         rich.print(table)
 
 
@@ -285,6 +299,7 @@ def item_details_command(json: bool, full: bool, verbose: int, quiet: bool, **it
     details.update(extractor.metadata)
 
     season_items = []
+
     for season in extractor.seasons:
         season_string = (
             f"Season: {season['se']} "
@@ -300,6 +315,7 @@ def item_details_command(json: bool, full: bool, verbose: int, quiet: bool, **it
 
     else:
         table = Table("Key", "Value", title=f"{details['title']} - details", show_lines=True)
+
         for key, value in details.items():
             table.add_row(key, "\n".join(value) if type(value) is list else str(value))
 

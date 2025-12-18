@@ -48,6 +48,7 @@ def test_download_tv_series_caption_file():
     search = Search(session, "Merlin", subject_type=SubjectType.TV_SERIES)
     search_results: SearchResultsModel = search.get_content_model_sync()
     target_series = search_results.first_item
+
     downloadable_files = DownloadableTVSeriesFilesDetail(session, target_series)
     downloadable_files_detail: DownloadableFilesMetadata = downloadable_files.get_content_model_sync(
         season=1, episode=1
@@ -64,6 +65,7 @@ def test_download_tv_series_file():
     search = Search(session, "Merlin", subject_type=SubjectType.TV_SERIES)
     search_results: SearchResultsModel = search.get_content_model_sync()
     target_series = search_results.first_item
+
     downloadable_files = DownloadableTVSeriesFilesDetail(session, target_series)
     downloadable_files_detail: DownloadableFilesMetadata = downloadable_files.get_content_model_sync(
         season=1, episode=1

@@ -53,6 +53,7 @@ class Session:
         self._cookies = cookies
         self._timeout = timeout
         self._proxy = proxy
+
         self._client = httpx.AsyncClient(
             headers=headers,
             cookies=cookies,
@@ -60,6 +61,7 @@ class Session:
             proxy=proxy,
             **httpx_kwargs,
         )
+
         self.moviebox_app_info: MovieboxAppInfo | None = None
         self.__moviebox_app_info_fetched: bool = False
         """Used to track cookies assignment status"""
@@ -116,8 +118,10 @@ class Session:
             Response: Httpx response object
         """
         await self.ensure_cookies_are_assigned()
+
         response = await self._client.get(url, params=params, **kwargs)
         response.raise_for_status()
+
         return self._validate_response(response)
 
     async def get_with_cookies_from_api(self, *args, **kwargs) -> dict:
@@ -142,8 +146,10 @@ class Session:
             Response: Httpx response object
         """
         await self.ensure_cookies_are_assigned()
+
         response = await self._client.post(url, json=json, **kwargs)
         response.raise_for_status()
+
         return self._validate_response(response)
 
     async def post_to_api(self, *args, **kwargs) -> dict:
@@ -165,6 +171,7 @@ class Session:
             # First run probably
             await self._fetch_app_info()
             self.__moviebox_app_info_fetched = True
+
         return self._client.cookies.get("account") is not None
 
     async def _fetch_app_info(self) -> MovieboxAppInfo:
@@ -176,10 +183,14 @@ class Session:
         """
         response = await self._client.get(url=self._moviebox_app_info_url)
         response.raise_for_status()
+
         moviebox_app_info = process_api_response(response.json())
+
         if isinstance(moviebox_app_info, list):
             moviebox_app_info = moviebox_app_info[0]
+
         self.moviebox_app_info = MovieboxAppInfo(**moviebox_app_info)
+
         return self.moviebox_app_info
 
     update_session_cookies = _fetch_app_info

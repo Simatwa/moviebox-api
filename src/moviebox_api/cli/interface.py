@@ -596,10 +596,13 @@ def main():
         moviebox.add_command(download_movie_command, "download-movie")
         moviebox.add_command(download_tv_series_command, "download-series")
         moviebox.add_command(mirror_hosts_command, "mirror-hosts")
+
         moviebox.add_command(homepage_content_command, "homepage-content")
         moviebox.add_command(popular_search_command, "popular-search")
+
         moviebox.add_command(item_details_command, "item-details")
         moviebox.add_command(interactive_menu_command, "interactive")
+
         return moviebox()
 
     except Exception as e:

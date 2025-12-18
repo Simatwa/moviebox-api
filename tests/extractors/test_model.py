@@ -20,9 +20,11 @@ def test_json_details_extractor_model(content_path):
     assert isinstance(extractor.data, BaseModel)
     assert isinstance(extractor.subject, BaseModel)
     assert isinstance(extractor.metadata, BaseModel)
+
     assert isinstance(extractor.resource, BaseModel)
     assert isinstance(extractor.reviews[0], BaseModel)
     assert isinstance(extractor.seasons[0], BaseModel)
+
     assert isinstance(extractor.stars[0], BaseModel)
     assert isinstance(extractor.page_details, BaseModel)
 
@@ -34,5 +36,6 @@ def test_tag_details_extractor_model(content_path):
     assert isinstance(extractor.extract_headers(), BaseModel)
     assert isinstance(extractor.extract_basics(), BaseModel)
     assert isinstance(extractor.extract_casts()[0], BaseModel)
+
     assert isinstance(extractor.extract_reviews()[0], BaseModel)
     assert isinstance(extractor.extract_others(), BaseModel)

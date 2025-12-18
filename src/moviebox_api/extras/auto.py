@@ -41,7 +41,7 @@ class MovieAuto:
 
     def __init__(
         self,
-        session: Session = Session(),
+        session: Session = None,
         caption_language: str = DEFAULT_CAPTION_LANGUAGE,
         dir: DownloadedFile | str = CURRENT_WORKING_DIR,
         caption_dir: DownloadedFile | str = CURRENT_WORKING_DIR,
@@ -68,7 +68,7 @@ class MovieAuto:
          httpx_kwargs : Keyword arguments for `httpx.AsyncClient`
         """  # noqa: E501
 
-        self._session = session
+        self._session = session if session else Session()
         self._caption_language = caption_language
 
         self.media_file_downloader = MediaFileDownloader(
