@@ -204,15 +204,6 @@ class SearchResultsModel(BaseModel):
     pager: SearchResultsPagerModel
     items: list[SearchResultsItem]
 
-    @field_validator("items", mode="after")
-    def validate_items(
-        value: list[SearchResultsItem],
-    ) -> list[SearchResultsItem]:
-        if not bool(value):
-            # TODO: Fix this as it's biased to non-modelled responses
-            raise ZeroSearchResultsError("Search yielded empty results. Try a different keyword.")
-        return value
-
     @property
     def first_item(self) -> SearchResultsItem:
         return self.items[0]

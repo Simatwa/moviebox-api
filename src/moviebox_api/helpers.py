@@ -20,6 +20,10 @@ VALID_ITEM_PAGE_URL_PATTERN = re.compile(r"^.*" + ITEM_DETAILS_PATH + r"/[\w-]+(
 
 SCHEME_HOST_PATTERN = re.compile(r"^https?://[-_\.\w]+$")
 
+SERIES_NAME_WITH_SEASON_NUMBER_PATTERN = re.compile(r"^.*\sS\d{1,2}$")
+SERIES_NAME_WITH_SEASON_NUMBER_ONE_PATTERN = re.compile(r"^.*\sS1$")
+UNWANTED_ITEM_NAME_PATTERN = re.compile(r"\sS\d{1,2}")
+
 
 def get_absolute_url(relative_url: str) -> str:
     """Makes absolute url from relative one
@@ -103,3 +107,17 @@ def get_event_loop():
         event_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(event_loop)
     return event_loop
+
+
+def is_valid_search_item(item_name: str) -> bool:
+    if SERIES_NAME_WITH_SEASON_NUMBER_PATTERN.match(item_name):
+        if SERIES_NAME_WITH_SEASON_NUMBER_ONE_PATTERN.match(item_name):
+            return True
+
+        return False
+
+    return True
+
+
+def sanitize_item_name(item_name: str) -> str:
+    return UNWANTED_ITEM_NAME_PATTERN.sub("", item_name)

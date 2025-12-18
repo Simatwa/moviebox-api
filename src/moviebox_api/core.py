@@ -10,10 +10,7 @@ from moviebox_api._bases import (
     BaseContentProviderAndHelper,
 )
 from moviebox_api.constants import SubjectType
-from moviebox_api.exceptions import (
-    ExhaustedSearchResultsError,
-    MovieboxApiException,
-)
+from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiException, ZeroSearchResultsError
 from moviebox_api.extractor._core import (
     JsonDetailsExtractor,
     JsonDetailsExtractorModel,
@@ -26,6 +23,8 @@ from moviebox_api.helpers import (
     get_absolute_url,
     get_event_loop,
     validate_item_page_url,
+    sanitize_item_name,
+    is_valid_search_item,
 )
 from moviebox_api.models import (
     HomepageContentModel,
@@ -174,9 +173,19 @@ class Search(BaseSearch):
             # Sometimes server response include irrelevant
             # items
 
-            for item in contents["items"]:
+            contents_items = contents["items"]
+
+            if not contents_items:
+                raise ZeroSearchResultsError("Search yielded empty results. Try a different keyword.")
+
+            for item in contents_items:
                 if item["subjectType"] == self._subject_type.value:
-                    target_items.append(item)
+                    # https://github.com/Simatwa/moviebox-api/issues/55
+                    item_name = item["title"]
+
+                    if is_valid_search_item(item_name):
+                        item["title"] = sanitize_item_name(item_name)
+                        target_items.append(item)
 
             contents["items"] = target_items
 

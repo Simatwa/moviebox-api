@@ -19,7 +19,7 @@ from moviebox_api.constants import (
     SubjectType,
 )
 from moviebox_api.core import Search, Session
-from moviebox_api.exceptions import ZeroCaptionFileError
+from moviebox_api.exceptions import ZeroCaptionFileError, ZeroSearchResultsError
 from moviebox_api.models import (
     CaptionFileMetadata,
     DownloadableFilesMetadata,
@@ -226,7 +226,9 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
             f' while in Windows : "set MOVIEBOX_API_HOST={example_host}'
         )
 
-    if not isinstance(exception, (ValueError, AssertionError, RuntimeError)):
+    if not isinstance(
+        exception, (ValueError, AssertionError, RuntimeError, ZeroCaptionFileError, ZeroSearchResultsError)
+    ):
         logging.info(f"Incase the error persist then feel free to submit the issue at {__repo__}/issues/new")
 
     return exit_code
