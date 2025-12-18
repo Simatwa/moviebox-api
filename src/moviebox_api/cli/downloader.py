@@ -47,8 +47,8 @@ class Downloader:
         Args:
             session (Session, optional): MovieboxAPI httpx request session . Defaults to Session().
         """
-        assert_instance(session, Session, "session")
         self._session = session if session else Session()
+        assert_instance(self._session, Session, "session")
 
     async def download_movie(
         self,
