@@ -240,7 +240,7 @@ class SubjectModel(ContentCategorySubjectsModel):
     """`.resData.subject`"""
 
     title: str
-    trailer: SubjectTrailerModel | None
+    trailer: SubjectTrailerModel | None = None
 
 
 class ResDataModel(BaseModel):
