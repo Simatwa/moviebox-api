@@ -263,7 +263,7 @@ def stream_video_via_mpv(url: str, subtitle_details_items: list[DownloadedFile],
 
         subprocess.run(mpv_cmd)
 
-        shutil.rmtree(subtitles_dir, ignore_errors=True)
+        # shutil.rmtree(subtitles_dir, ignore_errors=True)
 
         return (None, None)
 
@@ -296,7 +296,9 @@ def stream_video_via_vlc(url: str, subtitle_details_items: list[DownloadedFile],
 
         subprocess.run(mpv_cmd)
 
-        shutil.rmtree(subtitles_dir, ignore_errors=True)
+        # shutil.rmtree(subtitles_dir, ignore_errors=True)
+        # TODO: Reconsider clearing subtitle folder
+        # - Since its saved on temp-folder then OS will handle that...?
 
         return (None, None)
 
