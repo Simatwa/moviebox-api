@@ -292,10 +292,7 @@ class Downloader:
         subtitles_dir = tempfile.mkdtemp() if stream_via else caption_dir
 
         caption_downloader = CaptionFileDownloader(
-            dir=(
-                subtitles_dir if stream_via else
-                dir if group else subtitles_dir
-            ),
+            dir=(subtitles_dir if stream_via else dir if group else subtitles_dir),
             chunk_size=chunk_size,
             tasks=tasks,
             part_dir=part_dir,
