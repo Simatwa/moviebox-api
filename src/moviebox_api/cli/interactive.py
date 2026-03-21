@@ -8,9 +8,9 @@ import sys
 import click
 
 try:  # Resolves #51
-    import gnureadline as readline
-except ImportError:
     import readline
+except ImportError:
+    pass
 
 
 def clear_screen():
