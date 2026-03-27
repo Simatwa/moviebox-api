@@ -1,7 +1,7 @@
 import pytest
 
 from moviebox_api.v1 import MovieAuto
-from tests import MOVIE_KEYWORD
+from tests.v1 import MOVIE_KEYWORD
 
 
 @pytest.mark.asyncio

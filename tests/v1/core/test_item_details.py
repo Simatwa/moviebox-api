@@ -10,7 +10,7 @@ from moviebox_api.v1.extractor import (
     TagDetailsExtractorModel,
 )
 from moviebox_api.v1.requests import Session
-from tests import MOVIE_KEYWORD, TV_SERIES_KEYWORD
+from tests.v1 import MOVIE_KEYWORD, TV_SERIES_KEYWORD
 
 
 @pytest.mark.asyncio

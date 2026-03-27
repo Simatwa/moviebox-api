@@ -1,4 +1,4 @@
-from tests import project_dir
+from tests.v1 import project_dir
 
 content_names = ["content_path"]
 content_paths = (

@@ -3,10 +3,9 @@ import pytest
 from moviebox_api.v1.core import MovieDetails, Search, SubjectType, TVSeriesDetails
 from moviebox_api.v1.models import SearchResultsModel
 from moviebox_api.v1.requests import Session
-from tests import init_search
+from tests.v1 import init_search
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     argnames=["subject_type"],
     argvalues=(
@@ -16,13 +15,12 @@ from tests import init_search
         [SubjectType.MUSIC],
     ),
 )
-async def test_get_content_and_model(subject_type: SubjectType):
+def test_get_content_and_model(subject_type: SubjectType):
     search: Search = init_search(Session(), subject_type=subject_type)
-
-    contents = await search.get_content()
+    contents = search.get_content_sync()
     assert type(contents) is dict
-    modelled_contents = await search.get_content_model()
 
+    modelled_contents = search.get_content_model_sync()
     assert isinstance(modelled_contents, SearchResultsModel)
 
     for item in modelled_contents.items:
@@ -39,29 +37,27 @@ async def test_get_content_and_model(subject_type: SubjectType):
                 pass
 
 
-@pytest.mark.asyncio
-async def test_next_page_navigation():
+def test_next_page_navigation():
     search = init_search(Session())
-    contents = await search.get_content_model()
+    contents = search.get_content_model_sync()
     assert isinstance(contents, SearchResultsModel)
 
     next_search = search.next_page(contents)
     assert isinstance(next_search, Search)
-    next_contents = await next_search.get_content_model()
+    next_contents = next_search.get_content_model_sync()
 
     assert isinstance(next_contents, SearchResultsModel)
     assert contents.pager.page + 1 == next_contents.pager.page
 
 
-@pytest.mark.asyncio
-async def test_previous_page_navigation():
+def test_previous_page_navigation():
     search: Search = init_search(Session(), page=3)
-    contents = await search.get_content_model()
+    contents = search.get_content_model_sync()
     assert isinstance(contents, SearchResultsModel)
 
     previous_search = search.previous_page(contents)
     assert isinstance(previous_search, Search)
-    previous_contents = await previous_search.get_content_model()
+    previous_contents = previous_search.get_content_model_sync()
 
     assert isinstance(previous_contents, SearchResultsModel)
     assert contents.pager.page - 1 == previous_contents.pager.page
