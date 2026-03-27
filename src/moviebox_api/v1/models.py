@@ -226,10 +226,17 @@ class HotMoviesAndTVSeriesModel(BaseModel):
     tv_series: list[SearchResultsItem] = Field(alias="tv")
 
 
+class SuggestedItemModel(BaseModel):
+    """`SuggestedItemsModel.items[0]`"""
+    type: SubjectType
+    subject: str | None
+    word: str
+
+
 class SuggestedItemsModel(BaseModel):
     """Items suggested"""
 
-    items: list
+    items: list[SuggestedItemModel]
     keyword: str
     ops: str
 

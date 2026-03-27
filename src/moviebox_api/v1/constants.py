@@ -32,7 +32,7 @@ MIRROR_HOSTS = (
 )
 """Mirror domains/subdomains of Moviebox"""
 
-ENVIRONMENT_HOST_KEY = "MOVIEBOX_API_HOST"
+ENVIRONMENT_HOST_KEY = "MOVIEBOX_HOST"
 """User declares host to use as environment variable using this key"""
 
 SELECTED_HOST = (
@@ -104,15 +104,18 @@ class SubjectType(IntEnum):
 
     ALL = 0
     """Both Movies, series and music contents"""
+
     MOVIES = 1
     """Movies content only"""
+
     TV_SERIES = 2
     """TV Series content only"""
+
+    ANIME = 5
+    """Anime contents only"""
+
     MUSIC = 6
     """Music contents only"""
-
-    UNKNOWN_1 = 5
-    """Yet to be known"""
 
     UNKNOWN = 7
     """Yet to be known"""

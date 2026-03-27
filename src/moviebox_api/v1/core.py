@@ -567,7 +567,10 @@ class SearchSuggestion(BaseContentProviderAndHelper):
             dict: Suggested item(s) details
         """
         contents = await self.session.post_to_api(
-            self._url, json={"per_page": self._per_page, "keyword": reference}
+            self._url, json={
+                "per_page": self._per_page, 
+                "keyword": reference,
+                }
         )
         return contents
 

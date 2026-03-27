@@ -39,7 +39,8 @@ x-request-lang: en
 
 {
     "keyword":"The Warriors",
-    "page":1,"perPage":30,
+    "page":1,
+    "perPage":30,
     "subjectType":5
 }
 ```
