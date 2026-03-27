@@ -1,5 +1,5 @@
 """
-Main module for the package.
+Main module for the submodule.
 Generate models from httpx request responses.
 Also provides object mapping support to specific extracted item details
 """
@@ -42,6 +42,51 @@ class Search(moviebox_api.v1.core.Search):
         """
         contents = await self.get_content()
         return SearchResultsModel(**contents)
+    
+
+class ItemDetails(BaseItemDetails):
+    """Fetch specific item details - movies, anime, education, 
+    music & tv-series"""
+
+    def __init__(
+            self, session: Session):
+        """Constructor for `SingleItemDetails`
+
+        Args:
+            session (Session): MovieboxAPI request session
+        """
+        super().__init__(session)
+
+    async def get_content(self, path_or_item: str | SearchResultsItem) -> dict:
+        """Get specific item details
+
+        Args:
+            path_or_item (str|SearchResultsItem): Detail path for specific item
+              page or search-results-item.
+
+        Raises:
+            ValueError: InvalidDetailPathError
+        """
+
+        assert_instance(path_or_item, (str, SearchResultsItem), "path_or_item")
+
+        detail_path = path_or_item
+
+        if isinstance(path_or_item, SearchResultsItem):
+
+            detail_path = SearchResultsItem.detailPath
+
+        return await super().get_content(detail_path)
+
+    async def get_content_model(
+            self, path_or_item: str | SearchResultsItem,
+              **kwargs) -> SpecificItemDetailsModel:
+
+        content = await self.get_content(path_or_item, **kwargs)
+        return SpecificItemDetailsModel(**content)
+
+# TODO: Ignore the subjectType considerarion while fetching Item details
+# only consider it when fetching downloadble media details
 
 
 class SingleItemDetails(BaseItemDetails):

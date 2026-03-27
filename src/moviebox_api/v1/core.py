@@ -1,5 +1,5 @@
 """
-Main module for the package.
+Main module for the submodule.
 Generate models from httpx request responses.
 Also provides object mapping support to specific extracted item details
 """
