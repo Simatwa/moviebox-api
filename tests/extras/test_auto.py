@@ -1,6 +1,6 @@
 import pytest
 
-from moviebox_api import MovieAuto
+from moviebox_api.v1 import MovieAuto
 from tests import MOVIE_KEYWORD
 
 

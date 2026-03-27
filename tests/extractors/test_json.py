@@ -1,6 +1,6 @@
 import pytest
 
-from moviebox_api.extractor._core import JsonDetailsExtractor
+from moviebox_api.v1.extractor._core import JsonDetailsExtractor
 from tests.extractors import (
     content_names,
     content_paths,

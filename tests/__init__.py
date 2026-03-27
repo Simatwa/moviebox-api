@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from moviebox_api.core import Search, SubjectType
-from moviebox_api.requests import Session
+from moviebox_api.v1.core import Search, SubjectType
+from moviebox_api.v1.requests import Session
 
 project_dir = Path(__file__).parent.parent
 

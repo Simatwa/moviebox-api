@@ -1,5 +1,5 @@
-from moviebox_api import MovieDetails, Search, Session, SubjectType
-from moviebox_api.models import SearchResultsModel
+from moviebox_api.v1 import MovieDetails, Search, Session, SubjectType
+from moviebox_api.v1.models import SearchResultsModel
 
 
 def main():

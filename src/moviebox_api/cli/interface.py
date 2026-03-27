@@ -7,7 +7,7 @@ from pathlib import Path
 
 import click
 
-from moviebox_api import __version__
+from moviebox_api.v1 import __version__
 from moviebox_api.cli.downloader import Downloader
 from moviebox_api.cli.extras import (
     homepage_content_command,
@@ -23,7 +23,7 @@ from moviebox_api.cli.helpers import (
     show_any_help,
 )
 from moviebox_api.cli.interactive import run_interactive_menu
-from moviebox_api.constants import (
+from moviebox_api.v1.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CHUNK_SIZE,
     DEFAULT_READ_TIMEOUT_ATTEMPTS,
@@ -33,11 +33,11 @@ from moviebox_api.constants import (
     DOWNLOAD_QUALITIES,
     DownloadMode,
 )
-from moviebox_api.download import (
+from moviebox_api.v1.download import (
     CaptionFileDownloader,
     MediaFileDownloader,
 )
-from moviebox_api.helpers import get_event_loop
+from moviebox_api.v1.helpers import get_event_loop
 
 __all__ = [
     "download_movie_command",

@@ -1,15 +1,15 @@
 import pytest
 from pydantic import BaseModel
 
-from moviebox_api.constants import SubjectType
-from moviebox_api.core import MovieDetails, Search, TVSeriesDetails
-from moviebox_api.extractor import (
+from moviebox_api.v1.constants import SubjectType
+from moviebox_api.v1.core import MovieDetails, Search, TVSeriesDetails
+from moviebox_api.v1.extractor import (
     JsonDetailsExtractor,
     JsonDetailsExtractorModel,
     TagDetailsExtractor,
     TagDetailsExtractorModel,
 )
-from moviebox_api.requests import Session
+from moviebox_api.v1.requests import Session
 from tests import MOVIE_KEYWORD, TV_SERIES_KEYWORD
 
 

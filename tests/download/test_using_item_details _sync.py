@@ -1,12 +1,12 @@
-from moviebox_api.core import MovieDetails, Search, SubjectType, TVSeriesDetails
-from moviebox_api.download import (
+from moviebox_api.v1.core import MovieDetails, Search, SubjectType, TVSeriesDetails
+from moviebox_api.v1.download import (
     CaptionFileDownloader,
     DownloadableMovieFilesDetail,
     DownloadableTVSeriesFilesDetail,
     MediaFileDownloader,
 )
-from moviebox_api.models import DownloadableFilesMetadata, SearchResultsModel
-from moviebox_api.requests import Session
+from moviebox_api.v1.models import DownloadableFilesMetadata, SearchResultsModel
+from moviebox_api.v1.requests import Session
 
 
 def test_download_movie_caption_file():

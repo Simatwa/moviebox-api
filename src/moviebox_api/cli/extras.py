@@ -9,11 +9,11 @@ from moviebox_api.cli.helpers import (
     perform_search_and_get_item,
     prepare_start,
 )
-from moviebox_api.constants import MIRROR_HOSTS, SubjectType
-from moviebox_api.core import Homepage, MovieDetails, PopularSearch, TVSeriesDetails
-from moviebox_api.extractor import JsonDetailsExtractor
-from moviebox_api.helpers import get_event_loop
-from moviebox_api.requests import Session
+from moviebox_api.v1.constants import MIRROR_HOSTS, SubjectType
+from moviebox_api.v1.core import Homepage, MovieDetails, PopularSearch, TVSeriesDetails
+from moviebox_api.v1.extractor import JsonDetailsExtractor
+from moviebox_api.v1.helpers import get_event_loop
+from moviebox_api.v1.requests import Session
 
 
 @click.command(context_settings=command_context_settings)

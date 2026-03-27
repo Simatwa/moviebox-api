@@ -10,17 +10,17 @@ from httpx import ConnectTimeout, HTTPStatusError
 from pydantic import ValidationError
 from throttlebuster import DownloadedFile, DownloadMode
 
-from moviebox_api import __repo__, logger
-from moviebox_api.constants import (
+from moviebox_api.v1 import __repo__, logger
+from moviebox_api.v1.constants import (
     DOWNLOAD_REQUEST_HEADERS,
     ENVIRONMENT_HOST_KEY,
     HOST_URL,
     MIRROR_HOSTS,
     SubjectType,
 )
-from moviebox_api.core import Search, Session
-from moviebox_api.exceptions import ZeroCaptionFileError, ZeroSearchResultsError
-from moviebox_api.models import (
+from moviebox_api.v1.core import Search, Session
+from moviebox_api.v1.exceptions import ZeroCaptionFileError, ZeroSearchResultsError
+from moviebox_api.v1.models import (
     CaptionFileMetadata,
     DownloadableFilesMetadata,
     SearchResultsItem,

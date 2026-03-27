@@ -1,13 +1,13 @@
 import pytest
 
-from moviebox_api.core import Search, SubjectType
-from moviebox_api.download import (
+from moviebox_api.v1.core import Search, SubjectType
+from moviebox_api.v1.download import (
     CaptionFileDownloader,
     DownloadableMovieFilesDetail,
     DownloadableTVSeriesFilesDetail,
     MediaFileDownloader,
 )
-from moviebox_api.requests import Session
+from moviebox_api.v1.requests import Session
 
 
 @pytest.mark.asyncio

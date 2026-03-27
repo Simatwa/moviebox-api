@@ -1,7 +1,7 @@
 import pytest
 from pydantic import BaseModel
 
-from moviebox_api.extractor._core import (
+from moviebox_api.v1.extractor._core import (
     JsonDetailsExtractorModel,
     TagDetailsExtractorModel,
 )

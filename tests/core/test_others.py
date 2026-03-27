@@ -1,8 +1,8 @@
 import pytest
 from pydantic import BaseModel
 
-from moviebox_api import Search, Session, SubjectType
-from moviebox_api.core import (
+from moviebox_api.v1 import Search, Session, SubjectType
+from moviebox_api.v1.core import (
     HotMoviesAndTVSeries,
     PopularSearch,
     Recommend,

@@ -14,7 +14,7 @@ from moviebox_api.cli.helpers import (
     media_player_name_func_map,
     perform_search_and_get_item,
 )
-from moviebox_api.constants import (
+from moviebox_api.v1.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CAPTION_LANGUAGE,
     DEFAULT_CHUNK_SIZE,
@@ -23,17 +23,17 @@ from moviebox_api.constants import (
     DownloadQualitiesType,
     SubjectType,
 )
-from moviebox_api.core import Session, TVSeriesDetails
-from moviebox_api.download import (
+from moviebox_api.v1.core import Session, TVSeriesDetails
+from moviebox_api.v1.download import (
     CaptionFileDownloader,
     DownloadableMovieFilesDetail,
     DownloadableTVSeriesFilesDetail,
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
-from moviebox_api.exceptions import ZeroCaptionFileError
-from moviebox_api.helpers import assert_instance, assert_membership, get_event_loop
-from moviebox_api.models import SearchResultsItem
+from moviebox_api.v1.exceptions import ZeroCaptionFileError
+from moviebox_api.v1.helpers import assert_instance, assert_membership, get_event_loop
+from moviebox_api.v1.models import SearchResultsItem
 
 __all__ = ["Downloader"]
 

@@ -1,8 +1,8 @@
 import pytest
 
-from moviebox_api.core import MovieDetails, Search, SubjectType, TVSeriesDetails
-from moviebox_api.models import SearchResultsModel
-from moviebox_api.requests import Session
+from moviebox_api.v1.core import MovieDetails, Search, SubjectType, TVSeriesDetails
+from moviebox_api.v1.models import SearchResultsModel
+from moviebox_api.v1.requests import Session
 from tests import init_search
 
 
