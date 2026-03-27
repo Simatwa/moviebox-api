@@ -1,0 +1,13 @@
+{
+    "code": 0,
+    "message": "ok",
+    "data": [
+        {
+            "channelType": "CHANNEL_OWN",
+            "pkgName": "com.community.oneroom",
+            "url": "https://apk.aoneroom.com/apk/moviebox/release/3.0.05.0711.03/channel1710/moviebox-v-3.0.05.0711.03.apk",
+            "versionCode": "50020052",
+            "versionName": "3.0.05.0711.03"
+        }
+    ]
+}
