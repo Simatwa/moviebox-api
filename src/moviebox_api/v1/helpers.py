@@ -37,7 +37,7 @@ def get_absolute_url(relative_url: str, base_url: str = HOST_URL) -> str:
         str: Complete url with host
     """
 
-    return urljoin(HOST_URL, SCHEME_HOST_PATTERN.sub("", relative_url))
+    return urljoin(base_url, SCHEME_HOST_PATTERN.sub("", relative_url))
 
 
 def assert_membership(value: t.Any, elements: t.Iterable, identity="Value"):

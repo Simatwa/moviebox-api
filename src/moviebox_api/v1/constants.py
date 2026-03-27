@@ -111,14 +111,14 @@ class SubjectType(IntEnum):
     TV_SERIES = 2
     """TV Series content only"""
 
-    ANIME = 5
+    EDUCATION = 5
     """Anime contents only"""
 
     MUSIC = 6
     """Music contents only"""
 
-    UNKNOWN = 7
-    """Yet to be known"""
+    ANIME = 7
+    """Anime contents only"""
 
     # TODO: Research and update UNKNOWNS
 
