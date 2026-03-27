@@ -5,7 +5,7 @@ from moviebox_api.v1.extractor._core import (
     JsonDetailsExtractorModel,
     TagDetailsExtractorModel,
 )
-from tests.extractors import (
+from tests.v1.extractors import (
     content_names,
     content_paths,
     read_content,

@@ -24,7 +24,7 @@ from moviebox_api.v1.constants import (
     DownloadQualitiesType,
     SubjectType,
 )
-from moviebox_api.extractor.models.json import (
+from moviebox_api.v1.extractor.models.json import (
     ItemJsonDetailsModel,
     PostListItemSubjectModel,
 )

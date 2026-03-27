@@ -10,14 +10,18 @@ from moviebox_api.v1._bases import (
     BaseContentProviderAndHelper,
 )
 from moviebox_api.v1.constants import SubjectType
-from moviebox_api.v1.exceptions import ExhaustedSearchResultsError, MovieboxApiException, ZeroSearchResultsError
-from moviebox_api.extractor._core import (
+from moviebox_api.v1.exceptions import (
+    ExhaustedSearchResultsError,
+    MovieboxApiException,
+    ZeroSearchResultsError,
+)
+from moviebox_api.v1.extractor._core import (
     JsonDetailsExtractor,
     JsonDetailsExtractorModel,
     TagDetailsExtractor,
     TagDetailsExtractorModel,
 )
-from moviebox_api.extractor.models.json import ItemJsonDetailsModel
+from moviebox_api.v1.extractor.models.json import ItemJsonDetailsModel
 from moviebox_api.v1.helpers import (
     assert_instance,
     get_absolute_url,
