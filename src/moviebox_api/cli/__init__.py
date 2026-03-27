@@ -1,5 +1,5 @@
-"""Commandline interface"""
+"""Commandline module"""
 
-from moviebox_api.cli.interface import main
+from moviebox_api.cli.downloader import Downloader
 
-__all__ = ["main"]
+__all__ = ["Downloader"]

@@ -5,7 +5,17 @@ import typing as t
 from enum import IntEnum, StrEnum
 from pathlib import Path
 
+from throttlebuster.constants import (
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_READ_TIMEOUT_ATTEMPTS,
+    DEFAULT_TASKS_LIMIT,
+    DOWNLOAD_PART_EXTENSION,
+    DownloadMode,
+)
+
 from moviebox_api import logger
+
+"""asyncio event loop"""
 
 MIRROR_HOSTS = (
     # "moviebox.ng",
@@ -49,11 +59,13 @@ DEFAULT_REQUEST_HEADERS = {
 }
 """For general http requests other than download"""
 
+DOWNLOAD_REQUEST_REFERER = "https://fmoviesunblocked.net/"
+
 DOWNLOAD_REQUEST_HEADERS = {
     "Accept": "*/*",  # "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5",
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
     "Origin": SELECTED_HOST,
-    "Referer": HOST_URL,
+    "Referer": DOWNLOAD_REQUEST_REFERER,
 }
 """For media and subtitle files download requests"""
 
@@ -74,13 +86,17 @@ DOWNLOAD_QUALITIES = (
 
 DEFAULT_CAPTION_LANGUAGE = "English"
 
-DEFAULT_SHORT_CAPTION_LANGUAGE = "en"
+DEFAULT_CAPTION_LANGUAGE_SHORT = "en"
 
 CURRENT_WORKING_DIR = Path(os.getcwd())
 """Directory where contents will be saved to by default"""
 
 ITEM_DETAILS_PATH = "/detail"
 """Immediate path to particular item details page"""
+
+
+DEFAULT_TASKS = 5
+"""Default number of connections for download"""
 
 
 class SubjectType(IntEnum):
@@ -95,8 +111,13 @@ class SubjectType(IntEnum):
     MUSIC = 6
     """Music contents only"""
 
+    UNKNOWN_1 = 5
+    """Yet to be known"""
+
     UNKNOWN = 7
     """Yet to be known"""
+
+    # TODO: Research and update UNKNOWNS
 
     @classmethod
     def map(cls) -> dict[str, int]:
@@ -105,29 +126,6 @@ class SubjectType(IntEnum):
         for entry in cls:
             resp[entry.name] = entry.value
         return resp
-
-
-class DownloadMode(StrEnum):
-    START = "start"
-    RESUME = "resume"
-    AUTO = "auto"
-
-    @classmethod
-    def map(cls) -> dict[str, str]:
-        """Modes mapped to their string representatives"""
-        resp = {}
-        for entry in cls:
-            resp[entry.name] = entry.value
-        return resp
-
-    @classmethod
-    def map_cls(cls) -> dict:
-        """Names in lower case mapped to their values"""
-        return {
-            "start": cls.START,
-            "resume": cls.RESUME,
-            "auto": cls.AUTO,
-        }
 
 
 class DownloadStatus(StrEnum):

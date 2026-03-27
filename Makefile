@@ -1,5 +1,5 @@
 # Define targets
-.PHONY: install test build publish install-in-termux
+.PHONY: install test coverage-badge
 
 # Define variables
 PYTHON := python
@@ -10,21 +10,25 @@ default: install test
 
 # Target to install package
 install:
-	uv pip install -e .
+	uv pip install -e ".[cli]"
 
 # Target to install in termux
 install-in-termux:
 	pip install moviebox-api --no-deps
 	pip install 'pydantic==2.9.2'
-	pip install rich click httpx tqdm bs4
+	pip install rich click bs4 httpx throttlebuster
 
 # Target to run tests
 test:
-	pytest tests -v 
+	coverage run -m pytest -v
+
+# Target to generate coverage-badge
+coverage-badge:
+	coverage-badge -o assets/coverage.svg -f
 
 # target to build dist
 build:
-	rm build/ disr/ -rf
+	rm build/ dist/ -rf
 	uv build
 	
 # Target to publish dist to pypi

@@ -2,36 +2,33 @@
 and later performing the actual download as well
 """
 
-import asyncio
-import typing as t
-from os import path
 from pathlib import Path
 
 import httpx
-from tqdm import tqdm
+from throttlebuster import DownloadedFile, ThrottleBuster
+from throttlebuster.helpers import get_filesize_string, sanitize_filename
 
-from moviebox_api import logger
-from moviebox_api._bases import BaseContentProvider
+from moviebox_api._bases import (
+    BaseContentProviderAndHelper,
+    BaseFileDownloaderAndHelper,
+)
 from moviebox_api.constants import (
     CURRENT_WORKING_DIR,
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_READ_TIMEOUT_ATTEMPTS,
+    DEFAULT_TASKS,
+    DOWNLOAD_PART_EXTENSION,
     DOWNLOAD_QUALITIES,
     DOWNLOAD_REQUEST_HEADERS,
     DownloadMode,
     DownloadQualitiesType,
-    DownloadStatus,
     SubjectType,
 )
-from moviebox_api.exceptions import DownloadCompletedError
 from moviebox_api.extractor.models.json import (
     ItemJsonDetailsModel,
     PostListItemSubjectModel,
 )
-from moviebox_api.helpers import (
-    assert_instance,
-    get_absolute_url,
-    get_filesize_string,
-    sanitize_filename,
-)
+from moviebox_api.helpers import assert_instance, get_absolute_url
 from moviebox_api.models import (
     CaptionFileMetadata,
     DownloadableFilesMetadata,
@@ -60,7 +57,7 @@ def resolve_media_file_to_be_downloaded(
         downloadable_metadata (DownloadableFilesMetadata): Downloadable files metadata
 
     Raises:
-        ValueError: Incase media file matching target quality not found
+        RuntimeError: Incase no media file matched the target quality
         ValueError: Unexpected target media quality
 
     Returns:
@@ -71,12 +68,13 @@ def resolve_media_file_to_be_downloaded(
             target_metadata = downloadable_metadata.best_media_file
         case "WORST":
             target_metadata = downloadable_metadata.worst_media_file
-        case "_":
+        case _:
             if quality in DOWNLOAD_QUALITIES:
                 quality_downloads_map = downloadable_metadata.get_quality_downloads_map()
                 target_metadata = quality_downloads_map.get(quality)
+
                 if target_metadata is None:
-                    raise ValueError(
+                    raise RuntimeError(
                         f"Media file for quality {quality} does not exists. "
                         f"Try other qualities from {target_metadata.keys()}"
                     )
@@ -87,7 +85,7 @@ def resolve_media_file_to_be_downloaded(
     return target_metadata
 
 
-class BaseDownloadableFilesDetail(BaseContentProvider):
+class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
     """Base class for fetching and modelling downloadable files detail"""
 
     _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/download")
@@ -101,6 +99,7 @@ class BaseDownloadableFilesDetail(BaseContentProvider):
         """
         assert_instance(session, Session, "session")
         assert_instance(item, (SearchResultsItem, ItemJsonDetailsModel), "item")
+
         self.session = session
         self._item: SearchResultsItem | PostListItemSubjectModel = (
             item.resData.postList.items[0].subject if isinstance(item, ItemJsonDetailsModel) else item
@@ -175,52 +174,84 @@ class DownloadableTVSeriesFilesDetail(BaseDownloadableFilesDetail):
     # NOTE: Already implemented by parent class - BaseDownloadableFilesDetail
 
 
-class MediaFileDownloader:
+class MediaFileDownloader(BaseFileDownloaderAndHelper):
     """Download movie and tv-series files"""
 
     request_headers = DOWNLOAD_REQUEST_HEADERS
     request_cookies = {}
-    movie_filename_template = "%(title)s (%(release_year)d) - %(resolution)dP.%(ext)s"
-    series_filename_template = "%(title)s S%(season)dE%(episode)d - %(resolution)dP.%(ext)s"
+
+    movie_filename_template = "{title} ({release_year}).{ext}"
+    series_filename_template = "{title} S{season}E{episode}.{ext}"
+
     # Should have been named episode_filename_template but for consistency
     # with the subject-types {movie, tv-series, music} it's better as it is
     possible_filename_placeholders = (
-        "%(title)s",
-        "%(release_year)d",
-        "%(release_date)s",
-        "%(resolution)d",
-        "%(ext)s",
-        "%(size_string)s",
-        "%(season)d",
-        "%(episode)d",
+        "{title}",
+        "{release_year}",
+        "{release_date}",
+        "{resolution}",
+        "{ext}",
+        "{size_string}",
+        "{season}",
+        "{episode}",
     )
 
-    def __init__(self, media_file: MediaFileMetadata):
+    def __init__(
+        self,
+        dir: Path | str = CURRENT_WORKING_DIR,
+        chunk_size: int = DEFAULT_CHUNK_SIZE,
+        tasks: int = DEFAULT_TASKS,
+        part_dir: Path | str = CURRENT_WORKING_DIR,
+        part_extension: str = DOWNLOAD_PART_EXTENSION,
+        merge_buffer_size: int | None = None,
+        group_series: bool = False,
+        **httpx_kwargs,
+    ):
         """Constructor for `MediaFileDownloader`
+
         Args:
-            session (Session): MovieboxAPI request session.
-            media_file (MediaFileMetadata): Movie/tv-series/music to be downloaded.
-        """
-        assert_instance(media_file, MediaFileMetadata, "media_file")
-        self._media_file = media_file
-        self.session = httpx.AsyncClient(headers=self.request_headers, cookies=self.request_cookies)
-        """Httpx client session for downloading the file"""
+            dir (Path | str, optional): Directory for saving downloaded files to. Defaults to CURRENT_WORKING_DIR.
+            chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
+            tasks (int, optional): Number of tasks to carry out the download. Defaults to DEFAULT_TASKS.
+            part_dir (Path | str, optional): Directory for temporarily saving downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
+            part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
+            merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
+            group_series(bool, optional): Create directory for a series & group episodes based on season number. Defaults to False.
+
+        httpx_kwargs : Keyword arguments for `httpx.AsyncClient`
+        """  # noqa: E501
+
+        httpx_kwargs.setdefault("cookies", self.request_cookies)
+        self.group_series = group_series
+
+        self.throttle_buster = ThrottleBuster(
+            dir=dir,
+            chunk_size=chunk_size,
+            tasks=tasks,
+            part_dir=part_dir,
+            part_extension=part_extension,
+            merge_buffer_size=merge_buffer_size,
+            request_headers=self.request_headers,
+            **httpx_kwargs,
+        )
 
     def generate_filename(
         self,
         search_results_item: SearchResultsItem,
+        media_file: MediaFileMetadata,
         season: int = 0,
         episode: int = 0,
-    ) -> str:
-        """Generates filename in the format as in `self.*filename_template`
+        test: bool = False,
+    ) -> tuple[str, Path]:
+        """Generates filename in the format as in `self.*filename_template` and updates
+        final directory for saving contents
 
         Args:
             search_results_item (SearchResultsItem)
+            media_file (MediaFileMetadata): Movie/tv-series/music to be downloaded.
             season (int): Season number of the series.
             episde (int): Episode number of the series.
 
-        Returns:
-            str: Generated filename
         """
         assert_instance(
             search_results_item,
@@ -228,262 +259,189 @@ class MediaFileDownloader:
             "search_results_item",
         )
 
+        assert_instance(media_file, MediaFileMetadata, "media_file")
+
         placeholders = dict(
             title=search_results_item.title,
             release_date=str(search_results_item.releaseDate),
             release_year=search_results_item.releaseDate.year,
-            ext=self._media_file.ext,
-            resolution=self._media_file.resolution,
-            size_string=get_filesize_string(self._media_file.size),
+            ext=media_file.ext,
+            resolution=media_file.resolution,
+            size_string=get_filesize_string(media_file.size),
             season=season,
             episode=episode,
         )
 
-        filename_template = (
+        filename_template: str = (
             self.series_filename_template
             if search_results_item.subjectType == SubjectType.TV_SERIES
             else self.movie_filename_template
         )
 
-        return sanitize_filename(filename_template % placeholders)
+        final_dir = self.create_final_dir(
+            working_dir=self.throttle_buster.dir,
+            search_results_item=search_results_item,
+            season=season,
+            episode=episode,
+            test=test,
+            group=self.group_series,
+        )
+
+        return filename_template.format(**placeholders), final_dir
 
     async def run(
         self,
+        media_file: MediaFileMetadata,
         filename: str | SearchResultsItem,
-        dir: str | Path = CURRENT_WORKING_DIR,
-        progress_bar: bool = True,
-        chunk_size: int = 512,
+        progress_hook: callable = None,
         mode: DownloadMode = DownloadMode.AUTO,
+        disable_progress_bar: bool = None,
+        file_size: int = None,
+        keep_parts: bool = False,
+        timeout_retry_attempts: int = DEFAULT_READ_TIMEOUT_ATTEMPTS,
         colour: str = "cyan",
         simple: bool = False,
         test: bool = False,
         leave: bool = True,
         ascii: bool = False,
-        suppress_complete_error: bool = False,
-        progress_hook: t.Callable = None,
-        **kwargs,
-    ) -> Path | httpx.Response:
+        **filename_kwargs,
+    ) -> DownloadedFile | httpx.Response:
         """Performs the actual download.
 
         Args:
-            filename (str|SearchResultsItem): Movie filename
-            dir (str|Path, optional): Directory for saving the contents. Defaults to current working directory.
-            progress_bar (bool, optional): Display download progress bar. Defaults to True.
-            chunk_size (int, optional): Chunk_size for downloading files in KB. Defaults to 512.
-            mode (DownloadMode, DownloadMode.AUTO): Whether to start fresh download, resume or auto decide the download. Defaults to Auto.
+            media_file (MediaFileMetadata): Movie/tv-series/music to be downloaded.
+            filename (str, optional): Filename for the downloaded content. Defaults to None.
+            progress_hook (callable, optional): Function to call with the download progress information. Defaults to None.
+            mode (DownloadMode, optional): Whether to start or resume incomplete download. Defaults DownloadMode.AUTO.
+            disable_progress_bar (bool, optional): Do not show progress_bar. Defaults to None (decide based on progress_hook).
+            file_size (int, optional): Size of the file to be downloaded. Defaults to None.
+            keep_parts (bool, optional): Whether to retain the separate download parts. Defaults to False.
+            timeout_retry_attempts (int, optional): Number of times to retry download upon read request timing out. Defaults to DEFAULT_READ_TIMEOUT_ATTEMPTS.
             leave (bool, optional): Keep all leaves of the progressbar. Defaults to True.
             colour (str, optional): Progress bar display color. Defaults to "cyan".
             simple (bool, optional): Show percentage and bar only in progressbar. Deafults to False.
             test (bool, optional): Just test if download is possible but do not actually download. Defaults to False.
             ascii (bool, optional): Use unicode (smooth blocks) to fill the progress-bar meter. Defaults to False.
-            suppress_complete_error (bool, optional): Do not raise error when trying to resume a complete download. Defaults to False.
-            **kwargs: Keyworded arguments for generating filename incase instance of filename is SearchResultsItem.
 
-        Raises:
-            FileExistsError:  Incase of `resume=True` but the download was complete
+        filename_kwargs: Keyworded arguments for generating filename incase instance of filename is SearchResultsItem.
 
         Returns:
-            str|httpx.Response: Path where the media file has been saved to or httpx Response (test).
+            DownloadedFile | httpx.Response: Downloaded file details or httpx stream response (test).
         """  # noqa: E501
 
-        assert_instance(mode, DownloadMode, "mode")
+        assert_instance(media_file, MediaFileMetadata, "media_file")
 
-        if progress_hook is not None:
-            assert callable(progress_hook), (
-                f"Value for progress_hook must be a function not {type(progress_hook)}"
-            )
-
-        current_downloaded_size = 0
-        current_downloaded_size_in_mb = 0
+        dir = None
 
         if isinstance(filename, SearchResultsItem):
-            # Lets generate filename
-            filename = self.generate_filename(filename, **kwargs)
+            filename, dir = self.generate_filename(
+                search_results_item=filename, media_file=media_file, test=test, **filename_kwargs
+            )
 
-        save_to = Path(dir) / filename
+        elif self.group_series:
+            raise ValueError(
+                f"Value for filename should be an instance of {SearchResultsItem} "
+                "when group_series is activated"
+            )
 
-        match mode:
-            case DownloadMode.RESUME:
-                resume = True
-
-            case DownloadMode.START:
-                resume = False
-
-            case DownloadMode.AUTO:
-                resume = save_to.exists()
-
-        def pop_range_in_session_headers():
-            if self.session.headers.get("Range"):
-                self.session.headers.pop("Range")
-
-        if resume:
-            logger.debug("Download set to resume")
-
-            if not path.exists(save_to):
-                raise FileNotFoundError(f"File not found in path - '{save_to}'")
-
-            current_downloaded_size = path.getsize(save_to)
-            # Set the headers to resume download from the last byte
-            self.session.headers.update({"Range": f"bytes={current_downloaded_size}-"})
-            current_downloaded_size_in_mb = current_downloaded_size / 1000000
-
-        else:
-            logger.debug("Download set to start afresh")
-
-        size_in_bytes = self._media_file.size
-
-        if resume:
-            if size_in_bytes == current_downloaded_size:
-                if suppress_complete_error:
-                    logger.info(f"Download already completed for the file in path - {save_to}")
-                    return save_to
-
-                raise DownloadCompletedError(
-                    save_to,
-                    f"Download completed for the file in path - '{save_to}'",
-                )
-
-        size_in_mb = (size_in_bytes / 1_000_000) + current_downloaded_size_in_mb
-        size_with_unit = get_filesize_string(self._media_file.size)
-        chunk_size_in_bytes = chunk_size * 1_000
-
-        saving_mode = "ab" if resume else "wb"
-        logger.info(f"Downloading media file ({size_with_unit}, resume - {resume}). Writing to ({save_to})")
-
-        download_progress = {
-            "size": self._media_file.size,
-            "size_string": size_with_unit,
-            "downloaded_size": current_downloaded_size,
-            "dir": dir,
-            "filename": filename,
-            "path": save_to,
-            "status": DownloadStatus.DOWNLOADING,
-            "media_file": self._media_file,
-            "download_chunk_size": chunk_size_in_bytes,
-        }
-
-        async def call_progress_hook(progress: dict):
-            if progress_hook is not None:
-                if asyncio.iscoroutinefunction(progress_hook):
-                    await progress_hook(progress)
-                else:
-                    progress_hook(progress)
-
-        if progress_bar:
-            async with self.session.stream("GET", str(self._media_file.url)) as response:
-                response.raise_for_status()
-
-                if test:
-                    logger.info(f"Download test passed successfully {response.__repr__}")
-                    return response
-
-                with open(save_to, saving_mode) as fh:
-                    p_bar = tqdm(
-                        desc=f"Downloading{' ' if simple else f' [{filename}]'}",
-                        total=round(size_in_mb, 1),
-                        unit="Mb",
-                        # unit_scale=True,
-                        colour=colour,
-                        leave=leave,
-                        initial=current_downloaded_size_in_mb,
-                        ascii=ascii,
-                        bar_format=(
-                            "{l_bar}{bar} | %(size)s" % (dict(size=size_with_unit))
-                            if simple
-                            else "{l_bar}{bar}{r_bar}"
-                        ),
-                    )
-                    async for chunk in response.aiter_bytes(chunk_size_in_bytes):
-                        fh.write(chunk)
-
-                        current_downloaded_size += chunk_size_in_bytes
-                        p_bar.update(round(chunk_size_in_bytes / 1_000_000, 1))
-                        download_progress["downloaded_size"] = current_downloaded_size
-
-                        # TODO: Consider eta
-                        await call_progress_hook(download_progress)
-
-        else:
-            logger.debug(f"Movie file info {self._media_file}")
-
-            async with self.session.stream("GET", str(self._media_file.url)) as response:
-                response.raise_for_status()
-
-                if test:
-                    logger.info(f"Download test passed successfully {response.__repr__}")
-                    return response
-
-                with open(save_to, saving_mode) as fh:
-                    async for chunk in response.aiter_bytes(chunk_size_in_bytes):
-                        fh.write(chunk)
-                        current_downloaded_size += chunk_size_in_bytes
-                        download_progress["downloaded_size"] = current_downloaded_size
-                        await call_progress_hook(download_progress)
-
-        download_progress["status"] = DownloadStatus.FINISHED
-        await call_progress_hook(download_progress)
-
-        logger.info(f"{filename} - {size_with_unit} ✅")
-        pop_range_in_session_headers()
-
-        return save_to
+        return await self.throttle_buster.run(
+            url=str(media_file.url),
+            filename=filename,
+            progress_hook=progress_hook,
+            mode=mode,
+            disable_progress_bar=disable_progress_bar,
+            file_size=file_size,
+            keep_parts=keep_parts,
+            timeout_retry_attempts=timeout_retry_attempts,
+            colour=colour,
+            simple=simple,
+            test=test,
+            leave=leave,
+            ascii=ascii,
+            dir=dir,
+        )
 
 
-class CaptionFileDownloader:
+class CaptionFileDownloader(BaseFileDownloaderAndHelper):
     """Creates a local copy of a remote subtitle/caption file"""
 
     request_headers = DOWNLOAD_REQUEST_HEADERS
     request_cookies = {}
-    movie_filename_template = (
-        "%(title)s (%(release_year)d) - %(lanName)s.%(ext)s"
-        # "%(title)s (%(release_year)d) - %(lanName)s [delay - %(delay)d].%(ext)s"
-    )
-    series_filename_template = "%(title)s S%(season)dE%(episode)d - %(lanName)s.%(ext)s"
+    movie_filename_template = "{title} ({release_year}).{lan}.{ext}"
+    series_filename_template = "{title} S{season}E{episode}.{lan}.{ext}"
     possible_filename_placeholders = (
-        "%(title)s",
-        "%(release_year)d",
-        "%(release_date)s",
-        "%(ext)s",
-        "%(size_string)s",
-        "%(id)s",
-        "%(lan)s",
-        "%(lanName)s",
-        "%(delay)d",
-        "%(season)d",
-        "%(episode)d",
+        "{title}",
+        "{release_year}",
+        "{release_date}",
+        "{ext}",
+        "{size_string}",
+        "{id}",
+        "{lan}",
+        "{lanName}",
+        "{delay}",
+        "{season}",
+        "{episode}",
     )
 
-    def __init__(self, caption_file: CaptionFileMetadata):
+    def __init__(
+        self,
+        dir: Path | str = CURRENT_WORKING_DIR,
+        chunk_size: int = DEFAULT_CHUNK_SIZE,
+        tasks: int = DEFAULT_TASKS,
+        part_dir: Path | str = CURRENT_WORKING_DIR,
+        part_extension: str = DOWNLOAD_PART_EXTENSION,
+        merge_buffer_size: int | None = None,
+        group_series: bool = False,
+        **httpx_kwargs,
+    ):
         """Constructor for `CaptionFileDownloader`
         Args:
-            session (Session): MovieboxAPI request session.
-            caption_file (CaptionFileMetadata): Movie/tv-series/music caption file details.
-        """
-        assert_instance(caption_file, CaptionFileMetadata, "caption_file")
-        self._caption_file = caption_file
-        self.session = httpx.AsyncClient(headers=self.request_headers, cookies=self.request_cookies)
-        """Httpx client session for downloading the file"""
+            dir (Path | str, optional): Directory for downloaded files to. Defaults to CURRENT_WORKING_DIR.
+            chunk_size (int, optional): Streaming download chunk size in kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
+            tasks (int, optional): Number of tasks to carry out the download. Defaults to DEFAULT_TASKS.
+            part_dir (Path | str, optional): Directory for temporarily saving downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
+            part_extension (str, optional): Filename extension for download parts. Defaults to DOWNLOAD_PART_EXTENSION.
+            merge_buffer_size (int|None, optional). Buffer size for merging the separated files in kilobytes. Defaults to chunk_size.
+            group_series(bool, optional): Create directory for a series & group episodes based on season number. Defaults to False.
+
+        httpx_kwargs : Keyword arguments for `httpx.AsyncClient`
+        """  # noqa: E501
+
+        httpx_kwargs.setdefault("cookies", self.request_cookies)
+        self.group_series = group_series
+
+        self.throttle_buster = ThrottleBuster(
+            dir=dir,
+            chunk_size=chunk_size,
+            tasks=tasks,
+            part_dir=part_dir,
+            part_extension=part_extension,
+            merge_buffer_size=merge_buffer_size,
+            request_headers=self.request_headers,
+            **httpx_kwargs,
+        )
 
     def generate_filename(
         self,
         search_results_item: SearchResultsItem,
+        caption_file: CaptionFileMetadata,
         season: int = 0,
         episode: int = 0,
+        test: bool = False,
         **kwargs,
-    ) -> str:
+    ) -> tuple[str, Path]:
         """Generates filename in the format as in `self.*filename_template`
 
         Args:
             search_results_item (SearchResultsItem)
+            caption_file (CaptionFileMetadata): Movie/tv-series/music caption file details.
             season (int): Season number of the series.
             episde (int): Episode number of the series.
+            test (bool, optional): whether to create final directory
 
         Kwargs: Nothing much folk.
                 It's just here so that `MediaFileDownloader.run` and `CaptionFileDownloader.run`
                 will accept similar parameters in `moviebox_api.extra.movies.Auto.run` method.
-
-        Returns:
-            str: Generated filename
         """
         assert_instance(
             search_results_item,
@@ -495,66 +453,67 @@ class CaptionFileDownloader:
             title=search_results_item.title,
             release_date=str(search_results_item.releaseDate),
             release_year=search_results_item.releaseDate.year,
-            ext=self._caption_file.ext,
-            lan=self._caption_file.lan,
-            lanName=self._caption_file.lanName,
-            delay=self._caption_file.delay,
-            size_string=get_filesize_string(self._caption_file.size),
+            ext=caption_file.ext,
+            lan=caption_file.lan,
+            lanName=caption_file.lanName,
+            delay=caption_file.delay,
+            size_string=get_filesize_string(caption_file.size),
             season=season,
             episode=episode,
         )
 
-        filename_template = (
+        filename_template: str = (
             self.series_filename_template
             if search_results_item.subjectType == SubjectType.TV_SERIES
             else self.movie_filename_template
         )
-        return sanitize_filename(filename_template % placeholders)
+
+        final_dir = self.create_final_dir(
+            working_dir=self.throttle_buster.dir,
+            search_results_item=search_results_item,
+            season=season,
+            episode=episode,
+            test=test,
+            group=self.group_series,
+        )
+
+        return sanitize_filename(filename_template.format(**placeholders)), final_dir
 
     async def run(
         self,
+        caption_file: CaptionFileMetadata,
         filename: str | SearchResultsItem,
-        dir: str = CURRENT_WORKING_DIR,
-        chunk_size: int = 16,
-        test: bool = False,
-        **kwargs,
-    ) -> Path | httpx.Response:
+        season: int = 0,
+        episode: int = 0,
+        **run_kwargs,
+    ) -> DownloadedFile | httpx.Response:
         """Performs the actual download, incase already downloaded then return its Path.
 
         Args:
+            caption_file (CaptionFileMetadata): Movie/tv-series/music caption file details.
             filename (str|SearchResultsItem): Movie filename
-            dir (str, optional): Directory for saving the contents Defaults to current directory. Defaults to cwd.
-            chunk_size (int, optional): Chunk_size for downloading files in KB. Defaults to 16.
-            test (bool, optional): Just test if download is possible but do not actually download. Defaults to False.
-            **kwargs: Keyworded arguments for generating filename incase instance of filename is SearchResultsItem.
+            season (int): Season number of the series. Defaults to 0.
+            episde (int): Episode number of the series. Defaults to 0.
+
+        run_kwargs: Keyword arguments for `ThrottleBuster.run`
 
         Returns:
-            Path|httpx.Response: Path where the caption file has been saved to or httpx Response (test).
-        """  # noqa: E501
+            Path | httpx.Response: Path where the caption file has been saved to or httpx Response (test).
+        """
+
+        assert_instance(caption_file, CaptionFileMetadata, "caption_file")
+
+        dir = None
+
         if isinstance(filename, SearchResultsItem):
             # Lets generate filename
-            filename = self.generate_filename(filename, **kwargs)
-
-        save_to = Path(dir) / filename
-
-        if save_to.exists() and path.getsize(save_to) == self._caption_file.size:
-            logger.info(f"Caption file already downloaded - {save_to}.")
-            return save_to
-
-        size_with_unit = get_filesize_string(self._caption_file.size)
-
-        logger.info(f"Downloading caption file ({size_with_unit}). Writing to ({save_to})")
-
-        async with self.session.stream("GET", str(self._caption_file.url)) as response:
-            response.raise_for_status()
-
-            if test:
-                logger.info(f"Download test passed successfully {response.__repr__}")
-                return response
-
-            with open(save_to, mode="wb") as fh:
-                async for chunk in response.aiter_bytes(chunk_size * 1_000):
-                    fh.write(chunk)
-
-        logger.info(f"{filename} - {size_with_unit} ✅")
-        return save_to
+            filename, dir = self.generate_filename(
+                search_results_item=filename,
+                caption_file=caption_file,
+                season=season,
+                episode=episode,
+                test=run_kwargs.get("test", False),
+            )
+        return await self.throttle_buster.run(
+            url=str(caption_file.url), filename=filename, dir=dir, **run_kwargs
+        )

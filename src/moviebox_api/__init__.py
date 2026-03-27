@@ -8,12 +8,12 @@ it in your desired quality.
 For instance:
 
 ```python
-from moviebox_api import Auto
+from moviebox_api import MovieAuto
 
 async def main():
-    auto = Auto()
-    movie_saved_to, subtitle_saved_to = await auto.run("Avatar")
-    print(movie_saved_to, subtitle_saved_to, sep="\n")
+    auto = MovieAuto()
+    movie_file, subtitle_file = await auto.run("Avatar")
+    print(movie_file.saved_to, subtitle_file.saved_to, sep="\n")
     # Output
     # /.../Avatar - 1080P.mp4
     # /.../Avatar - English.srt
@@ -22,7 +22,53 @@ if __name__ == "__main__":
     import asyncio
 
     asyncio.run(main())
+```
 
+## More Control
+Prompt for confirmation prior to download
+
+### Movie
+
+```python
+# $ pip install 'moviebox-api[cli]'
+
+from moviebox_api.cli import Downloader
+
+async def main():
+    downloader = Downloader()
+    movie_file, subtitle_files = await downloader.download_movie(
+        "avatar",
+    )
+    print(movie_file, subtitle_files, sep="\n")
+
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
+```
+
+### TV-Series
+
+```python
+from moviebox_api.cli import Downloader
+
+async def main():
+    downloader = Downloader()
+    episodes_content_map = await downloader.download_tv_series(
+        "Merlin",
+        season=1,
+        episode=1,
+        limit=2,
+        # limit=13 # This will download entire 13 episodes of season 1
+    )
+
+    print(episodes_content_map)
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(main())
 ```
 """
 
@@ -38,6 +84,8 @@ __author__ = "Smartwa"
 __repo__ = "https://github.com/Simatwa/moviebox-api"
 
 logger = logging.getLogger(__name__)
+
+from throttlebuster import DownloadedFile, DownloadMode, DownloadTracker  # noqa: E402
 
 from moviebox_api.constants import (  # noqa: E402
     DOWNLOAD_QUALITIES,
@@ -64,16 +112,16 @@ from moviebox_api.download import (  # noqa: E402
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
-from moviebox_api.extras.movies import Auto  # noqa: E402
+from moviebox_api.extras.auto import MovieAuto  # noqa: E402
 from moviebox_api.requests import Session  # noqa: E402
 
 __all__ = [
-    "Auto",
     "Search",
     "Session",
     "Trending",
     "Homepage",
     "Recommend",
+    "MovieAuto",
     "SubjectType",
     "MovieDetails",
     "PopularSearch",
@@ -91,4 +139,8 @@ __all__ = [
     "SELECTED_HOST",
     "HOST_URL",
     "SubjectType",
+    # Others
+    "DownloadedFile",
+    "DownloadMode",
+    "DownloadTracker",
 ]

@@ -10,10 +10,7 @@ from uuid import UUID
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 from moviebox_api.constants import ITEM_DETAILS_PATH, DownloadQualitiesType, SubjectType
-from moviebox_api.exceptions import (
-    ZeroMediaFileError,
-    ZeroSearchResultsError,
-)
+from moviebox_api.exceptions import ZeroMediaFileError
 from moviebox_api.helpers import get_file_extension
 
 
@@ -135,7 +132,7 @@ class ContentCategoryModel(BaseModel):
 class HomepageContentModel(BaseModel):
     """Main model for home contents
 
-    - Movies/series available under path operatingList[0].banner.items
+    - Movies/series available under path `operatingList[0].banner.items`
     """
 
     topPickList: list
@@ -204,15 +201,6 @@ class SearchResultsModel(BaseModel):
     pager: SearchResultsPagerModel
     items: list[SearchResultsItem]
 
-    @field_validator("items", mode="after")
-    def validate_items(
-        value: list[SearchResultsItem],
-    ) -> list[SearchResultsItem]:
-        if not bool(value):
-            # TODO: Fix this as it's biased to non-modelled responses
-            raise ZeroSearchResultsError("Search yielded empty results. Try a different keyword.")
-        return value
-
     @property
     def first_item(self) -> SearchResultsItem:
         return self.items[0]
@@ -277,7 +265,7 @@ class DownloadableFilesMetadata(BaseModel):
     hasResource: bool
 
     def _check_downloads(self) -> bool:
-        """Checks whethere there are downloadable media file.
+        """Checks whether there are downloadable media file.
 
         Raises:
             ZeroMediaFileError: Incase the downloads list is empty
@@ -322,7 +310,7 @@ class DownloadableFilesMetadata(BaseModel):
     def get_quality_downloads_map(
         self,
     ) -> dict[DownloadQualitiesType, MediaFileMetadata]:
-        """Maps media file quality to their equivalent media files object
+        """Maps media file qualities to their equivalent media files object
 
         Returns:
             dict[DownloadQualitiesType, MediaFileMetadata]

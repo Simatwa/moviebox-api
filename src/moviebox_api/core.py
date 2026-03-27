@@ -1,7 +1,7 @@
 """
 Main module for the package.
 Generate models from httpx request responses.
-Also provides ORM support for a specific extracted item details
+Also provides object mapping support to specific extracted item details
 """
 
 import typing as t
@@ -10,10 +10,7 @@ from moviebox_api._bases import (
     BaseContentProviderAndHelper,
 )
 from moviebox_api.constants import SubjectType
-from moviebox_api.exceptions import (
-    ExhaustedSearchResultsError,
-    MovieboxApiException,
-)
+from moviebox_api.exceptions import ExhaustedSearchResultsError, MovieboxApiException, ZeroSearchResultsError
 from moviebox_api.extractor._core import (
     JsonDetailsExtractor,
     JsonDetailsExtractorModel,
@@ -24,6 +21,9 @@ from moviebox_api.extractor.models.json import ItemJsonDetailsModel
 from moviebox_api.helpers import (
     assert_instance,
     get_absolute_url,
+    get_event_loop,
+    is_valid_search_item,
+    sanitize_item_name,
     validate_item_page_url,
 )
 from moviebox_api.models import (
@@ -87,7 +87,7 @@ class BaseSearch(BaseContentProviderAndHelper):
 
     _url: str
 
-    def _create_payload(self) -> object:
+    def _create_payload(self) -> dict[str, t.Any]:
         raise NotImplementedError("Function needs to be implemented in subclass")
 
     async def get_content(self) -> dict:
@@ -114,8 +114,8 @@ class BaseSearch(BaseContentProviderAndHelper):
                 return MovieDetails(item, self.session)
             case SubjectType.TV_SERIES:
                 return TVSeriesDetails(item, self.session)
-            case "_":
-                raise ValueError(
+            case _:
+                raise NotImplementedError(
                     f"Currently only items of {SubjectType.MOVIES.name} and {SubjectType.TV_SERIES.name} "
                     "subject-types are supported. Check later versions for possible support of other "
                     "subject-types"
@@ -166,6 +166,29 @@ class Search(BaseSearch):
             dict: Fetched results
         """
         contents = await self.session.post_to_api(url=self._url, json=self._create_payload())
+
+        if self._subject_type is not SubjectType.ALL:
+            target_items = []
+
+            # Sometimes server response include irrelevant
+            # items
+
+            contents_items = contents["items"]
+
+            if not contents_items:
+                raise ZeroSearchResultsError("Search yielded empty results. Try a different keyword.")
+
+            for item in contents_items:
+                if item["subjectType"] == self._subject_type.value:
+                    # https://github.com/Simatwa/moviebox-api/issues/55
+                    item_name = item["title"]
+
+                    if is_valid_search_item(item_name):
+                        item["title"] = sanitize_item_name(item_name)
+                        target_items.append(item)
+
+            contents["items"] = target_items
+
         return contents
 
     async def get_content_model(self) -> SearchResultsModel:
@@ -186,7 +209,7 @@ class Search(BaseSearch):
         Returns:
             Search
         """
-        assert_instance(content, TrendingResultsModel, "content")
+        assert_instance(content, SearchResultsModel, "content")
 
         if content.pager.hasMore:
             return Search(
@@ -373,7 +396,10 @@ class Recommend(BaseSearch):
         self._per_page = per_page
 
     def __repr__(self):
-        return rf"<Recommend item=({self._item.title},{self._item.releaseDate.year} page={self._page} per_page={self._per_page}>"
+        return (
+            f"<Recommend item=({self._item.title},{self._item.releaseDate.year} "
+            f"page={self._page} per_page={self._per_page}>"
+        )
 
     async def get_content(self) -> dict:
         content = await super().get_content()
@@ -567,6 +593,7 @@ class BaseItemDetails(BaseContentProviderAndHelper):
             page_url (str): Url to specific page containing the item details.
             session (Session): MovieboxAPI request session
         """
+        assert_instance(session, Session, "session")
         self._url = validate_item_page_url(page_url)
         self._session = session
         self.__html_content: str | None = None
@@ -627,6 +654,30 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         """Fetch content and return object that models extracted details from json-formatted data in the page"""  # noqa: E501
         html_contents = await self.get_html_content()
         return JsonDetailsExtractorModel(html_contents)
+
+    def get_html_content_sync(self, *args, **kwargs) -> str:
+        """Get specific page contents `synchronously`
+
+        Returns:
+            str: html formatted contents of the page
+        """
+        return get_event_loop().run_until_complete(self.get_html_content(*args, **kwargs))
+
+    def get_tag_details_extractor_sync(self, *args, **kwargs) -> TagDetailsExtractor:
+        """Synchronously fetch content and return object that provide ways to extract details from html tags of the page"""  # noqa: E501
+        return get_event_loop().run_until_complete(self.get_tag_details_extractor(*args, **kwargs))
+
+    def get_json_details_extractor_sync(self, *args, **kwargs) -> JsonDetailsExtractor:
+        """Synchronously fetch content and return object that extract details from json-formatted data in the page"""  # noqa: E501
+        return get_event_loop().run_until_complete(self.get_json_details_extractor(*args, **kwargs))
+
+    def get_tag_details_extractor_model_sync(self, *args, **kwargs) -> TagDetailsExtractorModel:
+        """Synchronously fetch content and return object that provide ways to model extracted details from html tags"""  # noqa: E501
+        return get_event_loop().run_until_complete(self.get_tag_details_extractor_model(*args, **kwargs))
+
+    def get_json_details_extractor_model_sync(self, *args, **kwargs) -> JsonDetailsExtractorModel:
+        """Synchronously fetch content and return object that models extracted details from json-formatted data in the page"""  # noqa: E501
+        return get_event_loop().run_until_complete(self.get_json_details_extractor_model(*args, **kwargs))
 
 
 class MovieDetails(BaseItemDetails):

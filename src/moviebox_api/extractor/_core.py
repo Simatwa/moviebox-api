@@ -36,19 +36,16 @@ __all__ = [
 
 
 class TagDetailsExtractor:
-    """Extracts specific item details from html tags of the page
+    """Extracts specific-item details from html tags of the page
 
-    #### Pros
-    - It's super fast than `JsonDetailsExtractor`
-
-    #### Cons
+    #### Note:
     - Does not extract season details. Use `JsonDetailsExtractor` instead.
     - Also this extraction method suffers from content restriction
     - e.g "This content is not available on the website. Please download our Android app to access it."
     """
 
     def __init__(self, content: str):
-        """Constructor for `BaseMovieDetailsExtractor`
+        """Constructor for `TagDetailsExtractor`
 
         Args:
             content (str): Html formatted text
@@ -56,6 +53,13 @@ class TagDetailsExtractor:
         self._content = content
         self.souped_content = souper(content)
         self.souped_content_body = self.souped_content.find("body")
+
+    def __repr__(self) -> str:
+        headers = self.extract_headers()
+        return (
+            f"<{self.__module__}.{self.__class__.__name__} "
+            f'title="{headers["title"]}" url="{headers["absolute_url"]}">'
+        )
 
     def __call__(self) -> dict[str, list[str] | dict[str, t.Any]]:
         """Extract all possible contents from the page"""
@@ -81,7 +85,7 @@ class TagDetailsExtractor:
         resp = {}
         header = self.souped_content.find("head")
         resp["absolute_url"] = header.find("link", {"hreflang": "en"}).get("href")
-        resp["title"] = header.find("title").text
+        resp["title"] = header.find("title").getText(strip=True)
 
         def get_meta_content(name: str) -> str:
             return header.find("meta", {"name": name}).get("content")
@@ -170,7 +174,7 @@ class TagDetailsExtractor:
             "headers": self.extract_headers(),
             "basics": self.extract_basics(),
             "casts": self.extract_casts(),
-            "reviews": self.extract_others(),
+            "reviews": self.extract_reviews(),
             "others": self.extract_others(),
         }
 
@@ -180,10 +184,10 @@ class TagDetailsExtractor:
 
 
 class JsonDetailsExtractor:
-    """Exracts specific item details from json-formatted data appended on the page
+    """Exracts specific-item details from json-formatted data appended on the page
 
-    - Pros : Extracts whole details available.
-    - Cons : Kinda slower than `TagDetailsExtractor`
+    #### Note:
+    - Extracts whole details available.
     """
 
     def __init__(self, content: str):
@@ -195,6 +199,11 @@ class JsonDetailsExtractor:
         self._content = content
         self.details: dict[str, t.Any] = self.extract(content)
         """Whole important extracted details"""
+
+    def __repr__(self) -> str:
+        title = self.details["resData"]["metadata"]["title"]
+        url = self.details["resData"]["metadata"]["url"]
+        return rf'{self.__module__}.{self.__class__.__name__} title="{title}" url="{url}">'
 
     def __call__(self) -> dict[str, t.Any]:
         """Whole important extracted details"""
@@ -256,7 +265,7 @@ class JsonDetailsExtractor:
                 )
         except Exception as e:
             if isinstance(e, DetailsExtractionError):
-                raise e
+                raise
 
             raise DetailsExtractionError(
                 "The extraction process completed without any find. Ensure correct content is passed."

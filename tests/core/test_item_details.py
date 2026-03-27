@@ -32,8 +32,10 @@ async def test_movie_using_page_url(url):
     assert type(await details.get_html_content()) is str
     assert type(await details.get_content()) is dict
     assert isinstance(await details.get_content_model(), BaseModel)
+
     assert isinstance(await details.get_json_details_extractor(), JsonDetailsExtractor)
     assert isinstance(await details.get_tag_details_extractor(), TagDetailsExtractor)
+
     assert isinstance(await details.get_json_details_extractor_model(), JsonDetailsExtractorModel)
     assert isinstance(await details.get_tag_details_extractor_model(), TagDetailsExtractorModel)
 
@@ -59,8 +61,10 @@ async def test_tv_series_using_page_url(url):
     assert type(await details.get_html_content()) is str
     assert type(await details.get_content()) is dict
     assert isinstance(await details.get_content_model(), BaseModel)
+
     assert isinstance(await details.get_json_details_extractor(), JsonDetailsExtractor)
     assert isinstance(await details.get_tag_details_extractor(), TagDetailsExtractor)
+
     assert isinstance(await details.get_json_details_extractor_model(), JsonDetailsExtractorModel)
     assert isinstance(await details.get_tag_details_extractor_model(), TagDetailsExtractorModel)
 
@@ -77,8 +81,10 @@ async def test_movie_using_search_results_item():
     assert type(await details.get_html_content()) is str
     assert type(await details.get_content()) is dict
     assert isinstance(await details.get_content_model(), BaseModel)
+
     assert isinstance(await details.get_json_details_extractor(), JsonDetailsExtractor)
     assert isinstance(await details.get_tag_details_extractor(), TagDetailsExtractor)
+
     assert isinstance(await details.get_json_details_extractor_model(), JsonDetailsExtractorModel)
     assert isinstance(await details.get_tag_details_extractor_model(), TagDetailsExtractorModel)
 
@@ -99,7 +105,9 @@ async def test_tv_series_using_search_results_item():
     assert type(await details.get_html_content()) is str
     assert type(await details.get_content()) is dict
     assert isinstance(await details.get_content_model(), BaseModel)
+
     assert isinstance(await details.get_json_details_extractor(), JsonDetailsExtractor)
     assert isinstance(await details.get_tag_details_extractor(), TagDetailsExtractor)
+
     assert isinstance(await details.get_json_details_extractor_model(), JsonDetailsExtractorModel)
     assert isinstance(await details.get_tag_details_extractor_model(), TagDetailsExtractorModel)

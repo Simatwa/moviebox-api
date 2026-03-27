@@ -216,3 +216,6 @@ test.py
 *.mpv
 *.srt
 commit-msg*
+*.html
+*.part
+temp/

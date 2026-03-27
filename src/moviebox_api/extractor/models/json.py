@@ -69,6 +69,17 @@ class ResourceModel(BaseModel):
     source: str
     uploadBy: str
 
+    @property
+    def total_seasons(self) -> int:
+        return len(self.seasons)
+
+    def get_season_by_number(self, number: int) -> SeasonsModel:
+        for season in self.seasons:
+            if season.se == number:
+                return season
+
+        raise ValueError(f"The item does not have that season number {number}")
+
 
 class StarsModel(BaseModel):
     """`.resData.stars.0`"""
@@ -122,7 +133,7 @@ class PostListItemSubjectModel(BaseModel):
     rate: int
     releaseDate: date
     sniffUrl: HttpUrl | str
-    sourceUrl: HttpUrl
+    sourceUrl: HttpUrl | str
     subjectId: str
     subjectType: SubjectType
     title: str
@@ -180,7 +191,7 @@ class PostListItemModel(BaseModel):
     group: PostListItemGroupModel | None
     groupId: str
     isSubjectRate: bool
-    link: str | None
+    link: str | dict | None
     media: PostListMediaModel | None
     mediaType: str
     poiName: str
@@ -192,7 +203,7 @@ class PostListItemModel(BaseModel):
     subjectRate: int
     title: str
     updatedAt: str
-    user: PostListItemUserModel
+    user: PostListItemUserModel | None
     userId: str
 
 
@@ -229,7 +240,7 @@ class SubjectModel(ContentCategorySubjectsModel):
     """`.resData.subject`"""
 
     title: str
-    trailer: SubjectTrailerModel
+    trailer: SubjectTrailerModel | None = None
 
 
 class ResDataModel(BaseModel):
