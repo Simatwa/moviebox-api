@@ -10,7 +10,12 @@ from moviebox_api.cli.helpers import (
     prepare_start,
 )
 from moviebox_api.v1.constants import MIRROR_HOSTS, SubjectType
-from moviebox_api.v1.core import Homepage, MovieDetails, PopularSearch, TVSeriesDetails
+from moviebox_api.v1.core import (
+    Homepage,
+    MovieDetails,
+    PopularSearch,
+    TVSeriesDetails,
+)
 from moviebox_api.v1.extractor import JsonDetailsExtractor
 from moviebox_api.v1.helpers import get_event_loop
 from moviebox_api.v1.requests import Session
@@ -82,14 +87,18 @@ def mirror_hosts_command(json: bool, **start_kwargs):
     is_flag=True,
     help="Disable showing interactive texts on the progress (logs)",
 )
-def homepage_content_command(json: bool, title: str, banner: bool, **start_kwargs):
+def homepage_content_command(
+    json: bool, title: str, banner: bool, **start_kwargs
+):
     """Show contents displayed at landing page"""
     # TODO: Add automated test for this command
     prepare_start(**start_kwargs)
 
     session = Session()
     homepage = Homepage(session)
-    homepage_contents = get_event_loop().run_until_complete(homepage.get_content_model())
+    homepage_contents = get_event_loop().run_until_complete(
+        homepage.get_content_model()
+    )
 
     banners: dict[str, list[list[str]]] = {}
     items: dict[str, list[list[str]]] = {}
@@ -135,10 +144,13 @@ def homepage_content_command(json: bool, title: str, banner: bool, **start_kwarg
 
             if title is not None:
                 assert title in processed_items.keys(), (
-                    f"Title filter '{title}' is not one of {list(processed_items.keys())}"
+                    "Title filter '{title}' is not one of "
+                    f"{list(processed_items.keys())}"
                 )
 
-                rich.print_json(data={title: processed_items.get(title)}, indent=4)
+                rich.print_json(
+                    data={title: processed_items.get(title)}, indent=4
+                )
             else:
                 rich.print_json(data=processed_items, indent=4)
     else:
@@ -150,7 +162,9 @@ def homepage_content_command(json: bool, title: str, banner: bool, **start_kwarg
                     show_lines=True,
                 )
                 table.add_column("Pos")
-                table.add_column("Subject type", style="white")  # justify="center")
+                table.add_column(
+                    "Subject type", style="white"
+                )  # justify="center")
                 table.add_column("Title", style="cyan")
 
                 table.add_column("Genre")
@@ -166,7 +180,9 @@ def homepage_content_command(json: bool, title: str, banner: bool, **start_kwarg
         else:
             if title is not None:
                 target_title = items.get(title)
-                assert target_title is not None, f"Title filter '{title}' is not one of {list(items.keys())}"
+                assert target_title is not None, (
+                    f"Title filter '{title}' is not one of {list(items.keys())}"
+                )
                 items = {title: target_title}
 
             for key in items.keys():
@@ -266,11 +282,15 @@ def popular_search_command(json: bool):
     is_flag=True,
     help="Disable showing interactive texts on the progress (logs)",
 )
-def item_details_command(json: bool, full: bool, verbose: int, quiet: bool, **item_kwargs):
+def item_details_command(
+    json: bool, full: bool, verbose: int, quiet: bool, **item_kwargs
+):
     """Show details of a particular movie/tv-series"""
     prepare_start(quiet=quiet, verbose=verbose)
 
-    item_kwargs["subject_type"] = getattr(SubjectType, item_kwargs.get("subject_type"))
+    item_kwargs["subject_type"] = getattr(
+        SubjectType, item_kwargs.get("subject_type")
+    )
     session = Session()
 
     target_item = get_event_loop().run_until_complete(
@@ -282,12 +302,17 @@ def item_details_command(json: bool, full: bool, verbose: int, quiet: bool, **it
         SubjectType.TV_SERIES: TVSeriesDetails,
     }
 
-    ItemDetails: MovieDetails | TVSeriesDetails = subject_type_item_details_map.get(target_item.subjectType)
+    ItemDetails: MovieDetails | TVSeriesDetails = (
+        subject_type_item_details_map.get(target_item.subjectType)
+    )
 
     assert ItemDetails, (
-        f"The selected item type - {target_item.subjectType.name} - is not yet supported. "
+        f"The selected item type - {target_item.subjectType.name} - is not "
+        "yet supported. "
         "Choose items of subject types "
-        f"{' or '.join([key.name for key in list(subject_type_item_details_map.keys())])}"
+        f"{' or '.join(
+            [key.name for key in list(subject_type_item_details_map.keys())]
+            )}"
     )
 
     item_details = ItemDetails(target_item, session=session)
@@ -314,9 +339,13 @@ def item_details_command(json: bool, full: bool, verbose: int, quiet: bool, **it
         rich.print_json(data=details, indent=4)
 
     else:
-        table = Table("Key", "Value", title=f"{details['title']} - details", show_lines=True)
+        table = Table(
+            "Key", "Value", title=f"{details['title']} - details", show_lines=True
+        )
 
         for key, value in details.items():
-            table.add_row(key, "\n".join(value) if type(value) is list else str(value))
+            table.add_row(
+                key, "\n".join(value) if type(value) is list else str(value)
+            )
 
         rich.print(table)

@@ -1,13 +1,12 @@
 """This module stores constant variables"""
+
 import os
 
 from moviebox_api.v2 import logger
 
 """asyncio event loop"""
 
-MIRROR_HOSTS = (
-    "h5-api.aoneroom.com",
-)
+MIRROR_HOSTS = ("h5-api.aoneroom.com",)
 """Mirror domains/subdomains of Moviebox-api"""
 
 ENVIRONMENT_HOST_KEY = "MOVIEBOX_API_HOST"

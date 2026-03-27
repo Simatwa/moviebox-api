@@ -100,10 +100,14 @@ class BaseSearch(BaseContentProviderAndHelper):
         Returns:
             dict: Fetched results
         """
-        contents = await self.session.get_with_cookies_from_api(url=self._url, params=self._create_payload())
+        contents = await self.session.get_with_cookies_from_api(
+            url=self._url, params=self._create_payload()
+        )
         return contents
 
-    def get_item_details(self, item: SearchResultsItem) -> "MovieDetails | TVSeriesDetails":
+    def get_item_details(
+        self, item: SearchResultsItem
+    ) -> "MovieDetails | TVSeriesDetails":
         """Get object that provide more details about the search results item such as casts, seasons etc
 
         Args:
@@ -169,7 +173,9 @@ class Search(BaseSearch):
         Returns:
             dict: Fetched results
         """
-        contents = await self.session.post_to_api(url=self._url, json=self._create_payload())
+        contents = await self.session.post_to_api(
+            url=self._url, json=self._create_payload()
+        )
 
         if self._subject_type is not SubjectType.ALL:
             target_items = []
@@ -180,7 +186,9 @@ class Search(BaseSearch):
             contents_items = contents["items"]
 
             if not contents_items:
-                raise ZeroSearchResultsError("Search yielded empty results. Try a different keyword.")
+                raise ZeroSearchResultsError(
+                    "Search yielded empty results. Try a different keyword."
+                )
 
             for item in contents_items:
                 if item["subjectType"] == self._subject_type.value:
@@ -410,7 +418,9 @@ class Recommend(BaseSearch):
 
         # Just a hack to support pagination - pager attr is missing
         content["pager"] = {
-            "hasMore": bool(content.get("items")),  # If it has items then load more
+            "hasMore": bool(
+                content.get("items")
+            ),  # If it has items then load more
             "nextPage": self._page + 1,
             "page": self._page,
             "perPage": self._per_page,
@@ -567,10 +577,11 @@ class SearchSuggestion(BaseContentProviderAndHelper):
             dict: Suggested item(s) details
         """
         contents = await self.session.post_to_api(
-            self._url, json={
-                "per_page": self._per_page, 
+            self._url,
+            json={
+                "per_page": self._per_page,
                 "keyword": reference,
-                }
+            },
         )
         return contents
 
@@ -668,23 +679,41 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         Returns:
             str: html formatted contents of the page
         """
-        return get_event_loop().run_until_complete(self.get_html_content(*args, **kwargs))
+        return get_event_loop().run_until_complete(
+            self.get_html_content(*args, **kwargs)
+        )
 
-    def get_tag_details_extractor_sync(self, *args, **kwargs) -> TagDetailsExtractor:
+    def get_tag_details_extractor_sync(
+        self, *args, **kwargs
+    ) -> TagDetailsExtractor:
         """Synchronously fetch content and return object that provide ways to extract details from html tags of the page"""  # noqa: E501
-        return get_event_loop().run_until_complete(self.get_tag_details_extractor(*args, **kwargs))
+        return get_event_loop().run_until_complete(
+            self.get_tag_details_extractor(*args, **kwargs)
+        )
 
-    def get_json_details_extractor_sync(self, *args, **kwargs) -> JsonDetailsExtractor:
+    def get_json_details_extractor_sync(
+        self, *args, **kwargs
+    ) -> JsonDetailsExtractor:
         """Synchronously fetch content and return object that extract details from json-formatted data in the page"""  # noqa: E501
-        return get_event_loop().run_until_complete(self.get_json_details_extractor(*args, **kwargs))
+        return get_event_loop().run_until_complete(
+            self.get_json_details_extractor(*args, **kwargs)
+        )
 
-    def get_tag_details_extractor_model_sync(self, *args, **kwargs) -> TagDetailsExtractorModel:
+    def get_tag_details_extractor_model_sync(
+        self, *args, **kwargs
+    ) -> TagDetailsExtractorModel:
         """Synchronously fetch content and return object that provide ways to model extracted details from html tags"""  # noqa: E501
-        return get_event_loop().run_until_complete(self.get_tag_details_extractor_model(*args, **kwargs))
+        return get_event_loop().run_until_complete(
+            self.get_tag_details_extractor_model(*args, **kwargs)
+        )
 
-    def get_json_details_extractor_model_sync(self, *args, **kwargs) -> JsonDetailsExtractorModel:
+    def get_json_details_extractor_model_sync(
+        self, *args, **kwargs
+    ) -> JsonDetailsExtractorModel:
         """Synchronously fetch content and return object that models extracted details from json-formatted data in the page"""  # noqa: E501
-        return get_event_loop().run_until_complete(self.get_json_details_extractor_model(*args, **kwargs))
+        return get_event_loop().run_until_complete(
+            self.get_json_details_extractor_model(*args, **kwargs)
+        )
 
 
 class MovieDetails(BaseItemDetails):

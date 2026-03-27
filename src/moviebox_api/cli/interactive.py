@@ -40,7 +40,10 @@ def install_mpv():
             display_command = "sudo apt-get update && sudo apt-get install -y mpv"
             print(f"  {display_command}")
             # Split into two separate commands to avoid shell=True
-            install_commands = [["sudo", "apt-get", "update"], ["sudo", "apt-get", "install", "-y", "mpv"]]
+            install_commands = [
+                ["sudo", "apt-get", "update"],
+                ["sudo", "apt-get", "install", "-y", "mpv"],
+            ]
         elif check_command_exists("dnf"):
             print("\nDetected Fedora/RHEL system")
             print("\nTo install MPV, run the following command:")
@@ -61,7 +64,10 @@ def install_mpv():
             install_commands = [["sudo", "pacman", "-S", "--noconfirm", "mpv"]]
         else:
             print("\nCould not detect package manager.")
-            print("\nPlease install MPV manually using your distribution's package manager.")
+            print(
+                "\nPlease install MPV manually using your distribution's " 
+                "package manager."
+            )
             print("Visit: https://mpv.io/installation/")
             return False
 
@@ -95,7 +101,11 @@ def install_mpv():
 
         try:
             choice = (
-                input("\nType 'yes' to proceed with automatic installation, or press Enter to skip: ")
+                input(
+                    "\nType 'yes' to proceed with automatic installation, or "
+                    "press"
+                    " Enter to skip: "
+                )
                 .strip()
                 .lower()
             )
@@ -112,8 +122,14 @@ def install_mpv():
                         print("\nMPV player installed successfully!")
                         return True
                     else:
-                        print("\nInstallation command completed, but MPV is not detected.")
-                        print("Please try installing manually using the command above.")
+                        print(
+                            "\nInstallation command completed, but MPV is not "
+                            "detected."
+                        )
+                        print(
+                            "Please try installing manually using the command "
+                            "above."
+                        )
                         return False
 
                 except subprocess.CalledProcessError as e:
@@ -181,7 +197,14 @@ def get_quality_choice():
     print("[6] 1080p (Full HD)")
     choice = input("Choose quality [1-6]: ").strip()
 
-    quality_map = {"1": "best", "2": "worst", "3": "360p", "4": "480p", "5": "720p", "6": "1080p"}
+    quality_map = {
+        "1": "best",
+        "2": "worst",
+        "3": "360p",
+        "4": "480p",
+        "5": "720p",
+        "6": "1080p",
+    }
 
     return quality_map.get(choice, "best")
 
@@ -336,12 +359,18 @@ def stream_movie():
     print("\nMOVIE STREAMING WIZARD")
 
     media_player = click.prompt(
-        "Enter media player", type=click.Choice(["vlc", "mpv"]), show_choices=True, default="mpv"
+        "Enter media player",
+        type=click.Choice(["vlc", "mpv"]),
+        show_choices=True,
+        default="mpv",
     )
 
     if media_player == "mpv":
         if not check_mpv():
-            print("\nERROR: MPV player is required for streaming. Please install it first.")
+            print(
+                "\nERROR: MPV player is required for streaming." 
+                " Please install it first."
+            )
             input("\nPress Enter to return to main menu...")
             return
 
@@ -406,7 +435,10 @@ def stream_series():
 
     # Check if MPV is installed
     if not check_mpv():
-        print("\nERROR: MPV player is required for streaming. Please install it first.")
+        print(
+            "\nERROR: MPV player is required for streaming."
+            " Please install it first."
+        )
         input("\nPress Enter to return to main menu...")
         return
 

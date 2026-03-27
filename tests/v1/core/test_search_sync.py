@@ -1,6 +1,11 @@
 import pytest
 
-from moviebox_api.v1.core import MovieDetails, Search, SubjectType, TVSeriesDetails
+from moviebox_api.v1.core import (
+    MovieDetails,
+    Search,
+    SubjectType,
+    TVSeriesDetails,
+)
 from moviebox_api.v1.models import SearchResultsModel
 from moviebox_api.v1.requests import Session
 from tests.v1 import init_search
@@ -27,7 +32,10 @@ def test_get_content_and_model(subject_type: SubjectType):
         match subject_type:
             case SubjectType.MOVIES:
                 assert item.subjectType == SubjectType.MOVIES
-                assert isinstance(search.get_item_details(modelled_contents.first_item), MovieDetails)
+                assert isinstance(
+                    search.get_item_details(modelled_contents.first_item),
+                    MovieDetails,
+                )
 
             case SubjectType.TV_SERIES:
                 assert item.subjectType == SubjectType.TV_SERIES

@@ -92,7 +92,10 @@ def test_popular_search(command):
     argnames=[
         "command",
     ],
-    argvalues=(["item-details Merlin --yes --json"], ["item-details Avatar -s MOVIES -Y -F"]),
+    argvalues=(
+        ["item-details Merlin --yes --json"],
+        ["item-details Avatar -s MOVIES -Y -F"],
+    ),
 )
 def test_item_details(command):
     returncode = run_system_command(command)

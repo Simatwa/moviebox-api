@@ -36,15 +36,20 @@ class ContentProviderHelper:
 
     def get_content_sync(self, *args, **kwargs) -> dict | list[dict]:
         """Get content `synchronously`"""
-        return asyncio.get_event_loop().run_until_complete(self.get_content(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(
+            self.get_content(*args, **kwargs)
+        )
 
     def get_content_model_sync(self, *args, **kwargs) -> object | list[object]:
         """Get content model `synchronously`"""
-        return asyncio.get_event_loop().run_until_complete(self.get_content_model(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(
+            self.get_content_model(*args, **kwargs)
+        )
 
 
 class BaseContentProviderAndHelper(BaseContentProvider, ContentProviderHelper):
-    """A class that inherits both `BaseContentProvider(ABC)` and `ContentProviderHelper`"""
+    """A class that inherits both `BaseContentProvider(ABC)` and 
+    `ContentProviderHelper`"""
 
 
 class BaseFileDownloader(ABC):
@@ -61,7 +66,9 @@ class FileDownloaderHelper:
 
     def run_sync(self, *args, **kwargs) -> DownloadedFile | httpx.Response:
         """Sychronously performs the actual download"""
-        return asyncio.get_event_loop().run_until_complete(self.run(*args, **kwargs))
+        return asyncio.get_event_loop().run_until_complete(
+            self.run(*args, **kwargs)
+        )
 
 
 class BaseFileDownloaderAndHelper(FileDownloaderHelper, BaseFileDownloader):
@@ -80,10 +87,14 @@ class BaseFileDownloaderAndHelper(FileDownloaderHelper, BaseFileDownloader):
         if group and season and episode:
             # series it is
             working_dir = Path(working_dir)
-            assert working_dir.exists(), f"The chosen working directory does not exist - {working_dir}"
+            assert working_dir.exists(), (
+                f"The chosen working directory does not exist - {working_dir}"
+            )
 
             final_dir = working_dir.joinpath(
-                f"{search_results_item.title} ({search_results_item.releaseDate.year})", f"S{season}"
+                f"{search_results_item.title} "
+                f"({search_results_item.releaseDate.year})",
+                f"S{season}",
             )
 
             if not test:

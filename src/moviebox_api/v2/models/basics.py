@@ -1,4 +1,3 @@
-
 from json import loads
 from typing import Any
 
@@ -6,6 +5,7 @@ from pydantic import BaseModel, HttpUrl, field_validator
 
 from moviebox_api.v1.models import (
     ContentCategoryModel,
+    ContentImageModel,
     ContentModel,
     ContentSubjectModel,
     PlatformsModel,
@@ -15,20 +15,26 @@ from moviebox_api.v2.helpers import get_absolute_url
 
 
 class ContentModelV2(ContentModel):
-    subject: 'SearchResultsItem'
+    """`homepage.operatingList[0].banner.items[0]`"""
+
+    subject: "SearchResultsItem"
     detailPath: str
     url: HttpUrl | None = None
 
-    @field_validator('url', mode='before')
+    @field_validator("url", mode="before")
     def validate_url(value: str):
         return value if bool(value) else None
 
 
 class ContentCategoryBannerModelV2(BaseModel):
+    """`homepage.operatingList[0].banner`"""
+
     items: list[ContentModelV2]  # list of series/movies
 
 
 class ContentCategoryModelV2(ContentCategoryModel):
+    """`homepage.operatingList[0]`"""
+
     banner: ContentCategoryBannerModelV2 | None = None
     filters: list[Any]
     customData: Any
@@ -37,6 +43,8 @@ class ContentCategoryModelV2(ContentCategoryModel):
 
 
 class HomepageContentModel(BaseModel):
+    """homepage"""
+
     platformList: list[PlatformsModel]
     operatingList: list[ContentCategoryModelV2]
 
@@ -49,17 +57,28 @@ class OPS(BaseModel):
     q: str
 
 
+class DubModel(BaseModel):
+    """`SearchResultsModel.items[0].dubs[0]`"""
+
+    subjectId: str
+    lanName: str
+    lanCode: str
+    original: bool
+    type: int
+    detailPath: str
+
+
 class SearchResultsItem(ContentSubjectModel):
     """`SearchResultsModel.items[0]`"""
 
     subtitles: list[str] | None
-    ops: OPS | None 
+    ops: OPS | None
     hasResource: bool
     imdbRatingCount: int | None = None
-    stills: Any = None
+    stills: ContentImageModel | None = None
     postTitle: str
     season: int
-    dubs: list[Any]
+    dubs: list[DubModel] | None = None
 
     @field_validator("ops", mode="before")
     def validate_ops(value: str) -> dict:
@@ -78,7 +97,9 @@ class SearchResultsItem(ContentSubjectModel):
     @property
     def details_url(self) -> str:
         """Url to the specific item details"""
-        return get_absolute_url(f"/wefeed-h5api-bff/detail?detailPath={self.detailPath}")
+        return get_absolute_url(
+            f"/wefeed-h5api-bff/detail?detailPath={self.detailPath}"
+        )
 
 
 class SearchResultsModel(BaseModel):

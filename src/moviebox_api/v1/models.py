@@ -9,7 +9,11 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
-from moviebox_api.v1.constants import ITEM_DETAILS_PATH, DownloadQualitiesType, SubjectType
+from moviebox_api.v1.constants import (
+    ITEM_DETAILS_PATH,
+    DownloadQualitiesType,
+    SubjectType,
+)
 from moviebox_api.v1.exceptions import ZeroMediaFileError
 from moviebox_api.v1.helpers import get_file_extension
 
@@ -43,6 +47,23 @@ class ContentImageModel(BaseModel):
     id: str
 
 
+class VideoAddressModel(BaseModel):
+    videoId: str
+    definition: str
+    url: HttpUrl
+    duration: int
+    width: int
+    height: int
+    size: int
+    fps: int
+    type: int
+
+
+class SubjectTrailerModel(BaseModel):
+    videoAddress: VideoAddressModel
+    cover: ContentImageModel
+
+
 class ContentSubjectModel(BaseModel):
     subjectId: str
     subjectType: SubjectType
@@ -57,7 +78,7 @@ class ContentSubjectModel(BaseModel):
     # subtitles : str
     # ops : {rid: uuid, trace_id: str}
     # hasResource :bool
-    trailer: str | None = None
+    trailer: SubjectTrailerModel | None = None
     detailPath: str
     stafflist: list | None = None
     appointmentCnt: int
@@ -228,6 +249,7 @@ class HotMoviesAndTVSeriesModel(BaseModel):
 
 class SuggestedItemModel(BaseModel):
     """`SuggestedItemsModel.items[0]`"""
+
     type: SubjectType
     subject: str | None
     word: str
@@ -283,7 +305,9 @@ class DownloadableFilesMetadata(BaseModel):
         if bool(self.downloads):
             return True
 
-        raise ZeroMediaFileError("There are no downloadable  mediafiles for the targeted item")
+        raise ZeroMediaFileError(
+            "There are no downloadable  mediafiles for the targeted item"
+        )
 
     @property
     def best_media_file(self) -> MediaFileMetadata:
@@ -367,7 +391,9 @@ class DownloadableFilesMetadata(BaseModel):
             language_subtitle_map[caption.lan] = caption
         return language_subtitle_map
 
-    def get_subtitle_by_language(self, language: str) -> CaptionFileMetadata | None:
+    def get_subtitle_by_language(
+        self, language: str
+    ) -> CaptionFileMetadata | None:
         """Both `English` and `en` will return same thing"""
         if len(language) == 2:
             return self.get_language_short_subtitle_map().get(language.lower())

@@ -23,7 +23,9 @@ async def test_download_movie_caption_file():
 
     caption_file_downloader = CaptionFileDownloader()
     response = await caption_file_downloader.run(
-        target_caption_file, filename=target_movie.title + "- English.srt", test=True
+        target_caption_file,
+        filename=target_movie.title + "- English.srt",
+        test=True,
     )
     assert response.is_success
 
@@ -54,11 +56,15 @@ async def test_download_tv_series_caption_file():
     target_series = search_results.first_item
 
     downloadable_files = DownloadableTVSeriesFilesDetail(session, target_series)
-    downloadable_files_detail = await downloadable_files.get_content_model(season=1, episode=1)
+    downloadable_files_detail = await downloadable_files.get_content_model(
+        season=1, episode=1
+    )
     target_caption_file = downloadable_files_detail.english_subtitle_file
 
     caption_file_downloader = CaptionFileDownloader()
-    response = await caption_file_downloader.run(target_caption_file, filename=target_series, test=True)
+    response = await caption_file_downloader.run(
+        target_caption_file, filename=target_series, test=True
+    )
     assert response.is_success
 
 
@@ -70,9 +76,13 @@ async def test_download_tv_series_file():
     target_series = search_results.first_item
 
     downloadable_files = DownloadableTVSeriesFilesDetail(session, target_series)
-    downloadable_files_detail = await downloadable_files.get_content_model(season=1, episode=1)
+    downloadable_files_detail = await downloadable_files.get_content_model(
+        season=1, episode=1
+    )
     target_media_file = downloadable_files_detail.best_media_file
 
     media_file_downloader = MediaFileDownloader()
-    response = await media_file_downloader.run(target_media_file, filename=target_series, test=True)
+    response = await media_file_downloader.run(
+        target_media_file, filename=target_series, test=True
+    )
     assert response.is_success

@@ -29,7 +29,9 @@ class Session:
     with or without cookies on demand
     """
 
-    _moviebox_app_info_url = get_absolute_url(r"/wefeed-h5-bff/app/get-latest-app-pkgs?app_name=moviebox")
+    _moviebox_app_info_url = get_absolute_url(
+        r"/wefeed-h5-bff/app/get-latest-app-pkgs?app_name=moviebox"
+    )
 
     def __init__(
         self,
@@ -69,7 +71,9 @@ class Session:
     def _validate_response(self, response: Response) -> Response:
         """Ensures response is not empty"""
         if response is None or not bool(response.content):
-            raise EmptyResponseError(response, "Server returned an empty body response.")
+            raise EmptyResponseError(
+                response, "Server returned an empty body response."
+            )
         return response
 
     def __repr__(self):
@@ -107,7 +111,9 @@ class Session:
         response = await self.get(*args, **kwargs)
         return process_api_response(response.json())
 
-    async def get_with_cookies(self, url: str, params: dict = {}, **kwargs) -> Response:
+    async def get_with_cookies(
+        self, url: str, params: dict = {}, **kwargs
+    ) -> Response:
         """Makes a http get request with server-assigned cookies from previous requests.
 
         Args:

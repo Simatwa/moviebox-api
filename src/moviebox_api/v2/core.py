@@ -11,7 +11,7 @@ from moviebox_api.v2.models import HomepageContentModel, SearchResultsModel
 
 
 class Homepage(moviebox_api.v1.core.Homepage):
-    _url = get_absolute_url('/wefeed-h5api-bff/home?host=moviebox.ph')
+    _url = get_absolute_url("/wefeed-h5api-bff/home?host=moviebox.ph")
 
     async def get_content_model(self) -> HomepageContentModel:
         """Modelled version of the contents"""
@@ -34,5 +34,3 @@ class Search(moviebox_api.v1.core.Search):
         """
         contents = await self.get_content()
         return SearchResultsModel(**contents)
-
-

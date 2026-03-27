@@ -53,7 +53,9 @@ class StreamFilesDetail(BaseContentProvider):
             dict: File details
         """
         # Referer
-        request_header = {"Referer": get_absolute_url(f"/movies/{self._item.detailPath}")}
+        request_header = {
+            "Referer": get_absolute_url(f"/movies/{self._item.detailPath}")
+        }
         # Without the referer, empty response will be served.
 
         content = await self.session.get_with_cookies_from_api(
@@ -63,7 +65,9 @@ class StreamFilesDetail(BaseContentProvider):
         )
         return content
 
-    async def get_modelled_content(self, season: int, episode: int) -> StreamFilesMetadata:
+    async def get_modelled_content(
+        self, season: int, episode: int
+    ) -> StreamFilesMetadata:
         """Get modelled version of the streamable files detail.
 
         Args:

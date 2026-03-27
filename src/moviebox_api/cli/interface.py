@@ -7,7 +7,6 @@ from pathlib import Path
 
 import click
 
-from moviebox_api.v1 import __version__
 from moviebox_api.cli.downloader import Downloader
 from moviebox_api.cli.extras import (
     homepage_content_command,
@@ -23,6 +22,7 @@ from moviebox_api.cli.helpers import (
     show_any_help,
 )
 from moviebox_api.cli.interactive import run_interactive_menu
+from moviebox_api.v1 import __version__
 from moviebox_api.v1.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CHUNK_SIZE,
@@ -134,7 +134,9 @@ def moviebox():
     "-P",
     "--part-dir",
     help="Directory for temporarily saving the downloaded file-parts to",
-    type=click.Path(exists=True, file_okay=False, writable=True, resolve_path=True),
+    type=click.Path(
+        exists=True, file_okay=False, writable=True, resolve_path=True
+    ),
     default=CURRENT_WORKING_DIR,
     show_default=True,
 )
@@ -395,7 +397,9 @@ def download_movie_command(
     "-P",
     "--part-dir",
     help="Directory for temporarily saving the downloaded file-parts to",
-    type=click.Path(exists=True, file_okay=False, writable=True, resolve_path=True),
+    type=click.Path(
+        exists=True, file_okay=False, writable=True, resolve_path=True
+    ),
     default=CURRENT_WORKING_DIR,
     show_default=True,
 )

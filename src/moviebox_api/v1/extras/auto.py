@@ -34,9 +34,11 @@ __all__ = ["MovieAuto"]
 
 
 class MovieAuto:
-    """Search movie based on a given query and proceed to download the first one in the results.
+    """Search movie based on a given query and proceed to download 
+    the first one in the results.
 
-    This is a workaround for writing many lines of code at the expense of flow control.
+    This is a workaround for writing many lines of code at the expense of flow 
+    control.
     """
 
     def __init__(
@@ -81,7 +83,9 @@ class MovieAuto:
             **httpx_kwargs,
         )
 
-        self.caption_file_downloader = CaptionFileDownloader(dir=caption_dir, chunk_size=chunk_size)
+        self.caption_file_downloader = CaptionFileDownloader(
+            dir=caption_dir, chunk_size=chunk_size
+        )
 
     async def _search_handler(
         self, query: str, year: int | None
@@ -90,7 +94,8 @@ class MovieAuto:
 
         Args:
             query (str): Partial or complete movie title.
-            year (int, optional): Year filter for the search results to proceed with. Defaults to None.
+            year (int, optional): Year filter for search results to proceed with. 
+                Defaults to None.
 
         Kwargs : Keyworded arguments for `MediaFileDownloader.run` method.
 
@@ -116,14 +121,18 @@ class MovieAuto:
 
             if target_movie is None:
                 raise ZeroSearchResultsError(
-                    f"No movie in the search results matched the year filter - {year}. "
-                    "Try a different value or ommit the filter."
+                    "No movie in the search results matched the year filter "
+                    f"- {year}. Try a different value or ommit the filter."
                 )
 
         target_movie = search_results.first_item
-        downloadable_movie_file_details_inst = DownloadableMovieFilesDetail(self._session, target_movie)
+        downloadable_movie_file_details_inst = DownloadableMovieFilesDetail(
+            self._session, target_movie
+        )
 
-        downloadable_movie_file_details = await downloadable_movie_file_details_inst.get_content_model()
+        downloadable_movie_file_details = (
+            await downloadable_movie_file_details_inst.get_content_model()
+        )
 
         return target_movie, downloadable_movie_file_details
 
@@ -147,9 +156,13 @@ class MovieAuto:
         """  # noqa: E501
         assert_membership(quality, DOWNLOAD_QUALITIES, "quality")
 
-        target_media_file = resolve_media_file_to_be_downloaded(quality, downloadable_movie_file_details)
+        target_media_file = resolve_media_file_to_be_downloaded(
+            quality, downloadable_movie_file_details
+        )
 
-        saved_to_or_response = await self.media_file_downloader.run(target_media_file, **run_kwargs)
+        saved_to_or_response = await self.media_file_downloader.run(
+            target_media_file, **run_kwargs
+        )
 
         return saved_to_or_response
 
@@ -172,15 +185,23 @@ class MovieAuto:
             httpx.Response : if test=true
         """  # noqa: E501
 
-        target_subtitle = downloadable_movie_file_details.get_subtitle_by_language(caption_language)
+        target_subtitle = (
+            downloadable_movie_file_details.get_subtitle_by_language(
+                caption_language
+            )
+        )
 
         if target_subtitle:
-            saved_to_or_response = await self.caption_file_downloader.run(target_subtitle, **run_kwargs)
+            saved_to_or_response = await self.caption_file_downloader.run(
+                target_subtitle, **run_kwargs
+            )
 
             return saved_to_or_response
 
         else:
-            raise ValueError(f"No caption file matched that language - {caption_language}")
+            raise ValueError(
+                f"No caption file matched that language - {caption_language}"
+            )
 
     async def run(
         self,
@@ -190,7 +211,10 @@ class MovieAuto:
         caption_language: str = None,
         caption_only: bool = False,
         **kwargs,
-    ) -> tuple[DownloadedFile | httpx.Response | None, DownloadedFile | httpx.Response | None]:
+    ) -> tuple[
+        DownloadedFile | httpx.Response | None,
+        DownloadedFile | httpx.Response | None,
+    ]:
         """Perform movie search and download first item in the search results.
 
         Args:
@@ -213,7 +237,9 @@ class MovieAuto:
             downloadable_movie_file_details,
         ) = await self._search_handler(query, year)
 
-        kwargs.setdefault("filename", target_movie)  # SearchResultsItem - auto-filename generation
+        kwargs.setdefault(
+            "filename", target_movie
+        )  # SearchResultsItem - auto-filename generation
 
         caption_language = caption_language or self._caption_language
         movie_details_or_httpx_response = caption_details_or_httpx_response = None
@@ -227,31 +253,42 @@ class MovieAuto:
                 )
                 caption_language = DEFAULT_CAPTION_LANGUAGE
 
-            caption_details_or_httpx_response = await self._caption_download_handler(
-                downloadable_movie_file_details,
-                caption_language,
-                **kwargs,
+            caption_details_or_httpx_response = (
+                await self._caption_download_handler(
+                    downloadable_movie_file_details,
+                    caption_language,
+                    **kwargs,
+                )
             )
 
         else:
             # Download subtitle first
             if caption_language:
-                caption_details_or_httpx_response = await self._caption_download_handler(
-                    downloadable_movie_file_details,
-                    caption_language,
-                    **kwargs,
+                caption_details_or_httpx_response = (
+                    await self._caption_download_handler(
+                        downloadable_movie_file_details,
+                        caption_language,
+                        **kwargs,
+                    )
                 )
 
             movie_details_or_httpx_response = await self._movie_download_handler(
                 downloadable_movie_file_details, quality, **kwargs
             )
 
-        return (movie_details_or_httpx_response, caption_details_or_httpx_response)
+        return (
+            movie_details_or_httpx_response,
+            caption_details_or_httpx_response,
+        )
 
     def run_sync(
         self, *args, **kwargs
-    ) -> tuple[DownloadedFile | httpx.Response | None, DownloadedFile | httpx.Response | None]:
-        """Synchronously perform movie search and download first item in the search results."""
+    ) -> tuple[
+        DownloadedFile | httpx.Response | None,
+        DownloadedFile | httpx.Response | None,
+    ]:
+        """Synchronously perform movie search and download first item in the 
+        search results."""
         return get_event_loop().run_until_complete(self.run(*args, **kwargs))
 
 

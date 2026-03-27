@@ -70,7 +70,9 @@ def resolve_media_file_to_be_downloaded(
             target_metadata = downloadable_metadata.worst_media_file
         case _:
             if quality in DOWNLOAD_QUALITIES:
-                quality_downloads_map = downloadable_metadata.get_quality_downloads_map()
+                quality_downloads_map = (
+                    downloadable_metadata.get_quality_downloads_map()
+                )
                 target_metadata = quality_downloads_map.get(quality)
 
                 if target_metadata is None:
@@ -90,7 +92,9 @@ class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
 
     _url = get_absolute_url(r"/wefeed-h5-bff/web/subject/download")
 
-    def __init__(self, session: Session, item: SearchResultsItem | ItemJsonDetailsModel):
+    def __init__(
+        self, session: Session, item: SearchResultsItem | ItemJsonDetailsModel
+    ):
         """Constructor for `BaseDownloadableFilesDetail`
 
         Args:
@@ -102,7 +106,9 @@ class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
 
         self.session = session
         self._item: SearchResultsItem | PostListItemSubjectModel = (
-            item.resData.postList.items[0].subject if isinstance(item, ItemJsonDetailsModel) else item
+            item.resData.postList.items[0].subject
+            if isinstance(item, ItemJsonDetailsModel)
+            else item
         )
 
     def _create_request_params(self, season: int, episode: int) -> dict:
@@ -131,7 +137,9 @@ class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
             t.Dict: File details
         """
         # Referer
-        request_header = {"Referer": get_absolute_url(f"/movies/{self._item.detailPath}")}
+        request_header = {
+            "Referer": get_absolute_url(f"/movies/{self._item.detailPath}")
+        }
         # Without the referer, empty response will be served.
 
         content = await self.session.get_with_cookies_from_api(
@@ -141,7 +149,9 @@ class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
         )
         return content
 
-    async def get_content_model(self, season: int, episode: int) -> DownloadableFilesMetadata:
+    async def get_content_model(
+        self, season: int, episode: int
+    ) -> DownloadableFilesMetadata:
         """Get modelled version of the downloadable files detail.
 
         Args:
@@ -335,7 +345,10 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
 
         if isinstance(filename, SearchResultsItem):
             filename, dir = self.generate_filename(
-                search_results_item=filename, media_file=media_file, test=test, **filename_kwargs
+                search_results_item=filename,
+                media_file=media_file,
+                test=test,
+                **filename_kwargs,
             )
 
         elif self.group_series:
@@ -477,7 +490,9 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
             group=self.group_series,
         )
 
-        return sanitize_filename(filename_template.format(**placeholders)), final_dir
+        return sanitize_filename(
+            filename_template.format(**placeholders)
+        ), final_dir
 
     async def run(
         self,

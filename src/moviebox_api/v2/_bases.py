@@ -1,8 +1,9 @@
 import typing as t
 
 from moviebox_api.v1._bases import BaseContentProviderAndHelper
-from moviebox_api.v1.requests import Session
+from moviebox_api.v1.helpers import assert_instance
 from moviebox_api.v2.models import SearchResultsItem
+from moviebox_api.v2.requests import Session
 
 
 class BaseSearch(BaseContentProviderAndHelper):
@@ -22,10 +23,14 @@ class BaseSearch(BaseContentProviderAndHelper):
         Returns:
             dict: Fetched results
         """
-        contents = await self.session.get_from_api(url=self._url, params=self._create_payload())
+        contents = await self.session.get_from_api(
+            url=self._url, params=self._create_payload()
+        )
         return contents
 
-    def get_item_details(self, item: SearchResultsItem) -> "MovieDetails | TVSeriesDetails":
+    def get_item_details(
+        self, item: SearchResultsItem
+    ) -> "MovieDetails | TVSeriesDetails":
         """Get object that provide more details about the search results item such as casts, seasons etc
 
         Args:

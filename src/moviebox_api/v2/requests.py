@@ -1,4 +1,4 @@
-'''For server interaction'''
+"""For server interaction"""
 
 from httpx._config import DEFAULT_TIMEOUT_CONFIG
 from httpx._types import (
@@ -17,7 +17,6 @@ __all__ = ["Session"]
 
 
 class Session(moviebox_api.v1.requests.Session):
-
     _moviebox_app_info_url = None
 
     def __init__(
@@ -44,7 +43,7 @@ class Session(moviebox_api.v1.requests.Session):
             cookies=cookies,
             timeout=timeout,
             proxy=proxy,
-            **httpx_kwargs
+            **httpx_kwargs,
         )
 
     async def ensure_cookies_are_assigned(self) -> bool:
@@ -52,5 +51,5 @@ class Session(moviebox_api.v1.requests.Session):
 
     async def _fetch_app_info(self) -> MovieboxAppInfo:
         raise NotImplementedError(
-            'This functionality is only available to V1 of moviebox_api.requests'
+            "This functionality is only available to V1 of moviebox_api.requests"
         )

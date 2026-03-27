@@ -16,12 +16,16 @@ def test_download_movie_caption_file():
     target_movie = search_results.first_item
 
     downloadable_files = DownloadableMovieFilesDetail(session, target_movie)
-    downloadable_files_detail: DownloadableFilesMetadata = downloadable_files.get_content_model_sync()
+    downloadable_files_detail: DownloadableFilesMetadata = (
+        downloadable_files.get_content_model_sync()
+    )
     target_caption_file = downloadable_files_detail.english_subtitle_file
 
     caption_file_downloader = CaptionFileDownloader()
     response = caption_file_downloader.run_sync(
-        target_caption_file, filename=target_movie.title + "- English.srt", test=True
+        target_caption_file,
+        filename=target_movie.title + "- English.srt",
+        test=True,
     )
     assert response.is_success
 
@@ -33,7 +37,9 @@ def test_download_movie_file():
     target_movie = search_results.first_item
 
     downloadable_files = DownloadableMovieFilesDetail(session, target_movie)
-    downloadable_files_detail: DownloadableFilesMetadata = downloadable_files.get_content_model_sync()
+    downloadable_files_detail: DownloadableFilesMetadata = (
+        downloadable_files.get_content_model_sync()
+    )
     target_media_file = downloadable_files_detail.best_media_file
 
     media_file_downloader = MediaFileDownloader()
@@ -50,13 +56,15 @@ def test_download_tv_series_caption_file():
     target_series = search_results.first_item
 
     downloadable_files = DownloadableTVSeriesFilesDetail(session, target_series)
-    downloadable_files_detail: DownloadableFilesMetadata = downloadable_files.get_content_model_sync(
-        season=1, episode=1
+    downloadable_files_detail: DownloadableFilesMetadata = (
+        downloadable_files.get_content_model_sync(season=1, episode=1)
     )
     target_caption_file = downloadable_files_detail.english_subtitle_file
 
     caption_file_downloader = CaptionFileDownloader()
-    response = caption_file_downloader.run_sync(target_caption_file, filename=target_series, test=True)
+    response = caption_file_downloader.run_sync(
+        target_caption_file, filename=target_series, test=True
+    )
     assert response.is_success
 
 
@@ -67,11 +75,13 @@ def test_download_tv_series_file():
     target_series = search_results.first_item
 
     downloadable_files = DownloadableTVSeriesFilesDetail(session, target_series)
-    downloadable_files_detail: DownloadableFilesMetadata = downloadable_files.get_content_model_sync(
-        season=1, episode=1
+    downloadable_files_detail: DownloadableFilesMetadata = (
+        downloadable_files.get_content_model_sync(season=1, episode=1)
     )
     target_media_file = downloadable_files_detail.best_media_file
 
     media_file_downloader = MediaFileDownloader()
-    response = media_file_downloader.run_sync(target_media_file, filename=target_series, test=True)
+    response = media_file_downloader.run_sync(
+        target_media_file, filename=target_series, test=True
+    )
     assert response.is_success

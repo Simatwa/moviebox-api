@@ -7,14 +7,18 @@ from tests.v1 import MOVIE_KEYWORD
 @pytest.mark.asyncio
 async def test_movie_auto():
     auto = MovieAuto()
-    movie_response, caption_response = await auto.run(query=MOVIE_KEYWORD, test=True)
+    movie_response, caption_response = await auto.run(
+        query=MOVIE_KEYWORD, test=True
+    )
     assert movie_response.is_success
     assert caption_response.is_success
 
 
 def test_movie_auto_sync():
     auto = MovieAuto()
-    movie_response, caption_response = auto.run_sync(query=MOVIE_KEYWORD, test=True)
+    movie_response, caption_response = auto.run_sync(
+        query=MOVIE_KEYWORD, test=True
+    )
     assert movie_response.is_success
     assert caption_response.is_success
 

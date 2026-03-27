@@ -33,11 +33,19 @@ def test_movie_using_page_url(url):
     assert type(details.get_content_sync()) is dict
     assert isinstance(details.get_content_model_sync(), BaseModel)
 
-    assert isinstance(details.get_json_details_extractor_sync(), JsonDetailsExtractor)
-    assert isinstance(details.get_tag_details_extractor_sync(), TagDetailsExtractor)
+    assert isinstance(
+        details.get_json_details_extractor_sync(), JsonDetailsExtractor
+    )
+    assert isinstance(
+        details.get_tag_details_extractor_sync(), TagDetailsExtractor
+    )
 
-    assert isinstance(details.get_json_details_extractor_model_sync(), JsonDetailsExtractorModel)
-    assert isinstance(details.get_tag_details_extractor_model_sync(), TagDetailsExtractorModel)
+    assert isinstance(
+        details.get_json_details_extractor_model_sync(), JsonDetailsExtractorModel
+    )
+    assert isinstance(
+        details.get_tag_details_extractor_model_sync(), TagDetailsExtractorModel
+    )
 
 
 @pytest.mark.parametrize(
@@ -61,11 +69,19 @@ def test_tv_series_using_page_url(url):
     assert type(details.get_content_sync()) is dict
     assert isinstance(details.get_content_model_sync(), BaseModel)
 
-    assert isinstance(details.get_json_details_extractor_sync(), JsonDetailsExtractor)
-    assert isinstance(details.get_tag_details_extractor_sync(), TagDetailsExtractor)
+    assert isinstance(
+        details.get_json_details_extractor_sync(), JsonDetailsExtractor
+    )
+    assert isinstance(
+        details.get_tag_details_extractor_sync(), TagDetailsExtractor
+    )
 
-    assert isinstance(details.get_json_details_extractor_model_sync(), JsonDetailsExtractorModel)
-    assert isinstance(details.get_tag_details_extractor_model_sync(), TagDetailsExtractorModel)
+    assert isinstance(
+        details.get_json_details_extractor_model_sync(), JsonDetailsExtractorModel
+    )
+    assert isinstance(
+        details.get_tag_details_extractor_model_sync(), TagDetailsExtractorModel
+    )
 
 
 def test_movie_using_search_results_item():
@@ -80,11 +96,19 @@ def test_movie_using_search_results_item():
     assert type(details.get_content_sync()) is dict
     assert isinstance(details.get_content_model_sync(), BaseModel)
 
-    assert isinstance(details.get_json_details_extractor_sync(), JsonDetailsExtractor)
-    assert isinstance(details.get_tag_details_extractor_sync(), TagDetailsExtractor)
+    assert isinstance(
+        details.get_json_details_extractor_sync(), JsonDetailsExtractor
+    )
+    assert isinstance(
+        details.get_tag_details_extractor_sync(), TagDetailsExtractor
+    )
 
-    assert isinstance(details.get_json_details_extractor_model_sync(), JsonDetailsExtractorModel)
-    assert isinstance(details.get_tag_details_extractor_model_sync(), TagDetailsExtractorModel)
+    assert isinstance(
+        details.get_json_details_extractor_model_sync(), JsonDetailsExtractorModel
+    )
+    assert isinstance(
+        details.get_tag_details_extractor_model_sync(), TagDetailsExtractorModel
+    )
 
 
 def test_tv_series_using_search_results_item():
@@ -103,8 +127,16 @@ def test_tv_series_using_search_results_item():
     assert type(details.get_content_sync()) is dict
     assert isinstance(details.get_content_model_sync(), BaseModel)
 
-    assert isinstance(details.get_json_details_extractor_sync(), JsonDetailsExtractor)
-    assert isinstance(details.get_tag_details_extractor_sync(), TagDetailsExtractor)
+    assert isinstance(
+        details.get_json_details_extractor_sync(), JsonDetailsExtractor
+    )
+    assert isinstance(
+        details.get_tag_details_extractor_sync(), TagDetailsExtractor
+    )
 
-    assert isinstance(details.get_json_details_extractor_model_sync(), JsonDetailsExtractorModel)
-    assert isinstance(details.get_tag_details_extractor_model_sync(), TagDetailsExtractorModel)
+    assert isinstance(
+        details.get_json_details_extractor_model_sync(), JsonDetailsExtractorModel
+    )
+    assert isinstance(
+        details.get_tag_details_extractor_model_sync(), TagDetailsExtractorModel
+    )

@@ -16,7 +16,9 @@ FILE_EXT_PATTERN = re.compile(r".+\.(\w+)\?.+")
 
 ILLEGAL_CHARACTERS_PATTERN = re.compile(r"[^\w\-_\.\s()&|]")
 
-VALID_ITEM_PAGE_URL_PATTERN = re.compile(r"^.*" + ITEM_DETAILS_PATH + r"/[\w-]+(?:\?id\=\d{17,}.*)?$")
+VALID_ITEM_PAGE_URL_PATTERN = re.compile(
+    r"^.*" + ITEM_DETAILS_PATH + r"/[\w-]+(?:\?id\=\d{17,}.*)?$"
+)
 
 SCHEME_HOST_PATTERN = re.compile(r"^https?://[-_\.\w]+$")
 
@@ -51,7 +53,9 @@ def assert_membership(value: t.Any, elements: t.Iterable, identity="Value"):
     assert value in elements, f"{identity} '{value}' is not one of {elements}"
 
 
-def assert_instance(obj: object, class_or_tuple, name: str = "Parameter") -> t.NoReturn:
+def assert_instance(
+    obj: object, class_or_tuple, name: str = "Parameter"
+) -> t.NoReturn:
     """assert obj an instance of class_or_tuple"""
 
     assert isinstance(obj, class_or_tuple), (

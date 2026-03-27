@@ -19,7 +19,10 @@ from moviebox_api.v1.constants import (
     SubjectType,
 )
 from moviebox_api.v1.core import Search, Session
-from moviebox_api.v1.exceptions import ZeroCaptionFileError, ZeroSearchResultsError
+from moviebox_api.v1.exceptions import (
+    ZeroCaptionFileError,
+    ZeroSearchResultsError,
+)
 from moviebox_api.v1.models import (
     CaptionFileMetadata,
     DownloadableFilesMetadata,
@@ -47,7 +50,8 @@ async def perform_search_and_get_item(
         subject_type (SubjectType): Movie or tv-series.
         yes (bool): Proceed with the first item instead of prompting confirmation.
         search (Search, optional): Search object. Defaults to None.
-        message (str, optional): Prefix message for the prompt. Defaults to "select".
+        message (str, optional): Prefix message for the prompt. 
+            Defaults to "select".
 
     Raises:
         RuntimeError: When all items are exhausted without a match.
@@ -60,7 +64,8 @@ async def perform_search_and_get_item(
     subject_type_name = " ".join(subject_type.name.lower().split("_"))
 
     logger.info(
-        f"Query '{title}' yielded {'over ' if search_results.pager.hasMore else ''}"
+        f"Query '{title}' yielded {
+            'over ' if search_results.pager.hasMore else ''}"
         f"{len(search_results.items)} {subject_type_name}."
     )
     items = (
@@ -82,7 +87,8 @@ async def perform_search_and_get_item(
         for pos, item in enumerate(items, start=1):
             if click.confirm(
                 f"> {message} ({pos}/{len(items)}) : "
-                f"{'[' + item.subjectType.name + '] ' if subject_type is SubjectType.ALL else ''}{item.title}"
+                f"{'[' + item.subjectType.name + '] ' 
+                   if subject_type is SubjectType.ALL else ''}{item.title}"
                 f" {item.releaseDate.year, item.imdbRatingValue}"
             ):
                 return item
@@ -91,7 +97,9 @@ async def perform_search_and_get_item(
         next_search: Search = search.next_page(search_results)
         print(f" Loading next page ({next_search._page}) ...", end="\r")
 
-        logging.info(f"Navigating to the search results of page number {next_search._page}")
+        logging.info(
+            f"Navigating to the search results of page number {next_search._page}"
+        )
         return await perform_search_and_get_item(
             session=session,
             title=title,
@@ -102,7 +110,8 @@ async def perform_search_and_get_item(
         )
 
     raise RuntimeError(
-        "All items in the search results are exhausted. Try researching with a different keyword"
+        "All items in the search results are exhausted. Try researching with"
+        " a different keyword"
         f"{' or different year filter.' if year > 0 else ''}"
     )
 
@@ -110,7 +119,8 @@ async def perform_search_and_get_item(
 def get_caption_file_or_raise(
     downloadable_details: DownloadableFilesMetadata, language: str
 ) -> CaptionFileMetadata:
-    """Get caption-file based on desired language or raise ValueError if it doesn't exist.
+    """Get caption-file based on desired language or raise ValueError if 
+    it doesn't exist.
 
     Args:
         downloadable_details (DownloadableFilesMetadata)
@@ -136,12 +146,15 @@ def get_caption_file_or_raise(
         if subtitle_language_keys:
             raise ValueError(
                 f"There is no caption file for the language '{language}'. "
-                f"Choose from available ones - {', '.join(list(subtitle_language_keys))}"
+                f"Choose from available ones - {''
+                ', '.join(list(subtitle_language_keys))}"
             )
         else:
             raise ZeroCaptionFileError(
-                "The target item has no any caption file. Use --no-caption or --ignore-missing-caption flags"
-                " if you're using the commandline interface to suppress this error."
+                "The target item has no any caption file. Use --no-caption or "
+                "--ignore-missing-caption flags"
+                " if you're using the commandline interface to suppress "
+                "this error."
             )
     return target_caption_file
 
@@ -157,7 +170,11 @@ def prepare_start(quiet: bool = False, verbose: int = 0) -> None:
         verbose = 2
 
     logging.basicConfig(
-        format=("[%(asctime)s] : %(levelname)s - %(message)s" if verbose else "[%(module)s] %(message)s"),
+        format=(
+            "[%(asctime)s] : %(levelname)s - %(message)s"
+            if verbose
+            else "[%(module)s] %(message)s"
+        ),
         datefmt="%d-%b-%Y %H:%M:%S",
         level=(
             logging.ERROR
@@ -206,14 +223,19 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
     exit_code = 1
 
     if isinstance(exception, ConnectTimeout):
-        logging.info("Internet connection request has timed out. Check your connection and retry.")
+        logging.info(
+            "Internet connection request has timed out. Check your connection"
+            " and retry."
+        )
 
     elif isinstance(exception, HTTPStatusError):
         match exception.response.status_code:
             case 403:
                 logging.info(
-                    "Looks like you're in a region that Moviebox doesn't offer their services to. "
-                    "Use a proxy or a VPN from a different geographical location to bypass this restriction."
+                    "Looks like you're in a region that Moviebox doesn't offer"
+                    " their services to. "
+                    "Use a proxy or a VPN from a different geographical location"
+                    " to bypass this restriction."
                 )
 
     elif isinstance(exception, ValidationError):
@@ -225,21 +247,36 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
     if "404 Domain" in exception_msg:
         example_host = random.choice(MIRROR_HOSTS)
         logging.info(
-            'Run "moviebox mirror-hosts" command to check available mirror hosts and '
-            f'then export it to the environment using name "{ENVIRONMENT_HOST_KEY}".\n'
-            f"For instance: In *nix systems you might run 'export {ENVIRONMENT_HOST_KEY}=\"{example_host}\"'"
+            'Run "moviebox mirror-hosts" command to check available mirror hosts'
+            ' and '
+            'then export it to the environment using name '
+            f'{ENVIRONMENT_HOST_KEY}".\n'
+            'For instance: In *nix systems you might run export '
+            f'{ENVIRONMENT_HOST_KEY}=\"{example_host}\"'
             f' while in Windows : "set MOVIEBOX_API_HOST={example_host}'
         )
 
     if not isinstance(
-        exception, (ValueError, AssertionError, RuntimeError, ZeroCaptionFileError, ZeroSearchResultsError)
+        exception,
+        (
+            ValueError,
+            AssertionError,
+            RuntimeError,
+            ZeroCaptionFileError,
+            ZeroSearchResultsError,
+        ),
     ):
-        logging.info(f"Incase the error persist then feel free to submit the issue at {__repo__}/issues/new")
+        logging.info(
+            "Incase the error persist then feel free to submit the issue at"
+            f" {__repo__}/issues/new"
+        )
 
     return exit_code
 
 
-def stream_video_via_mpv(url: str, subtitle_details_items: list[DownloadedFile], subtitles_dir: str):
+def stream_video_via_mpv(
+    url: str, subtitle_details_items: list[DownloadedFile], subtitles_dir: str
+):
     try:
         # Create an MPV command with properly formatted headers
         mpv_cmd = ["mpv"]
@@ -269,7 +306,8 @@ def stream_video_via_mpv(url: str, subtitle_details_items: list[DownloadedFile],
 
     except FileNotFoundError as e:
         raise Exception(
-            "MPV player not found. Please install it from https://mpv.io/installation/ "
+            "MPV player not found. Please install it from " 
+            "https://mpv.io/installation/ "
             'to use streaming feature or retry using "--stream-via vlc" instead.'
         ) from e
 
@@ -277,12 +315,18 @@ def stream_video_via_mpv(url: str, subtitle_details_items: list[DownloadedFile],
         raise Exception(f"Error launching MPV: {e}") from e
 
 
-def stream_video_via_vlc(url: str, subtitle_details_items: list[DownloadedFile], subtitles_dir: str):
+def stream_video_via_vlc(
+    url: str, subtitle_details_items: list[DownloadedFile], subtitles_dir: str
+):
     try:
         user_agent = DOWNLOAD_REQUEST_HEADERS["User-Agent"]
         referrer = DOWNLOAD_REQUEST_HEADERS["Referer"]
 
-        mpv_cmd = ["vlc", f":http-user-agent={user_agent}", f"--http-referrer={referrer}"]
+        mpv_cmd = [
+            "vlc",
+            f":http-user-agent={user_agent}",
+            f"--http-referrer={referrer}",
+        ]
 
         for sub_file in subtitle_details_items:
             subtitle_path = sub_file.saved_to.resolve().as_posix()
@@ -304,7 +348,8 @@ def stream_video_via_vlc(url: str, subtitle_details_items: list[DownloadedFile],
 
     except FileNotFoundError as e:
         raise Exception(
-            "VLC media player not found. Please install it from https://www.videolan.org "
+            "VLC media player not found. Please install it from "
+            "https://www.videolan.org "
             'to use streaming feature or retry using "--stream-via mpv" instead.'
         ) from e
 
@@ -312,4 +357,7 @@ def stream_video_via_vlc(url: str, subtitle_details_items: list[DownloadedFile],
         raise Exception(f"Error launching VLC: {e}") from e
 
 
-media_player_name_func_map = {"mpv": stream_video_via_mpv, "vlc": stream_video_via_vlc}
+media_player_name_func_map = {
+    "mpv": stream_video_via_mpv,
+    "vlc": stream_video_via_vlc,
+}

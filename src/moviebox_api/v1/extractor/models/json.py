@@ -10,6 +10,7 @@ from moviebox_api.v1.helpers import get_absolute_url
 from moviebox_api.v1.models import (
     ContentCategorySubjectsModel,
     ContentImageModel,
+    SubjectTrailerModel,
 )
 
 
@@ -227,13 +228,6 @@ class TrailerVideoAddressModel(BaseModel):
     url: HttpUrl
     videoId: str
     width: int
-
-
-class SubjectTrailerModel(BaseModel):
-    """`.resData.subject.trailer`"""
-
-    cover: ContentImageModel
-    videoAddress: TrailerVideoAddressModel
 
 
 class SubjectModel(ContentCategorySubjectsModel):
