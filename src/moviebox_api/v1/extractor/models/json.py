@@ -20,9 +20,9 @@ class MetadataModel(BaseModel):
     description: str
     image: HttpUrl
     keyWords: list[str]
-    referer: HttpUrl
+    referer: HttpUrl | None = None
     title: str
-    url: HttpUrl
+    url: HttpUrl | None = None
 
     @field_validator("keyWords", mode="before")
     def validate_genre(value: str) -> list[str]:

@@ -3,6 +3,7 @@
 import os
 
 from moviebox_api.v2 import logger
+from moviebox_api.v1.constants import SubjectType
 
 """asyncio event loop"""
 
@@ -45,3 +46,10 @@ DOWNLOAD_REQUEST_HEADERS = {
     "Referer": DOWNLOAD_REQUEST_REFERER,
 }
 """For media and subtitle files download requests"""
+
+SINGLE_ITEM_SUBJECT_TYPES = {
+    SubjectType.MUSIC,
+    SubjectType.MOVIES,
+    SubjectType.ANIME,
+    SubjectType.EDUCATION
+}

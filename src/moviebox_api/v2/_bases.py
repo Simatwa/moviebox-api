@@ -2,53 +2,51 @@ import typing as t
 
 from moviebox_api.v1._bases import BaseContentProviderAndHelper
 from moviebox_api.v1.helpers import assert_instance
-from moviebox_api.v2.models import SearchResultsItem
+from moviebox_api.v2.exceptions import InvalidDetailPathError
+from moviebox_api.v2.helpers import get_absolute_url, validate_detail_path
+from moviebox_api.v2.models.extras import SpecificItemDetailsModel
 from moviebox_api.v2.requests import Session
 
 
-class BaseSearch(BaseContentProviderAndHelper):
-    """Base class for search providers such as `Trending` and `Search`"""
+class BaseItemDetails(BaseContentProviderAndHelper):
+    """Base class for specific movie/tv-series (item) details
+    """
 
-    session: Session
-    """Moviebox-api requests session"""
+    api_endpoint = get_absolute_url("/wefeed-h5api-bff/detail")
 
-    _url: str
-
-    def _create_payload(self) -> dict[str, t.Any]:
-        raise NotImplementedError("Function needs to be implemented in subclass")
-
-    async def get_content(self) -> dict:
-        """Fetches content
-
-        Returns:
-            dict: Fetched results
-        """
-        contents = await self.session.get_from_api(
-            url=self._url, params=self._create_payload()
-        )
-        return contents
-
-    def get_item_details(
-        self, item: SearchResultsItem
-    ) -> "MovieDetails | TVSeriesDetails":
-        """Get object that provide more details about the search results item such as casts, seasons etc
+    def __init__(self, session: Session):
+        """Constructor for `BaseItemDetails`
 
         Args:
-            item (SearchResultsItem): Search result item
-
-        Returns:
-            MovieDetails | TVSeriesDetails: Object providing more details about the item
+            detail_path (str): Specific item detail path
+            session (Session): MovieboxAPI request session
         """
-        # TODO: Implement this later
-        assert_instance(item, SearchResultsItem, "item")
-        match item.subjectType:
-            case SubjectType.MOVIES:
-                return MovieDetails(item, self.session)
-            case SubjectType.TV_SERIES:
-                return TVSeriesDetails(item, self.session)
-            case _:
-                raise NotImplementedError(
-                    f"Currently only items of {SubjectType.MOVIES.name} and {SubjectType.TV_SERIES.name} "
-                    "subject-types are supported. Check later versions for possible support of other "
-                    "subject-types"
-                )
+        assert_instance(session, Session, 'session')
+        self._session = session
+
+    def _validate_detail_path(self, detail_path: str) -> t.NoReturn:
+        if not validate_detail_path(detail_path):
+
+            raise InvalidDetailPathError(
+                f"Invalid detail path passed {detail_path!r} "
+                'Recheck and try again'
+            )
+
+    async def get_content(self, detail_path: str) -> dict:
+        self._validate_detail_path(detail_path)
+        content = await self._session.get_from_api(
+            self.api_endpoint,
+            params={
+                'detailPath': detail_path
+            }
+        )
+        return content
+
+    async def get_content_model(self,
+                                 detail_path: str,
+                                   **kwargs) -> SpecificItemDetailsModel:
+
+        content = await self.get_content(detail_path, **kwargs)
+        modelled_content = SpecificItemDetailsModel(**content)
+
+        return modelled_content

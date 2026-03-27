@@ -108,13 +108,15 @@ class BaseSearch(BaseContentProviderAndHelper):
     def get_item_details(
         self, item: SearchResultsItem
     ) -> "MovieDetails | TVSeriesDetails":
-        """Get object that provide more details about the search results item such as casts, seasons etc
+        """Get object that provide more details about the search results item 
+        such as casts, seasons etc
 
         Args:
             item (SearchResultsItem): Search result item
 
         Returns:
-            MovieDetails | TVSeriesDetails: Object providing more details about the item
+            MovieDetails | TVSeriesDetails: Object providing more details about
+            the item
         """
         assert_instance(item, SearchResultsItem, "item")
         match item.subjectType:
@@ -124,8 +126,10 @@ class BaseSearch(BaseContentProviderAndHelper):
                 return TVSeriesDetails(item, self.session)
             case _:
                 raise NotImplementedError(
-                    f"Currently only items of {SubjectType.MOVIES.name} and {SubjectType.TV_SERIES.name} "
-                    "subject-types are supported. Check later versions for possible support of other "
+                    f"Currently only items of {SubjectType.MOVIES.name} and "
+                    f"{SubjectType.TV_SERIES.name} "
+                    "subject-types are supported. Check later versions for "
+                    "possible support of other "
                     "subject-types"
                 )
 
@@ -163,7 +167,8 @@ class Search(BaseSearch):
 
     def __repr__(self):
         return (
-            rf"<Search query='{self._query}' subject_type={self._subject_type.name} "
+            rf"<Search query='{self._query}' "
+            rf"subject_type={self._subject_type.name} "
             rf"page={self._page} per_page={self._per_page}>"
         )
 
@@ -261,7 +266,8 @@ class Search(BaseSearch):
         else:
             raise MovieboxApiException(
                 "Unable to navigate to previous page. "
-                "Current page is the first one try navigating to the next one instead."
+                "Current page is the first one try navigating to the next "
+                "one instead."
             )
 
     def _create_payload(self) -> dict[str, str | int]:
@@ -283,7 +289,8 @@ class Trending(BaseSearch):
     """Trending movies, tv-series and music"""
 
     _url = get_absolute_url(
-        r"/wefeed-h5-bff/web/subject/trending"  # ?uid=5591179548772780352&page=0&perPage=18"
+        r"/wefeed-h5-bff/web/subject/trending"  
+        # ?uid=5591179548772780352&page=0&perPage=18"
     )
 
     def __init__(
@@ -296,8 +303,11 @@ class Trending(BaseSearch):
 
         Args:
             session (Session): MovieboxAPI request session
+
             page (int, optional): Page number filter. Defaults to 0.
-            per_page (int, optional): Maximum number of items per page. Defaults to 18.
+
+            per_page (int, optional): Maximum number of items per page. 
+                Defaults to 18.
         """
         assert_instance(session, Session, "session")
 
@@ -362,7 +372,8 @@ class Trending(BaseSearch):
         else:
             raise MovieboxApiException(
                 "Unable to navigate to previous page. "
-                "Current page is the first one try navigating to the next one instead."
+                "Current page is the first one try navigating to the next one" 
+                 " instead."
             )
 
     def _create_payload(self) -> dict[str, str | int]:
@@ -382,7 +393,8 @@ class Recommend(BaseSearch):
     """Recommend other movies/tv-series/music based on a given one"""
 
     _url = get_absolute_url(
-        "/wefeed-h5-bff/web/subject/detail-rec"  # ?subjectId=2518237873669820192&page=1&perPage=24"
+        "/wefeed-h5-bff/web/subject/detail-rec"  
+        # ?subjectId=2518237873669820192&page=1&perPage=24"
     )
 
     def __init__(
@@ -398,7 +410,8 @@ class Recommend(BaseSearch):
             session (Session): MovieboxAPI request session
             item (SearchResultsItem): Reference item.
             page (int, optional): Page number filter. Defaults to 1.
-            per_page (int, optional): Maximum number of items per page. Defaults to 24.
+            per_page (int, optional): Maximum number of items per page. 
+                Defaults to 24.
         """
         assert_instance(session, Session, "session")
         assert_instance(item, SearchResultsItem, "item")
@@ -484,7 +497,8 @@ class Recommend(BaseSearch):
         else:
             raise MovieboxApiException(
                 "Unable to navigate to previous page. "
-                "Current page is the first one try navigating to the next one instead."
+                "Current page is the first one try navigating to the next one"
+                " instead."
             )
 
     def _create_payload(self) -> dict[str, str | int]:
@@ -605,7 +619,7 @@ class BaseItemDetails(BaseContentProviderAndHelper):
     """
 
     def __init__(self, page_url: str, session: Session):
-        """Constructor for `BaseItemPageDetails`
+        """Constructor for `BaseItemDetails`
 
         Args:
             page_url (str): Url to specific page containing the item details.
@@ -624,7 +638,8 @@ class BaseItemDetails(BaseContentProviderAndHelper):
             str: html formatted contents of the page
         """
         if self.__html_content is not None:
-            # Not a good approach for async but it will save alot of seconds & bandwidth
+            # Not a good approach for async but it will save alot
+            #  of seconds & bandwidth
             return self.__html_content
 
         resp = await self._session.get_with_cookies(
@@ -643,7 +658,8 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         return extracted_content.details
 
     async def get_content_model(self) -> ItemJsonDetailsModel:
-        """Get modelled version of extracted item details using `self.get_json_details_extractor_model`
+        """Get modelled version of extracted item details using 
+            `self.get_json_details_extractor_model`
 
         Returns:
             ItemJsonDetailsModel: Modelled item details
@@ -652,24 +668,28 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         return modelled_extracted_content.details
 
     async def get_tag_details_extractor(self) -> TagDetailsExtractor:
-        """Fetch content and return object that provide ways to extract details from html tags of the page"""
+        """Fetch content and return object that provide ways to extract details 
+        from html tags of the page"""
         content = await self.get_html_content()
         return TagDetailsExtractor(content)
 
     async def get_json_details_extractor(self) -> JsonDetailsExtractor:
-        """Fetch content and return object that extract details from json-formatted data in the page"""
+        """Fetch content and return object that extract details from 
+        json-formatted data in the page"""
         html_contents = await self.get_html_content()
         return JsonDetailsExtractor(html_contents)
 
     async def get_tag_details_extractor_model(self) -> TagDetailsExtractorModel:
-        """Fetch content and return object that provide ways to model extracted details from html tags"""
+        """Fetch content and return object that provide ways to model extracted 
+        details from html tags"""
         html_content = await self.get_html_content()
         return TagDetailsExtractorModel(html_content)
 
     async def get_json_details_extractor_model(
         self,
     ) -> JsonDetailsExtractorModel:
-        """Fetch content and return object that models extracted details from json-formatted data in the page"""  # noqa: E501
+        """Fetch content and return object that models extracted details from
+          json-formatted data in the page"""
         html_contents = await self.get_html_content()
         return JsonDetailsExtractorModel(html_contents)
 
@@ -686,7 +706,8 @@ class BaseItemDetails(BaseContentProviderAndHelper):
     def get_tag_details_extractor_sync(
         self, *args, **kwargs
     ) -> TagDetailsExtractor:
-        """Synchronously fetch content and return object that provide ways to extract details from html tags of the page"""  # noqa: E501
+        """Synchronously fetch content and return object that provide ways
+          to extract details from html tags of the page""" 
         return get_event_loop().run_until_complete(
             self.get_tag_details_extractor(*args, **kwargs)
         )
@@ -694,7 +715,8 @@ class BaseItemDetails(BaseContentProviderAndHelper):
     def get_json_details_extractor_sync(
         self, *args, **kwargs
     ) -> JsonDetailsExtractor:
-        """Synchronously fetch content and return object that extract details from json-formatted data in the page"""  # noqa: E501
+        """Synchronously fetch content and return object that extract details
+          from json-formatted data in the page""" 
         return get_event_loop().run_until_complete(
             self.get_json_details_extractor(*args, **kwargs)
         )
@@ -702,7 +724,8 @@ class BaseItemDetails(BaseContentProviderAndHelper):
     def get_tag_details_extractor_model_sync(
         self, *args, **kwargs
     ) -> TagDetailsExtractorModel:
-        """Synchronously fetch content and return object that provide ways to model extracted details from html tags"""  # noqa: E501
+        """Synchronously fetch content and return object that provide ways to 
+        model extracted details from html tags""" 
         return get_event_loop().run_until_complete(
             self.get_tag_details_extractor_model(*args, **kwargs)
         )
@@ -710,7 +733,8 @@ class BaseItemDetails(BaseContentProviderAndHelper):
     def get_json_details_extractor_model_sync(
         self, *args, **kwargs
     ) -> JsonDetailsExtractorModel:
-        """Synchronously fetch content and return object that models extracted details from json-formatted data in the page"""  # noqa: E501
+        """Synchronously fetch content and return object that models extracted 
+        details from json-formatted data in the page"""
         return get_event_loop().run_until_complete(
             self.get_json_details_extractor_model(*args, **kwargs)
         )
@@ -723,7 +747,8 @@ class MovieDetails(BaseItemDetails):
         """Constructor for `MovieDetails`
 
         Args:
-            page_url (str|SearchResultsItem): Url to specific item page or search-results-item.
+            page_url (str|SearchResultsItem): Url to specific item page or 
+                search-results-item.
             session (Session): MovieboxAPI request session
         """
         assert_instance(url_or_item, (str, SearchResultsItem), "url_or_item")
@@ -731,8 +756,8 @@ class MovieDetails(BaseItemDetails):
         if isinstance(url_or_item, SearchResultsItem):
             if url_or_item.subjectType != SubjectType.MOVIES:
                 raise ValueError(
-                    f"item needs to be of subjectType {SubjectType.MOVIES.name} not"
-                    f" {url_or_item.subjectType.name}"
+                    f"item needs to be of subjectType {SubjectType.MOVIES.name} "
+                    f"not {url_or_item.subjectType.name}"
                 )
 
             page_url = url_or_item.page_url
@@ -750,7 +775,8 @@ class TVSeriesDetails(BaseItemDetails):
         """Constructor for `TVSeriesDetails`
 
         Args:
-            url_or_item: (str|SearchResultsItem): Url to specific item page or search-results-item.
+            url_or_item: (str|SearchResultsItem): Url to specific item page or 
+                search-results-item.
             session (Session): MovieboxAPI request session
         """
         assert_instance(url_or_item, (str, SearchResultsItem), "url_or_item")
@@ -758,8 +784,9 @@ class TVSeriesDetails(BaseItemDetails):
         if isinstance(url_or_item, SearchResultsItem):
             if url_or_item.subjectType != SubjectType.TV_SERIES:
                 raise ValueError(
-                    f"item needs to be of subjectType {SubjectType.TV_SERIES.name} not "
-                    f"{url_or_item.subjectType.name}"
+                    "item needs to be of subjectType "
+                    f"{SubjectType.TV_SERIES.name}"
+                     f" not {url_or_item.subjectType.name}"
                 )
 
             page_url = url_or_item.page_url

@@ -18,9 +18,10 @@ class SpecificItemDetailsModel(BaseModel):
     """For all subjectTypes"""
 
     subject: SearchResultsItem
-    stars: StarsModel
+    stars: list[StarsModel]
     resource: ResourceModel
     metadata: MetadataModel
     isForbid: bool
     watchTimeLimit: int
     postList: PostListModel
+
