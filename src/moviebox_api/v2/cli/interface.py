@@ -283,7 +283,8 @@ def download_movie_command(
     stream_via: bool = False,
     **download_runner_params,
 ):
-    """Search, download or stream movie/anime/music/education."""
+    """Search, download or stream items under movie/anime/music/education
+    subject-types."""
 
     prepare_start(quiet, verbose=verbose, host_url=HOST_URL)
 

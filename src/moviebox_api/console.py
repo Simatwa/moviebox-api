@@ -19,12 +19,12 @@ def cli_entry():
 
 @cli_entry.group()
 def v1():
-    """Search and download movies/tv-series and their subtitles"""
+    """Search and download movies/tv-series using moviebox-API v1"""
 
 
 @cli_entry.group()
 def v2():
-    """Search and download movies/tv-series and their subtitles"""
+    """Search and download movies/tv-series etc using moviebox-API v2"""
 
 
 build_command_group(v1, get_commands_map())

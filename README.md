@@ -37,7 +37,7 @@ Search, discover, download, and stream movies & TV series with subtitles
 Install with command-line interface support:
 
 ```sh
-pip install "moviebox-api[cli]"
+pip install "moviebox-api[cli]==0.3.6"
 ```
 
 ### For Developers
@@ -45,7 +45,7 @@ pip install "moviebox-api[cli]"
 Install base package for Python integration:
 
 ```sh
-pip install moviebox-api
+pip install "moviebox-api==0.3.6"
 ```
 
 ### Media Players (Optional, for Streaming)
