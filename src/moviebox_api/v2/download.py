@@ -2,6 +2,8 @@
 and initiating actual download
 """
 
+from abc import ABCMeta
+
 from moviebox_api.v1._bases import BaseContentProviderAndHelper
 from moviebox_api.v1.helpers import assert_instance
 from moviebox_api.v1.models import DownloadableFilesMetadata
@@ -11,7 +13,7 @@ from moviebox_api.v2.models.basics import SearchResultsItem
 from moviebox_api.v2.requests import Session
 
 
-class ImmutableMeta(type):
+class ImmutableMeta(ABCMeta):
     def __setattr__(cls, name, value):
         if name == "_subject_types":
             raise AttributeError("_subject_types is immutable")
