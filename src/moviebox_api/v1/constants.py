@@ -128,10 +128,13 @@ class SubjectType(IntEnum):
     # TODO: Research and update UNKNOWNS
 
     @classmethod
-    def map(cls) -> dict[str, int]:
+    def map(cls, ignore_names: set[str] = []) -> dict[str, int]:
         """Content-type names mapped to their int representatives"""
         resp = {}
         for entry in cls:
+            if entry.name in ignore_names:
+                continue
+
             resp[entry.name] = entry.value
         return resp
 

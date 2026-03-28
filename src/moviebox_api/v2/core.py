@@ -167,7 +167,7 @@ class TVSeriesDetails(BaseItemDetails):
                     f"not {path_or_item.subjectType!r}"
                 )
 
-            detail_path = SearchResultsItem.detailPath
+            detail_path = path_or_item.detailPath
 
         return await super().get_content(detail_path)
 

@@ -32,7 +32,7 @@ from moviebox_api.v2.cli.extras import (
     item_details_command,
     mirror_hosts_command,
 )
-from moviebox_api.v2.constants import HOST_URL
+from moviebox_api.v2.constants import HOST_URL, SubjectType
 from moviebox_api.v2.core import Search, Session
 from moviebox_api.v2.download import (
     CaptionFileDownloader,
@@ -47,6 +47,8 @@ __all__ = [
     "item_details_command",
 ]
 
+suject_types_name_value_map = SubjectType.map(ignore_names={"ALL", "TV_SERIES"})
+
 DEBUG = os.getenv("DEBUG", "0") == "1"
 
 
@@ -59,6 +61,14 @@ def moviebox_v2():
 
 @click.command(context_settings=command_context_settings)
 @click.argument("title")
+@click.option(
+    "-s",
+    "--subject-type",
+    type=click.Choice(suject_types_name_value_map.keys(), case_sensitive=False),
+    default=SubjectType.MOVIES.name,
+    show_default=True,
+    help="Subject type filter for the items",
+)
 @click.option(
     "-y",
     "--year",
@@ -256,6 +266,7 @@ def moviebox_v2():
 @click.help_option("-h", "--help")
 def download_movie_command(
     title: str,
+    subject_type: str,
     year: int,
     quality: str,
     dir: Path,
@@ -272,11 +283,11 @@ def download_movie_command(
     stream_via: bool = False,
     **download_runner_params,
 ):
-    """Search and download or stream movie."""
+    """Search, download or stream movie/anime/music/education."""
 
     prepare_start(quiet, verbose=verbose, host_url=HOST_URL)
 
-    downloader = Downloader(session=Session(), search_class=Search)
+    downloader = Downloader(session=Session(), search_class=Search, api_v2=True)
     get_event_loop().run_until_complete(
         downloader.download_movie(
             title,
@@ -292,6 +303,9 @@ def download_movie_command(
             caption_filename_tmpl=caption_filename_tmpl,
             stream_via=stream_via,
             ignore_missing_caption=ignore_missing_caption,
+            subject_type=SubjectType(
+                suject_types_name_value_map.get(subject_type.upper())
+            ),
             **process_download_runner_params(download_runner_params),
         )
     )
@@ -564,7 +578,7 @@ def download_tv_series_command(
 
     prepare_start(quiet, verbose=verbose, host_url=HOST_URL)
 
-    downloader = Downloader(session=Session(), search_class=Search)
+    downloader = Downloader(session=Session(), search_class=Search, api_v2=True)
     get_event_loop().run_until_complete(
         downloader.download_tv_series(
             title,

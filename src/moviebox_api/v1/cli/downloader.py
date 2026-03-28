@@ -1,4 +1,7 @@
-"""Gets the work done - downloads media with flexible flow control"""
+"""Gets the work done - downloads media with flexible flow control
+
+- Supports both API versions - v1, v2
+"""
 
 import logging
 import tempfile
@@ -38,6 +41,11 @@ from moviebox_api.v1.helpers import (
     get_event_loop,
 )
 from moviebox_api.v1.models import SearchResultsItem
+from moviebox_api.v2.core import TVSeriesDetails as TVSeriesDetailsV2
+from moviebox_api.v2.download import (
+    DownloadableSingleFilesDetail,
+    DownloadableTVSeriesFilesDetail as DownloadableTVSeriesFilesDetailV2,
+)
 
 __all__ = ["Downloader"]
 
@@ -45,7 +53,12 @@ __all__ = ["Downloader"]
 class Downloader:
     """Controls the movie/series download process"""
 
-    def __init__(self, session: Session = None, search_class: Search = None):
+    def __init__(
+        self,
+        session: Session = None,
+        search_class: Search = None,
+        api_v2: bool = None,
+    ):
         """Constructor for `Downloader`
 
         Args:
@@ -54,9 +67,22 @@ class Downloader:
 
             search_class (Search, optional): MovieboxAPI search class.
                 Defaults to Search - v1
+
+            api_v2 (bool, optional): Use API v2 layer for all external
+                interactions. Defaults to auto
         """
         self._session = session if session else Session()
         self._Search = search_class if search_class else Search
+
+        self._api_v2: bool = (
+            api_v2
+            if api_v2 is not None
+            else True
+            if search_class is not None
+            else False
+        )
+        """This logic is so basic - be advised to enforce the flag yourself"""
+
         assert_instance(self._session, Session, "session")
         assert_instance(self._Search, type, "search")
 
@@ -81,6 +107,7 @@ class Downloader:
         part_extension: str = DOWNLOAD_PART_EXTENSION,
         merge_buffer_size: int | None = None,
         ignore_missing_caption: bool = False,
+        subject_type: SubjectType = SubjectType.MOVIES,
         **run_kwargs,
     ) -> tuple[
         DownloadedFile | httpx.Response | None,
@@ -140,6 +167,7 @@ class Downloader:
 
             part_extension (str, optional): Filename extension for download parts.
                  Defaults to DOWNLOAD_PART_EXTENSION.
+
             merge_buffer_size (int|None, optional). Buffer size for merging the
                 separated files in kilobytes. Defaults to chunk_size.
 
@@ -165,13 +193,12 @@ class Downloader:
             self._session,
             title=title,
             year=year,
-            subject_type=SubjectType.MOVIES,
+            subject_type=subject_type,
             yes=yes,
             search=self._Search(
                 session=self._session,
                 query=title,
-                subject_type=SubjectType.MOVIES,
-                # TODO: Consider other single-item subjectTypes
+                subject_type=subject_type,
             ),
         )
 
@@ -180,8 +207,10 @@ class Downloader:
             f"of {SearchResultsItem} not {type(target_movie)}"
         )
 
-        downloadable_details_inst = DownloadableMovieFilesDetail(
-            self._session, target_movie
+        downloadable_details_inst = (
+            DownloadableSingleFilesDetail(self._session, target_movie)
+            if self._api_v2
+            else DownloadableMovieFilesDetail(self._session, target_movie)
         )
 
         downloadable_details = await downloadable_details_inst.get_content_model()
@@ -412,8 +441,10 @@ class Downloader:
             f"{SearchResultsItem} not {type(target_tv_series)}"
         )
 
-        downloadable_files = DownloadableTVSeriesFilesDetail(
-            self._session, target_tv_series
+        downloadable_files: DownloadableTVSeriesFilesDetail = (
+            DownloadableTVSeriesFilesDetailV2(self._session, target_tv_series)
+            if self._api_v2
+            else DownloadableTVSeriesFilesDetail(self._session, target_tv_series)
         )
 
         subtitles_dir = tempfile.mkdtemp() if stream_via else caption_dir
@@ -440,12 +471,25 @@ class Downloader:
             group_series=group,
         )
 
-        core_tv_series_details = TVSeriesDetails(target_tv_series, self._session)
+        if self._api_v2:
+            core_tv_series_details_inst = TVSeriesDetailsV2(self._session)
 
-        tv_series_details_model = (
-            await core_tv_series_details.get_json_details_extractor_model()
-        )
-        series_resource = tv_series_details_model.resource
+            core_tv_series_details = (
+                await core_tv_series_details_inst.get_content_model(
+                    target_tv_series
+                )
+            )
+            series_resource = core_tv_series_details.resource
+
+        else:
+            core_tv_series_details = TVSeriesDetails(
+                target_tv_series, self._session
+            )
+
+            tv_series_details_model = (
+                await core_tv_series_details.get_json_details_extractor_model()
+            )
+            series_resource = tv_series_details_model.resource
 
         async def download_episodes_per_season(
             season_number: int,

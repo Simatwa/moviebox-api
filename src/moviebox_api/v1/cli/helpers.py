@@ -41,7 +41,7 @@ async def perform_search_and_get_item(
     search: Search = None,
     message: str = "Select",
 ) -> SearchResultsItem:
-    """Search movie/tv-series and return target search results item
+    """Search movie/tv-series etc and return target search results item
 
     Args:
         session (Session): MovieboxAPI requests session.
@@ -165,10 +165,8 @@ def get_caption_file_or_raise(
 
 
 def prepare_start(
-        quiet: bool = False, 
-        verbose: int = 0, 
-        host_url: str = HOST_URL
-        ) -> None:
+    quiet: bool = False, verbose: int = 0, host_url: str = HOST_URL
+) -> None:
     """Set up some stuff for better CLI usage such as:
 
     - Set higher logging level for some packages.
@@ -257,7 +255,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
         example_host = random.choice(MIRROR_HOSTS)
         logging.info(
             'Run "moviebox-v1 mirror-hosts" command to check available mirror'
-            ' hosts'
+            " hosts"
             " and "
             "then export it to the environment using name "
             f'{ENVIRONMENT_HOST_KEY}".\n'
