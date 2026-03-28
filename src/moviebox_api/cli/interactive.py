@@ -65,7 +65,7 @@ def install_mpv():
         else:
             print("\nCould not detect package manager.")
             print(
-                "\nPlease install MPV manually using your distribution's " 
+                "\nPlease install MPV manually using your distribution's "
                 "package manager."
             )
             print("Visit: https://mpv.io/installation/")
@@ -368,7 +368,7 @@ def stream_movie():
     if media_player == "mpv":
         if not check_mpv():
             print(
-                "\nERROR: MPV player is required for streaming." 
+                "\nERROR: MPV player is required for streaming."
                 " Please install it first."
             )
             input("\nPress Enter to return to main menu...")

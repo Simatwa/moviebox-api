@@ -24,4 +24,3 @@ class SpecificItemDetailsModel(BaseModel):
     isForbid: bool
     watchTimeLimit: int
     postList: PostListModel
-

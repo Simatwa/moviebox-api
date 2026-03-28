@@ -41,7 +41,7 @@ class TagDetailsExtractor:
     #### Note:
     - Does not extract season details. Use `JsonDetailsExtractor` instead.
     - Also this extraction method suffers from content restriction
-    - e.g "This content is not available on the website. Please download 
+    - e.g "This content is not available on the website. Please download
     our Android app to access it."
     """
 
@@ -80,7 +80,7 @@ class TagDetailsExtractor:
         """Extracts juicy data from the header section
 
         Args:
-            include_extra (bool, optional): Include further details beyond 
+            include_extra (bool, optional): Include further details beyond
             basic one.
 
         Returns:
@@ -236,8 +236,10 @@ class JsonDetailsExtractor:
     def __repr__(self) -> str:
         title = self.details["resData"]["metadata"]["title"]
         url = self.details["resData"]["metadata"]["url"]
-        return rf'{self.__module__}.{self.__class__.__name__} ' \
-        rf'title="{title}" url="{url}">'
+        return (
+            rf"{self.__module__}.{self.__class__.__name__} "
+            rf'title="{title}" url="{url}">'
+        )
 
     def __call__(self) -> dict[str, t.Any]:
         """Whole important extracted details"""
@@ -319,7 +321,7 @@ class JsonDetailsExtractor:
     def data(self) -> dict[str, t.Any]:
         """Key data resources
 
-        Contains key data such as `metadata`, `stars`, `reviews`, 
+        Contains key data such as `metadata`, `stars`, `reviews`,
         `resource.seasons`, `subject` etc
 
         - Retrieved from `self.details["resData"]`

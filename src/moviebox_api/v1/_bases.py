@@ -48,7 +48,7 @@ class ContentProviderHelper:
 
 
 class BaseContentProviderAndHelper(BaseContentProvider, ContentProviderHelper):
-    """A class that inherits both `BaseContentProvider(ABC)` and 
+    """A class that inherits both `BaseContentProvider(ABC)` and
     `ContentProviderHelper`"""
 
 

@@ -89,45 +89,45 @@ class Downloader:
             year (int|None, optional): `releaseDate.year` filter for the movie.
                 Defaults to None.
 
-            yes (bool, optional): Proceed with the first item in the results 
+            yes (bool, optional): Proceed with the first item in the results
                 instead of prompting confirmation. Defaults to False
 
-            dir (Path|str, optional): Directory for saving the movie file to. 
+            dir (Path|str, optional): Directory for saving the movie file to.
                 Defaults to CURRENT_WORKING_DIR.
 
-            caption_dir (Path|str, optional): Directory for saving the caption 
+            caption_dir (Path|str, optional): Directory for saving the caption
                 file to. Defaults to CURRENT_WORKING_DIR.
 
-            quality (DownloadQualitiesType, optional): Such as `720p` or simply 
+            quality (DownloadQualitiesType, optional): Such as `720p` or simply
                 `BEST` etc. Defaults to 'BEST'.
 
-            movie_filename_tmpl (str, optional): Template for generating movie 
+            movie_filename_tmpl (str, optional): Template for generating movie
                 filename. Defaults to MediaFileDownloader.movie_filename_template.
 
             caption_filename_tmpl (str, optional): Template for generating caption
-                filename. Defaults to 
+                filename. Defaults to
                 CaptionFileDownloader.movie_filename_template.
 
-            language (tuple, optional): Languages to download captions in. 
+            language (tuple, optional): Languages to download captions in.
                 Defaults to (DEFAULT_CAPTION_LANGUAGE,).
 
             download_caption (bool, optional): Whether to download caption or not.
                 Defaults to False.
 
-            caption_only (bool, optional): Whether to ignore movie file or not. 
+            caption_only (bool, optional): Whether to ignore movie file or not.
                 Defaults to False.
 
-            stream_via (Literal["mpv", "vlc"] | None = None, optional): Stream 
-                directly in chosen media_player instead of downloading. 
+            stream_via (Literal["mpv", "vlc"] | None = None, optional): Stream
+                directly in chosen media_player instead of downloading.
                 Defaults to None.
 
-            search_function (callable, optional): Accepts `session`, `title`, 
+            search_function (callable, optional): Accepts `session`, `title`,
                 `year`, `subject_type` & `yes` and returns `SearchResultsItem`.
 
-            chunk_size (int, optional): Streaming download chunk size in 
+            chunk_size (int, optional): Streaming download chunk size in
                 kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
 
-            tasks (int, optional): Number of tasks to carry out the download. 
+            tasks (int, optional): Number of tasks to carry out the download.
                 Defaults to DEFAULT_TASKS.
 
             part_dir (Path | str, optional): Directory for temporarily saving the
@@ -135,13 +135,13 @@ class Downloader:
 
             part_extension (str, optional): Filename extension for download parts.
                  Defaults to DOWNLOAD_PART_EXTENSION.
-            merge_buffer_size (int|None, optional). Buffer size for merging the 
+            merge_buffer_size (int|None, optional). Buffer size for merging the
                 separated files in kilobytes. Defaults to chunk_size.
 
         run_kwargs: Other keyword arguments for `MediaFileDownloader.run`
 
         Returns:
-            tuple[DownloadedFile | httpx.Response  | None, list[DownloadedFile | 
+            tuple[DownloadedFile | httpx.Response  | None, list[DownloadedFile |
             httpx.Response ] | None]: Path to downloaded movie and downloaded
               caption files.
         """
@@ -150,7 +150,7 @@ class Downloader:
 
         assert callable(search_function), (
             "Value for search_function must be callable not"
-              f"{type(search_function)}"
+            f"{type(search_function)}"
         )
 
         MediaFileDownloader.movie_filename_template = movie_filename_tmpl
@@ -274,40 +274,40 @@ class Downloader:
             ],
         ],
     ]:
-        """Search tv-series by name and proceed to download or stream its 
+        """Search tv-series by name and proceed to download or stream its
             episodes.
 
         Args:
             title (str): Complete or partial tv-series name.
-            
+
             season (int): Target season number of the tv-series.
 
             episode (int): Target episode number of the tv-series.
 
-            year (int|None, optional): `releaseDate.year` filter for the 
+            year (int|None, optional): `releaseDate.year` filter for the
                 tv-series. Defaults to None.
 
-            yes (bool, optional): Proceed with the first item in the results 
+            yes (bool, optional): Proceed with the first item in the results
                 instead of prompting confirmation. Defaults to False.
 
-            dir (Path|str, optional): Directory for saving the movie file to. 
+            dir (Path|str, optional): Directory for saving the movie file to.
                 Defaults to CURRENT_WORKING_DIR.
 
-            caption_dir (Path|str, optional): Directory for saving the caption 
+            caption_dir (Path|str, optional): Directory for saving the caption
                 files to. Defaults to CURRENT_WORKING_DIR.
 
-            quality (DownloadQualitiesType, optional): Episode quality such as 
+            quality (DownloadQualitiesType, optional): Episode quality such as
                 `720p` or simply `BEST` etc. Defaults to 'BEST'.
 
             episode_filename_tmpl (str, optional): Template for generating episode
-                filename. Defaults to 
+                filename. Defaults to
                 MediaFileDownloader.series_filename_template.
 
-            caption_filename_tmpl (str, optional): Template for generating 
-                caption filename. Defaults to 
+            caption_filename_tmpl (str, optional): Template for generating
+                caption filename. Defaults to
                 CaptionFileDownloader.series_filename_template.
 
-            language (tuple, optional): Languages to download captions in. 
+            language (tuple, optional): Languages to download captions in.
                 Defaults to (DEFAULT_CAPTION_LANGUAGE,).
 
             download_caption (bool, optional): Whether to download caption or not.
@@ -316,19 +316,19 @@ class Downloader:
             caption_only (bool, optional): Whether to ignore episode files or not.
                 Defaults to False.
 
-            stream_via (Literal["mpv", "vlc"], optional): Stream directly in 
+            stream_via (Literal["mpv", "vlc"], optional): Stream directly in
                 chosen media played instead of downloading. Defaults to None.
 
-            limit (int, optional): Number of episodes to download including the 
+            limit (int, optional): Number of episodes to download including the
                 offset episode. Defaults to 1.
 
-            search_function (callable, optional): Accepts `session`, `title`, 
+            search_function (callable, optional): Accepts `session`, `title`,
                 `year`, `subject_type` & `yes` and returns item.
 
-            chunk_size (int, optional): Streaming download chunk size in 
+            chunk_size (int, optional): Streaming download chunk size in
                 kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
 
-            tasks (int, optional): Number of tasks to carry out the download. 
+            tasks (int, optional): Number of tasks to carry out the download.
                 Defaults to DEFAULT_TASKS.
 
             part_dir (Path | str, optional): Directory for temporarily saving the
@@ -337,26 +337,26 @@ class Downloader:
             part_extension (str, optional): Filename extension for download parts.
                  Defaults to DOWNLOAD_PART_EXTENSION.
 
-            merge_buffer_size (int|None, optional). Buffer size for merging the 
+            merge_buffer_size (int|None, optional). Buffer size for merging the
                 separated files in kilobytes. Defaults to chunk_size.
 
-            auto_mode (bool, optional). Iterate over seasons as well. When limit 
+            auto_mode (bool, optional). Iterate over seasons as well. When limit
                 is 1 (default), download entire tv series. Defaults to False.
 
-            format(Literal["filename", "group", "struct"] | None, optional): Ways 
+            format(Literal["filename", "group", "struct"] | None, optional): Ways
                 of formating filename and saving the episodes. Defaults to None
 
-                group -> Organize episodes into separate folders based on seasons 
+                group -> Organize episodes into separate folders based on seasons
                     e.g Merlin/S1/Merlin S1E2.mp4
 
-                struct -> Save episodes in a hierarchical directory structure 
+                struct -> Save episodes in a hierarchical directory structure
                     e.g Merlin (2009)/S1/E1.mp4
 
         run_kwargs: Other keyword arguments for `MediaFileDownloader.run`
 
         Returns:
-             dict[int, dict[str, DownloadedFile | httpx.Response  | 
-             list[DownloadedFile | httpx.Response ]]]: Episode number and 
+             dict[int, dict[str, DownloadedFile | httpx.Response  |
+             list[DownloadedFile | httpx.Response ]]]: Episode number and
              downloaded episode file details and caption files.
         """
 
@@ -593,7 +593,7 @@ class Downloader:
 
             assert episode <= target_season.maxEp, (
                 f"The chosen episode offset {episode} exceeds the available"
-                 f" episodes {target_season.maxEp}"
+                f" episodes {target_season.maxEp}"
             )
 
             available_episodes = target_season.maxEp - (episode - 1)  # offset
@@ -630,7 +630,7 @@ class Downloader:
         DownloadedFile | httpx.Response | None,
         list[DownloadedFile | httpx.Response] | None,
     ]:
-        """Synchronously search movie by name and proceed to download or 
+        """Synchronously search movie by name and proceed to download or
         stream it."""
         return get_event_loop().run_until_complete(
             self.download_movie(*args, **kwargs)
@@ -649,7 +649,7 @@ class Downloader:
             | list[DownloadedFile | httpx.Response],
         ],
     ]:
-        """Synchronously search tv-series by name and proceed to download or 
+        """Synchronously search tv-series by name and proceed to download or
         stream its episodes."""
         return get_event_loop().run_until_complete(
             self.download_tv_series(*args, **kwargs)

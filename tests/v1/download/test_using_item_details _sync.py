@@ -23,7 +23,7 @@ def test_download_movie_caption_file():
 
     # We just fetch page details of that specific item.
     # It would make much sense when you cached the item-page so you'll not
-    # required to start afresh come next time, rather proceed where you 
+    # required to start afresh come next time, rather proceed where you
     # stopped from.
 
     # To make this test future proof to changes on the backend side,

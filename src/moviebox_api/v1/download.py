@@ -54,7 +54,8 @@ def resolve_media_file_to_be_downloaded(
 
     Args:
         quality (DownloadQualitiesType): Target media quality such
-        downloadable_metadata (DownloadableFilesMetadata): Downloadable files metadata
+        downloadable_metadata (DownloadableFilesMetadata): Downloadable files
+            metadata
 
     Raises:
         RuntimeError: Incase no media file matched the target quality
@@ -82,7 +83,8 @@ def resolve_media_file_to_be_downloaded(
                     )
             else:
                 raise ValueError(
-                    f"Unknown media file quality passed '{quality}'. Choose from {DOWNLOAD_QUALITIES}"
+                    "Unknown media file quality passed '{quality}'. Choose from "
+                    f"{DOWNLOAD_QUALITIES}"
                 )
     return target_metadata
 
@@ -99,7 +101,8 @@ class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
 
         Args:
             session (Session): MovieboxAPI request session.
-            item (SearchResultsItem | ItemJsonDetailsModel): Movie/TVSeries item to handle.
+            item (SearchResultsItem | ItemJsonDetailsModel): Movie/TVSeries item
+                to handle.
         """
         assert_instance(session, Session, "session")
         assert_instance(item, (SearchResultsItem, ItemJsonDetailsModel), "item")
@@ -253,12 +256,13 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         episode: int = 0,
         test: bool = False,
     ) -> tuple[str, Path]:
-        """Generates filename in the format as in `self.*filename_template` and updates
-        final directory for saving contents
+        """Generates filename in the format as in `self.*filename_template` and
+            updates final directory for saving contents
 
         Args:
             search_results_item (SearchResultsItem)
-            media_file (MediaFileMetadata): Movie/tv-series/music to be downloaded.
+            media_file (MediaFileMetadata): Movie/tv-series/music to be
+                downloaded.
             season (int): Season number of the series.
             episde (int): Episode number of the series.
 
@@ -353,8 +357,8 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
 
         elif self.group_series:
             raise ValueError(
-                f"Value for filename should be an instance of {SearchResultsItem} "
-                "when group_series is activated"
+                f"Value for filename should be an instance of {SearchResultsItem}"
+                " when group_series is activated"
             )
 
         return await self.throttle_buster.run(
@@ -447,14 +451,17 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
 
         Args:
             search_results_item (SearchResultsItem)
-            caption_file (CaptionFileMetadata): Movie/tv-series/music caption file details.
+            caption_file (CaptionFileMetadata): Movie/tv-series/music caption file
+                 details.
             season (int): Season number of the series.
             episde (int): Episode number of the series.
             test (bool, optional): whether to create final directory
 
         Kwargs: Nothing much folk.
-                It's just here so that `MediaFileDownloader.run` and `CaptionFileDownloader.run`
-                will accept similar parameters in `moviebox_api.extra.movies.Auto.run` method.
+                It's just here so that `MediaFileDownloader.run` and
+                    `CaptionFileDownloader.run`
+                will accept similar parameters in
+                    `moviebox_api.extra.movies.Auto.run` method.
         """
         assert_instance(
             search_results_item,
@@ -502,10 +509,12 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         episode: int = 0,
         **run_kwargs,
     ) -> DownloadedFile | httpx.Response:
-        """Performs the actual download, incase already downloaded then return its Path.
+        """Performs the actual download, incase already downloaded then return
+            its Path.
 
         Args:
-            caption_file (CaptionFileMetadata): Movie/tv-series/music caption file details.
+            caption_file (CaptionFileMetadata): Movie/tv-series/music caption file
+                 details.
             filename (str|SearchResultsItem): Movie filename
             season (int): Season number of the series. Defaults to 0.
             episde (int): Episode number of the series. Defaults to 0.
@@ -513,7 +522,8 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         run_kwargs: Keyword arguments for `ThrottleBuster.run`
 
         Returns:
-            Path | httpx.Response: Path where the caption file has been saved to or httpx Response (test).
+            Path | httpx.Response: Path where the caption file has been saved to
+                or httpx Response (test).
         """
 
         assert_instance(caption_file, CaptionFileMetadata, "caption_file")

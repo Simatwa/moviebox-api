@@ -108,7 +108,7 @@ class BaseSearch(BaseContentProviderAndHelper):
     def get_item_details(
         self, item: SearchResultsItem
     ) -> "MovieDetails | TVSeriesDetails":
-        """Get object that provide more details about the search results item 
+        """Get object that provide more details about the search results item
         such as casts, seasons etc
 
         Args:
@@ -289,7 +289,7 @@ class Trending(BaseSearch):
     """Trending movies, tv-series and music"""
 
     _url = get_absolute_url(
-        r"/wefeed-h5-bff/web/subject/trending"  
+        r"/wefeed-h5-bff/web/subject/trending"
         # ?uid=5591179548772780352&page=0&perPage=18"
     )
 
@@ -306,7 +306,7 @@ class Trending(BaseSearch):
 
             page (int, optional): Page number filter. Defaults to 0.
 
-            per_page (int, optional): Maximum number of items per page. 
+            per_page (int, optional): Maximum number of items per page.
                 Defaults to 18.
         """
         assert_instance(session, Session, "session")
@@ -372,8 +372,8 @@ class Trending(BaseSearch):
         else:
             raise MovieboxApiException(
                 "Unable to navigate to previous page. "
-                "Current page is the first one try navigating to the next one" 
-                 " instead."
+                "Current page is the first one try navigating to the next one"
+                " instead."
             )
 
     def _create_payload(self) -> dict[str, str | int]:
@@ -393,7 +393,7 @@ class Recommend(BaseSearch):
     """Recommend other movies/tv-series/music based on a given one"""
 
     _url = get_absolute_url(
-        "/wefeed-h5-bff/web/subject/detail-rec"  
+        "/wefeed-h5-bff/web/subject/detail-rec"
         # ?subjectId=2518237873669820192&page=1&perPage=24"
     )
 
@@ -410,7 +410,7 @@ class Recommend(BaseSearch):
             session (Session): MovieboxAPI request session
             item (SearchResultsItem): Reference item.
             page (int, optional): Page number filter. Defaults to 1.
-            per_page (int, optional): Maximum number of items per page. 
+            per_page (int, optional): Maximum number of items per page.
                 Defaults to 24.
         """
         assert_instance(session, Session, "session")
@@ -658,7 +658,7 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         return extracted_content.details
 
     async def get_content_model(self) -> ItemJsonDetailsModel:
-        """Get modelled version of extracted item details using 
+        """Get modelled version of extracted item details using
             `self.get_json_details_extractor_model`
 
         Returns:
@@ -668,19 +668,19 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         return modelled_extracted_content.details
 
     async def get_tag_details_extractor(self) -> TagDetailsExtractor:
-        """Fetch content and return object that provide ways to extract details 
+        """Fetch content and return object that provide ways to extract details
         from html tags of the page"""
         content = await self.get_html_content()
         return TagDetailsExtractor(content)
 
     async def get_json_details_extractor(self) -> JsonDetailsExtractor:
-        """Fetch content and return object that extract details from 
+        """Fetch content and return object that extract details from
         json-formatted data in the page"""
         html_contents = await self.get_html_content()
         return JsonDetailsExtractor(html_contents)
 
     async def get_tag_details_extractor_model(self) -> TagDetailsExtractorModel:
-        """Fetch content and return object that provide ways to model extracted 
+        """Fetch content and return object that provide ways to model extracted
         details from html tags"""
         html_content = await self.get_html_content()
         return TagDetailsExtractorModel(html_content)
@@ -689,7 +689,7 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         self,
     ) -> JsonDetailsExtractorModel:
         """Fetch content and return object that models extracted details from
-          json-formatted data in the page"""
+        json-formatted data in the page"""
         html_contents = await self.get_html_content()
         return JsonDetailsExtractorModel(html_contents)
 
@@ -707,7 +707,7 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         self, *args, **kwargs
     ) -> TagDetailsExtractor:
         """Synchronously fetch content and return object that provide ways
-          to extract details from html tags of the page""" 
+        to extract details from html tags of the page"""
         return get_event_loop().run_until_complete(
             self.get_tag_details_extractor(*args, **kwargs)
         )
@@ -716,7 +716,7 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         self, *args, **kwargs
     ) -> JsonDetailsExtractor:
         """Synchronously fetch content and return object that extract details
-          from json-formatted data in the page""" 
+        from json-formatted data in the page"""
         return get_event_loop().run_until_complete(
             self.get_json_details_extractor(*args, **kwargs)
         )
@@ -724,8 +724,8 @@ class BaseItemDetails(BaseContentProviderAndHelper):
     def get_tag_details_extractor_model_sync(
         self, *args, **kwargs
     ) -> TagDetailsExtractorModel:
-        """Synchronously fetch content and return object that provide ways to 
-        model extracted details from html tags""" 
+        """Synchronously fetch content and return object that provide ways to
+        model extracted details from html tags"""
         return get_event_loop().run_until_complete(
             self.get_tag_details_extractor_model(*args, **kwargs)
         )
@@ -733,7 +733,7 @@ class BaseItemDetails(BaseContentProviderAndHelper):
     def get_json_details_extractor_model_sync(
         self, *args, **kwargs
     ) -> JsonDetailsExtractorModel:
-        """Synchronously fetch content and return object that models extracted 
+        """Synchronously fetch content and return object that models extracted
         details from json-formatted data in the page"""
         return get_event_loop().run_until_complete(
             self.get_json_details_extractor_model(*args, **kwargs)
@@ -747,7 +747,7 @@ class MovieDetails(BaseItemDetails):
         """Constructor for `MovieDetails`
 
         Args:
-            page_url (str|SearchResultsItem): Url to specific item page or 
+            page_url (str|SearchResultsItem): Url to specific item page or
                 search-results-item.
             session (Session): MovieboxAPI request session
         """
@@ -775,7 +775,7 @@ class TVSeriesDetails(BaseItemDetails):
         """Constructor for `TVSeriesDetails`
 
         Args:
-            url_or_item: (str|SearchResultsItem): Url to specific item page or 
+            url_or_item: (str|SearchResultsItem): Url to specific item page or
                 search-results-item.
             session (Session): MovieboxAPI request session
         """
@@ -786,7 +786,7 @@ class TVSeriesDetails(BaseItemDetails):
                 raise ValueError(
                     "item needs to be of subjectType "
                     f"{SubjectType.TV_SERIES.name}"
-                     f" not {url_or_item.subjectType.name}"
+                    f" not {url_or_item.subjectType.name}"
                 )
 
             page_url = url_or_item.page_url

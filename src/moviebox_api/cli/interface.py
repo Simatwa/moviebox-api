@@ -56,7 +56,7 @@ DEBUG = os.getenv("DEBUG", "0") == "1"
 @click.version_option(version=__version__)
 def moviebox():
     """Search and download movies/tv-series and their subtitles.
-      envvar-prefix : MOVIEBOX"""
+    envvar-prefix : MOVIEBOX"""
 
 
 @click.command(context_settings=command_context_settings)
@@ -413,7 +413,7 @@ def download_movie_command(
     help=(
         "Ways of formating filename and saving the episodes. "
         " group -> Organize episodes into separate folders based on seasons"
-         " e.g Merlin/S1/Merlin S1E2.mp4\n"
+        " e.g Merlin/S1/Merlin S1E2.mp4\n"
         " struct -> Save episodes in a hierarchical directory structure "
         "e.g Merlin (2009)/S1/E1.mp4"
     ),

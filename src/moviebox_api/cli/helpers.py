@@ -50,7 +50,7 @@ async def perform_search_and_get_item(
         subject_type (SubjectType): Movie or tv-series.
         yes (bool): Proceed with the first item instead of prompting confirmation.
         search (Search, optional): Search object. Defaults to None.
-        message (str, optional): Prefix message for the prompt. 
+        message (str, optional): Prefix message for the prompt.
             Defaults to "select".
 
     Raises:
@@ -65,7 +65,8 @@ async def perform_search_and_get_item(
 
     logger.info(
         f"Query '{title}' yielded {
-            'over ' if search_results.pager.hasMore else ''}"
+            'over ' if search_results.pager.hasMore else ''
+        }"
         f"{len(search_results.items)} {subject_type_name}."
     )
     items = (
@@ -87,8 +88,11 @@ async def perform_search_and_get_item(
         for pos, item in enumerate(items, start=1):
             if click.confirm(
                 f"> {message} ({pos}/{len(items)}) : "
-                f"{'[' + item.subjectType.name + '] ' 
-                   if subject_type is SubjectType.ALL else ''}{item.title}"
+                f"{
+                    '[' + item.subjectType.name + '] '
+                    if subject_type is SubjectType.ALL
+                    else ''
+                }{item.title}"
                 f" {item.releaseDate.year, item.imdbRatingValue}"
             ):
                 return item
@@ -119,7 +123,7 @@ async def perform_search_and_get_item(
 def get_caption_file_or_raise(
     downloadable_details: DownloadableFilesMetadata, language: str
 ) -> CaptionFileMetadata:
-    """Get caption-file based on desired language or raise ValueError if 
+    """Get caption-file based on desired language or raise ValueError if
     it doesn't exist.
 
     Args:
@@ -146,8 +150,9 @@ def get_caption_file_or_raise(
         if subtitle_language_keys:
             raise ValueError(
                 f"There is no caption file for the language '{language}'. "
-                f"Choose from available ones - {''
-                ', '.join(list(subtitle_language_keys))}"
+                f"Choose from available ones - {
+                    ', '.join(list(subtitle_language_keys))
+                }"
             )
         else:
             raise ZeroCaptionFileError(
@@ -248,11 +253,11 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
         example_host = random.choice(MIRROR_HOSTS)
         logging.info(
             'Run "moviebox mirror-hosts" command to check available mirror hosts'
-            ' and '
-            'then export it to the environment using name '
+            " and "
+            "then export it to the environment using name "
             f'{ENVIRONMENT_HOST_KEY}".\n'
-            'For instance: In *nix systems you might run export '
-            f'{ENVIRONMENT_HOST_KEY}=\"{example_host}\"'
+            "For instance: In *nix systems you might run export "
+            f'{ENVIRONMENT_HOST_KEY}="{example_host}"'
             f' while in Windows : "set MOVIEBOX_API_HOST={example_host}'
         )
 
@@ -306,7 +311,7 @@ def stream_video_via_mpv(
 
     except FileNotFoundError as e:
         raise Exception(
-            "MPV player not found. Please install it from " 
+            "MPV player not found. Please install it from "
             "https://mpv.io/installation/ "
             'to use streaming feature or retry using "--stream-via vlc" instead.'
         ) from e

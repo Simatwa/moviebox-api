@@ -310,9 +310,11 @@ def item_details_command(
         f"The selected item type - {target_item.subjectType.name} - is not "
         "yet supported. "
         "Choose items of subject types "
-        f"{' or '.join(
-            [key.name for key in list(subject_type_item_details_map.keys())]
-            )}"
+        f"{
+            ' or '.join(
+                [key.name for key in list(subject_type_item_details_map.keys())]
+            )
+        }"
     )
 
     item_details = ItemDetails(target_item, session=session)

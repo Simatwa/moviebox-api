@@ -42,14 +42,13 @@ class Search(moviebox_api.v1.core.Search):
         """
         contents = await self.get_content()
         return SearchResultsModel(**contents)
-    
+
 
 class ItemDetails(BaseItemDetails):
-    """Fetch specific item details - movies, anime, education, 
+    """Fetch specific item details - movies, anime, education,
     music & tv-series"""
 
-    def __init__(
-            self, session: Session):
+    def __init__(self, session: Session):
         """Constructor for `SingleItemDetails`
 
         Args:
@@ -73,17 +72,17 @@ class ItemDetails(BaseItemDetails):
         detail_path = path_or_item
 
         if isinstance(path_or_item, SearchResultsItem):
-
             detail_path = SearchResultsItem.detailPath
 
         return await super().get_content(detail_path)
 
     async def get_content_model(
-            self, path_or_item: str | SearchResultsItem,
-              **kwargs) -> SpecificItemDetailsModel:
+        self, path_or_item: str | SearchResultsItem, **kwargs
+    ) -> SpecificItemDetailsModel:
 
         content = await self.get_content(path_or_item, **kwargs)
         return SpecificItemDetailsModel(**content)
+
 
 # TODO: Ignore the subjectType considerarion while fetching Item details
 # only consider it when fetching downloadble media details
@@ -92,8 +91,7 @@ class ItemDetails(BaseItemDetails):
 class SingleItemDetails(BaseItemDetails):
     """Fetch specific item details - movies, anime, education, music"""
 
-    def __init__(
-            self, session: Session):
+    def __init__(self, session: Session):
         """Constructor for `SingleItemDetails`
 
         Args:
@@ -117,12 +115,11 @@ class SingleItemDetails(BaseItemDetails):
         detail_path = path_or_item
 
         if isinstance(path_or_item, SearchResultsItem):
-
             if path_or_item.subjectType == SubjectType.TV_SERIES:
                 raise ValueError(
-                    'item needs to be any of the following subjectTypes'
-                      f'{SINGLE_ITEM_SUBJECT_TYPES!r} '
-                    f'not {path_or_item.subjectType!r}'
+                    "item needs to be any of the following subjectTypes"
+                    f"{SINGLE_ITEM_SUBJECT_TYPES!r} "
+                    f"not {path_or_item.subjectType!r}"
                 )
 
             detail_path = SearchResultsItem.detailPath
@@ -130,8 +127,8 @@ class SingleItemDetails(BaseItemDetails):
         return await super().get_content(detail_path)
 
     async def get_content_model(
-            self, path_or_item: str | SearchResultsItem,
-              **kwargs) -> SpecificItemDetailsModel:
+        self, path_or_item: str | SearchResultsItem, **kwargs
+    ) -> SpecificItemDetailsModel:
 
         content = await self.get_content(path_or_item, **kwargs)
         return SpecificItemDetailsModel(**content)
@@ -140,8 +137,7 @@ class SingleItemDetails(BaseItemDetails):
 class TVSeriesItemDetails(BaseItemDetails):
     """Fetch specific item details - tv_series"""
 
-    def __init__(
-            self, session: Session):
+    def __init__(self, session: Session):
         """Constructor for `TVSeriesItemDetails`
 
         Args:
@@ -165,12 +161,11 @@ class TVSeriesItemDetails(BaseItemDetails):
         detail_path = path_or_item
 
         if isinstance(path_or_item, SearchResultsItem):
-
             if path_or_item.subjectType != SubjectType.TV_SERIES:
                 raise ValueError(
-                    f'item needs to be of subjectType'
-                      f'{SubjectType.TV_SERIES!r} only'
-                    f'not {path_or_item.subjectType!r}'
+                    f"item needs to be of subjectType"
+                    f"{SubjectType.TV_SERIES!r} only"
+                    f"not {path_or_item.subjectType!r}"
                 )
 
             detail_path = SearchResultsItem.detailPath
@@ -178,9 +173,8 @@ class TVSeriesItemDetails(BaseItemDetails):
         return await super().get_content(detail_path)
 
     async def get_content_model(
-            self, path_or_item: str | SearchResultsItem,
-              **kwargs) -> SpecificItemDetailsModel:
+        self, path_or_item: str | SearchResultsItem, **kwargs
+    ) -> SpecificItemDetailsModel:
 
         content = await self.get_content(path_or_item, **kwargs)
         return SpecificItemDetailsModel(**content)
-

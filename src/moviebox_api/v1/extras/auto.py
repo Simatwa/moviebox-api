@@ -34,10 +34,10 @@ __all__ = ["MovieAuto"]
 
 
 class MovieAuto:
-    """Search movie based on a given query and proceed to download 
+    """Search movie based on a given query and proceed to download
     the first one in the results.
 
-    This is a workaround for writing many lines of code at the expense of flow 
+    This is a workaround for writing many lines of code at the expense of flow
     control.
     """
 
@@ -94,7 +94,7 @@ class MovieAuto:
 
         Args:
             query (str): Partial or complete movie title.
-            year (int, optional): Year filter for search results to proceed with. 
+            year (int, optional): Year filter for search results to proceed with.
                 Defaults to None.
 
         Kwargs : Keyworded arguments for `MediaFileDownloader.run` method.
@@ -287,7 +287,7 @@ class MovieAuto:
         DownloadedFile | httpx.Response | None,
         DownloadedFile | httpx.Response | None,
     ]:
-        """Synchronously perform movie search and download first item in the 
+        """Synchronously perform movie search and download first item in the
         search results."""
         return get_event_loop().run_until_complete(self.run(*args, **kwargs))
 

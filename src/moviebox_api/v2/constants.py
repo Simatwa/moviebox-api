@@ -51,5 +51,5 @@ SINGLE_ITEM_SUBJECT_TYPES = {
     SubjectType.MUSIC,
     SubjectType.MOVIES,
     SubjectType.ANIME,
-    SubjectType.EDUCATION
+    SubjectType.EDUCATION,
 }
