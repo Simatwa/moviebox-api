@@ -1,5 +1,5 @@
 """
-Main module for the submodule.
+Main module for v2 submodule.
 Generate models from httpx request responses.
 Also provides object mapping support to specific extracted item details
 """
@@ -9,12 +9,12 @@ from moviebox_api.v1.helpers import assert_instance
 from moviebox_api.v2._bases import BaseItemDetails
 from moviebox_api.v2.constants import SINGLE_ITEM_SUBJECT_TYPES, SubjectType
 from moviebox_api.v2.helpers import get_absolute_url
-from moviebox_api.v2.models.basics import (
+from moviebox_api.v2.models import (
     HomepageContentModel,
     SearchResultsItem,
     SearchResultsModel,
+    SpecificItemDetailsModel,
 )
-from moviebox_api.v2.models.extras import SpecificItemDetailsModel
 from moviebox_api.v2.requests import Session
 
 

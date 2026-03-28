@@ -2,8 +2,8 @@
 
 import os
 
-from moviebox_api.v2 import logger
 from moviebox_api.v1.constants import SubjectType
+from moviebox_api.v2 import logger
 
 """asyncio event loop"""
 
@@ -26,13 +26,15 @@ HOST_URL = f"{HOST_PROTOCOL}://{SELECTED_HOST}/"
 
 logger.info(f"Moviebox API host url - {HOST_URL}")
 
-REFERER = "videodownloader.site"
+REFERER = "https://videodownloader.site/"
 
 DEFAULT_REQUEST_HEADERS = {
-    "X-Client-Info": '{"timezone":"Africa/Nairobi"}',  # TODO: Set this value dynamically.
+    "X-Client-Info": '{"timezone":"Africa/Nairobi"}',
+    # TODO: Set this value dynamically.
     "Accept-Language": "en-US,en;q=0.5",
     "Accept": "application/json",
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101"
+    " Firefox/137.0",
     "Referer": REFERER,
 }
 """For general http requests other than download"""
@@ -40,8 +42,10 @@ DEFAULT_REQUEST_HEADERS = {
 DOWNLOAD_REQUEST_REFERER = REFERER
 
 DOWNLOAD_REQUEST_HEADERS = {
-    "Accept": "*/*",  # "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5",
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
+    "Accept": "*/*",  # "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,
+    # audio/*;q=0.6,*/*;q=0.5",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 "
+    "Firefox/137.0",
     "Origin": REFERER,
     "Referer": DOWNLOAD_REQUEST_REFERER,
 }

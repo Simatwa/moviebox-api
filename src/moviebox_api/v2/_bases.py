@@ -4,7 +4,7 @@ from moviebox_api.v1._bases import BaseContentProviderAndHelper
 from moviebox_api.v1.helpers import assert_instance
 from moviebox_api.v2.exceptions import InvalidDetailPathError
 from moviebox_api.v2.helpers import get_absolute_url, validate_detail_path
-from moviebox_api.v2.models.extras import SpecificItemDetailsModel
+from moviebox_api.v2.models import SpecificItemDetailsModel
 from moviebox_api.v2.requests import Session
 
 

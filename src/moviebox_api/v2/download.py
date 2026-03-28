@@ -5,11 +5,12 @@ and initiating actual download
 from abc import ABCMeta
 
 from moviebox_api.v1._bases import BaseContentProviderAndHelper
+from moviebox_api.v1.download import CaptionFileDownloader, MediaFileDownloader
 from moviebox_api.v1.helpers import assert_instance
 from moviebox_api.v1.models import DownloadableFilesMetadata
 from moviebox_api.v2.constants import SubjectType
 from moviebox_api.v2.helpers import get_absolute_url
-from moviebox_api.v2.models.basics import SearchResultsItem
+from moviebox_api.v2.models import SearchResultsItem
 from moviebox_api.v2.requests import Session
 
 
@@ -28,7 +29,7 @@ class BaseDownloadableFilesDetail(
 
     _url = get_absolute_url(r"/wefeed-h5api-bff/subject/download")
 
-    _subject_types: tuple[SubjectType] | SubjectType = None
+    _subject_types: tuple[SubjectType] = None
     """Enforce item to be of this subjectType(s). Defaults to None"""
 
     def __init__(
@@ -47,7 +48,7 @@ class BaseDownloadableFilesDetail(
         assert_instance(item, SearchResultsItem, "item")
 
         if self._subject_types is not None:
-            if not isinstance(item.subjectType, self._subject_types):
+            if item.subjectType not in self._subject_types:
                 raise ValueError(
                     "item needs to be /any/ of the subjectType(s) "
                     f"{self._subject_types!r}",

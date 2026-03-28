@@ -1,14 +1,22 @@
+"""V2 Models"""
+
 from json import loads
 from typing import Any
 
 from pydantic import BaseModel, HttpUrl, field_validator
 
+from moviebox_api.v1.extractor.models.json import (
+    MetadataModel,
+    PostListModel,
+    ResourceModel,
+    StarsModel,
+)
 from moviebox_api.v1.models import (
     ContentCategoryModel,
     ContentImageModel,
     ContentModel,
-    ContentSubjectModel,
     PlatformsModel,
+    SearchResultsItem as SearchResultsItemV1,
     SearchResultsPagerModel,
 )
 from moviebox_api.v2.helpers import get_absolute_url
@@ -68,12 +76,11 @@ class DubModel(BaseModel):
     detailPath: str
 
 
-class SearchResultsItem(ContentSubjectModel):
+class SearchResultsItem(SearchResultsItemV1):
     """`SearchResultsModel.items[0]`"""
 
     subtitles: list[str] | None
     ops: OPS | None
-    hasResource: bool
     imdbRatingCount: int | None = None
     stills: ContentImageModel | None = None
     postTitle: str
@@ -95,7 +102,7 @@ class SearchResultsItem(ContentSubjectModel):
         return value.split(",")
 
     @property
-    def details_url(self) -> str:
+    def page_url(self) -> str:
         """Url to the specific item details"""
         return get_absolute_url(
             f"/wefeed-h5api-bff/detail?detailPath={self.detailPath}"
@@ -111,3 +118,15 @@ class SearchResultsModel(BaseModel):
     @property
     def first_item(self) -> SearchResultsItem:
         return self.items[0]
+
+
+class SpecificItemDetailsModel(BaseModel):
+    """For all subjectTypes"""
+
+    subject: SearchResultsItem
+    stars: list[StarsModel]
+    resource: ResourceModel
+    metadata: MetadataModel
+    isForbid: bool
+    watchTimeLimit: int
+    postList: PostListModel
