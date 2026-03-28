@@ -21,7 +21,6 @@ from moviebox_api.cli.helpers import (
     process_download_runner_params,
     show_any_help,
 )
-from moviebox_api.cli.interactive import run_interactive_menu
 from moviebox_api.v1 import __version__
 from moviebox_api.v1.constants import (
     CURRENT_WORKING_DIR,
@@ -592,13 +591,6 @@ def download_tv_series_command(
     )
 
 
-@click.command(context_settings=command_context_settings)
-@click.help_option("-h", "--help")
-def interactive_menu_command():
-    """Launch interactive menu interface."""
-    run_interactive_menu()
-
-
 def main():
     """Entry point"""
     try:
@@ -610,7 +602,6 @@ def main():
         moviebox.add_command(popular_search_command, "popular-search")
 
         moviebox.add_command(item_details_command, "item-details")
-        moviebox.add_command(interactive_menu_command, "interactive")
 
         return moviebox()
 

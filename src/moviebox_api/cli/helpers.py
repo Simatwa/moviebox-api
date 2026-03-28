@@ -2,7 +2,6 @@
 
 import logging
 import random
-import shutil
 import subprocess
 
 import click
@@ -10,7 +9,8 @@ from httpx import ConnectTimeout, HTTPStatusError
 from pydantic import ValidationError
 from throttlebuster import DownloadedFile, DownloadMode
 
-from moviebox_api.v1 import __repo__, logger
+from moviebox_api import __repo__
+from moviebox_api.v1 import logger
 from moviebox_api.v1.constants import (
     DOWNLOAD_REQUEST_HEADERS,
     ENVIRONMENT_HOST_KEY,

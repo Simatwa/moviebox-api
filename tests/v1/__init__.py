@@ -6,7 +6,7 @@ import pytest
 from moviebox_api.v1.core import Search, SubjectType
 from moviebox_api.v1.requests import Session
 
-project_dir = Path(__file__).parent.parent
+project_dir = Path(__file__).parent.parent.parent
 
 query = "Titanic"
 

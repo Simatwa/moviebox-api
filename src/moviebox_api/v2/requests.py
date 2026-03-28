@@ -8,7 +8,6 @@ from httpx._types import (
 )
 
 import moviebox_api.v1.requests
-from moviebox_api.v1.models import MovieboxAppInfo
 from moviebox_api.v2.constants import DOWNLOAD_REQUEST_HEADERS
 
 request_cookies = {}
@@ -49,7 +48,7 @@ class Session(moviebox_api.v1.requests.Session):
     async def ensure_cookies_are_assigned(self) -> bool:
         return True
 
-    async def _fetch_app_info(self) -> MovieboxAppInfo:
+    async def _fetch_app_info(self) -> None:
         raise NotImplementedError(
             "This functionality is only available to V1 of moviebox_api.requests"
         )

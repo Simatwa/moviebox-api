@@ -84,10 +84,6 @@ class ItemDetails(BaseItemDetails):
         return SpecificItemDetailsModel(**content)
 
 
-# TODO: Ignore the subjectType considerarion while fetching Item details
-# only consider it when fetching downloadble media details
-
-
 class SingleItemDetails(BaseItemDetails):
     """Fetch specific item details - movies, anime, education, music"""
 

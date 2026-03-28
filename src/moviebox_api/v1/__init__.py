@@ -76,7 +76,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from throttlebuster import DownloadedFile, DownloadMode, DownloadTracker  # noqa: E402
+from throttlebuster import (  # noqa: E402
+    DownloadedFile,
+    DownloadMode,
+    DownloadTracker,
+)
 
 from moviebox_api.v1.constants import (  # noqa: E402
     DOWNLOAD_QUALITIES,

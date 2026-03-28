@@ -73,7 +73,7 @@ select = [
 ]
 ignore = [
     "UP031",  # https://docs.astral.sh/ruff/rules/printf-string-formatting/
-    "F401"    # https://docs.astral.sh/ruff/rules/unused-import
+   # "F401"    # https://docs.astral.sh/ruff/rules/unused-import
 ]
 
 [tool.ruff.lint.isort]
