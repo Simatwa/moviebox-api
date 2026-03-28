@@ -10,7 +10,7 @@ from moviebox_api.v2 import logger
 MIRROR_HOSTS = ("h5-api.aoneroom.com",)
 """Mirror domains/subdomains of Moviebox-api"""
 
-ENVIRONMENT_HOST_KEY = "MOVIEBOX_API_HOST"
+ENVIRONMENT_HOST_KEY = "MOVIEBOX_API_HOST_V2"
 """User declares host to use as environment variable using this key"""
 
 SELECTED_HOST = (

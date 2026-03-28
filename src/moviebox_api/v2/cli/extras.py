@@ -10,7 +10,7 @@ from moviebox_api.v1.cli.helpers import (
     prepare_start,
 )
 from moviebox_api.v1.helpers import get_event_loop
-from moviebox_api.v2.constants import MIRROR_HOSTS, SubjectType
+from moviebox_api.v2.constants import HOST_URL, MIRROR_HOSTS, SubjectType
 from moviebox_api.v2.core import (
     Homepage,
     ItemDetails,
@@ -35,8 +35,8 @@ from moviebox_api.v2.requests import Session
     help="Disable showing interactive texts on the progress (logs)",
 )
 def mirror_hosts_command(json: bool, **start_kwargs):
-    """Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST]"""
-    prepare_start(**start_kwargs)
+    """Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST_V2]"""
+    prepare_start(host_url=HOST_URL, **start_kwargs)
 
     if json:
         rich.print_json(data=dict(details=MIRROR_HOSTS), indent=4)

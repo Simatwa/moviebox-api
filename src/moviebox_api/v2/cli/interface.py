@@ -9,11 +9,6 @@ import click
 
 from moviebox_api import __version__
 from moviebox_api.v1.cli.downloader import Downloader
-from moviebox_api.v1.cli.extras import (
-    homepage_content_command,
-    item_details_command,
-    mirror_hosts_command,
-)
 from moviebox_api.v1.cli.helpers import (
     command_context_settings,
     media_player_name_func_map,
@@ -32,6 +27,12 @@ from moviebox_api.v1.constants import (
     DownloadMode,
 )
 from moviebox_api.v1.helpers import get_event_loop
+from moviebox_api.v2.cli.extras import (
+    homepage_content_command,
+    item_details_command,
+    mirror_hosts_command,
+)
+from moviebox_api.v2.constants import HOST_URL
 from moviebox_api.v2.core import Search, Session
 from moviebox_api.v2.download import (
     CaptionFileDownloader,
@@ -273,7 +274,7 @@ def download_movie_command(
 ):
     """Search and download or stream movie."""
 
-    prepare_start(quiet, verbose=verbose)
+    prepare_start(quiet, verbose=verbose, host_url=HOST_URL)
 
     downloader = Downloader(session=Session(), search_class=Search)
     get_event_loop().run_until_complete(
@@ -561,9 +562,9 @@ def download_tv_series_command(
 ):
     """Search and download or stream tv series."""
 
-    prepare_start(quiet, verbose=verbose)
+    prepare_start(quiet, verbose=verbose, host_url=HOST_URL)
 
-    downloader = Downloader(session=Session, search_class=Search)
+    downloader = Downloader(session=Session(), search_class=Search)
     get_event_loop().run_until_complete(
         downloader.download_tv_series(
             title,

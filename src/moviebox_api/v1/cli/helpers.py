@@ -164,7 +164,11 @@ def get_caption_file_or_raise(
     return target_caption_file
 
 
-def prepare_start(quiet: bool = False, verbose: int = 0) -> None:
+def prepare_start(
+        quiet: bool = False, 
+        verbose: int = 0, 
+        host_url: str = HOST_URL
+        ) -> None:
     """Set up some stuff for better CLI usage such as:
 
     - Set higher logging level for some packages.
@@ -192,7 +196,7 @@ def prepare_start(quiet: bool = False, verbose: int = 0) -> None:
             else logging.INFO
         ),
     )
-    logging.info(f"Using host url - {HOST_URL}")
+    logging.info(f"Using host url - {host_url}")
 
     packages = ("httpx",)
 
@@ -252,7 +256,8 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
     if "404 Domain" in exception_msg:
         example_host = random.choice(MIRROR_HOSTS)
         logging.info(
-            'Run "moviebox mirror-hosts" command to check available mirror hosts'
+            'Run "moviebox-v1 mirror-hosts" command to check available mirror'
+            ' hosts'
             " and "
             "then export it to the environment using name "
             f'{ENVIRONMENT_HOST_KEY}".\n'
