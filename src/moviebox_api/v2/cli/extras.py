@@ -11,10 +11,7 @@ from moviebox_api.v1.cli.helpers import (
 )
 from moviebox_api.v1.helpers import get_event_loop
 from moviebox_api.v2.constants import HOST_URL, MIRROR_HOSTS, SubjectType
-from moviebox_api.v2.core import (
-    Homepage,
-    ItemDetails,
-)
+from moviebox_api.v2.core import Homepage, ItemDetails, Search
 from moviebox_api.v2.models import SpecificItemDetailsModel
 from moviebox_api.v2.requests import Session
 
@@ -90,7 +87,7 @@ def homepage_content_command(
 ):
     """Show contents displayed at landing page"""
     # TODO: Add automated test for this command
-    prepare_start(**start_kwargs)
+    prepare_start(host_url=HOST_URL, **start_kwargs)
 
     session = Session()
     homepage = Homepage(session)
@@ -219,7 +216,7 @@ def homepage_content_command(
 @click.option(
     "-s",
     "--subject-type",
-    type=click.Choice(SubjectType.map().keys()),
+    type=click.Choice(SubjectType.map().keys(), False),
     help="Item subject-type filter",
     default=SubjectType.ALL.name,
     show_default=True,
@@ -254,22 +251,31 @@ def item_details_command(
     json: bool, full: bool, verbose: int, quiet: bool, **item_kwargs
 ):
     """Show details of a particular movie/tv-series"""
-    prepare_start(quiet=quiet, verbose=verbose)
+    prepare_start(quiet=quiet, verbose=verbose, host_url=HOST_URL)
 
     item_kwargs["subject_type"] = getattr(
-        SubjectType, item_kwargs.get("subject_type")
+        SubjectType, item_kwargs.get("subject_type").upper()
     )
     session = Session()
 
     target_item = get_event_loop().run_until_complete(
-        perform_search_and_get_item(session=session, **item_kwargs)
+        perform_search_and_get_item(
+            session=session,
+            search=Search(
+                session=session,
+                query=item_kwargs['title'],
+                subject_type=item_kwargs['subject_type']
+                ),
+            **item_kwargs
+        )
     )
 
     item_details_inst = ItemDetails(session=session)
 
-    item_details: SpecificItemDetailsModel = item_details_inst.get_content_model(
+    item_details: SpecificItemDetailsModel = (
+        item_details_inst.get_content_model_sync(
         target_item
-    )
+    ))
 
     details = target_item.model_dump() if full else {}
 
