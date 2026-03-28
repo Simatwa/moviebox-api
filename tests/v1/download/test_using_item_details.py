@@ -22,7 +22,7 @@ async def test_download_movie_caption_file():
 
     search_results = await search.get_content_model()
     target_movie = search_results.first_item
-    
+
     # We just fetch page details of that specific item.
     # It would make much sense when you cache the item-page so you wont be
     # required to start afresh come next time, rather proceed where you

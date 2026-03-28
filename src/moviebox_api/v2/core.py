@@ -130,7 +130,10 @@ class SingleItemDetails(BaseItemDetails):
         return SpecificItemDetailsModel(**content)
 
 
-class TVSeriesItemDetails(BaseItemDetails):
+MusicDetails = AnimeDetails = EducationDetails = MovieDetails = SingleItemDetails
+
+
+class TVSeriesDetails(BaseItemDetails):
     """Fetch specific item details - tv_series"""
 
     def __init__(self, session: Session):

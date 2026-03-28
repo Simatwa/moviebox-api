@@ -4,7 +4,7 @@ import click
 import rich
 from rich.table import Table
 
-from moviebox_api.cli.helpers import (
+from moviebox_api.v1.cli.helpers import (
     command_context_settings,
     perform_search_and_get_item,
     prepare_start,

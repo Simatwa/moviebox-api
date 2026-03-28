@@ -1,11 +1,5 @@
 """
-v2 of the Moviebox-API
-
-Required:
-
-1. Core - link models with services
-2. Models  - data schema
-3. Services - fetch data from server
+V2 of Moviebox-API
 """
 
 import logging
@@ -16,12 +10,16 @@ logger = logging.getLogger(__name__)
 logging.getLogger("moviebox_api.v1").setLevel(logging.DEBUG)
 
 from moviebox_api.v2.core import (  # noqa: E402
+    AnimeDetails,
+    EducationDetails,
     Homepage,
     ItemDetails,
+    MovieDetails,
+    MusicDetails,
     Search,
     SearchSuggestion,
     SingleItemDetails,
-    TVSeriesItemDetails,
+    TVSeriesDetails,
 )
 from moviebox_api.v2.download import (  # noqa: E402
     DownloadableSingleFilesDetail,
@@ -40,5 +38,9 @@ __all__ = [
     "Search",
     "SearchSuggestion",
     "SingleItemDetails",
-    "TVSeriesItemDetails",
+    "TVSeriesDetails",
+    "MovieDetails",
+    "MusicDetails",
+    "AnimeDetails",
+    "EducationDetails",
 ]

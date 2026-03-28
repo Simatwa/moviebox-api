@@ -32,7 +32,7 @@ MIRROR_HOSTS = (
 )
 """Mirror domains/subdomains of Moviebox"""
 
-ENVIRONMENT_HOST_KEY = "MOVIEBOX_HOST"
+ENVIRONMENT_HOST_KEY = "MOVIEBOX_API_HOST"
 """User declares host to use as environment variable using this key"""
 
 SELECTED_HOST = (
@@ -49,11 +49,14 @@ HOST_URL = f"{HOST_PROTOCOL}://{SELECTED_HOST}/"
 logger.info(f"Moviebox host url - {HOST_URL}")
 
 DEFAULT_REQUEST_HEADERS = {
-    "X-Client-Info": '{"timezone":"Africa/Nairobi"}',  # TODO: Set this value dynamically.
+    "X-Client-Info": '{"timezone":"Africa/Nairobi"}',
+    # TODO: Set this value dynamically.
     "Accept-Language": "en-US,en;q=0.5",
     "Accept": "application/json",
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
-    "Referer": HOST_URL,  # "https://moviebox.ng/movies/titanic-kGoZgiDdff?id=206379412718240440&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 "
+    "Firefox/137.0",
+    "Referer": HOST_URL,  # "https://moviebox.ng/movies/titanic-kGoZgiDdff?id=
+    # 206379412718240440&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
     "Host": SELECTED_HOST,
     # "X-Source": "",
 }
@@ -62,8 +65,10 @@ DEFAULT_REQUEST_HEADERS = {
 DOWNLOAD_REQUEST_REFERER = "https://fmoviesunblocked.net/"
 
 DOWNLOAD_REQUEST_HEADERS = {
-    "Accept": "*/*",  # "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5",
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/137.0",
+    "Accept": "*/*",  # "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,
+    # audio/*;q=0.6,*/*;q=0.5",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 "
+    "Firefox/137.0",
     "Origin": SELECTED_HOST,
     "Referer": DOWNLOAD_REQUEST_REFERER,
 }

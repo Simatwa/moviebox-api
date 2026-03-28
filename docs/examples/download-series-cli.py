@@ -1,4 +1,4 @@
-from moviebox_api.cli import Downloader
+from moviebox_api.v1.cli import Downloader
 
 
 async def main():

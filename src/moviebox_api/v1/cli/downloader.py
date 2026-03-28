@@ -9,7 +9,7 @@ import httpx
 from throttlebuster import DownloadedFile
 from throttlebuster.constants import DOWNLOAD_PART_EXTENSION
 
-from moviebox_api.cli.helpers import (
+from moviebox_api.v1.cli.helpers import (
     get_caption_file_or_raise,
     media_player_name_func_map,
     perform_search_and_get_item,
@@ -23,7 +23,7 @@ from moviebox_api.v1.constants import (
     DownloadQualitiesType,
     SubjectType,
 )
-from moviebox_api.v1.core import Session, TVSeriesDetails
+from moviebox_api.v1.core import Search, Session, TVSeriesDetails
 from moviebox_api.v1.download import (
     CaptionFileDownloader,
     DownloadableMovieFilesDetail,
@@ -45,15 +45,20 @@ __all__ = ["Downloader"]
 class Downloader:
     """Controls the movie/series download process"""
 
-    def __init__(self, session: Session = None):
+    def __init__(self, session: Session = None, search_class: Search = None):
         """Constructor for `Downloader`
 
         Args:
             session (Session, optional): MovieboxAPI httpx request session .
               Defaults to Session().
+
+            search_class (Search, optional): MovieboxAPI search class.
+                Defaults to Search - v1
         """
         self._session = session if session else Session()
+        self._Search = search_class if search_class else Search
         assert_instance(self._session, Session, "session")
+        assert_instance(self._Search, type, "search")
 
     async def download_movie(
         self,
@@ -162,6 +167,12 @@ class Downloader:
             year=year,
             subject_type=SubjectType.MOVIES,
             yes=yes,
+            search=self._Search(
+                session=self._session,
+                query=title,
+                subject_type=SubjectType.MOVIES,
+                # TODO: Consider other single-item subjectTypes
+            ),
         )
 
         assert isinstance(target_movie, SearchResultsItem), (
@@ -389,6 +400,11 @@ class Downloader:
             year=year,
             subject_type=SubjectType.TV_SERIES,
             yes=yes,
+            search=self._Search(
+                session=self._session,
+                query=title,
+                subject_type=SubjectType.TV_SERIES,
+            ),
         )
         assert isinstance(target_tv_series, SearchResultsItem), (
             f"Search function {search_function.__name__} must return an "

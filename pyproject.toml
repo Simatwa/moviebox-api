@@ -28,9 +28,10 @@ dependencies = [
 ]
 
 [project.scripts]
-moviebox-api = "moviebox_api.cli.interface:main"
-moviebox = "moviebox_api.cli.interface:main"
-moviebox-interactive = "moviebox_api.cli.interactive:run_interactive_menu"
+moviebox-api = "moviebox_api.console:cli_entry"
+moviebox = "moviebox_api.console:cli_entry"
+moviebox-v1 = "moviebox_api.v1.cli.interface:main"
+moviebox-v2 = "moviebox_api.v2.cli.interface:main"
 
 [project.urls]
 homepage = "https://github.com/Simatwa/moviebox-api"
@@ -73,7 +74,7 @@ select = [
 ]
 ignore = [
     "UP031",  # https://docs.astral.sh/ruff/rules/printf-string-formatting/
-   # "F401"    # https://docs.astral.sh/ruff/rules/unused-import
+    "F401"    # https://docs.astral.sh/ruff/rules/unused-import
 ]
 
 [tool.ruff.lint.isort]

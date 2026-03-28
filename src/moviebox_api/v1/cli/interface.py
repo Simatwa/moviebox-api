@@ -7,21 +7,21 @@ from pathlib import Path
 
 import click
 
-from moviebox_api.cli.downloader import Downloader
-from moviebox_api.cli.extras import (
+from moviebox_api import __version__
+from moviebox_api.v1.cli.downloader import Downloader
+from moviebox_api.v1.cli.extras import (
     homepage_content_command,
     item_details_command,
     mirror_hosts_command,
     popular_search_command,
 )
-from moviebox_api.cli.helpers import (
+from moviebox_api.v1.cli.helpers import (
     command_context_settings,
     media_player_name_func_map,
     prepare_start,
     process_download_runner_params,
     show_any_help,
 )
-from moviebox_api.v1 import __version__
 from moviebox_api.v1.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CHUNK_SIZE,
@@ -45,7 +45,6 @@ __all__ = [
     "homepage_content_command",
     "popular_search_command",
     "item_details_command",
-    "interactive_menu_command",
 ]
 
 DEBUG = os.getenv("DEBUG", "0") == "1"
@@ -53,8 +52,8 @@ DEBUG = os.getenv("DEBUG", "0") == "1"
 
 @click.group()
 @click.version_option(version=__version__)
-def moviebox():
-    """Search and download movies/tv-series and their subtitles.
+def moviebox_v1():
+    """Search and download movies/tv-series and their subtitles (v1).
     envvar-prefix : MOVIEBOX"""
 
 
@@ -591,19 +590,27 @@ def download_tv_series_command(
     )
 
 
+def get_commands_map():
+    """Builds command"""
+    commands_map = {
+        download_movie_command: "download-movie",
+        download_tv_series_command: "download-series",
+        mirror_hosts_command: "mirror-hosts",
+        homepage_content_command: "homepage-content",
+        popular_search_command: "popular-search",
+        item_details_command: "item-details",
+    }
+    return commands_map
+
+
 def main():
     """Entry point"""
     try:
-        moviebox.add_command(download_movie_command, "download-movie")
-        moviebox.add_command(download_tv_series_command, "download-series")
-        moviebox.add_command(mirror_hosts_command, "mirror-hosts")
+        from moviebox_api.utils import build_command_group
 
-        moviebox.add_command(homepage_content_command, "homepage-content")
-        moviebox.add_command(popular_search_command, "popular-search")
+        command = build_command_group(moviebox_v1, get_commands_map())
 
-        moviebox.add_command(item_details_command, "item-details")
-
-        return moviebox()
+        return command()
 
     except Exception as e:
         exception_msg = str({e.args[1] if e.args and len(e.args) > 1 else e})
