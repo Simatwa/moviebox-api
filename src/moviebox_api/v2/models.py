@@ -17,7 +17,7 @@ from moviebox_api.v1.models import (
     ContentModel,
     PlatformsModel,
     SearchResultsItem as SearchResultsItemV1,
-    SearchResultsPagerModel,
+    SearchResultsModel as SearchResultsModelV1,
 )
 from moviebox_api.v2.helpers import get_absolute_url
 
@@ -109,10 +109,9 @@ class SearchResultsItem(SearchResultsItemV1):
         )
 
 
-class SearchResultsModel(BaseModel):
+class SearchResultsModel(SearchResultsModelV1):
     """Whole search results"""
 
-    pager: SearchResultsPagerModel
     items: list[SearchResultsItem]
 
     @property
