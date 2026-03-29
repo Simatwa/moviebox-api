@@ -14,6 +14,12 @@ MOVIE_KEYWORD = query
 
 TV_SERIES_KEYWORD = "Merlin"
 
+TEST_MOVIE_PAGE_URL = "/detail/titanic-QOuOQeUejq8?id=7070560136179630776"
+
+TEST_TV_SERIES_PAGE_URL = (
+    "/detail/28-years-later-the-bone-temple-elp7hxPnHE?id=550956010823997056"
+)
+
 
 def init_search(
     session: Session,

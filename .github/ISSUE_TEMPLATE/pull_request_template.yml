@@ -1,0 +1,39 @@
+name: Pull Request
+description: Standard pull request submission form
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Pull Request Submission
+        Complete all sections before submiting
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: Briefly describe what this PR does and why.
+      placeholder: "This PR adds / fixes / refactors ..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: authorship-declaration
+    attributes:
+      label: Authorship Declaration
+      description: >
+        Check box to proceed
+      options:
+        - label: >
+            I understand that the maintainer of this repo doesn't want AI generated slop 
+            and he might close this PR if it introduces such.
+
+          required: true
+
+  - type: textarea
+    id: additional-notes
+    attributes:
+      label: Additional Notes
+      description: Anything else reviewers should know?
+      placeholder: "Known limitations, follow-up work, related issues ..."
+    validations:
+      required: false

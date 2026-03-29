@@ -10,16 +10,21 @@ from moviebox_api.v1.extractor import (
     TagDetailsExtractorModel,
 )
 from moviebox_api.v1.requests import Session
-from tests.v1 import MOVIE_KEYWORD, TV_SERIES_KEYWORD
+from tests.v1 import (
+    MOVIE_KEYWORD,
+    TEST_MOVIE_PAGE_URL,
+    TEST_TV_SERIES_PAGE_URL,
+    TV_SERIES_KEYWORD,
+)
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     argnames=["url"],
     argvalues=(
-        ["https://moviebox.pk/detail/titanic-m7a9yt0abq6?id=5390197429792821032"],
+        [TEST_MOVIE_PAGE_URL],
         [
-            "/detail/titanic-m7a9yt0abq6?id=5390197429792821032",
+            TEST_TV_SERIES_PAGE_URL,
         ],
     ),
 )
@@ -54,10 +59,7 @@ async def test_movie_using_page_url(url):
     argnames=["url"],
     argvalues=(
         [
-            "https://moviebox.pk/detail/merlin-sMxCiIO6fZ9?id=8382755684005333552&scene&page_from=search_detail&type=%2Fmovie%2Fdetail"
-        ],
-        [
-            "https://moviebox.pk/detail/merlin-sMxCiIO6fZ9?id=8382755684005333552",
+            "/detail/county-49-UcSx2qEJvw7?id=6315211642355729232"
         ],
     ),
 )

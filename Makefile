@@ -20,7 +20,7 @@ install-in-termux:
 
 # Target to run tests
 test:
-	coverage run -m pytest -v
+	uv run coverage run -m pytest -v
 
 # Target to generate coverage-badge
 coverage-badge:

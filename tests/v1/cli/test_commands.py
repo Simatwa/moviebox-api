@@ -6,7 +6,7 @@ import pytest
 def run_system_command(command: str) -> int:
     try:
         result = subprocess.run(
-            ("python -m moviebox_api v2 " + command
+            ("python -m moviebox_api v1 " + command
             if not command.startswith('python') else command),
             shell=True,
             check=True,
@@ -70,7 +70,7 @@ def test_mirror_hosts():
         ["homepage-content --json"],
         ["homepage-content --banner"],
         ["homepage-content --banner --json"],
-        ["homepage-content --title 'Trending Now🔥'"],
+        ["homepage-content --title 'Popular Movie'"],
     ],
 )
 def test_homepage(command):
