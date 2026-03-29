@@ -114,7 +114,8 @@ class Session:
     async def get_with_cookies(
         self, url: str, params: dict = {}, **kwargs
     ) -> Response:
-        """Makes a http get request with server-assigned cookies from previous requests.
+        """Makes a http get request with server-assigned cookies from previous
+          requests.
 
         Args:
             url (str): Resource link.
@@ -131,8 +132,8 @@ class Session:
         return self._validate_response(response)
 
     async def get_with_cookies_from_api(self, *args, **kwargs) -> dict:
-        """Makes a http get request with server-assigned cookies from previous requests
-        and extract the `data` field from the response.
+        """Makes a http get request with server-assigned cookies from previous 
+        requests and extract the `data` field from the response.
 
         Returns:
             dict: Extracted data field value
