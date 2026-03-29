@@ -128,7 +128,7 @@ moviebox v2 --help
 ```
 
 | Command | Description |
-|||
+|-|-|
 | `download-movie` | Search, download, or stream movies, anime, music, and educational content |
 | `download-series` | Search and download or stream TV series |
 | `homepage-content` | Show contents displayed on the landing page |
@@ -154,7 +154,7 @@ moviebox v2 download-movie "Avatar" --yes
 ```
 
 | Option | Description |
-|||
+|-|-|
 | `-y, --year` | Filter by release year |
 | `-q, --quality` | Video quality: `best`, `1080p`, `720p`, `480p`, `360p`, `worst` |
 | `-d, --dir` | Download directory |
@@ -228,7 +228,7 @@ moviebox v2 download-series "Merlin" -s 1 -e 1 --auto-mode
 ```
 
 | Option | Description |
-|||
+|-|-|
 | `-s, --season` | Season number (required) |
 | `-e, --episode` | Starting episode number (required) |
 | `-l, --limit` | Number of episodes to download (default: 1) |
