@@ -18,15 +18,15 @@ from moviebox_api.v1 import logger
 """asyncio event loop"""
 
 MIRROR_HOSTS = (
-    # "moviebox.ng",
     "h5.aoneroom.com",
-    "movieboxapp.in",
-    "moviebox.pk",
-    "moviebox.ph",
-    "moviebox.id",
+    # Sess https://github.com/Simatwa/moviebox-api/issues/63
+    # "movieboxapp.in",
+    # "moviebox.pk",
+    # "moviebox.ph",
+    # "moviebox.id",
     # "fmoviesunblocked.net"
-    "v.moviebox.ph",
-    "netnaija.video",
+    # "v.moviebox.ph",
+    # "netnaija.video",
     # "sflix.film",
     # "netnaija.com"
 )
