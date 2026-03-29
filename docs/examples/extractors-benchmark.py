@@ -1,4 +1,4 @@
-from moviebox_api.extractor import JsonDetailsExtractor, TagDetailsExtractor
+from moviebox_api.v1.extractor import JsonDetailsExtractor, TagDetailsExtractor
 
 
 def read_content(name: str = "avatar.page") -> str:
