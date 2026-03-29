@@ -5,7 +5,7 @@ import re
 import moviebox_api.v1.helpers
 from moviebox_api.v2.constants import HOST_URL
 
-VALID_DETAIL_PATH_PATTERN = re.compile(r"^[\w-]+-\w{11}$")
+VALID_DETAIL_PATH_PATTERN = re.compile(r"^[\w-]+-\w{9,13}$")
 
 
 def get_absolute_url(relative_url: str, base_url: str = HOST_URL):

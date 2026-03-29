@@ -4,6 +4,8 @@ Generate models from httpx request responses.
 Also provides object mapping support to specific extracted item details
 """
 
+from typing_extensions import deprecated
+
 import moviebox_api.v1.core
 from moviebox_api.v1.helpers import assert_instance
 from moviebox_api.v2._bases import BaseItemDetails
@@ -42,6 +44,10 @@ class Search(moviebox_api.v1.core.Search):
         """
         contents = await self.get_content()
         return SearchResultsModel(**contents)
+
+    @deprecated("This method is only available in v1")
+    def get_item_details(self, item: SearchResultsItem) -> None:
+        raise NotImplementedError("Method is only available in v1")
 
 
 class ItemDetails(BaseItemDetails):

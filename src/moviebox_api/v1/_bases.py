@@ -10,7 +10,7 @@ from pathlib import Path
 import httpx
 from throttlebuster import DownloadedFile
 
-# from moviebox_api.models import SearchResultsItem
+from moviebox_api.utils import get_event_loop
 
 
 class BaseMovieboxException(Exception):
@@ -36,13 +36,13 @@ class ContentProviderHelper:
 
     def get_content_sync(self, *args, **kwargs) -> dict | list[dict]:
         """Get content `synchronously`"""
-        return asyncio.get_event_loop().run_until_complete(
+        return get_event_loop().run_until_complete(
             self.get_content(*args, **kwargs)
         )
 
     def get_content_model_sync(self, *args, **kwargs) -> object | list[object]:
         """Get content model `synchronously`"""
-        return asyncio.get_event_loop().run_until_complete(
+        return get_event_loop().run_until_complete(
             self.get_content_model(*args, **kwargs)
         )
 

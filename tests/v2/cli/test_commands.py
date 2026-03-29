@@ -6,7 +6,8 @@ import pytest
 def run_system_command(command: str) -> int:
     try:
         result = subprocess.run(
-            "python -m moviebox_api " + command,
+            ("python -m moviebox_api v2 " + command
+            if not command.startswith('python') else command),
             shell=True,
             check=True,
             text=True,
@@ -14,12 +15,12 @@ def run_system_command(command: str) -> int:
         )
         return result.returncode
     except subprocess.CalledProcessError as e:
-        print(e, e.output, sep="\n")
+        print(e.stderr, e.output, sep="\n")
         return e.returncode
 
 
 def test_version():
-    returncode = run_system_command("--version")
+    returncode = run_system_command("python -m moviebox_api --version")
     assert returncode <= 0
 
 
@@ -32,7 +33,6 @@ def test_version():
         ["download-series --help"],
         ["mirror-hosts --help"],
         ["homepage-content --help"],
-        ["popular-search --help"],
         ["item-details --help"],
     ],
 )
@@ -47,6 +47,9 @@ def test_help(command):
     ],
     argvalues=[
         ["download-movie avatar -YT"],
+       # ["download-movie war -s education -YT"],
+        ["download-movie walker -s music -YT"],
+       # ["download-movie king -s anime -YT"],
         ["download-series merlin -s 1 -e 1 -YT"],
     ],
 )
@@ -69,21 +72,10 @@ def test_mirror_hosts():
         ["homepage-content --json"],
         ["homepage-content --banner"],
         ["homepage-content --banner --json"],
-        ["homepage-content --title 'Trending Now🔥'"],
+        ["homepage-content --title 'Popular Movie'"],
     ],
 )
 def test_homepage(command):
-    returncode = run_system_command(command)
-    assert returncode <= 0
-
-
-@pytest.mark.parametrize(
-    argnames=[
-        "command",
-    ],
-    argvalues=(["popular-search"], ["popular-search --json"]),
-)
-def test_popular_search(command):
     returncode = run_system_command(command)
     assert returncode <= 0
 

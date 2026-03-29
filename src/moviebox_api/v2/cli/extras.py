@@ -263,30 +263,30 @@ def item_details_command(
             session=session,
             search=Search(
                 session=session,
-                query=item_kwargs['title'],
-                subject_type=item_kwargs['subject_type']
-                ),
-            **item_kwargs
+                query=item_kwargs["title"],
+                subject_type=item_kwargs["subject_type"],
+            ),
+            **item_kwargs,
         )
     )
 
     item_details_inst = ItemDetails(session=session)
 
     item_details: SpecificItemDetailsModel = (
-        item_details_inst.get_content_model_sync(
-        target_item
-    ))
+        item_details_inst.get_content_model_sync(target_item)
+    )
 
-    details = target_item.model_dump() if full else {}
+    details = target_item.model_dump(mode='json') if full else {}
 
-    details.update(item_details.metadata.model_dump())
+    details.update(item_details.metadata.model_dump(mode='json',
+                                                     exclude=['referer', 'url']))
 
     season_items = []
 
     for season in item_details.resource.seasons:
         season_string = (
-            f"Season: {season.se} "
-            f"Episodes: {season.maxEp} "
+            f"Season: {season.se}, "
+            f"Episodes: {season.maxEp}, "
             f"Resolutions: {[res.resolution for res in season.resolutions]}"
         )
         season_items.append(season_string)
@@ -295,7 +295,7 @@ def item_details_command(
 
     if json:
         rich.print_json(
-            data=item_details.model_dump(serialize_as_any=True), indent=4
+            data=item_details.model_dump(mode='json'), indent=4
         )
 
     else:

@@ -8,6 +8,7 @@ import re
 import typing as t
 from urllib.parse import urljoin
 
+from moviebox_api.utils import get_event_loop
 from moviebox_api.v1 import logger
 from moviebox_api.v1.constants import HOST_URL, ITEM_DETAILS_PATH
 from moviebox_api.v1.exceptions import UnsuccessfulResponseError
@@ -59,7 +60,8 @@ def assert_instance(
     """assert obj an instance of class_or_tuple"""
 
     assert isinstance(obj, class_or_tuple), (
-        f"{name} value needs to be an instance of/any of {class_or_tuple} not {type(obj)}"
+        f"{name} value needs to be an instance of/any of {class_or_tuple} "
+        f"not {type(obj)}"
     )
 
 
@@ -78,7 +80,8 @@ def process_api_response(json: dict) -> dict | list:
     logger.debug(f"Unsuccessful response received from server - {json}")
     raise UnsuccessfulResponseError(
         json,
-        "Unsuccessful response from the server. Check `.response`  for detailed response info",
+        "Unsuccessful response from the server. Check `.response`  for detailed "
+        "response info",
     )
 
 
@@ -89,7 +92,8 @@ def get_file_extension(url: str) -> str | None:
     """Extracts extension from file url e.g `mp4` or `srt`
 
     For example:
-        url : https://valiw.hakunaymatata.com/resource/537977caa8c13703185d26471ce7de9f.mp4?auth_key=1753024153-0-0-c824d3b5a5c8acc294bfd41de43c51ef"
+        url : https://valiw.hakunaymatata.com/resource/537977caa8c137031
+        85d26471ce7de9f.mp4?auth_key=1753024153-0-0-c824d3b5a5c8acc294bfd41de43c51ef"
         returns 'mp4'
     """
     ext_match = FILE_EXT_PATTERN.match(str(url))
@@ -104,15 +108,6 @@ def validate_item_page_url(url: str) -> str:
         return url
 
     raise ValueError(f"Invalid url for a specific item page - '{url}'")
-
-
-def get_event_loop():
-    try:
-        event_loop = asyncio.get_event_loop()
-    except RuntimeError:
-        event_loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(event_loop)
-    return event_loop
 
 
 def is_valid_search_item(item_name: str) -> bool:

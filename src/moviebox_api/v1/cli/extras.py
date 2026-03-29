@@ -251,7 +251,7 @@ def popular_search_command(json: bool):
 @click.option(
     "-s",
     "--subject-type",
-    type=click.Choice(SubjectType.map().keys()),
+    type=click.Choice(SubjectType.map().keys(), case_sensitive=False),
     help="Item subject-type filter",
     default=SubjectType.ALL.name,
     show_default=True,
@@ -289,7 +289,7 @@ def item_details_command(
     prepare_start(quiet=quiet, verbose=verbose)
 
     item_kwargs["subject_type"] = getattr(
-        SubjectType, item_kwargs.get("subject_type")
+        SubjectType, item_kwargs.get("subject_type").upper()
     )
     session = Session()
 
@@ -329,8 +329,8 @@ def item_details_command(
 
     for season in extractor.seasons:
         season_string = (
-            f"Season: {season['se']} "
-            f"Episodes: {season['maxEp']} "
+            f"Season: {season['se']}, "
+            f"Episodes: {season['maxEp']}, "
             f"Resolutions: {[res['resolution'] for res in season['resolutions']]}"
         )
         season_items.append(season_string)
