@@ -1,0 +1,154 @@
+name: Bug Report / Issue
+description: Report a bug, unexpected behavior, or malfunction in moviebox-api.
+labels: ["needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Before You Submit
+        - Search existing issues to avoid duplicates.
+        - This template is for bugs and malfunctions only. Feature requests use a separate template.
+        - Fill in every required field. Incomplete reports will be closed without investigation.
+
+  - type: dropdown
+    id: interface
+    attributes:
+      label: Interface
+      description: How are you interacting with moviebox-api?
+      options:
+        - CLI (command line)
+        - Python API (imported as a library)
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: moviebox-api Version
+      description: Run `moviebox --version` or check your `pyproject.toml` / `uv.lock`. Do not write "latest."
+      placeholder: "e.g. 0.4.2"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version
+      description: Run `python --version` or `uv run python --version`.
+      placeholder: "e.g. 3.12.3"
+    validations:
+      required: true
+
+  - type: textarea
+    id: command-or-code
+    attributes:
+      label: Exact Command or Code Snippet
+      description: >
+        Paste the exact command you ran or the exact code you executed.
+        No paraphrasing — copy it verbatim. Use code fences.
+      placeholder: |
+        ```bash
+        moviebox v1 download-movie "Blood Diamond"
+        ```
+
+        or
+
+        ```python
+        from moviebox_api import Client
+        client = Client(...)
+        client.fetch(...)
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What happened instead? Include the full error message and stack trace if applicable.
+      placeholder: |
+        ```
+        Traceback (most recent call last):
+          ...
+        SomeError: message here
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Numbered steps that reliably produce the issue from a clean state.
+      placeholder: |
+        1. Install version X
+        2. Run command Y with input Z
+        3. Observe error
+    validations:
+      required: true
+
+  - type: dropdown
+    id: reproducibility
+    attributes:
+      label: Reproducibility
+      options:
+        - Always — happens every time
+        - Intermittent — happens sometimes
+        - Once — could not reproduce again
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment-extras
+    attributes:
+      label: Additional Environment Details
+      description: >
+        Anything else relevant to your environment — virtual env setup, proxy/network conditions,
+        uv workspace config, relevant env variables, containerized setup, etc.
+      placeholder: "e.g. Running inside Docker, behind a corporate proxy, using uv workspaces, MOVIEBOX_ENV=staging set, etc."
+    validations:
+      required: false
+
+  - type: textarea
+    id: anything-else
+    attributes:
+      label: Anything Else
+      description: >
+        Logs, screenshots, related issues, things you already tried, workarounds you found,
+        or any other context that might help.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Submission Checklist
+      options:
+        - label: I have searched existing issues and this is not a duplicate.
+          required: true
+        - label: I have provided the exact command or code that triggers the issue.
+          required: true
+        - label: I have included the full error output, not a summary.
+          required: true
+        - label: I am reporting a bug, not requesting a feature.
+          required: true

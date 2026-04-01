@@ -1,0 +1,143 @@
+name: Feature Request
+description: Propose a new feature or meaningful improvement to moviebox-api.
+labels: ["feature-request", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Before You Submit
+        - Search existing issues and pull requests — your idea may already be tracked.
+        - This template is for feature requests only. Bugs use a separate template.
+        - Vague requests ("make it better", "add more options") will be closed. Be specific.
+
+  - type: dropdown
+    id: interface
+    attributes:
+      label: Affected Interface
+      description: Which interface does this feature concern?
+      options:
+        - CLI (command line)
+        - Python API (imported as a library)
+        - Both
+        - Neither / General / Internals
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: What area does this feature fall under?
+      options:
+        - New functionality
+        - Improvement to existing behavior
+        - Performance
+        - Configuration / Options
+        - Output / Formatting
+        - Error handling / Logging
+        - Documentation
+        - Developer experience / Tooling
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Gap
+      description: >
+        What are you currently unable to do, or what is painful to do?
+        Describe the limitation without proposing a solution yet.
+      placeholder: "When I try to do X, I have to work around it by doing Y, which is fragile because Z ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Solution
+      description: >
+        Describe the feature you want. Be concrete — include expected CLI flags,
+        API method signatures, config keys, or behavior changes where applicable.
+      placeholder: |
+        Add a `--timeout` flag to the CLI and a `timeout` parameter to `requests.Session()`.
+
+        ```bash
+        moviebox v2 download-series "Banshee" --timeout 30
+        ```
+
+        ```python
+        requests.Session(..., timeout=30)
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: >
+        What workarounds or alternative approaches have you tried or considered?
+        Why are they insufficient?
+    validations:
+      required: false
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: >
+        Describe a real, concrete scenario where this feature would be used.
+        Generic or hypothetical justifications carry less weight.
+      placeholder: "In production we process batches of N sources daily. Currently we have to ..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Impact on Your Workflow
+      description: How much does the absence of this feature affect you?
+      options:
+        - Blocking — I cannot use moviebox-api for my use case without this
+        - High — I work around it but the workaround is costly or fragile
+        - Medium — It would improve my workflow noticeably
+        - Low — Nice to have
+    validations:
+      required: true
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Willing to Implement?
+      description: Are you able and willing to submit a PR for this feature?
+      options:
+        - "Yes — I can implement this and submit a PR"
+        - "Partially — I can contribute but would need guidance"
+        - "No — I am requesting this for maintainers to consider"
+    validations:
+      required: true
+
+  - type: textarea
+    id: anything-else
+    attributes:
+      label: Anything Else
+      description: >
+        References, prior art in other tools, related issues, mockups, or any
+        additional context that supports this request.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Submission Checklist
+      options:
+        - label: I have searched existing issues and this feature has not already been requested.
+          required: true
+        - label: I have described a specific, concrete feature — not a vague idea.
+          required: true
+        - label: I have provided a real use case that justifies this request.
+          required: true
+        - label: I am not reporting a bug. Bugs use the bug report template.
+          required: true
