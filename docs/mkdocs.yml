@@ -1,0 +1,24 @@
+site_name: Moviebox-API
+repo_url: https://github.com/Simatwa/moviebox-api
+repo_name: Moviebox-API
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Guide:
+      - Installation: installation.md
+      - Usage: usage.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+
+plugins:
+  - search
