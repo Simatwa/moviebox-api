@@ -40,7 +40,7 @@ mkdocs-serve:
 	 mkdocs serve -w docs --livereload
 
 netlify-build-docs:
-	uv pip install mkdocs-material
+	pip install mkdocs-material
 	mkdocs build
 
 
