@@ -63,7 +63,7 @@ markdown_extensions:
 
 plugins:
   - search
- # - offline # offline build
+  - offline # offline build
   - blog:
       authors_profiles: true
 
