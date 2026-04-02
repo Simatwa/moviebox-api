@@ -16,8 +16,6 @@ Search, discover, download, and stream movies & TV series with subtitles
 
 </div>
 
-
-
 ## Features
 
 - **Download Movies & TV Series** : High-quality downloads with multiple resolution options
@@ -467,8 +465,8 @@ Merlin (2009)/
 
 ## Examples
 
-- [Download Movie CLI](./docs/examples/download-movie-cli.py)
-- [Download Series CLI](./docs/examples/download-series-cli.py)
+- [V1 Examples](./docs/v1/examples/)
+- [v2 Examples](./docs/v2/examples/)
 
 ## Contributors
 
@@ -488,4 +486,4 @@ Merlin (2009)/
 
 
 
-<div align="center">Made with love</div>
+<div align="center">Made with ❤️ </div>

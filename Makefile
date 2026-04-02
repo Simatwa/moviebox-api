@@ -36,3 +36,8 @@ publish:
 	uv publish --token $(shell get pypi)
 
 
+mkdocs-serve:
+	 mkdocs serve -w docs --livereload
+
+
+
