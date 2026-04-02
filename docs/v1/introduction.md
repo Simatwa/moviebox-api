@@ -1,28 +1,27 @@
 ## Background
 
-This is the very first version of the API. Some parts of it **scrape data** off html formatted pages while others fetch them directly from **REST-API server**
+This is the very first version of the API. Some parts of it **scrape data** from HTML-formatted pages, while others fetch data directly from the **REST API server**.
 
 ## Download Movie
 
-This can be done very straightforward way:
+This can be done in a very straightforward way:
 
 === "Async"
 
     ```py
     --8<-- "v1/examples/auto_movie.py"
     ```
-
 === "Sync"
 
     ```py
     --8<-- "v1/examples/auto_movie_sync.py"
     ```
 
-Behind the hood this script does the following:
+Behind the scenes, this script does the following:
 
-1. Performs movie search
-2. Present the search results for user to select one
-3. Download both movie and subtile files
+1. Performs a movie search
+2. Presents the search results for the user to select one
+3. Downloads both the movie and subtitle files
 
 ### Download with Progress Callback
 
@@ -38,6 +37,5 @@ Behind the hood this script does the following:
     --8<-- "v1/examples/download_with_progress_callback_sync.py"
     ```
 
-
-!!! question "Why TV-series lack **Auto**magic"
-    It's by [developers](https://github.com/Simatwa) choice to be so. The focus is now channeled more towards implementing new features rather than adding miscellaneous ones. Perhaps it will be implemented someday, or could you **[submit a PR](https://github.com/Simatwa/moviebox-api/pulls)**?
+!!! question "Why TV series lack **Auto**magic"
+    This is a deliberate choice by the [developers](https://github.com/Simatwa). The current focus is more on implementing new features rather than adding miscellaneous ones. It may be implemented in the future, or you could **[submit a PR](https://github.com/Simatwa/moviebox-api/pulls)**.

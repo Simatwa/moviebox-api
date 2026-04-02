@@ -30,11 +30,11 @@ We shall be using [uv tool](https://docs.astral.sh/uv/)
     ```
 
 !!! important "CLI utils"
-    At some point developers would want to make use of CLI utility functions for operations such as prompting users to choosing movie quality to be processed etc. This will require the commandline extra dependencies installed.
+    At some point, developers may want to make use of CLI utility functions for operations such as prompting users to choose the movie quality to be processed, etc. This will require the commandline extra dependencies to be installed.
 
 ## Installing from source
 
-If you like new features before actual releases:
+If you like new features before official releases:
 
 === "Install"
 
