@@ -2,6 +2,7 @@
 site_name: Moviebox-API Documentation
 repo_url: https://github.com/Simatwa/moviebox-api
 repo_name: Moviebox-API
+edit_uri: edit/main/docs/
 
 nav:
   - Home: index.md
@@ -94,7 +95,7 @@ theme:
     - navigation.top
     - navigation.footer
     - content.code.copy
-  #  - navigation.instant
+    # - navigation.instant
     - navigation.instant.progress
     - search.suggest
     - search.highlight
@@ -103,7 +104,9 @@ theme:
     - content.code.select
     - content.code.annotate
     - content.tooltips
-
+  # editing & viewing source
+    - content.action.edit
+    - content.action.view
 
 extra:
   generator: true # made with mkdocs

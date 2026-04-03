@@ -232,9 +232,6 @@ Merlin (2009)/
     E1.mp4
 ```
 
-???+ tip "Version Recommendation"
-    V2 is recommended — it has no geo-restrictions at the time of writing.
-
 #### Caption Options
 
 | Option | Type | Default | Description |

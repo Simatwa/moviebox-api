@@ -461,8 +461,6 @@ Merlin (2009)/
     E1.mp4
 ```
 
-> **Note:** V2 is recommended — it has no geo-restrictions at the time of writing.
-
 ## Examples
 
 - [V1 Examples](./docs/v1/examples/)

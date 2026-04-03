@@ -36,12 +36,15 @@ publish:
 	uv publish --token $(shell get pypi)
 
 
-mkdocs-serve:
+serve-docs:
 	 mkdocs serve -w docs --livereload
 
 netlify-build-docs:
 	pip install mkdocs-material
 	mkdocs build
 
+build-docs:
+	uv run mkdocs build
 
-
+serve-build-docs:
+	uv run python -m http.server -d site 8080
