@@ -7,7 +7,7 @@ async def progress_callback(progress: DownloadTracker):
 
 
 async def main():
-    auto = MovieAuto()
+    auto = MovieAuto(tasks=1)
     await auto.run("Avatar", progress_hook=progress_callback)
 
 

@@ -42,6 +42,14 @@ pip install "moviebox-api[cli]"
 pip install "moviebox-api"
 ```
 
+### Termux (Android)
+
+```sh
+pip install moviebox-api --no-deps
+pip install 'pydantic==2.9.2'
+pip install rich click bs4 httpx throttlebuster
+```
+
 ### Media Players (optional, required for streaming)
 
 To stream content directly without downloading, install [MPV](https://mpv.io/installation) or [VLC](https://www.videolan.org):
@@ -74,18 +82,6 @@ brew install mpv
 
 Download from [mpv.io/installation](https://mpv.io/installation/).
 </details>
-
-<details>
-<summary>Termux (Android)</summary>
-
-```sh
-pip install moviebox-api --no-deps
-pip install 'pydantic==2.9.2'
-pip install rich click bs4 httpx throttlebuster
-```
-</details>
-
-
 
 ## Quick Start
 
