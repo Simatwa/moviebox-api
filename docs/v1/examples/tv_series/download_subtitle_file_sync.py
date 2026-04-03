@@ -31,7 +31,7 @@ def download_tv_series_subtitle_file():
 
     caption_file_downloader = CaptionFileDownloader()
     downloaded_file = caption_file_downloader.run_sync(
-        target_media_file, filename=target_series
+        target_media_file, filename=target_series, season=1, episode=1
     )
 
     print(downloaded_file.saved_to)

@@ -31,7 +31,7 @@ async def download_tv_series_video_file():
 
     media_file_downloader = MediaFileDownloader()
     downloaded_file = await media_file_downloader.run(
-        target_media_file, filename=target_series
+        target_media_file, filename=target_series, season=1, episode=1
     )
 
     print(downloaded_file.saved_to)
