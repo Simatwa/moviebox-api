@@ -55,11 +55,7 @@ def test_movie_using_page_url(url):
 
 @pytest.mark.parametrize(
     argnames=["url"],
-    argvalues=(
-        [
-            TEST_TV_SERIES_PAGE_URL
-        ],
-    ),
+    argvalues=([TEST_TV_SERIES_PAGE_URL],),
 )
 def test_tv_series_using_page_url(url):
     session = Session()

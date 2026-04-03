@@ -28,10 +28,10 @@ def test_get_content_and_model(subject_type: SubjectType):
     modelled_contents = search.get_content_model_sync()
 
     assert isinstance(modelled_contents, SearchResultsModel)
-    
+
     if subject_type == SubjectType.ALL:
         return
-    
+
     for item in modelled_contents.items:
         assert item.subjectType == subject_type
 

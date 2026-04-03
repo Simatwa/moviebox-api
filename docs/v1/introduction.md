@@ -9,12 +9,12 @@ This can be done in a very straightforward way:
 === "Async"
 
     ```py
-    --8<-- "v1/examples/auto_movie.py"
+    --8<-- "v1/examples/movie/auto_movie.py"
     ```
 === "Sync"
 
     ```py
-    --8<-- "v1/examples/auto_movie_sync.py"
+    --8<-- "v1/examples/movie/auto_movie_sync.py"
     ```
 
 Behind the scenes, this script does the following:
@@ -28,13 +28,13 @@ Behind the scenes, this script does the following:
 === "Async"
 
     ```py
-    --8<-- "v1/examples/download_with_progress_callback.py"
+    --8<-- "v1/examples/movie/download_with_progress_callback.py"
     ```
 
 === "Sync"
 
     ```py
-    --8<-- "v1/examples/download_with_progress_callback_sync.py"
+    --8<-- "v1/examples/movie/download_with_progress_callback_sync.py"
     ```
 
 !!! question "Why TV series lack **Auto**magic"

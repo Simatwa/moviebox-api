@@ -30,8 +30,7 @@ async def download_subtitle_file():
     caption_file_downloader = CaptionFileDownloader()
 
     downloaded_file = await caption_file_downloader.run(
-        target_caption_file,
-        filename=target_movie
+        target_caption_file, filename=target_movie
     )
 
     print(downloaded_file.saved_to)

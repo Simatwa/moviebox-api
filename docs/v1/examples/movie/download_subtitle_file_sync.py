@@ -30,8 +30,7 @@ def download_subtitle_file():
     caption_file_downloader = CaptionFileDownloader()
 
     downloaded_file = caption_file_downloader.run_sync(
-        target_caption_file,
-        filename=target_movie
+        target_caption_file, filename=target_movie
     )
 
     print(downloaded_file.saved_to)

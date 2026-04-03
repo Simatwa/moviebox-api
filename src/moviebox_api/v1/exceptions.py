@@ -45,5 +45,5 @@ class ZeroCaptionFileError(BaseMovieboxException):
 
 
 class ZeroMediaFileError(BaseMovieboxException):
-    """Raised when trying to access a downloadable media file but the list 
+    """Raised when trying to access a downloadable media file but the list
     is empty"""

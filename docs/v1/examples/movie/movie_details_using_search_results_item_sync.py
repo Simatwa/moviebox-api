@@ -13,7 +13,7 @@ def movie_details_using_search_results_item():
 
     search_results: SearchResultsModel = search.get_content_model_sync()
 
-    target_item = search_results.first_item  # search_results.items[0]
+    target_item = search_results.first_item  # (1)
 
     md = MovieDetails(
         target_item,
@@ -21,9 +21,7 @@ def movie_details_using_search_results_item():
     )
 
     details: ItemJsonDetailsModel = md.get_content_model_sync()
-    print(type(details))
-
-    # <class 'moviebox_api.v1.extractor.models.json.ItemJsonDetailsModel'>
+    print(type(details))  # (2)
 
 
 if __name__ == "__main__":

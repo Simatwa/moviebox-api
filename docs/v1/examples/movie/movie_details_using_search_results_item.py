@@ -9,7 +9,7 @@ async def movie_details_using_search_results_item():
 
     search_results = await search.get_content_model()
 
-    target_item = search_results.first_item  # search_results.items[0]
+    target_item = search_results.first_item  # (1)
 
     md = MovieDetails(
         target_item,
@@ -17,9 +17,7 @@ async def movie_details_using_search_results_item():
     )
 
     details = await md.get_content_model()
-    print(type(details))
-
-    # <class 'moviebox_api.v1.extractor.models.json.ItemJsonDetailsModel'>
+    print(type(details))  # (2)
 
 
 if __name__ == "__main__":

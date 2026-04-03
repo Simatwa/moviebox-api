@@ -132,7 +132,7 @@ class Session:
         return self._validate_response(response)
 
     async def get_with_cookies_from_api(self, *args, **kwargs) -> dict:
-        """Makes a http get request with server-assigned cookies from previous 
+        """Makes a http get request with server-assigned cookies from previous
         requests and extract the `data` field from the response.
 
         Returns:

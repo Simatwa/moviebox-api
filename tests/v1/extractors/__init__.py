@@ -18,7 +18,7 @@ def read_content(path):
 
 
 def write_content(path, content):
-    with open(path, 'w') as fh:
+    with open(path, "w") as fh:
         fh.write(content)
 
 

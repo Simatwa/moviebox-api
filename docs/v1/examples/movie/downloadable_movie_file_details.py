@@ -14,9 +14,9 @@ async def downloadable_movie_file_details():
     search_results = await search.get_content_model()
     target_movie = search_results.first_item
 
-    target_movie_details_instance = MovieDetails(target_movie, client_session)
-    # Alternatively :
-    # target_movie_details_instance = search.get_item_details(target_movie)
+    target_movie_details_instance = MovieDetails(
+        target_movie, client_session
+    )  # (1)
 
     target_movie_details_model = (
         await target_movie_details_instance.get_content_model()
@@ -27,9 +27,7 @@ async def downloadable_movie_file_details():
     )
     downloadable_files_detail = await downloadable_files.get_content_model()
 
-    print(
-        type(downloadable_files_detail)
-    )  # (3) <class 'moviebox_api.v1.models.DownloadableFilesMetadata'>
+    print(type(downloadable_files_detail))  # (2)
 
     subtitles = downloadable_files_detail.captions
 

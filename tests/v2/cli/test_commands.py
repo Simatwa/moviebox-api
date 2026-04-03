@@ -6,8 +6,11 @@ import pytest
 def run_system_command(command: str) -> int:
     try:
         result = subprocess.run(
-            ("python -m moviebox_api v2 " + command
-            if not command.startswith('python') else command),
+            (
+                "python -m moviebox_api v2 " + command
+                if not command.startswith("python")
+                else command
+            ),
             shell=True,
             check=True,
             text=True,
@@ -47,9 +50,9 @@ def test_help(command):
     ],
     argvalues=[
         ["download-movie avatar -YT"],
-       # ["download-movie war -s education -YT"],
+        # ["download-movie war -s education -YT"],
         ["download-movie walker -s music -YT"],
-       # ["download-movie king -s anime -YT"],
+        # ["download-movie king -s anime -YT"],
         ["download-series merlin -s 1 -e 1 -YT"],
     ],
 )

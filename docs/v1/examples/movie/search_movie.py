@@ -9,17 +9,11 @@ async def search_movie():
     )
 
     search_results = await search.get_content()
-    print(type(search_results))  # <class 'dict'>
-
-    # items = search_results['items'] # list of individual movies matching the query
+    print(type(search_results))  # (1)
 
     modelled_search_results = await search.get_content_model()  # (2)
 
-    print(
-        type(modelled_search_results)
-    )  # <class 'moviebox_api.v1.models.SearchResultsModel'>
-
-    # items = search_results.items # (1)
+    print(type(modelled_search_results))  # (3)
 
 
 if __name__ == "__main__":

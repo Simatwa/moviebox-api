@@ -6,8 +6,11 @@ import pytest
 def run_system_command(command: str) -> int:
     try:
         result = subprocess.run(
-            ("python -m moviebox_api v1 " + command
-            if not command.startswith('python') else command),
+            (
+                "python -m moviebox_api v1 " + command
+                if not command.startswith("python")
+                else command
+            ),
             shell=True,
             check=True,
             text=True,

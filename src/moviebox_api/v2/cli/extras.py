@@ -276,10 +276,11 @@ def item_details_command(
         item_details_inst.get_content_model_sync(target_item)
     )
 
-    details = target_item.model_dump(mode='json') if full else {}
+    details = target_item.model_dump(mode="json") if full else {}
 
-    details.update(item_details.metadata.model_dump(mode='json',
-                                                     exclude=['referer', 'url']))
+    details.update(
+        item_details.metadata.model_dump(mode="json", exclude=["referer", "url"])
+    )
 
     season_items = []
 
@@ -294,9 +295,7 @@ def item_details_command(
     details["seasons"] = season_items
 
     if json:
-        rich.print_json(
-            data=item_details.model_dump(mode='json'), indent=4
-        )
+        rich.print_json(data=item_details.model_dump(mode="json"), indent=4)
 
     else:
         table = Table(

@@ -57,11 +57,7 @@ async def test_movie_using_page_url(url):
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     argnames=["url"],
-    argvalues=(
-        [
-            "/detail/county-49-UcSx2qEJvw7?id=6315211642355729232"
-        ],
-    ),
+    argvalues=(["/detail/county-49-UcSx2qEJvw7?id=6315211642355729232"],),
 )
 async def test_tv_series_using_page_url(url):
     session = Session()
