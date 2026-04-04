@@ -1,8 +1,10 @@
 """
 Constants for MovieBox API client.
 """
-
 import os
+
+from enum import StrEnum
+from moviebox_api.v1.constants import SubjectType
 
 SECRET_KEY_DEFAULT: str = (
     os.getenv("MOVIEBOX_SECRET_KEY_DEFAULT", "").strip()
@@ -85,5 +87,18 @@ TRAILER_CONTENT_FRAGMENTS: tuple[str, ...] = (
     "clip",
 )
 
-# ── Body truncation for signing ───────────────────────────────────────────────
+# Body truncation for signing
 SIGNATURE_BODY_MAX_BYTES: int = 102_400
+
+SEARCH_PER_PAGE_LIMIT = 20
+
+
+class TabID(StrEnum):
+    ALL = "All"
+    MUSIC = "Music"
+    PEOPLE = "People"
+    EDUCATION = "Education"
+    MOVIE = "Movie"
+    TV_SERIES = "TV"
+    MOVIE_TV = "MovieTV"
+    SHORT_TV = "ShortTV"

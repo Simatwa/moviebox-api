@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import logging
+from json import dumps
 from typing import Any
 
 import httpx
@@ -116,6 +117,7 @@ class MovieBoxHttpClient:
         content_type: str = "application/json",
         body: str | None = None,
         include_play_mode: bool = False,
+        **request_kwargs,
     ) -> tuple[str, httpx.Response]:
         """
         Try each host in the pool in order and return the first response that
@@ -138,12 +140,15 @@ class MovieBoxHttpClient:
 
             try:
                 if method.upper() == "GET":
-                    response = await self._client.get(url, headers=headers)
+                    response = await self._client.get(
+                        url, headers=headers, **request_kwargs
+                    )
                 else:
                     response = await self._client.post(
                         url,
                         headers=headers,
                         content=body.encode() if body else b"",
+                        **request_kwargs,
                     )
 
                 self._absorb_x_user(response.headers)
@@ -190,11 +195,12 @@ class MovieBoxHttpClient:
     async def post(
         self,
         path: str,
-        body: dict,
+        json: dict,
         *,
         params: dict = None,
         accept: str = "application/json",
         content_type: str = "application/json; charset=utf-8",
+        **request_kwargs,
     ) -> tuple[str, httpx.Response]:
 
         if params:
@@ -205,7 +211,8 @@ class MovieBoxHttpClient:
             path,
             accept=accept,
             content_type=content_type,
-            body=json.dumps(body),
+            body=dumps(json),
+            **request_kwargs,
         )
 
     async def get_raw(
@@ -214,6 +221,7 @@ class MovieBoxHttpClient:
         *,
         params: dict = None,
         headers: dict[str, str] | None = None,
+        **request_kwargs,
     ) -> httpx.Response:
         """
         Fetch an arbitrary URL without signing (used for web-API scraping and
@@ -223,7 +231,9 @@ class MovieBoxHttpClient:
             full_url = combine_url_path_with_params(full_url, params)
 
         assert self._client is not None
-        return await self._client.get(full_url, headers=headers or {})
+        return await self._client.get(
+            full_url, headers=headers or {}, **request_kwargs
+        )
 
     async def get_from_api(self, *args, **kwargs) -> dict:
         """Fetch data from api and extract the `data` field from the response

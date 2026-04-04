@@ -1,7 +1,18 @@
 from moviebox_api.v3._bases import BaseContentProviderAndHelper
-from moviebox_api.v3.helpers import assert_instance
+from moviebox_api.v3.constants import SEARCH_PER_PAGE_LIMIT, SubjectType, TabID
+from moviebox_api.v3.exceptions import (
+    ExhaustedSearchResultsError,
+    MovieboxApiException,
+    ZeroSearchResultsError,
+)
+from moviebox_api.v3.helpers import (
+    assert_instance,
+    is_valid_search_item,
+    sanitize_item_name,
+)
 from moviebox_api.v3.http_client import MovieBoxHttpClient
 from moviebox_api.v3.models.homepage import RootHomepageModel
+from moviebox_api.v3.models.search import SearchResultsModel
 
 
 class Homepage(BaseContentProviderAndHelper):
@@ -35,3 +46,149 @@ class Homepage(BaseContentProviderAndHelper):
     async def get_content_model(self, *args, **kwargs) -> RootHomepageModel:
         content = await self.get_content(*args, **kwargs)
         return RootHomepageModel.model_validate(content)
+
+
+class Search:
+    """Performs a search of movies, tv series, music  etc or both"""
+    _path = "/wefeed-mobile-bff/subject-api/search/v2"
+
+    def __init__(
+        self,
+        client_session: MovieBoxHttpClient,  # 0113562291
+        query: str,
+        subject_type: SubjectType = SubjectType.ALL,
+        tab_id: TabID = TabID.ALL,
+        page: int = 1,
+        per_page: int = 20,
+    ):
+        assert 0 < per_page <= SEARCH_PER_PAGE_LIMIT, (
+            f"per_page value {per_page} "
+            f"is NOT between 0 and {SEARCH_PER_PAGE_LIMIT}"
+        )
+        assert_instance(subject_type, SubjectType, "subject_type")
+        assert_instance(client_session, MovieBoxHttpClient, "client_session")
+        assert_instance(tab_id, TabID, "tab_id")
+
+        self.client_session = client_session
+        self._subject_type = subject_type
+        self._query = query
+        self._page = page
+        self._per_page = per_page
+        self._tab_id = tab_id
+
+    def _create_payload(self) -> dict[str, str | int]:
+        """Creates payload from the parameters declared.
+
+        Returns:
+            dict[str, str|int]: Ready payload
+        """
+
+        return {
+            "keyword": self._query,
+            "page": self._page,
+            "perPage": self._per_page,
+            "subjectType": self._subject_type.value,
+            "tabId": self._tab_id,
+        }
+
+    async def get_content(self) -> dict:
+        """Performs the actual fetch of contents
+
+        Returns:
+            dict: Fetched results
+        """
+        contents = await self.client_session.post_to_api(
+            self._path, json=self._create_payload()
+        )
+
+        return contents
+        '''
+
+        if self._subject_type is not SubjectType.ALL:
+            target_items = []
+
+            # Sometimes server response include irrelevant
+            # items
+
+            contents_items = contents["items"]
+
+            if not contents_items:
+                raise ZeroSearchResultsError(
+                    "Search yielded empty results. Try a different keyword."
+                )
+
+            for item in contents_items:
+                if item["subjectType"] == self._subject_type.value:
+                    # https://github.com/Simatwa/moviebox-api/issues/55
+                    item_name = item["title"]
+
+                    if is_valid_search_item(item_name):
+                        item["title"] = sanitize_item_name(item_name)
+                        target_items.append(item)
+
+            contents["items"] = target_items
+
+        return contents
+        '''
+
+    async def get_content_model(self) -> SearchResultsModel:
+        """Modelled version of the contents.
+
+        Returns:
+            SearchResultsModel: Modelled contents
+        """
+        contents = await self.get_content()
+        return SearchResultsModel(**contents)
+
+    def next_page(self, content: SearchResultsModel) -> "Search":
+        """Navigate to the search results of the next page.
+
+        Args:
+            content (SearchResultsModel): Modelled version of search results
+
+        Returns:
+            Search
+        """
+        assert_instance(content, SearchResultsModel, "content")
+
+        if content.pager.hasMore:
+            return Search(
+                session=self.session,
+                query=self._query,
+                subject_type=self._subject_type,
+                page=content.pager.nextPage,
+                per_page=self._per_page,
+            )
+        else:
+            raise ExhaustedSearchResultsError(
+                content.pager,
+                "You have already reached the last page of the search results.",
+            )
+
+    def previous_page(self, content: SearchResultsModel) -> "Search":
+        """Navigate to the search results of the previous page.
+
+        - Useful when the currrent page is greater than  1.
+
+        Args:
+            content (SearchResultsModel): Modelled version of search results
+
+        Returns:
+            Search
+        """
+        assert_instance(content, SearchResultsModel, "content")
+
+        if content.pager.page >= 2:
+            return Search(
+                session=self.session,
+                query=self._query,
+                subject_type=self._subject_type,
+                page=content.pager.page - 1,
+                per_page=self._per_page,
+            )
+        else:
+            raise MovieboxApiException(
+                "Unable to navigate to previous page. "
+                "Current page is the first one try navigating to the next "
+                "one instead."
+            )
