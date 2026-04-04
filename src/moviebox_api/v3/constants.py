@@ -33,15 +33,17 @@ WEB_USER_AGENT: str = (
     "Chrome/123.0.0.0 Safari/537.36"
 )
 
-RETRY_STATUS_CODES: frozenset[int] = frozenset({
-    403,
-    407,
-    429,
-    500,
-    502,
-    503,
-    504,
-})
+RETRY_STATUS_CODES: frozenset[int] = frozenset(
+    {
+        403,
+        407,
+        429,
+        500,
+        502,
+        503,
+        504,
+    }
+)
 
 BLOCKED_HOST_KEYWORDS: tuple[str, ...] = (
     "fzmovies",

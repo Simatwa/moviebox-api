@@ -2,6 +2,7 @@
 This module provide functions for performing common and frequently required tasks
 across the package.
 """
+
 import re
 import typing as t
 from urllib.parse import urljoin

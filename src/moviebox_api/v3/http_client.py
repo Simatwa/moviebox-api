@@ -44,7 +44,7 @@ class MovieBoxHttpClient:
         host_pool: list[str] = HOST_POOL,
         timeout: float = 20.0,
         follow_redirects: bool = True,
-        **httpx_client_kwargs
+        **httpx_client_kwargs,
     ) -> None:
         self._host_pool = host_pool
         self._active_base: str = DEFAULT_API_BASE
@@ -58,8 +58,8 @@ class MovieBoxHttpClient:
         self._client = httpx.AsyncClient(
             timeout=self._timeout,
             follow_redirects=self._follow_redirects,
-            **self._httpx_client_kwargs
-            )
+            **self._httpx_client_kwargs,
+        )
         return self
 
     async def __aexit__(self, *_: Any) -> None:

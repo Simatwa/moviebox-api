@@ -81,7 +81,6 @@ class MovieBoxProvider:
     async def __aexit__(self, *args: object) -> None:
         await self._http.__aexit__(*args)
 
-
     def _cover_url(self, data: dict) -> str | None:
         """Extract the best available cover image URL from a raw subject dict."""
 
@@ -104,7 +103,9 @@ class MovieBoxProvider:
             _url(data.get("landscape")),
         )
 
-    def _default_stream_headers(self, cookie: str | None = None) -> dict[str, str]:
+    def _default_stream_headers(
+        self, cookie: str | None = None
+    ) -> dict[str, str]:
         headers: dict[str, str] = {
             "User-Agent": USER_AGENT,
             "Referer": self._http.active_base,
@@ -128,10 +129,15 @@ class MovieBoxProvider:
             if not sid or not title:
                 return None
             cover_node = s.get("cover")
-            cover_url = cover_node.get("url") if isinstance(cover_node, dict) else None
+            cover_url = (
+                cover_node.get("url") if isinstance(cover_node, dict) else None
+            )
             stype = s.get("subjectType", 1)
             return SearchResult(
-                title=title, subject_id=sid, subject_type=stype, cover_url=cover_url
+                title=title,
+                subject_id=sid,
+                subject_type=stype,
+                cover_url=cover_url,
             )
 
         sections: list[dict] = []
@@ -139,7 +145,9 @@ class MovieBoxProvider:
             root = json.loads(response.text)
             for section in root.get("data", {}).get("items", []):
                 raw_title = section.get("title", "")
-                title = "🔥Top Picks" if raw_title.lower() == "banner" else raw_title
+                title = (
+                    "🔥Top Picks" if raw_title.lower() == "banner" else raw_title
+                )
                 stype = section.get("type", "")
                 media_list: list[SearchResult] = []
 
@@ -154,7 +162,9 @@ class MovieBoxProvider:
                         if r:
                             media_list.append(r)
                 elif stype == "CUSTOM":
-                    for item in (section.get("customData") or {}).get("items", []):
+                    for item in (section.get("customData") or {}).get(
+                        "items", []
+                    ):
                         r = _parse_subject(item.get("subject") or {})
                         if r:
                             media_list.append(r)
@@ -188,10 +198,10 @@ class MovieBoxProvider:
         results: list[SearchResult] = []
         try:
             root = json.loads(response.text)
-            '''
+            """
             with open("search_results.json", "w") as fh:
                 json.dump(root, fh, indent=4)
-            '''
+            """
             for result in root.get("data", {}).get("results", []):
                 for subject in result.get("subjects", []):
                     sid = subject.get("subjectId")
@@ -200,7 +210,9 @@ class MovieBoxProvider:
                         continue
                     cover_node = subject.get("cover")
                     cover_url = (
-                        cover_node.get("url") if isinstance(cover_node, dict) else None
+                        cover_node.get("url")
+                        if isinstance(cover_node, dict)
+                        else None
                     )
                     stype = subject.get("subjectType", 1)
                     results.append(
@@ -228,12 +240,12 @@ class MovieBoxProvider:
 
         try:
             root = json.loads(response.text)
-            '''
+            """
             with open("movie_details.json", "w") as fh:
                 json.dump(
                     root, fh, indent=4
                 )
-            '''
+            """
         except json.JSONDecodeError:
             logger.exception("Bad JSON for subject %s", subject_id)
             return None
@@ -246,7 +258,9 @@ class MovieBoxProvider:
         try:
             subject = SubjectData.model_validate(raw_data)
         except ValidationError:
-            logger.exception("Pydantic validation failed for subject %s", subject_id)
+            logger.exception(
+                "Pydantic validation failed for subject %s", subject_id
+            )
             return None
 
         cover = self._cover_url(raw_data)
@@ -334,8 +348,12 @@ class MovieBoxProvider:
         parts = data.split("|")
         is_series = len(parts) > 1
         subject_id = extract_subject_id(parts[0])
-        season = max(int(parts[1]), 1) if len(parts) > 1 and parts[1].isdigit() else 0
-        episode = max(int(parts[2]), 1) if len(parts) > 2 and parts[2].isdigit() else 0
+        season = (
+            max(int(parts[1]), 1) if len(parts) > 1 and parts[1].isdigit() else 0
+        )
+        episode = (
+            max(int(parts[2]), 1) if len(parts) > 2 and parts[2].isdigit() else 0
+        )
 
         emitted: set[str] = set()
         collected: list[ExtractorLink] = []
@@ -391,12 +409,16 @@ class MovieBoxProvider:
             return collected
 
         # 2. play-info streams
-        has_links = await self._links_from_play_info(subject_id, season, episode, emit)
+        has_links = await self._links_from_play_info(
+            subject_id, season, episode, emit
+        )
         if has_links:
             return collected
 
         # 3. /resource endpoint
-        has_links = await self._links_from_resource(subject_id, season, episode, emit)
+        has_links = await self._links_from_resource(
+            subject_id, season, episode, emit
+        )
         if has_links:
             return collected
 
@@ -456,7 +478,9 @@ class MovieBoxProvider:
             if not is_series:
                 trailer_url = raw_data.get("trailer") or {}
                 if isinstance(trailer_url, dict):
-                    trailer_url = (trailer_url.get("VideoAddress") or {}).get("url")
+                    trailer_url = (trailer_url.get("VideoAddress") or {}).get(
+                        "url"
+                    )
                 else:
                     trailer_url = None
                 if trailer_url:
@@ -556,7 +580,9 @@ class MovieBoxProvider:
         has = False
         try:
             assert self._http._client is not None
-            candidates = await fetch_web_candidates(subject_id, self._http._client)
+            candidates = await fetch_web_candidates(
+                subject_id, self._http._client
+            )
 
             if is_series:
                 candidates.sort(

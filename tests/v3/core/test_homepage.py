@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from moviebox_api.v3.core import Homepage
 from moviebox_api.v3.http_client import MovieBoxHttpClient
+from moviebox_api.v3.models.homepage import RootHomepageModel
 
 
 def save(data, filename="research.json", indent=4):
@@ -34,5 +35,6 @@ async def test_homepage_fetch_contents():
         homepage = Homepage(client_session)
         contents = await homepage.get_content()
         assert type(contents) is dict
-
-        save(contents)
+        modelled_contents = await homepage.get_content_model()
+        assert isinstance(modelled_contents, RootHomepageModel)
+        save(modelled_contents)
