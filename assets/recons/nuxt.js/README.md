@@ -1,0 +1,2 @@
+> [!NOTE]
+> Specific movie/tv-series page contents are rendered dynamically using *nuxt.js*. However, the contents - `application/json` - are kinda like obfuscated. My aim was to deobfuscate it which I undoubtedly achieved.

@@ -1,0 +1,1145 @@
+{
+    "code": 0,
+    "message": "ok",
+    "data": {
+        "subject": {
+            "subjectId": "2731661859534295832",
+            "subjectType": 2,
+            "title": "Warrior S1-S3",
+            "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+            "releaseDate": "2019-04-05",
+            "duration": 0,
+            "genre": "Action,Crime,Drama",
+            "cover": {
+                "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                "width": 1296,
+                "height": 1920,
+                "size": 421632,
+                "format": "jpg",
+                "thumbnail": "",
+                "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                "gif": null,
+                "avgHueLight": "#4c3333",
+                "avgHueDark": "#4c3333",
+                "id": "0"
+            },
+            "countryName": "United States",
+            "imdbRatingValue": "8.4",
+            "subtitles": "English,Filipino,Français,Indonesian,Kiswahili,Português,Русский,اَلْعَرَبِيَّةُ,اُردُو,هَرْشٜن هَوْس,বাংলা,ਪੰਜਾਬੀ,中文",
+            "ops": "",
+            "hasResource": true,
+            "trailer": {
+                "videoAddress": {
+                    "videoId": "228267425052117768",
+                    "definition": "",
+                    "url": "https://macdn.aoneroom.com/media/vone/2023/07/10/a42a998d445bb686f26aab618b00b10f-sd.mp4",
+                    "duration": 146,
+                    "width": 848,
+                    "height": 476,
+                    "size": 5818258,
+                    "fps": 0,
+                    "bitrate": 0,
+                    "type": 0
+                },
+                "cover": {
+                    "url": "https://pbcdnw.aoneroom.com/image/2023/07/10/978e0be081e5bb4ab20c7412935c5576.webp",
+                    "width": 854,
+                    "height": 480,
+                    "size": 13070,
+                    "format": "webp",
+                    "thumbnail": "",
+                    "blurHash": "eO9@O+~o_1?G%L-:-:%L%2t7RkV]WEWCV[aiWEWCWCWCR*WCWVayay",
+                    "gif": null,
+                    "avgHueLight": "#38362f",
+                    "avgHueDark": "#38362f",
+                    "id": "0"
+                }
+            },
+            "detailPath": "warrior-Au4u1Uu2Nf3",
+            "staffList": [],
+            "appointmentCnt": 0,
+            "appointmentDate": "",
+            "corner": "",
+            "imdbRatingCount": 35891,
+            "stills": {
+                "url": "https://pbcdnw.aoneroom.com/image/2023/07/10/978e0be081e5bb4ab20c7412935c5576.webp",
+                "width": 854,
+                "height": 480,
+                "size": 13070,
+                "format": "webp",
+                "thumbnail": "",
+                "blurHash": "eO9@O+~o_1?G%L-:-:%L%2t7RkV]WEWCV[aiWEWCWCWCR*WCWVayay",
+                "gif": null,
+                "avgHueLight": "#38362f",
+                "avgHueDark": "#38362f",
+                "id": "0"
+            },
+            "postTitle": "This show is just pure awesome.",
+            "season": 0,
+            "dubs": [
+                {
+                    "subjectId": "2731661859534295832",
+                    "lanName": "Original Audio",
+                    "lanCode": "zh",
+                    "original": true,
+                    "type": 0,
+                    "detailPath": "warrior-Au4u1Uu2Nf3"
+                },
+                {
+                    "subjectId": "8275320608632832896",
+                    "lanName": "Arabic sub",
+                    "lanCode": "ar",
+                    "original": false,
+                    "type": 1,
+                    "detailPath": "warrior-IO8fPXt3jR9"
+                },
+                {
+                    "subjectId": "3959939732506821720",
+                    "lanName": "French dub",
+                    "lanCode": "fr",
+                    "original": false,
+                    "type": 0,
+                    "detailPath": "warrior-Is9evE5zwI4"
+                },
+                {
+                    "subjectId": "8367356964602527808",
+                    "lanName": "Indonesian sub",
+                    "lanCode": "id",
+                    "original": false,
+                    "type": 1,
+                    "detailPath": "warrior-EKr5HCbA6Y9"
+                }
+            ]
+        },
+        "stars": [
+            {
+                "staffId": "468753508075457200",
+                "staffType": 1,
+                "name": "Andrew Koji",
+                "character": "Ah Sahm",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/10/14/f48479186d430b97d83f8b0f495ea8d5.jpg",
+                "detailPath": "andrew-koji-Q2mBrnyTCy"
+            },
+            {
+                "staffId": "9002395630175670056",
+                "staffType": 1,
+                "name": "Olivia Cheng",
+                "character": "Ah Toy",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/09/07/8de713e5fbbd8092dcee0a543c4ab9b9.jpg",
+                "detailPath": "olivia-cheng-g2dHSrb41Ja"
+            },
+            {
+                "staffId": "4187947435520052920",
+                "staffType": 1,
+                "name": "Jason Tobin",
+                "character": "Young Jun",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/09/02/48a1fd28fe540d6e916daefc0402d4a5.jpg",
+                "detailPath": "jason-tobin-I4ROT7jQmZ4"
+            },
+            {
+                "staffId": "5550211538826449952",
+                "staffType": 1,
+                "name": "Kieran Bew",
+                "character": "Bill O'Hara",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/11/03/6aaa3f27507e6cd2a895c1c7731df1bd.jpg",
+                "detailPath": "kieran-bew-UGLe9BI10C6"
+            },
+            {
+                "staffId": "4150295742156002072",
+                "staffType": 1,
+                "name": "Langley Kirkwood",
+                "character": "Walter Buckley",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/11/03/26eab3754b0beebc560954aaf3532ff1-s.jpg",
+                "detailPath": "langley-kirkwood-Uql2ZWHoAW4"
+            },
+            {
+                "staffId": "4150295742156526360",
+                "staffType": 1,
+                "name": "Dianne Doan",
+                "character": "Mai Ling",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/11/03/366ec9a1457f0c4245a6ab3868b72c82-s.jpg",
+                "detailPath": "dianne-doan-aPx4ZWHoAW4"
+            },
+            {
+                "staffId": "1948661856231377984",
+                "staffType": 1,
+                "name": "Dean Jagger",
+                "character": "Dylan Leary",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2024/02/08/0661bb2f95c0330079c190620351f357.jpg",
+                "detailPath": "dean-jagger-WJ4sHKiTWj2"
+            },
+            {
+                "staffId": "286629474340328480",
+                "staffType": 1,
+                "name": "Joanna Vanderham",
+                "character": "Penelope Blake",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/11/03/9f96aab749c32a18a1635941a6e254bb.jpg",
+                "detailPath": "joanna-vanderham-y35ScDuLal"
+            },
+            {
+                "staffId": "7066692215334391600",
+                "staffType": 1,
+                "name": "Tom Weston-Jones",
+                "character": "Richard Lee",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/09/07/1a15d165ee46ea23c2505667b767ac52.jpg",
+                "detailPath": "tom-weston-jones-04At5kzw1q8"
+            },
+            {
+                "staffId": "4675280813200658216",
+                "staffType": 1,
+                "name": "Hoon Lee",
+                "character": "Wang Chao",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/09/07/1910443c646cb3d96e55a2c1b5325954.jpg",
+                "detailPath": "hoon-lee-CdplOwOPmz5"
+            },
+            {
+                "staffId": "5359252774541741856",
+                "staffType": 1,
+                "name": "Christian McKay",
+                "character": "Mayor Samuel Blake",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/09/02/4ab5e1a0f4096ffffe6e184a0d5558b0.jpg",
+                "detailPath": "christian-mckay-OPBWZsWqTn6"
+            },
+            {
+                "staffId": "579753604945431216",
+                "staffType": 1,
+                "name": "Perry Yung",
+                "character": "Father Jun",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/10/14/6f80cfbdc5795e47a88ca4cb3b3d65fa.jpg",
+                "detailPath": "perry-yung-SzU0ukdhPG"
+            },
+            {
+                "staffId": "3496609708344495912",
+                "staffType": 1,
+                "name": "Joe Taslim",
+                "character": "Li Yong",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/09/02/00e0f86e4cd1a12906918e2f4923d150-s.jpg",
+                "detailPath": "joe-taslim-4ic9yKAvia4"
+            },
+            {
+                "staffId": "8887937431795289904",
+                "staffType": 1,
+                "name": "Robert Hobbs",
+                "character": "Stone",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/09/02/437931cf0c15cec6ecf75d34caa914df.jpg",
+                "detailPath": "robert-hobbs-2f1jeGyQyAa"
+            },
+            {
+                "staffId": "6260588426527395512",
+                "staffType": 1,
+                "name": "Nicholas Pauling",
+                "character": "Harrison",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/09/02/151627a91076aa9e5d86ac95ffbb8ac8.jpg",
+                "detailPath": "nicholas-pauling-4OC6z4Oyts7"
+            },
+            {
+                "staffId": "2646590463053024952",
+                "staffType": 1,
+                "name": "Dustin Nguyen",
+                "character": "Zing",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/09/02/223a97e0a5e7e44e47c3dd5403cc65cd.jpg",
+                "detailPath": "dustin-nguyen-osmmfgzpv93"
+            },
+            {
+                "staffId": "8734712927322263336",
+                "staffType": 1,
+                "name": "David Butler",
+                "character": "Russell Flannagan",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2023/08/09/e47265876108681dd9618741b106a88d.jpg",
+                "detailPath": "david-butler-MGhbYlP4fpa"
+            },
+            {
+                "staffId": "741379615206296240",
+                "staffType": 1,
+                "name": "Kenneth Fok",
+                "character": "Jacob",
+                "avatarUrl": "",
+                "detailPath": "kenneth-fok-kQbVqSDwLS"
+            },
+            {
+                "staffId": "3832971017023016536",
+                "staffType": 1,
+                "name": "Chen Tang",
+                "character": "Hong",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/10/14/4f9316517bdae7f57db63677efac8ba2.jpg",
+                "detailPath": "chen-tang-iPr8mdY29z4"
+            },
+            {
+                "staffId": "1259934759432639520",
+                "staffType": 1,
+                "name": "Emily Child",
+                "character": "Lucy O'Hara",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/11/03/30be677f6e12680ee35a4a5dccc9e7ac-s.jpg",
+                "detailPath": "emily-child-IghshZTv4v1"
+            },
+            {
+                "staffId": "8631021146802638632",
+                "staffType": 1,
+                "name": "Miranda Raison",
+                "character": "Nellie Davenport",
+                "avatarUrl": "https://pbcdnw.aoneroom.com/image/2022/09/02/15efcaaac2f646868bab794257f4de26.jpg",
+                "detailPath": "miranda-raison-8mtrppraAha"
+            },
+            {
+                "staffId": "1800056663173383888",
+                "staffType": 3,
+                "name": "Jonathan Tropper",
+                "character": "Writer",
+                "avatarUrl": "",
+                "detailPath": "jonathan-tropper-4SUhEZghY82"
+            }
+        ],
+        "resource": {
+            "seasons": [
+                {
+                    "se": 1,
+                    "maxEp": 10,
+                    "allEp": "",
+                    "resolutions": [
+                        {
+                            "resolution": 360,
+                            "epNum": 10
+                        },
+                        {
+                            "resolution": 480,
+                            "epNum": 10
+                        },
+                        {
+                            "resolution": 720,
+                            "epNum": 10
+                        },
+                        {
+                            "resolution": 1080,
+                            "epNum": 10
+                        }
+                    ]
+                },
+                {
+                    "se": 2,
+                    "maxEp": 10,
+                    "allEp": "",
+                    "resolutions": [
+                        {
+                            "resolution": 360,
+                            "epNum": 10
+                        },
+                        {
+                            "resolution": 480,
+                            "epNum": 9
+                        },
+                        {
+                            "resolution": 1080,
+                            "epNum": 1
+                        }
+                    ]
+                },
+                {
+                    "se": 3,
+                    "maxEp": 10,
+                    "allEp": "",
+                    "resolutions": [
+                        {
+                            "resolution": 360,
+                            "epNum": 10
+                        },
+                        {
+                            "resolution": 480,
+                            "epNum": 10
+                        }
+                    ]
+                }
+            ],
+            "source": "ailok.pe",
+            "uploadBy": "Marki kelil"
+        },
+        "metadata": {
+            "title": "Warrior",
+            "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+            "keyWords": "",
+            "image": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg"
+        },
+        "isForbid": false,
+        "watchTimeLimit": 15,
+        "postList": {
+            "pager": {
+                "hasMore": true,
+                "nextPage": "1752835961846",
+                "page": "",
+                "perPage": 0,
+                "totalCount": 0
+            },
+            "items": [
+                {
+                    "postId": "7354294171735577120",
+                    "userId": "329508278726181672",
+                    "title": "",
+                    "content": "C'est vraiment belle ",
+                    "groupId": "0",
+                    "subjectId": "2731661859534295832",
+                    "isSubjectRate": false,
+                    "subjectRate": 0,
+                    "status": 1,
+                    "link": null,
+                    "mediaType": "NONE",
+                    "createdAt": "1772981612035",
+                    "updatedAt": "0",
+                    "user": {
+                        "userId": "329508278726181672",
+                        "username": "",
+                        "nickname": "Djoulensky Olivier Tanis",
+                        "avatar": "https://pacdn.aoneroom.com/image/2025/10/27/09fbd04a5d9271f367925890cbde9d6c.jpg"
+                    },
+                    "group": null,
+                    "subject": {
+                        "subjectId": "2731661859534295832",
+                        "title": "Warrior",
+                        "rate": 0,
+                        "imdbRate": "8.4",
+                        "subjectType": 2,
+                        "releaseDate": "2019-04-05",
+                        "duration": "0",
+                        "durationSeconds": 0,
+                        "genre": "Action,Crime,Drama",
+                        "cover": {
+                            "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                            "width": 1296,
+                            "height": 1920,
+                            "size": 421632,
+                            "format": "jpg",
+                            "thumbnail": "",
+                            "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                            "gif": null,
+                            "avgHueLight": "#4c3333",
+                            "avgHueDark": "#4c3333",
+                            "id": "0"
+                        },
+                        "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+                        "countryName": "United States",
+                        "hasResource": true,
+                        "dl": null,
+                        "detailPath": "warrior-Au4u1Uu2Nf3",
+                        "detailUrl": "",
+                        "sniffUrl": "",
+                        "sourceUrl": ""
+                    },
+                    "stat": {
+                        "viewCount": 0,
+                        "likeCount": 0,
+                        "commentCount": 0,
+                        "shareCount": 0,
+                        "mediaViewCount": 0
+                    },
+                    "media": null,
+                    "cover": {
+                        "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                        "width": 1296,
+                        "height": 1920,
+                        "size": 421632,
+                        "format": "jpg",
+                        "thumbnail": "",
+                        "blurHash": "",
+                        "gif": null,
+                        "avgHueLight": "",
+                        "avgHueDark": "",
+                        "id": "0"
+                    },
+                    "commentList": [],
+                    "poiName": ""
+                },
+                {
+                    "postId": "2708153788220727032",
+                    "userId": "1332586556288288496",
+                    "title": "",
+                    "content": "in hindi dubbing plzzzz ",
+                    "groupId": "0",
+                    "subjectId": "2731661859534295832",
+                    "isSubjectRate": false,
+                    "subjectRate": 0,
+                    "status": 1,
+                    "link": null,
+                    "mediaType": "NONE",
+                    "createdAt": "1772312071224",
+                    "updatedAt": "0",
+                    "user": {
+                        "userId": "1332586556288288496",
+                        "username": "",
+                        "nickname": "Haron Gill",
+                        "avatar": "https://pbcdn.aoneroom.com/image/2026/02/28/a03cc8e7f0ceee931973a647d149dd8e.png"
+                    },
+                    "group": null,
+                    "subject": {
+                        "subjectId": "2731661859534295832",
+                        "title": "Warrior",
+                        "rate": 0,
+                        "imdbRate": "8.4",
+                        "subjectType": 2,
+                        "releaseDate": "2019-04-05",
+                        "duration": "0",
+                        "durationSeconds": 0,
+                        "genre": "Action,Crime,Drama",
+                        "cover": {
+                            "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                            "width": 1296,
+                            "height": 1920,
+                            "size": 421632,
+                            "format": "jpg",
+                            "thumbnail": "",
+                            "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                            "gif": null,
+                            "avgHueLight": "#4c3333",
+                            "avgHueDark": "#4c3333",
+                            "id": "0"
+                        },
+                        "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+                        "countryName": "United States",
+                        "hasResource": true,
+                        "dl": null,
+                        "detailPath": "warrior-Au4u1Uu2Nf3",
+                        "detailUrl": "",
+                        "sniffUrl": "",
+                        "sourceUrl": ""
+                    },
+                    "stat": {
+                        "viewCount": 0,
+                        "likeCount": 0,
+                        "commentCount": 0,
+                        "shareCount": 0,
+                        "mediaViewCount": 0
+                    },
+                    "media": null,
+                    "cover": {
+                        "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                        "width": 1296,
+                        "height": 1920,
+                        "size": 421632,
+                        "format": "jpg",
+                        "thumbnail": "",
+                        "blurHash": "",
+                        "gif": null,
+                        "avgHueLight": "",
+                        "avgHueDark": "",
+                        "id": "0"
+                    },
+                    "commentList": [],
+                    "poiName": ""
+                },
+                {
+                    "postId": "4147210085716087552",
+                    "userId": "3613783819091953064",
+                    "title": "",
+                    "content": "Hindi mai kab aega",
+                    "groupId": "0",
+                    "subjectId": "2731661859534295832",
+                    "isSubjectRate": false,
+                    "subjectRate": 0,
+                    "status": 1,
+                    "link": null,
+                    "mediaType": "NONE",
+                    "createdAt": "1771622970386",
+                    "updatedAt": "0",
+                    "user": {
+                        "userId": "3613783819091953064",
+                        "username": "",
+                        "nickname": "Bilal Askani",
+                        "avatar": "https://pbcdn.aoneroom.com/image/2025/11/26/77f81a8324eec771edaa6e31ab0eb029.png"
+                    },
+                    "group": null,
+                    "subject": {
+                        "subjectId": "2731661859534295832",
+                        "title": "Warrior",
+                        "rate": 0,
+                        "imdbRate": "8.4",
+                        "subjectType": 2,
+                        "releaseDate": "2019-04-05",
+                        "duration": "0",
+                        "durationSeconds": 0,
+                        "genre": "Action,Crime,Drama",
+                        "cover": {
+                            "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                            "width": 1296,
+                            "height": 1920,
+                            "size": 421632,
+                            "format": "jpg",
+                            "thumbnail": "",
+                            "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                            "gif": null,
+                            "avgHueLight": "#4c3333",
+                            "avgHueDark": "#4c3333",
+                            "id": "0"
+                        },
+                        "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+                        "countryName": "United States",
+                        "hasResource": true,
+                        "dl": null,
+                        "detailPath": "warrior-Au4u1Uu2Nf3",
+                        "detailUrl": "",
+                        "sniffUrl": "",
+                        "sourceUrl": ""
+                    },
+                    "stat": {
+                        "viewCount": 0,
+                        "likeCount": 0,
+                        "commentCount": 0,
+                        "shareCount": 0,
+                        "mediaViewCount": 0
+                    },
+                    "media": null,
+                    "cover": {
+                        "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                        "width": 1296,
+                        "height": 1920,
+                        "size": 421632,
+                        "format": "jpg",
+                        "thumbnail": "",
+                        "blurHash": "",
+                        "gif": null,
+                        "avgHueLight": "",
+                        "avgHueDark": "",
+                        "id": "0"
+                    },
+                    "commentList": [],
+                    "poiName": ""
+                },
+                {
+                    "postId": "2018571585979830264",
+                    "userId": "2953859480573855736",
+                    "title": "",
+                    "content": "😎🫣",
+                    "groupId": "0",
+                    "subjectId": "2731661859534295832",
+                    "isSubjectRate": false,
+                    "subjectRate": 0,
+                    "status": 1,
+                    "link": null,
+                    "mediaType": "NONE",
+                    "createdAt": "1771159977247",
+                    "updatedAt": "0",
+                    "user": {
+                        "userId": "2953859480573855736",
+                        "username": "",
+                        "nickname": "Dex Danny",
+                        "avatar": "https://pacdn.aoneroom.com/image/2025/04/03/a43c2d53cc5aaf851f8d867294a65d37.webp"
+                    },
+                    "group": null,
+                    "subject": {
+                        "subjectId": "2731661859534295832",
+                        "title": "Warrior",
+                        "rate": 0,
+                        "imdbRate": "8.4",
+                        "subjectType": 2,
+                        "releaseDate": "2019-04-05",
+                        "duration": "0",
+                        "durationSeconds": 0,
+                        "genre": "Action,Crime,Drama",
+                        "cover": {
+                            "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                            "width": 1296,
+                            "height": 1920,
+                            "size": 421632,
+                            "format": "jpg",
+                            "thumbnail": "",
+                            "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                            "gif": null,
+                            "avgHueLight": "#4c3333",
+                            "avgHueDark": "#4c3333",
+                            "id": "0"
+                        },
+                        "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+                        "countryName": "United States",
+                        "hasResource": true,
+                        "dl": null,
+                        "detailPath": "warrior-Au4u1Uu2Nf3",
+                        "detailUrl": "",
+                        "sniffUrl": "",
+                        "sourceUrl": ""
+                    },
+                    "stat": {
+                        "viewCount": 0,
+                        "likeCount": 0,
+                        "commentCount": 0,
+                        "shareCount": 0,
+                        "mediaViewCount": 0
+                    },
+                    "media": null,
+                    "cover": {
+                        "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                        "width": 1296,
+                        "height": 1920,
+                        "size": 421632,
+                        "format": "jpg",
+                        "thumbnail": "",
+                        "blurHash": "",
+                        "gif": null,
+                        "avgHueLight": "",
+                        "avgHueDark": "",
+                        "id": "0"
+                    },
+                    "commentList": [],
+                    "poiName": ""
+                },
+                {
+                    "postId": "2071250871693758552",
+                    "userId": "9124754202387006760",
+                    "title": "",
+                    "content": "hindi dubbed ",
+                    "groupId": "0",
+                    "subjectId": "2731661859534295832",
+                    "isSubjectRate": false,
+                    "subjectRate": 0,
+                    "status": 1,
+                    "link": null,
+                    "mediaType": "NONE",
+                    "createdAt": "1770644450847",
+                    "updatedAt": "0",
+                    "user": {
+                        "userId": "9124754202387006760",
+                        "username": "",
+                        "nickname": "Hadi 007",
+                        "avatar": "https://pacdn.aoneroom.com/image/2025/05/07/341b3480d1402dc9eddecc10a7107cdb.jpg"
+                    },
+                    "group": null,
+                    "subject": {
+                        "subjectId": "2731661859534295832",
+                        "title": "Warrior",
+                        "rate": 0,
+                        "imdbRate": "8.4",
+                        "subjectType": 2,
+                        "releaseDate": "2019-04-05",
+                        "duration": "0",
+                        "durationSeconds": 0,
+                        "genre": "Action,Crime,Drama",
+                        "cover": {
+                            "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                            "width": 1296,
+                            "height": 1920,
+                            "size": 421632,
+                            "format": "jpg",
+                            "thumbnail": "",
+                            "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                            "gif": null,
+                            "avgHueLight": "#4c3333",
+                            "avgHueDark": "#4c3333",
+                            "id": "0"
+                        },
+                        "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+                        "countryName": "United States",
+                        "hasResource": true,
+                        "dl": null,
+                        "detailPath": "warrior-Au4u1Uu2Nf3",
+                        "detailUrl": "",
+                        "sniffUrl": "",
+                        "sourceUrl": ""
+                    },
+                    "stat": {
+                        "viewCount": 0,
+                        "likeCount": 0,
+                        "commentCount": 0,
+                        "shareCount": 0,
+                        "mediaViewCount": 0
+                    },
+                    "media": null,
+                    "cover": {
+                        "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                        "width": 1296,
+                        "height": 1920,
+                        "size": 421632,
+                        "format": "jpg",
+                        "thumbnail": "",
+                        "blurHash": "",
+                        "gif": null,
+                        "avgHueLight": "",
+                        "avgHueDark": "",
+                        "id": "0"
+                    },
+                    "commentList": [],
+                    "poiName": ""
+                },
+                {
+                    "postId": "8274153403488555416",
+                    "userId": "8808391532748456280",
+                    "title": "",
+                    "content": "hindi plz",
+                    "groupId": "0",
+                    "subjectId": "2731661859534295832",
+                    "isSubjectRate": false,
+                    "subjectRate": 0,
+                    "status": 1,
+                    "link": null,
+                    "mediaType": "NONE",
+                    "createdAt": "1768577545355",
+                    "updatedAt": "0",
+                    "user": {
+                        "userId": "8808391532748456280",
+                        "username": "",
+                        "nickname": "Ahmad🇹🇷",
+                        "avatar": "https://pacdn.aoneroom.com/app/avatar/default_avatar_01.webp"
+                    },
+                    "group": null,
+                    "subject": {
+                        "subjectId": "2731661859534295832",
+                        "title": "Warrior",
+                        "rate": 0,
+                        "imdbRate": "8.4",
+                        "subjectType": 2,
+                        "releaseDate": "2019-04-05",
+                        "duration": "0",
+                        "durationSeconds": 0,
+                        "genre": "Action,Crime,Drama",
+                        "cover": {
+                            "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                            "width": 1296,
+                            "height": 1920,
+                            "size": 421632,
+                            "format": "jpg",
+                            "thumbnail": "",
+                            "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                            "gif": null,
+                            "avgHueLight": "#4c3333",
+                            "avgHueDark": "#4c3333",
+                            "id": "0"
+                        },
+                        "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+                        "countryName": "United States",
+                        "hasResource": true,
+                        "dl": null,
+                        "detailPath": "warrior-Au4u1Uu2Nf3",
+                        "detailUrl": "",
+                        "sniffUrl": "",
+                        "sourceUrl": ""
+                    },
+                    "stat": {
+                        "viewCount": 0,
+                        "likeCount": 0,
+                        "commentCount": 1,
+                        "shareCount": 0,
+                        "mediaViewCount": 0
+                    },
+                    "media": null,
+                    "cover": {
+                        "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                        "width": 1296,
+                        "height": 1920,
+                        "size": 421632,
+                        "format": "jpg",
+                        "thumbnail": "",
+                        "blurHash": "",
+                        "gif": null,
+                        "avgHueLight": "",
+                        "avgHueDark": "",
+                        "id": "0"
+                    },
+                    "commentList": [],
+                    "poiName": ""
+                },
+                {
+                    "postId": "6439073470302637400",
+                    "userId": "3566055995551935024",
+                    "title": "",
+                    "content": "wow",
+                    "groupId": "0",
+                    "subjectId": "2731661859534295832",
+                    "isSubjectRate": false,
+                    "subjectRate": 0,
+                    "status": 1,
+                    "link": null,
+                    "mediaType": "NONE",
+                    "createdAt": "1762508398852",
+                    "updatedAt": "0",
+                    "user": {
+                        "userId": "3566055995551935024",
+                        "username": "",
+                        "nickname": "Walter Nonso",
+                        "avatar": "https://pacdn.aoneroom.com/image/2024/05/31/4ec8070b221d8915cf404a874ecaea49.jpg"
+                    },
+                    "group": null,
+                    "subject": {
+                        "subjectId": "2731661859534295832",
+                        "title": "Warrior",
+                        "rate": 0,
+                        "imdbRate": "8.4",
+                        "subjectType": 2,
+                        "releaseDate": "2019-04-05",
+                        "duration": "0",
+                        "durationSeconds": 0,
+                        "genre": "Action,Crime,Drama",
+                        "cover": {
+                            "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                            "width": 1296,
+                            "height": 1920,
+                            "size": 421632,
+                            "format": "jpg",
+                            "thumbnail": "",
+                            "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                            "gif": null,
+                            "avgHueLight": "#4c3333",
+                            "avgHueDark": "#4c3333",
+                            "id": "0"
+                        },
+                        "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+                        "countryName": "United States",
+                        "hasResource": true,
+                        "dl": null,
+                        "detailPath": "warrior-Au4u1Uu2Nf3",
+                        "detailUrl": "",
+                        "sniffUrl": "",
+                        "sourceUrl": ""
+                    },
+                    "stat": {
+                        "viewCount": 0,
+                        "likeCount": 1,
+                        "commentCount": 0,
+                        "shareCount": 0,
+                        "mediaViewCount": 0
+                    },
+                    "media": null,
+                    "cover": {
+                        "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                        "width": 1296,
+                        "height": 1920,
+                        "size": 421632,
+                        "format": "jpg",
+                        "thumbnail": "",
+                        "blurHash": "",
+                        "gif": null,
+                        "avgHueLight": "",
+                        "avgHueDark": "",
+                        "id": "0"
+                    },
+                    "commentList": [],
+                    "poiName": ""
+                },
+                {
+                    "postId": "4478657202336728736",
+                    "userId": "4869740331241194296",
+                    "title": "",
+                    "content": "English ",
+                    "groupId": "0",
+                    "subjectId": "2731661859534295832",
+                    "isSubjectRate": false,
+                    "subjectRate": 0,
+                    "status": 1,
+                    "link": null,
+                    "mediaType": "NONE",
+                    "createdAt": "1758676726386",
+                    "updatedAt": "0",
+                    "user": {
+                        "userId": "4869740331241194296",
+                        "username": "",
+                        "nickname": "EC4o5k",
+                        "avatar": "https://pacdn.aoneroom.com/image/2025/10/28/10d21758d46f4ce90826de847122f0c6.png"
+                    },
+                    "group": null,
+                    "subject": {
+                        "subjectId": "2731661859534295832",
+                        "title": "Warrior",
+                        "rate": 0,
+                        "imdbRate": "8.4",
+                        "subjectType": 2,
+                        "releaseDate": "2019-04-05",
+                        "duration": "0",
+                        "durationSeconds": 0,
+                        "genre": "Action,Crime,Drama",
+                        "cover": {
+                            "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                            "width": 1296,
+                            "height": 1920,
+                            "size": 421632,
+                            "format": "jpg",
+                            "thumbnail": "",
+                            "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                            "gif": null,
+                            "avgHueLight": "#4c3333",
+                            "avgHueDark": "#4c3333",
+                            "id": "0"
+                        },
+                        "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+                        "countryName": "United States",
+                        "hasResource": true,
+                        "dl": null,
+                        "detailPath": "warrior-Au4u1Uu2Nf3",
+                        "detailUrl": "",
+                        "sniffUrl": "",
+                        "sourceUrl": ""
+                    },
+                    "stat": {
+                        "viewCount": 0,
+                        "likeCount": 4,
+                        "commentCount": 0,
+                        "shareCount": 0,
+                        "mediaViewCount": 0
+                    },
+                    "media": null,
+                    "cover": {
+                        "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                        "width": 1296,
+                        "height": 1920,
+                        "size": 421632,
+                        "format": "jpg",
+                        "thumbnail": "",
+                        "blurHash": "",
+                        "gif": null,
+                        "avgHueLight": "",
+                        "avgHueDark": "",
+                        "id": "0"
+                    },
+                    "commentList": [],
+                    "poiName": ""
+                },
+                {
+                    "postId": "5329300798436787408",
+                    "userId": "3383532333897859320",
+                    "title": "",
+                    "content": "é muito bom ",
+                    "groupId": "0",
+                    "subjectId": "2731661859534295832",
+                    "isSubjectRate": false,
+                    "subjectRate": 0,
+                    "status": 1,
+                    "link": null,
+                    "mediaType": "NONE",
+                    "createdAt": "1757006801376",
+                    "updatedAt": "0",
+                    "user": {
+                        "userId": "3383532333897859320",
+                        "username": "",
+                        "nickname": "Menino TBD",
+                        "avatar": "https://pacdn.aoneroom.com/image/2025/09/04/9d52eed4fd6ef5b7d5a950e0018a1ced.png"
+                    },
+                    "group": null,
+                    "subject": {
+                        "subjectId": "2731661859534295832",
+                        "title": "Warrior",
+                        "rate": 0,
+                        "imdbRate": "8.4",
+                        "subjectType": 2,
+                        "releaseDate": "2019-04-05",
+                        "duration": "0",
+                        "durationSeconds": 0,
+                        "genre": "Action,Crime,Drama",
+                        "cover": {
+                            "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                            "width": 1296,
+                            "height": 1920,
+                            "size": 421632,
+                            "format": "jpg",
+                            "thumbnail": "",
+                            "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                            "gif": null,
+                            "avgHueLight": "#4c3333",
+                            "avgHueDark": "#4c3333",
+                            "id": "0"
+                        },
+                        "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+                        "countryName": "United States",
+                        "hasResource": true,
+                        "dl": null,
+                        "detailPath": "warrior-Au4u1Uu2Nf3",
+                        "detailUrl": "",
+                        "sniffUrl": "",
+                        "sourceUrl": ""
+                    },
+                    "stat": {
+                        "viewCount": 0,
+                        "likeCount": 1,
+                        "commentCount": 0,
+                        "shareCount": 1,
+                        "mediaViewCount": 0
+                    },
+                    "media": null,
+                    "cover": {
+                        "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                        "width": 1296,
+                        "height": 1920,
+                        "size": 421632,
+                        "format": "jpg",
+                        "thumbnail": "",
+                        "blurHash": "",
+                        "gif": null,
+                        "avgHueLight": "",
+                        "avgHueDark": "",
+                        "id": "0"
+                    },
+                    "commentList": [],
+                    "poiName": "49W4+GW Luanda"
+                },
+                {
+                    "postId": "5015010295899652864",
+                    "userId": "134548501685569456",
+                    "title": "",
+                    "content": "mnwb",
+                    "groupId": "0",
+                    "subjectId": "2731661859534295832",
+                    "isSubjectRate": false,
+                    "subjectRate": 0,
+                    "status": 1,
+                    "link": null,
+                    "mediaType": "NONE",
+                    "createdAt": "1754933378096",
+                    "updatedAt": "0",
+                    "user": {
+                        "userId": "134548501685569456",
+                        "username": "",
+                        "nickname": "Nahsamzy",
+                        "avatar": "https://pbcdn.aoneroom.com/image/2025/11/09/83b5f40f121feab02cab0affad53e816.png"
+                    },
+                    "group": null,
+                    "subject": {
+                        "subjectId": "2731661859534295832",
+                        "title": "Warrior",
+                        "rate": 0,
+                        "imdbRate": "8.4",
+                        "subjectType": 2,
+                        "releaseDate": "2019-04-05",
+                        "duration": "0",
+                        "durationSeconds": 0,
+                        "genre": "Action,Crime,Drama",
+                        "cover": {
+                            "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                            "width": 1296,
+                            "height": 1920,
+                            "size": 421632,
+                            "format": "jpg",
+                            "thumbnail": "",
+                            "blurHash": "eLBe:q{_t7S~RP^Q,oofS#V@v~j^S2S2kBVYX9R*RjozM{S6WBR%bv",
+                            "gif": null,
+                            "avgHueLight": "#4c3333",
+                            "avgHueDark": "#4c3333",
+                            "id": "0"
+                        },
+                        "description": "During the Tong Wars in the late 1800s, Ah Sahm, a martial arts prodigy from China, immigrates to San Francisco and becomes a hatchet man for the most powerful tong in Chinatown.",
+                        "countryName": "United States",
+                        "hasResource": true,
+                        "dl": null,
+                        "detailPath": "warrior-Au4u1Uu2Nf3",
+                        "detailUrl": "",
+                        "sniffUrl": "",
+                        "sourceUrl": ""
+                    },
+                    "stat": {
+                        "viewCount": 0,
+                        "likeCount": 1,
+                        "commentCount": 0,
+                        "shareCount": 0,
+                        "mediaViewCount": 0
+                    },
+                    "media": null,
+                    "cover": {
+                        "url": "https://pbcdnw.aoneroom.com/image/2022/11/03/fdccb319e51222c69c808e54fc02f8ac.jpg",
+                        "width": 1296,
+                        "height": 1920,
+                        "size": 421632,
+                        "format": "jpg",
+                        "thumbnail": "",
+                        "blurHash": "",
+                        "gif": null,
+                        "avgHueLight": "",
+                        "avgHueDark": "",
+                        "id": "0"
+                    },
+                    "commentList": [],
+                    "poiName": ""
+                }
+            ]
+        }
+    }
+}
