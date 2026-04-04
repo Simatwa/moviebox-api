@@ -219,3 +219,4 @@ commit-msg*
 *.html
 *.part
 temp/
+research.json
