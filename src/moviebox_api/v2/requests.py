@@ -6,6 +6,7 @@ from httpx._types import (
     ProxyTypes,
     TimeoutTypes,
 )
+from typing_extensions import deprecated
 
 import moviebox_api.v1.requests
 from moviebox_api.v2.constants import DOWNLOAD_REQUEST_HEADERS
@@ -48,6 +49,7 @@ class Session(moviebox_api.v1.requests.Session):
     async def ensure_cookies_are_assigned(self) -> bool:
         return True
 
+    @deprecated("This method is only available to to V1 of moviebox_api.requests")
     async def _fetch_app_info(self) -> None:
         raise NotImplementedError(
             "This functionality is only available to V1 of moviebox_api.requests"

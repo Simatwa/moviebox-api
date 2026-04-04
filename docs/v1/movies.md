@@ -43,7 +43,7 @@ async def search_movie():
     ...
     contents: SearchResultsModel = await search.get_content_model() # (3)
 
-    next_search: Search = search.next_page(search_results)  # (1)
+    next_search: Search = search.next_page(contents)  # (1)
 
     next_contents: SearchResultsModel = await next_search.get_content_model()  # (2)
 ```
