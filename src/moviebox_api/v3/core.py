@@ -12,6 +12,7 @@ from moviebox_api.v3.helpers import (
     validate_subject_id,
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
+from moviebox_api.v3.models.details import RootItemDetailsModel
 from moviebox_api.v3.models.homepage import RootHomepageModel
 from moviebox_api.v3.models.search import RootSearchResultsModel
 
@@ -220,3 +221,8 @@ class ItemDetails:
         )
 
         return contents
+
+    async def get_content_model(self, subject_id: str) -> RootItemDetailsModel:
+        contents = await self.get_content(subject_id)
+
+        return RootItemDetailsModel.model_validate(contents)

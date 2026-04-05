@@ -3,7 +3,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
-from moviebox_api.v3.constants import TabID, TopicType
+from moviebox_api.v3.constants import SubjectType, TabID, TopicType
 from moviebox_api.v3.models.common import MODEL_CONFIG
 from moviebox_api.v3.models.homepage import Image, PlayUrl
 
@@ -32,7 +32,7 @@ class ResultsSubjectModel(BaseModel):
     model_config = MODEL_CONFIG
 
     subject_id: str = Field(alias="subjectId")
-    subject_type: int = Field(alias="subjectType")
+    subject_type: SubjectType = Field(alias="subjectType")
     title: str
     description: str
     release_date: str = Field(alias="releaseDate")

@@ -1,37 +1,24 @@
-import json
-
 import pytest
-from pydantic import BaseModel
 
 from moviebox_api.v3.constants import SubjectType
 from moviebox_api.v3.core import Search
 from moviebox_api.v3.http_client import MovieBoxHttpClient
-
-
-def save(data, filename="research.json", indent=4):
-
-    def dump_pydantic_model(data: BaseModel) -> dict:
-        if isinstance(data, BaseModel):
-            return data.model_dump()
-
-        return data
-
-    if type(data) is list:
-        processed_data = []
-        for entry in data:
-            processed_data.append(dump_pydantic_model(entry))
-        data = processed_data
-
-    else:
-        data = dump_pydantic_model(data)
-
-    with open(filename, "w") as fh:
-        json.dump(data, fh, indent=indent)
+from moviebox_api.v3.models.search import RootSearchResultsModel
 
 
 @pytest.mark.asyncio
-async def test_homepage_fetch_contents():
+@pytest.mark.parametrize(
+    ["query", "subject_type"],
+    (["titanic", SubjectType.MOVIES], ["banshee", SubjectType.TV_SERIES]),
+)
+async def test_search_contents(query, subject_type):
     async with MovieBoxHttpClient() as client_session:
-        search = Search(client_session, 'titanic', subject_type=SubjectType.MOVIES)
+        search = Search(client_session, query, subject_type=subject_type)
         contents = await search.get_content()
-        save(contents)
+        assert type(contents) is dict
+
+        modelled_contents = await search.get_content_model()
+        assert isinstance(modelled_contents, RootSearchResultsModel)
+
+        for item in modelled_contents.items:
+            assert item.subject_type is subject_type
