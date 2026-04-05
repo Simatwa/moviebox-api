@@ -9,6 +9,7 @@ from moviebox_api.v3.helpers import (
     assert_instance,
     is_valid_search_item,
     sanitize_item_name,
+    validate_subject_id,
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
 from moviebox_api.v3.models.homepage import RootHomepageModel
@@ -195,3 +196,27 @@ class Search:
                 "Current page is the first one try navigating to the next "
                 "one instead."
             )
+
+
+class ItemDetails:
+    """Specific item details"""
+
+    _path = "/wefeed-mobile-bff/subject-api/get"
+
+    def __init__(
+        self,
+        client_session: MovieBoxHttpClient,
+    ):
+        self.client_session = client_session
+
+    async def get_content(self, subject_id: str) -> dict:
+        if not validate_subject_id(subject_id):
+            raise ValueError(f"Invalid subject id passed {subject_id!r}")
+
+        request_params = {"subjectId": subject_id}
+
+        contents = await self.client_session.get_from_api(
+            self._path, params=request_params
+        )
+
+        return contents

@@ -1,17 +1,4 @@
-"""
-MovieBox API provider – async Python port of MovieBoxProviderIN.kt.
 
-Usage::
-
-    async with MovieBoxProvider() as provider:
-        results = await provider.search("Inception")
-        detail  = await provider.load(results[0].subject_id)
-        links   = await provider.load_links(detail.subject_id)
-
-        # For a series episode:
-        ep = detail.episodes[0]
-        links = await provider.load_links(ep.data_key)
-"""
 
 from __future__ import annotations
 
@@ -440,6 +427,7 @@ class MovieBoxProvider:
                 f"/wefeed-mobile-bff/subject-api/get?subjectId={subject_id}",
                 include_play_mode=True,
             )
+
             if not resp.text:
                 return False
 

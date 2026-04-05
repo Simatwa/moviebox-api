@@ -2,6 +2,7 @@
 Constants for MovieBox API client.
 """
 import os
+import re
 from enum import StrEnum
 
 from moviebox_api.v1.constants import SubjectType
@@ -91,6 +92,11 @@ TRAILER_CONTENT_FRAGMENTS: tuple[str, ...] = (
 SIGNATURE_BODY_MAX_BYTES: int = 102_400
 
 SEARCH_PER_PAGE_LIMIT = 20
+
+# Patterns
+
+
+VALID_SUBJECT_ID_PATTERN = re.compile(r"^\d{18,20}$")
 
 
 class TabID(StrEnum):

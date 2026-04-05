@@ -1,8 +1,5 @@
 """
 Cryptographic utilities: request signing, HMAC-MD5, MD5, token generation.
-
-All functions are pure (no I/O) and synchronous — they are fast enough that
-there's no benefit to making them async.
 """
 
 from __future__ import annotations
