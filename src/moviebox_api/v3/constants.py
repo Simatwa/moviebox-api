@@ -2,8 +2,8 @@
 Constants for MovieBox API client.
 """
 import os
-
 from enum import StrEnum
+
 from moviebox_api.v1.constants import SubjectType
 
 SECRET_KEY_DEFAULT: str = (
@@ -102,3 +102,10 @@ class TabID(StrEnum):
     TV_SERIES = "TV"
     MOVIE_TV = "MovieTV"
     SHORT_TV = "ShortTV"
+
+
+class TopicType(StrEnum):
+    SUBJECT = "SUBJECT"
+    VERTICAL_RANK = "VERTICAL_RANK"
+
+
