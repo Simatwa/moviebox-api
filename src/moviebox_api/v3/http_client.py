@@ -130,6 +130,8 @@ class MovieBoxHttpClient:
         )
 
         last_response: httpx.Response | None = None
+        last_exception: Exception = Exception
+
         last_base: str = self._active_base
 
         for base in self._host_pool:
@@ -160,16 +162,21 @@ class MovieBoxHttpClient:
                     return base, response
 
                 logger.debug(
-                    "Host %s returned %d – retrying.", base, response.status_code
+                    "Host %s returned %d - retrying.", base, response.status_code
                 )
 
             except httpx.TransportError as exc:
+                last_exception = exc
                 logger.debug("Host %s transport error: %s", base, exc)
 
         # All hosts failed; return whatever we got last
         self._active_base = last_base
         if last_response is None:
-            raise RuntimeError(f"All hosts exhausted for {path_and_query}")
+            raise RuntimeError(
+                f"All hosts exhausted for {path_and_query}. "
+                 "Set logging level to debug to see the actual errors"
+            ) from last_exception
+
         return last_base, last_response
 
     async def get(

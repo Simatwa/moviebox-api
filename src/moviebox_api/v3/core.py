@@ -226,3 +226,29 @@ class ItemDetails:
         contents = await self.get_content(subject_id)
 
         return RootItemDetailsModel.model_validate(contents)
+
+
+class BaseDownloadableFilesDetail:
+    """Fetches media and subtitle files metadata"""
+
+    _path = "/wefeed-mobile-bff/subject-api/resource"
+
+    def __init__(
+        self,
+        client_session: MovieBoxHttpClient,
+    ):
+        self.client_session = client_session
+
+    async def get_content(
+        self, subject_id: str, season: int, episode: int
+    ) -> dict:
+        # seed runtime bearer
+        await self.client_session.get_from_api(
+            f"/wefeed-mobile-bff/subject-api/get?subjectId={subject_id}"
+            )
+
+        request_params = {"subjectId": subject_id, "se": season, "ep": episode}
+        contents = await self.client_session.get_from_api(
+            self._path, params=request_params
+        )
+        return contents

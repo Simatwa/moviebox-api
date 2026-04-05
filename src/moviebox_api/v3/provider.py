@@ -506,6 +506,7 @@ class MovieBoxProvider:
                 ok = await emit(stream.url, stream.label, stream.sign_cookie)
                 if ok:
                     has = True
+                    
         except Exception:
             logger.exception("_links_from_play_info failed for %s", subject_id)
 

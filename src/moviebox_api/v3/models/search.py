@@ -79,6 +79,18 @@ class ResultsSubjectModel(BaseModel):
     season: int
     is_cam: bool = Field(alias="isCam")
 
+    @property
+    def total_seasons(self) -> int:
+        "Total number of seasons"
+        return self.se_num
+
+    @property
+    def is_accessible_from_website(self) -> bool:
+        """Whether this movie is accessible from
+        Moviebox website
+        """
+        return self.detail_url is not None
+
     @field_validator("genre", "language", "subtitles", mode="before")
     @classmethod
     def split_genre(cls, v):

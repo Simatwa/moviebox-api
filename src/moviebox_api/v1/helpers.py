@@ -2,7 +2,7 @@
 This module provide functions for performing common and frequently required tasks
 across the package.
 """
-
+import json as j
 import re
 import typing as t
 from urllib.parse import urljoin
@@ -79,8 +79,7 @@ def process_api_response(json: dict) -> dict | list:
     logger.debug(f"Unsuccessful response received from server - {json}")
     raise UnsuccessfulResponseError(
         json,
-        "Unsuccessful response from the server. Check `.response`  for detailed "
-        "response info",
+        f"Unsuccessful response from the server {j.dumps(json, indent=1)}",
     )
 
 

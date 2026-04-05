@@ -48,7 +48,7 @@ def generate_x_client_token(timestamp_ms: int | None = None) -> str:
 def _sorted_query_string(url: str) -> str:
     """
     Rebuild the query string with keys in sorted order.
-    Values are NOT percent-encoded (mirrors the original Kotlin behaviour).
+    Values are NOT percent-encoded.
     """
     parsed = urlparse(url)
     qs = parse_qs(parsed.query, keep_blank_values=True)
