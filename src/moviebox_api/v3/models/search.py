@@ -43,7 +43,7 @@ class ResultsSubjectModel(BaseModel):
     pre_video_address: list[Any] = Field(alias="preVideoAddress")
     country_name: str = Field(alias="countryName")
     language: list[str]
-    imdb_rating_value: str = Field(alias="imdbRatingValue")
+    imdb_rating_value: float = Field(alias="imdbRatingValue")
     staff_list: list[Any] = Field(alias="staffList")
     want_to_see_count: int = Field(alias="wantToSeeCount")
     have_seen_count: int = Field(alias="haveSeenCount")
@@ -66,7 +66,7 @@ class ResultsSubjectModel(BaseModel):
     se_num: int = Field(alias="seNum")
     viewers: int
     category: str
-    subtitles: str
+    subtitles: list[str]
     dubs: list[Any]
     related_app: Any = Field(alias="relatedApp")
     restrict_level: str = Field(alias="restrictLevel")
@@ -79,7 +79,7 @@ class ResultsSubjectModel(BaseModel):
     season: int
     is_cam: bool = Field(alias="isCam")
 
-    @field_validator("genre", "language", mode="before")
+    @field_validator("genre", "language", "subtitles", mode="before")
     @classmethod
     def split_genre(cls, v):
         if isinstance(v, str):

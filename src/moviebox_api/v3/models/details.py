@@ -53,7 +53,7 @@ class ResourceDetectorModel(BaseModel):
     upload_time: str = Field(alias="uploadTime")
     upload_by: str = Field(alias="uploadBy")
     resource_link: HttpUrl = Field(alias="resourceLink")
-    download_url: HttpUrl = Field(alias="downloadUrl")
+    download_url: HttpUrl | None = Field(alias="downloadUrl")
     source: str
     first_size: str = Field(alias="firstSize")
     resource_id: str = Field(alias="resourceId")
@@ -62,6 +62,10 @@ class ResourceDetectorModel(BaseModel):
     resolution_list: list[ResolutionModel] = Field(alias="resolutionList")
     subject_id: str = Field(alias="subjectId")
     codec_name: str = Field(alias="codecName")
+
+    @field_validator("download_url", mode="before")
+    def validate_download_url(value):
+        return value if bool(value) else None
 
 
 class VideoAddressModel(BaseModel):

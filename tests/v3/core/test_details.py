@@ -30,7 +30,9 @@ def save(data, filename="research.json", indent=4):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize(["subject_id"], (["8906247916759695608"],))
+@pytest.mark.parametrize(
+    ["subject_id"], (["8906247916759695608"], ["1076625875212323512"])
+)
 async def test_item_details_fetching(subject_id):
     async with MovieBoxHttpClient() as client_session:
         search = ItemDetails(
