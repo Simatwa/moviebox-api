@@ -38,7 +38,7 @@ class ResultsSubjectModel(BaseModel):
     release_date: str = Field(alias="releaseDate")
     duration: str
     genre: list[str]
-    cover: Image
+    cover: Image | None
     pre_video_cover: Any = Field(alias="preVideoCover")
     pre_video_address: list[Any] = Field(alias="preVideoAddress")
     country_name: str = Field(alias="countryName")
@@ -140,7 +140,7 @@ class PagerModel(BaseModel):
     total_count: int = Field(alias="totalCount")
 
 
-class RootSearchResultsModel(BaseModel):
+class RootSearchResultsModelV2(BaseModel):
     model_config = MODEL_CONFIG
 
     pager: PagerModel
@@ -148,3 +148,15 @@ class RootSearchResultsModel(BaseModel):
     tab_id: TabID = Field(alias="tabId")
     tabs: list[Any]
     items: list[ResultsSubjectModel]  # Script generated 
+
+
+class RootSearchResultsModel(BaseModel):
+    model_config = MODEL_CONFIG
+
+    pager: PagerModel
+    vertical_ranks: list[VerticalRankItem] = Field(alias="verticalRanks")
+    items: list[ResultsSubjectModel]
+    counts: list[dict]
+    subject_type: SubjectType = Field(alias="subjectType")
+    staffs: list[Any]
+    accurate: Any

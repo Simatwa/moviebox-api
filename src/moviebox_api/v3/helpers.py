@@ -1,5 +1,5 @@
 import re
-from urllib.parse import urlencode
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from moviebox_api.v1.helpers import (
     assert_instance,
@@ -11,7 +11,14 @@ from moviebox_api.v3.constants import VALID_SUBJECT_ID_PATTERN
 
 
 def combine_url_path_with_params(path: str, params: dict):
-    return f"{path}?{urlencode(params)}"
+    parsed = urlparse(path)
+
+    existing_params = dict(parse_qsl(parsed.query))
+
+    merged_params = {**existing_params, **params}
+    new_query = urlencode(merged_params)
+
+    return urlunparse(parsed._replace(query=new_query))
 
 
 def validate_subject_id(subject_id: str) -> bool:

@@ -29,7 +29,7 @@ class ResolutionModel(BaseModel):
     title: str
     resource_link: HttpUrl = Field(alias="resourceLink")
     link_type: int = Field(alias="linkType")
-    size: str
+    size: int
     upload_by: str = Field(alias="uploadBy")
     resource_id: str = Field(alias="resourceId")
     post_id: str = Field(alias="postId")
@@ -49,13 +49,13 @@ class ResourceDetectorModel(BaseModel):
 
     type: int
     total_episode: int = Field(alias="totalEpisode")
-    total_size: str = Field(alias="totalSize")
+    total_size: int = Field(alias="totalSize")
     upload_time: str = Field(alias="uploadTime")
     upload_by: str = Field(alias="uploadBy")
     resource_link: HttpUrl = Field(alias="resourceLink")
     download_url: HttpUrl | None = Field(alias="downloadUrl")
     source: str
-    first_size: str = Field(alias="firstSize")
+    first_size: int = Field(alias="firstSize")
     resource_id: str = Field(alias="resourceId")
     post_id: str = Field(alias="postId")
     ext_captions: list[Any] = Field(alias="extCaptions")

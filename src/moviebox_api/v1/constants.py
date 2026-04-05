@@ -119,10 +119,10 @@ class SubjectType(IntEnum):
     EDUCATION = 5
     """Anime contents only"""
 
-    MUSIC = 6
+    MUSIC = 6  # AUDIO
     """Music contents only"""
 
-    ANIME = 7
+    ANIME = 7  # "ShortTV"
     """Anime contents only"""
 
     # TODO: Research and update UNKNOWNS
