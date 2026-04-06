@@ -111,6 +111,10 @@ class ResultsSubjectModel(BaseModel):
     @field_validator("detail_url", "play_url", mode="before")
     def validate_detail_url(value):
         return value if bool(value) else None
+    
+    @field_validator("imdb_rating_value", mode="before")
+    def validate_imdb_rating_value(value):
+        return float(value) if bool(value) else 0
 
 
 class SearchResultsItem(BaseModel):

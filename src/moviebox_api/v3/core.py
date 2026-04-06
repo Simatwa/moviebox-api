@@ -64,7 +64,6 @@ class Search:
         client_session: MovieBoxHttpClient,
         query: str,
         subject_type: SubjectType = SubjectType.ALL,
-        tab_id: TabID = TabID.ALL,
         page: int = 1,
         per_page: int = 20,
     ):
@@ -74,14 +73,12 @@ class Search:
         )
         assert_instance(subject_type, SubjectType, "subject_type")
         assert_instance(client_session, MovieBoxHttpClient, "client_session")
-        assert_instance(tab_id, TabID, "tab_id")
 
         self.client_session = client_session
         self._subject_type = subject_type
         self._query = query
         self._page = page
         self._per_page = per_page
-        self._tab_id = tab_id
 
     def _create_payload(self) -> dict[str, str | int]:
         """Creates payload from the parameters declared.
@@ -95,7 +92,6 @@ class Search:
             "page": self._page,
             "perPage": self._per_page,
             "subjectType": self._subject_type.value,
-            "tabId": self._tab_id,
         }
 
     async def get_content(self) -> dict:
@@ -202,7 +198,6 @@ class SearchV2:
     """Performs a search of movies, tv series, music  etc or both"""
 
     _path = "/wefeed-mobile-bff/subject-api/search/v2"
-    _path = "/wefeed-mobile-bff/subject-api/search"
 
     def __init__(
         self,
