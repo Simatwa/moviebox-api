@@ -6,7 +6,7 @@ import os
 import random
 import re
 import uuid
-from enum import StrEnum
+from enum import IntEnum, StrEnum
 
 from moviebox_api.v1.constants import SubjectType
 
@@ -132,6 +132,8 @@ TRAILER_CONTENT_FRAGMENTS: tuple[str, ...] = (
 )
 SIGNATURE_BODY_MAX_BYTES: int = 102_400
 SEARCH_PER_PAGE_LIMIT = 20
+RESULTS_PER_PAGE_AMOUNT = SEARCH_PER_PAGE_LIMIT
+
 VALID_SUBJECT_ID_PATTERN = re.compile(r"^\d{18,20}$")
 
 
@@ -149,3 +151,14 @@ class TabID(StrEnum):
 class TopicType(StrEnum):
     SUBJECT = "SUBJECT"
     VERTICAL_RANK = "VERTICAL_RANK"
+
+
+class ResolutionType(IntEnum):
+    _240P = 240
+    _360P = 360
+    _480P = 480
+    _720P = 720
+    _1080P = 1080
+    _1440P = 1440
+    _2160P = 2160
+    _4320P = 4320

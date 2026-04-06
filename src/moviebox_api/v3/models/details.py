@@ -3,6 +3,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
+from moviebox_api.v3.constants import ResolutionType
 from moviebox_api.v3.models.common import MODEL_CONFIG
 from moviebox_api.v3.models.homepage import Image
 from moviebox_api.v3.models.search import OpsModel, ResultsSubjectModel
@@ -37,7 +38,7 @@ class ResolutionModel(BaseModel):
     se: int
     ep: int
     source_url: HttpUrl = Field(alias="sourceUrl")
-    resolution: int
+    resolution: ResolutionType
     codec_name: str = Field(alias="codecName")
     duration: int
     require_member_type: int = Field(alias="requireMemberType")
@@ -110,7 +111,7 @@ class StyleModel(BaseModel):
 class ResolutionItemModel(BaseModel):
     model_config = MODEL_CONFIG
 
-    resolution: int
+    resolution: ResolutionType
     ep_num: int = Field(alias="epNum")
 
 

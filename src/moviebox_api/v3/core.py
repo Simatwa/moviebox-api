@@ -1,18 +1,25 @@
 from moviebox_api.v3._bases import BaseContentProviderAndHelper
-from moviebox_api.v3.constants import SEARCH_PER_PAGE_LIMIT, SubjectType, TabID
+from moviebox_api.v3.constants import (
+    RESULTS_PER_PAGE_AMOUNT,
+    ResolutionType,
+    SubjectType,
+    TabID,
+)
 from moviebox_api.v3.exceptions import (
     ExhaustedSearchResultsError,
-    MovieboxApiException,
+    ResultsNavigationError,
     ZeroSearchResultsError,
 )
 from moviebox_api.v3.helpers import (
     assert_instance,
     is_valid_search_item,
     sanitize_item_name,
+    validate_per_page_and_raise,
     validate_subject_id,
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
 from moviebox_api.v3.models.details import RootItemDetailsModel
+from moviebox_api.v3.models.downloadables import RootDownloadFilesModel
 from moviebox_api.v3.models.homepage import RootHomepageModel
 from moviebox_api.v3.models.search import (
     RootSearchResultsModel,
@@ -37,11 +44,26 @@ class Homepage(BaseContentProviderAndHelper):
 
     def __init__(self, client_session: MovieBoxHttpClient):
         """Constructor for `Homepage`"""
-        assert_instance(client_session, MovieBoxHttpClient, "client_session")
         self.client_session = client_session
         self._page_number: int = 1
         self._tab_id: int = 0
         self._version: str = ""
+
+    def __setattr__(self, name, value):
+        match name:
+            case "client_session":
+                assert_instance(value, MovieBoxHttpClient, "client_session")
+
+            case "_per_page":
+                validate_per_page_and_raise(value)
+
+            case "_tab_id":
+                assert_instance(value, TabID, "tab_id")
+
+            case _:
+                pass
+
+        super().__setattr__(name, value)
 
     def _create_params(self) -> dict:
         return {
@@ -62,7 +84,7 @@ class Homepage(BaseContentProviderAndHelper):
         return RootHomepageModel.model_validate(content)
 
 
-class Search:
+class Search(BaseContentProviderAndHelper):
     """Performs a search of movies, tv series, music  etc or both"""
 
     _path = SEARCH_PATH
@@ -73,20 +95,30 @@ class Search:
         query: str,
         subject_type: SubjectType = SubjectType.ALL,
         page: int = 1,
-        per_page: int = 20,
+        per_page: int = RESULTS_PER_PAGE_AMOUNT,
     ):
-        assert 0 < per_page <= SEARCH_PER_PAGE_LIMIT + 50, (
-            f"per_page value {per_page} "
-            f"is NOT between 0 and {SEARCH_PER_PAGE_LIMIT + 50}"
-        )
-        assert_instance(subject_type, SubjectType, "subject_type")
-        assert_instance(client_session, MovieBoxHttpClient, "client_session")
 
         self.client_session = client_session
         self._subject_type = subject_type
         self._query = query
         self._page = page
         self._per_page = per_page
+
+    def __setattr__(self, name, value):
+        match name:
+            case "client_session":
+                assert_instance(value, MovieBoxHttpClient, "client_session")
+
+            case "_per_page":
+                validate_per_page_and_raise(value)
+
+            case "_subject_type":
+                assert_instance(value, SubjectType, "_subject_type")
+
+            case _:
+                pass
+
+        super().__setattr__(name, value)
 
     def _create_payload(self) -> dict[str, str | int]:
         """Creates payload from the parameters declared.
@@ -193,14 +225,14 @@ class Search:
             )
 
         else:
-            raise MovieboxApiException(
+            raise ResultsNavigationError(
                 "Unable to navigate to previous page. "
                 "Current page is the first one, try navigating to the next "
                 "one instead."
             )
 
 
-class SearchV2:
+class SearchV2(BaseContentProviderAndHelper):
     """Performs a search of movies, tv series, music  etc or both"""
 
     _path = SEARCH_PATH_V2
@@ -212,15 +244,8 @@ class SearchV2:
         subject_type: SubjectType = SubjectType.ALL,
         tab_id: TabID = TabID.ALL,
         page: int = 1,
-        per_page: int = 20,
+        per_page: int = RESULTS_PER_PAGE_AMOUNT,
     ):
-        assert 0 < per_page <= SEARCH_PER_PAGE_LIMIT, (
-            f"per_page value {per_page} "
-            f"is NOT between 0 and {SEARCH_PER_PAGE_LIMIT}"
-        )
-        assert_instance(subject_type, SubjectType, "subject_type")
-        assert_instance(client_session, MovieBoxHttpClient, "client_session")
-        assert_instance(tab_id, TabID, "tab_id")
 
         self.client_session = client_session
         self._subject_type = subject_type
@@ -228,6 +253,25 @@ class SearchV2:
         self._page = page
         self._per_page = per_page
         self._tab_id = tab_id
+
+    def __setattr__(self, name, value):
+        match name:
+            case "client_session":
+                assert_instance(value, MovieBoxHttpClient, "client_session")
+
+            case "_per_page":
+                validate_per_page_and_raise(value)
+
+            case "_tab_id":
+                assert_instance(value, TabID, "tab_id")
+
+            case "_subject_type":
+                assert_instance(value, SubjectType, "subjct_type")
+
+            case _:
+                pass
+
+        super().__setattr__(name, value)
 
     def _create_payload(self) -> dict[str, str | int]:
         """Creates payload from the parameters declared.
@@ -341,14 +385,14 @@ class SearchV2:
             )
 
         else:
-            raise MovieboxApiException(
+            raise ResultsNavigationError(
                 "Unable to navigate to previous page. "
                 "Current page is the first one, try navigating to the next "
                 "one instead."
             )
 
 
-class ItemDetails:
+class ItemDetails(BaseContentProviderAndHelper):
     """Specific item details including seasons info"""
 
     _path = SUBJECT_GET_PATH
@@ -359,6 +403,16 @@ class ItemDetails:
         client_session: MovieBoxHttpClient,
     ):
         self.client_session = client_session
+
+    def __setattr__(self, name, value):
+        match name:
+            case "client_session":
+                assert_instance(value, MovieBoxHttpClient, "client_session")
+
+            case _:
+                pass
+
+        super().__setattr__(name, value)
 
     async def _get_seasons_detail(self, subject_id: str) -> dict:
         if not validate_subject_id(subject_id):
@@ -399,7 +453,7 @@ class ItemDetails:
         return RootItemDetailsModel.model_validate(contents)
 
 
-class BaseDownloadableFilesDetail:
+class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
     """Fetches media and subtitle files metadata"""
 
     _path = RESOURCE_PATH
@@ -407,16 +461,120 @@ class BaseDownloadableFilesDetail:
     def __init__(
         self,
         client_session: MovieBoxHttpClient,
+        page: int = 1,
+        per_page: int = RESULTS_PER_PAGE_AMOUNT,
+        resolution: ResolutionType = ResolutionType._1080P,
     ):
         self.client_session = client_session
+        self.page = page
+        self.per_page = per_page
+        self.resolution = resolution
+
+    def __setattr__(self, name, value):
+        match name:
+            case "client_session":
+                assert_instance(value, MovieBoxHttpClient, "client_session")
+
+            case "per_page":
+                validate_per_page_and_raise(value)
+
+            case "resolution":
+                assert_instance(value, ResolutionType, "resolution")
+
+            case _:
+                pass
+
+        super().__setattr__(name, value)
+
+    def _create_params(self, subject_id: str) -> dict:
+        validate_subject_id(subject_id)
+
+        return {
+            "subjectId": subject_id,
+            # "se": season,
+            # "ep": episode,
+            "resolution": self.resolution,
+            "page": self.page,
+            "perPage": self.per_page,
+            # "all": 0,
+            # "startPosition": 1,
+            # "endPosition": 1,
+            # "pagerMode": 0,
+            # "epFrom": 1,
+            # "epTo": 1,
+        }
 
     async def get_content(
-        self, subject_id: str, season: int, episode: int
+        self,
+        subject_id: str,
     ) -> dict:
 
-        request_params = {"subjectId": subject_id, "se": season, "ep": episode}
+        request_params = self._create_params(subject_id)
 
         contents = await self.client_session.get_from_api(
-            self._path, params=request_params, include_play_mode=True
+            self._path,
+            params=request_params,
         )
         return contents
+
+    async def get_content_model(self, subject_id: str) -> RootDownloadFilesModel:
+        contents = await self.get_content(subject_id)
+
+        modelled_contents = RootDownloadFilesModel.model_validate(contents)
+        return modelled_contents
+
+    def next_page(
+        self, content: RootDownloadFilesModel
+    ) -> "BaseDownloadableFilesDetail":
+        """Navigate to the search results of the next page.
+
+        Args:
+            content (RootDownloadFilesModel): Modelled version of search results
+
+        Returns:
+            BaseDownloadableFilesDetail
+        """
+        assert_instance(content, RootDownloadFilesModel, "content")
+
+        if content.pager.has_more:
+            return BaseDownloadableFilesDetail(
+                client_session=self.client_session,
+                page=content.pager.next_page,
+                per_page=self.per_page,
+                resolution=self.resolution,
+            )
+        else:
+            raise ExhaustedSearchResultsError(
+                content.pager,
+                "You have already reached the last page of the search results.",
+            )
+
+    def previous_page(
+        self, content: RootDownloadFilesModel
+    ) -> "BaseDownloadableFilesDetail":
+        """Navigate to the search results of the previous page.
+
+        - Useful when the currrent page is greater than  1.
+
+        Args:
+            content (RootDownloadFilesModel): Modelled version of search results
+
+        Returns:
+            BaseDownloadableFilesDetail
+        """
+        assert_instance(content, RootDownloadFilesModel, "content")
+
+        if content.pager.page >= 2:
+            return BaseDownloadableFilesDetail(
+                client_session=self.client_session,
+                page=content.pager.page - 1,
+                per_page=self.per_page,
+                resolution=self.resolution,
+            )
+
+        else:
+            raise ResultsNavigationError(
+                "Unable to navigate to previous page. "
+                "Current page is the first one, try navigating to the next "
+                "one instead."
+            )

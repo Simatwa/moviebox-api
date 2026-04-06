@@ -3,3 +3,6 @@ from moviebox_api.v1.exceptions import (
     MovieboxApiException,
     ZeroSearchResultsError,
 )
+
+
+class ResultsNavigationError(MovieboxApiException): ...
