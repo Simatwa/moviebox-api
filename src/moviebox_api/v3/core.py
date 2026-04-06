@@ -153,7 +153,6 @@ class Search:
                 client_session=self.client_session,
                 query=self._query,
                 subject_type=self._subject_type,
-                tab_id=self._tab_id,
                 page=content.pager.next_page,
                 per_page=self._per_page,
             )
@@ -181,7 +180,6 @@ class Search:
                 client_session=self.client_session,
                 query=self._query,
                 subject_type=self._subject_type,
-                tab_id=self._tab_id,
                 page=content.pager.page - 1,
                 per_page=self._per_page,
             )
@@ -189,7 +187,7 @@ class Search:
         else:
             raise MovieboxApiException(
                 "Unable to navigate to previous page. "
-                "Current page is the first one try navigating to the next "
+                "Current page is the first one, try navigating to the next "
                 "one instead."
             )
 
@@ -337,7 +335,7 @@ class SearchV2:
         else:
             raise MovieboxApiException(
                 "Unable to navigate to previous page. "
-                "Current page is the first one try navigating to the next "
+                "Current page is the first one, try navigating to the next "
                 "one instead."
             )
 
