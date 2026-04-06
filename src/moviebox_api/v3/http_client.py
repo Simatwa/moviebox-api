@@ -249,7 +249,7 @@ class MovieBoxHttpClient:
             dict: Extracted data field value
         """
         _, response = await self.get(*args, **kwargs)
-        return process_api_response(response.json())
+        return process_api_response(response)
 
     async def post_to_api(self, *args, **kwargs) -> dict:
         """Sends data to api and extract the `data` field from the response
@@ -258,4 +258,4 @@ class MovieBoxHttpClient:
             dict: Extracted data field value
         """
         _, response = await self.post(*args, **kwargs)
-        return process_api_response(response.json())
+        return process_api_response(response)

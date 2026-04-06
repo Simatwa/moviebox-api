@@ -12,7 +12,7 @@ class MovieboxApiException(BaseMovieboxException):
 class UnsuccessfulResponseError(BaseMovieboxException):
     """Raised when moviebox API serves request with a fail report."""
 
-    def __init__(self, response: dict, *args, **kwargs):
+    def __init__(self, response: Response, *args, **kwargs):
         self.response = response
         """Unsuccessful response data"""
         super().__init__(*args, **kwargs)

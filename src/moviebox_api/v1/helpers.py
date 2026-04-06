@@ -2,10 +2,13 @@
 This module provide functions for performing common and frequently required tasks
 across the package.
 """
-import json as j
+
+import json
 import re
 import typing as t
 from urllib.parse import urljoin
+
+import httpx
 
 from moviebox_api.utils import get_event_loop
 from moviebox_api.v1 import logger
@@ -64,22 +67,39 @@ def assert_instance(
     )
 
 
-def process_api_response(json: dict) -> dict | list:
+def process_api_response(response: httpx.Response) -> dict | list:
     """Extracts the response data field
 
     Args:
-        json (t.Dict): Whole server response
+        response (t.Dict): Server response
 
     Returns:
         t.Dict: Extracted data field value
     """
-    if json.get("code", 1) == 0 and json.get("message") == "ok":
-        return json["data"]
+    expected_content_type = "application/json"
+    content_type = response.headers.get("content-type", "")
 
-    logger.debug(f"Unsuccessful response received from server - {json}")
+    if content_type != expected_content_type:
+        raise RuntimeError(
+            f"Unexpect content type {content_type!r} encountered. "
+            f"Expected {expected_content_type!r} - BODY {response.text!r}"
+        )
+
+    j: dict = response.json()
+
+    if j.get("code", 1) == 0 and j.get("message") == "ok":
+        return j["data"]
+
+    error_msg = (
+        "Unsuccessful response received from server -"
+        f"STATUS {response.status_code} - BODY: {response.text!r}"
+    )
+
+    logger.debug(error_msg)
+
     raise UnsuccessfulResponseError(
-        json,
-        f"Unsuccessful response from the server {j.dumps(json, indent=1)}",
+        response,
+        error_msg,
     )
 
 

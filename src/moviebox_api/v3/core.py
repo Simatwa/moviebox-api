@@ -388,5 +388,8 @@ class BaseDownloadableFilesDetail:
 
         contents = await self.client_session.get_from_api(
             self._path, params=request_params,
+            accept="*/*",
+            content_type="",
+            include_play_mode=True
         )
         return contents

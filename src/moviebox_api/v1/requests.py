@@ -109,7 +109,7 @@ class Session:
             dict: Extracted data field value
         """
         response = await self.get(*args, **kwargs)
-        return process_api_response(response.json())
+        return process_api_response(response)
 
     async def get_with_cookies(
         self, url: str, params: dict = {}, **kwargs
@@ -139,7 +139,7 @@ class Session:
             dict: Extracted data field value
         """
         response = await self.get_with_cookies(*args, **kwargs)
-        return process_api_response(response.json())
+        return process_api_response(response)
 
     async def post(self, url: str, json: dict, **kwargs) -> Response:
         """Makes a http post request with both self assigned and server-
@@ -166,7 +166,7 @@ class Session:
             dict: Extracted data field value
         """
         response = await self.post(*args, **kwargs)
-        return process_api_response(response.json())
+        return process_api_response(response)
 
     async def ensure_cookies_are_assigned(self) -> bool:
         """Checks if the essential cookies are available if not update it.
@@ -191,7 +191,7 @@ class Session:
         response = await self._client.get(url=self._moviebox_app_info_url)
         response.raise_for_status()
 
-        moviebox_app_info = process_api_response(response.json())
+        moviebox_app_info = process_api_response(response)
 
         if isinstance(moviebox_app_info, list):
             moviebox_app_info = moviebox_app_info[0]
