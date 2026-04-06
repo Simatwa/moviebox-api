@@ -1,5 +1,5 @@
 """
-Constants for MovieBox API client.
+Constants for moviebox_api.v3
 """
 
 import os

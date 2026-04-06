@@ -20,7 +20,7 @@ from moviebox_api.v3.helpers import (
     validate_subject_id,
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
-from moviebox_api.v3.models.details import RootItemDetailsModel
+from moviebox_api.v3.models.details import RootItemDetailsModel, SeasonsModel
 from moviebox_api.v3.models.downloadables import RootDownloadFilesDetailModel
 from moviebox_api.v3.models.homepage import RootHomepageModel
 from moviebox_api.v3.models.search import (
@@ -394,11 +394,10 @@ class SearchV2(BaseContentProviderAndHelper):
             )
 
 
-class ItemDetails(BaseContentProviderAndHelper):
-    """Specific item details including seasons info"""
+class SeasonDetails(BaseContentProviderAndHelper):
+    """Fetches season information for a particular subject"""
 
-    _path = SUBJECT_GET_PATH
-    _path_season_details = SEASON_INFO_PATH
+    _path = SEASON_INFO_PATH
 
     def __init__(
         self,
@@ -416,19 +415,56 @@ class ItemDetails(BaseContentProviderAndHelper):
 
         super().__setattr__(name, value)
 
-    async def _get_seasons_detail(self, subject_id: str) -> dict:
+    async def get_content(self, subject_id: str) -> dict:
         if not validate_subject_id(subject_id):
             raise ValueError(f"Invalid subject id passed {subject_id!r}")
 
         request_params = {"subjectId": subject_id}
 
         contents = await self.client_session.get_from_api(
-            self._path_season_details, params=request_params
+            self._path, params=request_params
         )
         return contents
 
+    async def get_content_model(self, subject_id: str) -> SeasonsModel:
+        contents = await self.get_content(subject_id)
+        modelled_contents = SeasonsModel.model_validate(contents)
+        return modelled_contents
+
+
+class ItemDetails(BaseContentProviderAndHelper):
+    """Specific item details including seasons info"""
+
+    _path = SUBJECT_GET_PATH
+
+    def __init__(
+        self, client_session: MovieBoxHttpClient, include_seasons: bool = False
+    ):
+        self.client_session = client_session
+        self.include_seasons = include_seasons
+        self.season_details = SeasonDetails(client_session)
+
+    def __setattr__(self, name, value):
+        match name:
+            case "client_session":
+                assert_instance(value, MovieBoxHttpClient, "client_session")
+
+            case "season_details":
+                assert_instance(value, SeasonDetails, "season_details")
+
+            case "include_seasons":
+                assert type(value) is bool, (
+                    f"value for include_seasons must of {type(bool)} not " 
+                    f"{type(value)}"
+                )
+
+            case _:
+                pass
+
+        super().__setattr__(name, value)
+
     async def get_content(
-        self, subject_id: str, exclude_seasons: bool = False
+        self, subject_id: str,
     ) -> dict:
         if not validate_subject_id(subject_id):
             raise ValueError(f"Invalid subject id passed {subject_id!r}")
@@ -441,16 +477,17 @@ class ItemDetails(BaseContentProviderAndHelper):
 
         seasons = None
 
-        if not exclude_seasons:
-            seasons = await self._get_seasons_detail(subject_id)
-            contents["seasons"] = seasons
+        if self.include_seasons:
+            seasons = await self.season_details.get_content(subject_id)
+
+        contents["seasons"] = seasons
 
         return contents
 
     async def get_content_model(
-        self, subject_id: str, exclude_seasons: bool = False
+        self, subject_id: str,
     ) -> RootItemDetailsModel:
-        contents = await self.get_content(subject_id, exclude_seasons)
+        contents = await self.get_content(subject_id)
 
         return RootItemDetailsModel.model_validate(contents)
 
