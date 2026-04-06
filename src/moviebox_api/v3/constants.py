@@ -1,8 +1,11 @@
 """
 Constants for MovieBox API client.
 """
+
 import os
+import random
 import re
+import uuid
 from enum import StrEnum
 
 from moviebox_api.v1.constants import SubjectType
@@ -17,37 +20,82 @@ SECRET_KEY_ALT: str = (
 )
 AUTH_TOKEN: str | None = os.getenv("MOVIEBOX_AUTH_TOKEN", "").strip() or None
 
-USER_AGENT: str = (
-    "com.community.oneroom/50020052 "
-    "(Linux; U; Android 16; en_IN; sdk_gphone64_x86_64; "
-    "Build/BP22.250325.006; Cronet/133.0.6876.3)"
-)
-CLIENT_INFO: str = (
-    '{"package_name":"com.community.oneroom","version_name":"3.0.05.0711.03",'
-    '"version_code":50020052,"os":"android","os_version":"16",'
-    '"device_id":"da2b99c821e6ea023e4be55b54d5f7d8","install_store":"ps",'
-    '"gaid":"d7578036d13336cc","brand":"google","model":"sdk_gphone64_x86_64",'
-    '"system_language":"en","net":"NETWORK_WIFI","region":"IN",'
-    '"timezone":"Asia/Calcutta","sp_code":""}'
-)
+
+def _random_hex(length: int) -> str:
+    return "".join(random.choices("0123456789abcdef", k=length))
+
+
+def _random_gaid() -> str:
+    return str(uuid.uuid4())
+
+
+def _generate_client_info() -> tuple[str, str]:
+    android_versions = [
+        {"version": "9", "build": "PQ3A.190605.03081104"},
+        {"version": "10", "build": "QP1A.191005.007.A3"},
+        {"version": "11", "build": "RP1A.200720.011"},
+        {"version": "12", "build": "S1B.220414.015"},
+        {"version": "13", "build": "TQ2A.230405.003"},
+    ]
+    redmi_devices = [
+        {"model": "23078RKD5C", "brand": "Redmi"},
+        {"model": "2201117TY", "brand": "Redmi"},
+        {"model": "2201117TG", "brand": "Redmi"},
+        {"model": "22101316G", "brand": "Redmi"},
+        {"model": "21121210G", "brand": "Redmi"},
+        {"model": "M2012K11AG", "brand": "Redmi"},
+        {"model": "M2007J20CG", "brand": "Redmi"},
+    ]
+    version_codes = [50020042, 50020043, 50020044, 50020045, 50020046]
+    network_types = ["NETWORK_WIFI", "NETWORK_MOBILE"]
+    timezones = [
+        "Asia/Kolkata",
+        "Asia/Shanghai",
+        "Asia/Tokyo",
+        "America/New_York",
+        "Europe/London",
+    ]
+
+    android = random.choice(android_versions)
+    device = random.choice(redmi_devices)
+    version_code = random.choice(version_codes)
+    network = random.choice(network_types)
+    timezone = random.choice(timezones)
+    gaid = _random_gaid()
+    device_id = _random_hex(32)
+
+    user_agent = (
+        f"com.community.oneroom/{version_code} "
+        f"(Linux; U; Android {android['version']}; en_US; "
+        f"{device['model']}; Build/{android['build']}; Cronet/135.0.7012.3)"
+    )
+    client_info = (
+        f'{{"package_name":"com.community.oneroom","version_name":"3.0.03.0529.03",'
+        f'"version_code":{version_code},"os":"android","os_version":"{android["version"]}",'
+        f'"install_ch":"ps","device_id":"{device_id}","install_store":"ps",'
+        f'"gaid":"{gaid}","brand":"{device["brand"]}","model":"{device["model"]}",'
+        f'"system_language":"en","net":"{network}","region":"US",'
+        f'"timezone":"{timezone}","sp_code":"40401","X-Play-Mode":"2"}}'
+    )
+    return user_agent, client_info
+
+
+USER_AGENT, CLIENT_INFO = _generate_client_info()
+
 WEB_USER_AGENT: str = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
     "Chrome/123.0.0.0 Safari/537.36"
 )
-
-RETRY_STATUS_CODES: frozenset[int] = frozenset(
-    {
-        403,
-        407,
-        429,
-        500,
-        502,
-        503,
-        504,
-    }
-)
-
+RETRY_STATUS_CODES: frozenset[int] = frozenset({
+    403,
+    407,
+    429,
+    500,
+    502,
+    503,
+    504,
+})
 BLOCKED_HOST_KEYWORDS: tuple[str, ...] = (
     "fzmovies",
     "vegamovies",
@@ -56,7 +104,6 @@ BLOCKED_HOST_KEYWORDS: tuple[str, ...] = (
     "adsterra",
     "doubleclick",
 )
-
 MEDIA_PATH_EXTENSIONS: tuple[str, ...] = (
     ".m3u8",
     ".mp4",
@@ -65,7 +112,6 @@ MEDIA_PATH_EXTENSIONS: tuple[str, ...] = (
     ".ts",
     ".mpd",
 )
-
 MEDIA_URL_HINTS: tuple[str, ...] = (
     ".m3u8",
     ".mp4",
@@ -74,28 +120,18 @@ MEDIA_URL_HINTS: tuple[str, ...] = (
     "sign=",
     "/resource/",
 )
-
-# Series stream fragments that belong to trailers / promos, not episodes
 SERIES_TRAILER_FRAGMENTS: tuple[str, ...] = (
     "/media/vone/",
     "-ld.mp4",
     "/trailer/",
 )
-
 TRAILER_CONTENT_FRAGMENTS: tuple[str, ...] = (
     "trailer",
     "teaser",
     "clip",
 )
-
-# Body truncation for signing
 SIGNATURE_BODY_MAX_BYTES: int = 102_400
-
 SEARCH_PER_PAGE_LIMIT = 20
-
-# Patterns
-
-
 VALID_SUBJECT_ID_PATTERN = re.compile(r"^\d{18,20}$")
 
 
@@ -113,5 +149,3 @@ class TabID(StrEnum):
 class TopicType(StrEnum):
     SUBJECT = "SUBJECT"
     VERTICAL_RANK = "VERTICAL_RANK"
-
-

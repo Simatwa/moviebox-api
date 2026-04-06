@@ -1,0 +1,29 @@
+{
+    "subjectId": "8906247916759695608",
+    "subjectType": 1,
+    "seasons": [
+        {
+            "se": 0,
+            "maxEp": 0,
+            "allEp": "",
+            "resolutions": [
+                {
+                    "resolution": 360,
+                    "epNum": 1
+                },
+                {
+                    "resolution": 480,
+                    "epNum": 1
+                },
+                {
+                    "resolution": 720,
+                    "epNum": 1
+                },
+                {
+                    "resolution": 1080,
+                    "epNum": 1
+                }
+            ]
+        }
+    ]
+}

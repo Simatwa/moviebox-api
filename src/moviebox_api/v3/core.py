@@ -18,6 +18,12 @@ from moviebox_api.v3.models.search import (
     RootSearchResultsModel,
     RootSearchResultsModelV2,
 )
+from moviebox_api.v3.urls import (
+    MAIN_PAGE_PATH,
+    SEARCH_PATH,
+    SEARCH_PATH_V2,
+    SUBJECT_GET_PATH,
+)
 
 
 class Homepage(BaseContentProviderAndHelper):
@@ -25,7 +31,7 @@ class Homepage(BaseContentProviderAndHelper):
 
     # TODO: Add page navigation
 
-    _path = "/wefeed-mobile-bff/tab-operating"
+    _path = MAIN_PAGE_PATH
 
     def __init__(self, client_session: MovieBoxHttpClient):
         """Constructor for `Homepage`"""
@@ -57,7 +63,7 @@ class Homepage(BaseContentProviderAndHelper):
 class Search:
     """Performs a search of movies, tv series, music  etc or both"""
 
-    _path = "/wefeed-mobile-bff/subject-api/search"
+    _path = SEARCH_PATH
 
     def __init__(
         self,
@@ -195,7 +201,7 @@ class Search:
 class SearchV2:
     """Performs a search of movies, tv series, music  etc or both"""
 
-    _path = "/wefeed-mobile-bff/subject-api/search/v2"
+    _path = SEARCH_PATH_V2
 
     def __init__(
         self,
@@ -343,7 +349,7 @@ class SearchV2:
 class ItemDetails:
     """Specific item details"""
 
-    _path = "/wefeed-mobile-bff/subject-api/get"
+    _path = SUBJECT_GET_PATH
 
     def __init__(
         self,
@@ -372,13 +378,15 @@ class ItemDetails:
 class BaseDownloadableFilesDetail:
     """Fetches media and subtitle files metadata"""
 
-    _path = "/wefeed-mobile-bff/subject-api/resource"
+    _path = "/wefeed-mobile-bff/subject-api/season-info"
 
     def __init__(
         self,
         client_session: MovieBoxHttpClient,
     ):
         self.client_session = client_session
+
+    def _get_season_info(self, subject_id: str, season: int, episode: int): ...
 
     async def get_content(
         self, subject_id: str, season: int, episode: int
@@ -387,9 +395,6 @@ class BaseDownloadableFilesDetail:
         request_params = {"subjectId": subject_id, "se": season, "ep": episode}
 
         contents = await self.client_session.get_from_api(
-            self._path, params=request_params,
-            accept="*/*",
-            content_type="",
-            include_play_mode=True
+            self._path, params=request_params, include_play_mode=True
         )
         return contents

@@ -1,0 +1,98 @@
+{
+    "subjectId": "1076625875212323512",
+    "subjectType": 2,
+    "seasons": [
+        {
+            "se": 1,
+            "maxEp": 10,
+            "allEp": "",
+            "resolutions": [
+                {
+                    "resolution": 360,
+                    "epNum": 10
+                },
+                {
+                    "resolution": 480,
+                    "epNum": 10
+                },
+                {
+                    "resolution": 720,
+                    "epNum": 9
+                },
+                {
+                    "resolution": 1080,
+                    "epNum": 9
+                }
+            ]
+        },
+        {
+            "se": 2,
+            "maxEp": 10,
+            "allEp": "",
+            "resolutions": [
+                {
+                    "resolution": 360,
+                    "epNum": 10
+                },
+                {
+                    "resolution": 480,
+                    "epNum": 10
+                },
+                {
+                    "resolution": 720,
+                    "epNum": 8
+                },
+                {
+                    "resolution": 1080,
+                    "epNum": 10
+                }
+            ]
+        },
+        {
+            "se": 3,
+            "maxEp": 10,
+            "allEp": "",
+            "resolutions": [
+                {
+                    "resolution": 360,
+                    "epNum": 10
+                },
+                {
+                    "resolution": 480,
+                    "epNum": 10
+                },
+                {
+                    "resolution": 720,
+                    "epNum": 10
+                },
+                {
+                    "resolution": 1080,
+                    "epNum": 10
+                }
+            ]
+        },
+        {
+            "se": 4,
+            "maxEp": 8,
+            "allEp": "",
+            "resolutions": [
+                {
+                    "resolution": 360,
+                    "epNum": 8
+                },
+                {
+                    "resolution": 480,
+                    "epNum": 8
+                },
+                {
+                    "resolution": 720,
+                    "epNum": 8
+                },
+                {
+                    "resolution": 1080,
+                    "epNum": 8
+                }
+            ]
+        }
+    ]
+}

@@ -39,6 +39,7 @@ async def test_item_details_fetching(subject_id):
             client_session,
         )
         contents = await search.get_content(subject_id)
+        # save(contents)
         assert type(contents) is dict
 
         modelled_contents = await search.get_content_model(subject_id)
