@@ -153,6 +153,10 @@ class RootSearchResultsModelV2(BaseModel):
     tabs: list[Any]
     items: list[ResultsSubjectModel]  # Script generated 
 
+    @property
+    def first_item(self) -> ResultsSubjectModel:
+        return self.items[0]
+
 
 class RootSearchResultsModel(BaseModel):
     model_config = MODEL_CONFIG
@@ -164,3 +168,7 @@ class RootSearchResultsModel(BaseModel):
     subject_type: SubjectType = Field(alias="subjectType")
     staffs: list[Any]
     accurate: Any
+
+    @property
+    def first_item(self) -> ResultsSubjectModel:
+        return self.items[0]
