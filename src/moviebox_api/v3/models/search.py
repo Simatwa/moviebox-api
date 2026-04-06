@@ -138,8 +138,8 @@ class PagerModel(BaseModel):
     model_config = MODEL_CONFIG
 
     has_more: bool = Field(alias="hasMore")
-    next_page: str = Field(alias="nextPage")
-    page: str
+    next_page: int = Field(alias="nextPage")
+    page: int
     per_page: int = Field(alias="perPage")
     total_count: int = Field(alias="totalCount")
 

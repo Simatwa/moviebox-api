@@ -1,0 +1,386 @@
+{
+    "subjectId": "8906247916759695608",
+    "subjectType": 1,
+    "title": "Avatar",
+    "description": "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
+    "releaseDate": "2009-12-18",
+    "duration": "2h 42m",
+    "genre": "Action, Adventure, Fantasy",
+    "cover": {
+        "url": "https://pbcdn.aoneroom.com/image/2026/01/27/d0afc52be1b6f93d5c9a70f9105f3a37.jpg",
+        "width": 1965,
+        "height": 2902,
+        "size": 621660,
+        "format": "jpg",
+        "thumbnail": "eC9@I[?d0KE1xvBYXV$%%1xv9DM_%NxvkW}lwG9tIoRi4.M_$xngRO",
+        "gif": null,
+        "averageHueLight": "#363842",
+        "averageHueDark": "#393b42"
+    },
+    "preVideoCover": null,
+    "preVideoAddress": [],
+    "countryName": "United States",
+    "language": "English, Spanish",
+    "imdbRatingValue": "7.9",
+    "staffList": [
+        {
+            "staffId": "3965547019544973104",
+            "staffType": 1,
+            "name": "Sam Worthington",
+            "character": "Jake Sully",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/1f75434211ac1a206c2f6166ba7a89fd.jpg"
+        },
+        {
+            "staffId": "7423924505272536760",
+            "staffType": 1,
+            "name": "Zoe Saldana",
+            "character": "Neytiri",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/242ceae290dd9d08ccee8d3327616429.jpg"
+        },
+        {
+            "staffId": "3006403444217892536",
+            "staffType": 1,
+            "name": "Sigourney Weaver",
+            "character": "Grace",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/6fce31d65dc1f2aba788445bd1b72371.jpg"
+        },
+        {
+            "staffId": "3872132511648599840",
+            "staffType": 1,
+            "name": "Stephen Lang",
+            "character": "Colonel Miles Quaritch",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/2fad8a1dd915ef4ac64e3c1bdf76331b.jpg"
+        },
+        {
+            "staffId": "3846606249698676408",
+            "staffType": 1,
+            "name": "Michelle Rodriguez",
+            "character": "Trudy Chacon",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/c97ae27da7aae9ce91fdddc9dccdf7c0.jpg"
+        },
+        {
+            "staffId": "90093987075870392",
+            "staffType": 1,
+            "name": "Giovanni Ribisi",
+            "character": "Parker Selfridge",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/2daa4e1d8cca316f9fae8172eefa5e1b.jpg"
+        },
+        {
+            "staffId": "8759769560368172840",
+            "staffType": 1,
+            "name": "Joel David Moore",
+            "character": "Norm Spellman",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/ed410a41cf4cdbf24c7e0395bbac3670.jpg"
+        },
+        {
+            "staffId": "9124877789533982392",
+            "staffType": 1,
+            "name": "CCH Pounder",
+            "character": "Mo'at",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/446ebf89fbc842110b08e62480080407.jpg"
+        },
+        {
+            "staffId": "7154834427536101152",
+            "staffType": 1,
+            "name": "Wes Studi",
+            "character": "Eytukan",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/c5dfab0b3bfa9874d64b4669cb482fc9.jpg"
+        },
+        {
+            "staffId": "9099545041630023352",
+            "staffType": 1,
+            "name": "Laz Alonso",
+            "character": "Tsu'tey",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/19a433a4c73e2f712de8cb603415ac37.jpg"
+        },
+        {
+            "staffId": "9112917755166082680",
+            "staffType": 1,
+            "name": "Dileep Rao",
+            "character": "Dr. Max Patel",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2023/03/29/f5e7d061a1eb1a0a56d7c153ca4a3863.jpg"
+        },
+        {
+            "staffId": "6104879987848269496",
+            "staffType": 1,
+            "name": "Matt Gerald",
+            "character": "Corporal Lyle Wainfleet",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/52a73a0bf1d8ae01a25dc79992a847c5.jpg"
+        },
+        {
+            "staffId": "9112917755166606968",
+            "staffType": 1,
+            "name": "Sean Anthony Moran",
+            "character": "Private Fike",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2023/03/29/802a2a2f73db5d24b8061ecbcc9363cf.jpg"
+        },
+        {
+            "staffId": "9112917755167131256",
+            "staffType": 1,
+            "name": "Jason Whyte",
+            "character": "Cryo Vault Med Tech",
+            "avatarUrl": ""
+        },
+        {
+            "staffId": "1624273347639398072",
+            "staffType": 1,
+            "name": "Scott Lawrence",
+            "character": "Venture Star Crew Chief",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/732148afef7f27cac051ffa4216af32c.jpg"
+        },
+        {
+            "staffId": "105718500425090680",
+            "staffType": 1,
+            "name": "Kelly Kilgour",
+            "character": "Lock Up Trooper",
+            "avatarUrl": ""
+        },
+        {
+            "staffId": "105718500425614968",
+            "staffType": 1,
+            "name": "James Patrick Pitt",
+            "character": "Shuttle Pilot",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2023/03/29/557128e6f094043e3f9fd74a7878592f.jpg"
+        },
+        {
+            "staffId": "105718500426139256",
+            "staffType": 1,
+            "name": "Sean Patrick Murphy",
+            "character": "Shuttle Co-Pilot",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2023/03/29/7ebaf414bea6076ef97ad2c99a1ba6ae.jpg"
+        }
+    ],
+    "wantToSeeCount": 0,
+    "haveSeenCount": 0,
+    "seenStatus": 0,
+    "mySeeTime": "0",
+    "myScoreValue": 0,
+    "myScorePostId": "0",
+    "myScoreTime": "0",
+    "opt": "",
+    "hasResource": true,
+    "resourceDetectors": [
+        {
+            "type": 0,
+            "totalEpisode": 1,
+            "totalSize": "5090540105",
+            "uploadTime": "1669028245",
+            "uploadBy": "Mayampiti",
+            "resourceLink": "https://ailok.pe/info/Avatar-480P-h265",
+            "downloadUrl": "https://bcdn.hakunaymatata.com/resource/h265/f42bc86e4ab6231eb6bc9dbc9b5c3682.mp4?sign=bd8930355af32343d98321e9723fb85a&t=1775469553",
+            "source": "ailok.pe",
+            "firstSize": "400112331",
+            "resourceId": "5314556955782955704",
+            "postId": "7153929133255706360",
+            "extCaptions": [],
+            "resolutionList": [
+                {
+                    "episode": 0,
+                    "title": "Avatar-360P",
+                    "resourceLink": "https://bcdn.hakunaymatata.com/resource/h265/91fe18effb301d65a5e730c1b1d1fd8b.mp4?sign=4449686fc67796bed0598a020b124f22&t=1775470076",
+                    "linkType": 2,
+                    "size": "356567015",
+                    "uploadBy": "Mayampiti",
+                    "resourceId": "4358647173001663160",
+                    "postId": "2268612432027338312",
+                    "extCaptions": [],
+                    "se": 0,
+                    "ep": 0,
+                    "sourceUrl": "https://ailok.pe/info/Avatar-480P-h265",
+                    "resolution": 360,
+                    "codecName": "hevc",
+                    "duration": 10689,
+                    "requireMemberType": 0,
+                    "memberIcon": ""
+                },
+                {
+                    "episode": 0,
+                    "title": "Avatar",
+                    "resourceLink": "https://bcdn.hakunaymatata.com/resource/h265/f42bc86e4ab6231eb6bc9dbc9b5c3682.mp4?sign=bd8930355af32343d98321e9723fb85a&t=1775469553",
+                    "linkType": 2,
+                    "size": "400112331",
+                    "uploadBy": "Mayampiti",
+                    "resourceId": "5314556955782955704",
+                    "postId": "7153929133255706360",
+                    "extCaptions": [],
+                    "se": 0,
+                    "ep": 0,
+                    "sourceUrl": "https://ailok.pe/info/Avatar-480P-h265",
+                    "resolution": 480,
+                    "codecName": "hevc",
+                    "duration": 10689,
+                    "requireMemberType": 0,
+                    "memberIcon": ""
+                },
+                {
+                    "episode": 0,
+                    "title": "Avatar-720P",
+                    "resourceLink": "https://bcdn.hakunaymatata.com/resource/h265/60dd05af6416335f6223401c21a66845.mp4?sign=b2d655a03deddea67944a0d16414fca3&t=1775468634",
+                    "linkType": 2,
+                    "size": "1638956874",
+                    "uploadBy": "Mayampiti",
+                    "resourceId": "4638019631687631176",
+                    "postId": "827460551268861368",
+                    "extCaptions": [],
+                    "se": 0,
+                    "ep": 0,
+                    "sourceUrl": "https://ailok.pe/info/Avatar-480P-h265",
+                    "resolution": 720,
+                    "codecName": "hevc",
+                    "duration": 10689,
+                    "requireMemberType": 0,
+                    "memberIcon": ""
+                },
+                {
+                    "episode": 0,
+                    "title": "Avatar-1080P",
+                    "resourceLink": "https://bcdn.hakunaymatata.com/resource/h265/437bb82ab88e30fc7bb3121383909f78.mp4?sign=954780960978dd32edfc488fe9e8e848&t=1775468153",
+                    "linkType": 2,
+                    "size": "2694903885",
+                    "uploadBy": "Mayampiti",
+                    "resourceId": "25841032050917584",
+                    "postId": "8269762452800292600",
+                    "extCaptions": [],
+                    "se": 0,
+                    "ep": 0,
+                    "sourceUrl": "https://ailok.pe/info/Avatar-480P-h265",
+                    "resolution": 1080,
+                    "codecName": "hevc",
+                    "duration": 10689,
+                    "requireMemberType": 0,
+                    "memberIcon": ""
+                }
+            ],
+            "subjectId": "8906247916759695608",
+            "codecName": "hevc"
+        }
+    ],
+    "ops": "",
+    "durationSeconds": 9720,
+    "stills": {
+        "url": "https://pbcdn.aoneroom.com/image/2023/03/23/92f5465c28dfb684904e3bda68038194.jpg",
+        "width": 1024,
+        "height": 428,
+        "size": 29162,
+        "format": "jpg",
+        "thumbnail": "e46b0}Nb8wR:o$.8ROIAa$t7x]RjaxxuM_xvW;jbj?NGxuRPWBt7RP",
+        "gif": null,
+        "averageHueLight": "#2f363a",
+        "averageHueDark": "#2f363a"
+    },
+    "trailer": {
+        "VideoAddress": {
+            "videoId": "1255306700240934240",
+            "definition": "sd",
+            "url": "https://macdn.aoneroom.com/media/vone/2022/11/22/1d6874b1fbeec76606f035e08b737035-sd.mp4",
+            "duration": 215,
+            "width": 848,
+            "height": 354,
+            "size": 13209342,
+            "fps": 23,
+            "bitrate": 489,
+            "type": 1
+        },
+        "cover": {
+            "url": "https://pbcdn.aoneroom.com/image/2022/11/22/447607ed2de4f2ae00538b820ee0033c.webp",
+            "width": 480,
+            "height": 200,
+            "size": 13508,
+            "format": "webp",
+            "thumbnail": "e79Q,I?^4oIAs.p0IUniM_RjNGD$%K-pD%%goee.MxIU%MRjIBV@-:",
+            "gif": null,
+            "averageHueLight": "#3c4346",
+            "averageHueDark": "#3c4346"
+        }
+    },
+    "contentRating": "PG-13",
+    "postTitle": "All eye candy and little else",
+    "aka": "",
+    "explains": [],
+    "seNum": 0,
+    "viewers": 3077,
+    "category": "",
+    "subtitles": "English,Filipino,Fran\u00e7ais,Indonesian,Malay,Portugu\u00eas,\u0420\u0443\u0441\u0441\u043a\u0438\u0439,\u0627\u064e\u0644\u0652\u0639\u064e\u0631\u064e\u0628\u0650\u064a\u064e\u0651\u0629\u064f,\u0627\u064f\u0631\u062f\u064f\u0648,\u09ac\u09be\u0982\u09b2\u09be,\u0a2a\u0a70\u0a1c\u0a3e\u0a2c\u0a40,\u4e2d\u6587",
+    "dubs": [
+        {
+            "subjectId": "8906247916759695608",
+            "lanName": "Original Audio",
+            "lanCode": "en",
+            "original": true,
+            "type": 0
+        },
+        {
+            "subjectId": "1654274595068805784",
+            "lanName": "Hindi dub",
+            "lanCode": "hi",
+            "original": false,
+            "type": 0
+        },
+        {
+            "subjectId": "3387445081316775448",
+            "lanName": "Tamil dub",
+            "lanCode": "ta",
+            "original": false,
+            "type": 0
+        },
+        {
+            "subjectId": "5331311270480462024",
+            "lanName": "Telugu dub",
+            "lanCode": "te",
+            "original": false,
+            "type": 0
+        },
+        {
+            "subjectId": "2115849262339607256",
+            "lanName": "ptbr dub",
+            "lanCode": "ptbr",
+            "original": false,
+            "type": 0
+        }
+    ],
+    "relatedApp": null,
+    "restrictLevel": "",
+    "corner": "",
+    "likeStatus": 0,
+    "style": {
+        "colNum": 3,
+        "shape": "Vertical"
+    },
+    "detailUrl": "https://moviebox.ph/detail/avatar-WLDIi21IUBa",
+    "playUrl": {
+        "playUrl": "",
+        "urlType": "PLAY_URL_WEB"
+    },
+    "restrictKid": 0,
+    "season": 0,
+    "isCam": false,
+    "seasons": {
+        "subjectId": "8906247916759695608",
+        "subjectType": 1,
+        "seasons": [
+            {
+                "se": 0,
+                "maxEp": 0,
+                "allEp": "",
+                "resolutions": [
+                    {
+                        "resolution": 360,
+                        "epNum": 1
+                    },
+                    {
+                        "resolution": 480,
+                        "epNum": 1
+                    },
+                    {
+                        "resolution": 720,
+                        "epNum": 1
+                    },
+                    {
+                        "resolution": 1080,
+                        "epNum": 1
+                    }
+                ]
+            }
+        ]
+    }
+}

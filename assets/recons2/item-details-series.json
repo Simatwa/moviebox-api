@@ -1,0 +1,375 @@
+{
+    "subjectId": "1076625875212323512",
+    "subjectType": 2,
+    "title": "Banshee",
+    "description": "An ex-con assumes the identity of a murdered sheriff in the small town of Banshee, Pennsylvania, where he has some unfinished business.",
+    "releaseDate": "2013-01-11",
+    "duration": "",
+    "genre": "Action, Crime, Drama",
+    "cover": {
+        "url": "https://pbcdn.aoneroom.com/image/2026/01/27/5922f579bf092d76be70362f6926f709.jpg",
+        "width": 338,
+        "height": 500,
+        "size": 29586,
+        "format": "jpg",
+        "thumbnail": "eLE28vJBJU$zkV}@WCbbsVX79}xDxFRnR+5qxDo0WEn+o{W:ahs.jY",
+        "gif": null,
+        "averageHueLight": "#6c5230",
+        "averageHueDark": "#664f32"
+    },
+    "preVideoCover": null,
+    "preVideoAddress": [],
+    "countryName": "United States",
+    "language": "English",
+    "imdbRatingValue": "8.4",
+    "staffList": [
+        {
+            "staffId": "309468547049213744",
+            "staffType": 1,
+            "name": "Antony Starr",
+            "character": "Lucas Hood",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/dfd36b7fcf554e10c0ed670677e3e9e0.jpg"
+        },
+        {
+            "staffId": "7787977203274633000",
+            "staffType": 1,
+            "name": "Ivana Milicevic",
+            "character": "Carrie Hopewell",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/f0407e9bff3bbabd5147b611cbe7ec50.jpg"
+        },
+        {
+            "staffId": "7787977203274633000",
+            "staffType": 1,
+            "name": "Ivana Milicevic",
+            "character": "Anastasia",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/f0407e9bff3bbabd5147b611cbe7ec50.jpg"
+        },
+        {
+            "staffId": "4814880169582808760",
+            "staffType": 1,
+            "name": "Ulrich Thomsen",
+            "character": "Kai Proctor",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/58e44525ba752178945daba7d52994d6.jpg"
+        },
+        {
+            "staffId": "7360874110490398392",
+            "staffType": 1,
+            "name": "Frankie Faison",
+            "character": "Sugar Bates",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/892129a306fa42296e1600b167e0183b.jpg"
+        },
+        {
+            "staffId": "4675280813200658216",
+            "staffType": 1,
+            "name": "Hoon Lee",
+            "character": "Job",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/07/1910443c646cb3d96e55a2c1b5325954.jpg"
+        },
+        {
+            "staffId": "7512272463587069736",
+            "staffType": 1,
+            "name": "Matt Servitto",
+            "character": "Deputy Brock Lotus",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/4cbe37cda28a8be94aea2bce90f72a54.jpg"
+        },
+        {
+            "staffId": "7512272463587069736",
+            "staffType": 1,
+            "name": "Matt Servitto",
+            "character": "Sheriff Brock Lotus",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/4cbe37cda28a8be94aea2bce90f72a54.jpg"
+        },
+        {
+            "staffId": "6112007475337512816",
+            "staffType": 1,
+            "name": "Ryann Shane",
+            "character": "Deva Hopewell",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2023/03/29/81ee35427594dd104d82c3c4f6707b65.jpg"
+        },
+        {
+            "staffId": "5720407142713152280",
+            "staffType": 1,
+            "name": "Lili Simmons",
+            "character": "Rebecca Bowman",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/11/03/2ab656207f275a57ef6fcddd6abf42c8.jpg"
+        },
+        {
+            "staffId": "616411649032998696",
+            "staffType": 1,
+            "name": "Trieste Kelly Dunn",
+            "character": "Deputy Siobhan Kelly",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/07/86c541b64f23335d251515f2e68d9413-s.jpg"
+        },
+        {
+            "staffId": "1958023505179463472",
+            "staffType": 1,
+            "name": "Matthew Rauch",
+            "character": "Clay Burton",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/ec9fd8d629f7bda4877f8f2072f4a3f0.jpg"
+        },
+        {
+            "staffId": "310946290677993256",
+            "staffType": 1,
+            "name": "Rus Blackwell",
+            "character": "Gordon Hopewell",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/691fa90c7471e6ab2f325337fa0fa62d.jpg"
+        },
+        {
+            "staffId": "4761556965191470680",
+            "staffType": 1,
+            "name": "Demetrius Grosse",
+            "character": "Deputy Emmett Yawners",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/10/14/f0e30514fc6f6ac34f202e8af243b53e.jpg"
+        },
+        {
+            "staffId": "3733400532503383848",
+            "staffType": 1,
+            "name": "Ben Cross",
+            "character": "Mr. Rabbit",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/e5fd8455011b2c75a5b9ee35ed4719c9.jpg"
+        },
+        {
+            "staffId": "1721452583346655024",
+            "staffType": 1,
+            "name": "Anthony Ruivivar",
+            "character": "Alex Longshadow",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/02/4bd8e12b9275af8e99c6b79f387e6eaa.jpg"
+        },
+        {
+            "staffId": "5552788794082480920",
+            "staffType": 1,
+            "name": "Geno Segers",
+            "character": "Chayton Littlestone",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/11/03/20d43267c72b576b63927b366dc055a9.jpg"
+        },
+        {
+            "staffId": "5552788794082480920",
+            "staffType": 1,
+            "name": "Geno Segers",
+            "character": "Chayton",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/11/03/20d43267c72b576b63927b366dc055a9.jpg"
+        },
+        {
+            "staffId": "2809392933571547928",
+            "staffType": 1,
+            "name": "Tom Pelphrey",
+            "character": "Kurt Bunker",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/11/03/0ebd03440797d645cbb0655f76ff8f11-s.jpg"
+        },
+        {
+            "staffId": "245025266454650520",
+            "staffType": 1,
+            "name": "Gabriel Suttle",
+            "character": "Max Hopewell",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2023/04/27/a8318cb0859feed1c071befdd4bbbd9c.jpg"
+        },
+        {
+            "staffId": "7714647611722845992",
+            "staffType": 1,
+            "name": "Afton Williamson",
+            "character": "Alison Medding",
+            "avatarUrl": "https://pbcdn.aoneroom.com/image/2022/09/07/ccd0a78a4cb27af005e10820341f2a23.jpg"
+        }
+    ],
+    "wantToSeeCount": 0,
+    "haveSeenCount": 0,
+    "seenStatus": 0,
+    "mySeeTime": "0",
+    "myScoreValue": 0,
+    "myScorePostId": "0",
+    "myScoreTime": "0",
+    "opt": "",
+    "hasResource": true,
+    "resourceDetectors": [
+        {
+            "type": 1,
+            "totalEpisode": 38,
+            "totalSize": "5373431680",
+            "uploadTime": "1693473901",
+            "uploadBy": "Moji Shortbabaa etc.",
+            "resourceLink": "https://ailok.pe/info/Banshee-480P season-1/episode-1-480P/season-1/episode-1-r360P",
+            "downloadUrl": "",
+            "source": "ailok.pe etc.",
+            "firstSize": "177151437",
+            "resourceId": "7726273314024735792",
+            "postId": "5539505696112264952",
+            "extCaptions": [],
+            "resolutionList": [],
+            "subjectId": "1076625875212323512",
+            "codecName": ""
+        }
+    ],
+    "ops": "",
+    "durationSeconds": 0,
+    "stills": null,
+    "trailer": {
+        "VideoAddress": {
+            "videoId": "6048599863829349936",
+            "definition": "sd",
+            "url": "https://macdn.aoneroom.com/media/vone/2023/08/11/c4017b6511aac03c45f14cff27580ec1-sd.mp4",
+            "duration": 30,
+            "width": 848,
+            "height": 476,
+            "size": 1269605,
+            "fps": 25,
+            "bitrate": 338,
+            "type": 1
+        },
+        "cover": {
+            "url": "https://pbcdn.aoneroom.com/image/2023/08/15/47827c9a34a86173eb808cb24a4c03f3.webp",
+            "width": 854,
+            "height": 480,
+            "size": 19070,
+            "format": "webp",
+            "thumbnail": "eLAKU3_N.8tRWU_3?u%gxua}.8-;%MofWB.8%Mxua}Rj%Mx[ofWBRj",
+            "gif": null,
+            "averageHueLight": "#43514d",
+            "averageHueDark": "#43514d"
+        }
+    },
+    "contentRating": "TV-MA",
+    "postTitle": "Trailer-Banshee",
+    "aka": "",
+    "explains": [],
+    "seNum": 4,
+    "viewers": 2591,
+    "category": "",
+    "subtitles": "English,Espa\u00f1ol,Filipino,Fran\u00e7ais,Indonesian,Kiswahili,Malay,Portugu\u00eas,T\u00fcrk\u00e7e,ti\u1ebfng Vi\u1ec7t,\u0420\u0443\u0441\u0441\u043a\u0438\u0439,\u0627\u064e\u0644\u0652\u0639\u064e\u0631\u064e\u0628\u0650\u064a\u064e\u0651\u0629\u064f,\u0627\u064f\u0631\u062f\u064f\u0648,\u0641\u0627\u0631\u0633\u06cc,\u0647\u064e\u0631\u0652\u0634\u065c\u0646 \u0647\u064e\u0648\u0652\u0633,\u09ac\u09be\u0982\u09b2\u09be,\u0a2a\u0a70\u0a1c\u0a3e\u0a2c\u0a40,\u0e20\u0e32\u0e29\u0e32\u0e44\u0e17\u0e22,\u4e2d\u6587",
+    "dubs": [
+        {
+            "subjectId": "1076625875212323512",
+            "lanName": "Original Audio",
+            "lanCode": "en",
+            "original": true,
+            "type": 0
+        },
+        {
+            "subjectId": "4523687269408163280",
+            "lanName": "esla dub",
+            "lanCode": "esla",
+            "original": false,
+            "type": 0
+        },
+        {
+            "subjectId": "4984113033464136776",
+            "lanName": "ptbr dub",
+            "lanCode": "ptbr",
+            "original": false,
+            "type": 0
+        }
+    ],
+    "relatedApp": null,
+    "restrictLevel": "",
+    "corner": "",
+    "likeStatus": 0,
+    "style": {
+        "colNum": 3,
+        "shape": "Vertical"
+    },
+    "detailUrl": "https://moviebox.ph/detail/banshee-gQe7HhoXwh1",
+    "playUrl": {
+        "playUrl": "",
+        "urlType": "PLAY_URL_WEB"
+    },
+    "restrictKid": 0,
+    "season": 0,
+    "isCam": false,
+    "seasons": {
+        "subjectId": "1076625875212323512",
+        "subjectType": 2,
+        "seasons": [
+            {
+                "se": 1,
+                "maxEp": 10,
+                "allEp": "",
+                "resolutions": [
+                    {
+                        "resolution": 360,
+                        "epNum": 10
+                    },
+                    {
+                        "resolution": 480,
+                        "epNum": 10
+                    },
+                    {
+                        "resolution": 720,
+                        "epNum": 9
+                    },
+                    {
+                        "resolution": 1080,
+                        "epNum": 9
+                    }
+                ]
+            },
+            {
+                "se": 2,
+                "maxEp": 10,
+                "allEp": "",
+                "resolutions": [
+                    {
+                        "resolution": 360,
+                        "epNum": 10
+                    },
+                    {
+                        "resolution": 480,
+                        "epNum": 10
+                    },
+                    {
+                        "resolution": 720,
+                        "epNum": 8
+                    },
+                    {
+                        "resolution": 1080,
+                        "epNum": 10
+                    }
+                ]
+            },
+            {
+                "se": 3,
+                "maxEp": 10,
+                "allEp": "",
+                "resolutions": [
+                    {
+                        "resolution": 360,
+                        "epNum": 10
+                    },
+                    {
+                        "resolution": 480,
+                        "epNum": 10
+                    },
+                    {
+                        "resolution": 720,
+                        "epNum": 10
+                    },
+                    {
+                        "resolution": 1080,
+                        "epNum": 10
+                    }
+                ]
+            },
+            {
+                "se": 4,
+                "maxEp": 8,
+                "allEp": "",
+                "resolutions": [
+                    {
+                        "resolution": 360,
+                        "epNum": 8
+                    },
+                    {
+                        "resolution": 480,
+                        "epNum": 8
+                    },
+                    {
+                        "resolution": 720,
+                        "epNum": 8
+                    },
+                    {
+                        "resolution": 1080,
+                        "epNum": 8
+                    }
+                ]
+            }
+        ]
+    }
+}

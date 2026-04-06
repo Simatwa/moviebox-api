@@ -28,9 +28,9 @@ WEB_DETAIL_PATHS: list[str] = [
 MAIN_PAGE_PATH: str = "/wefeed-mobile-bff/tab-operating"
 SEARCH_PATH: str = "/wefeed-mobile-bff/subject-api/search"
 SEARCH_PATH_V2: str = "/wefeed-mobile-bff/subject-api/search/v2"
-SUBJECT_GET_PATH: str = "/wefeed-mobile-bff/subject-api/get"
-SEASON_INFO_PATH: str = "/wefeed-mobile-bff/subject-api/season-info"
-PLAY_INFO_PATH: str = "/wefeed-mobile-bff/subject-api/play-info"
+SUBJECT_GET_PATH: str = "/wefeed-mobile-bff/subject-api/get"  # item details
+SEASON_INFO_PATH: str = "/wefeed-mobile-bff/subject-api/season-info"  # seNum etc
+PLAY_INFO_PATH: str = "/wefeed-mobile-bff/subject-api/play-info"  # mpd url
 RESOURCE_PATH: str = "/wefeed-mobile-bff/subject-api/resource"
 
 

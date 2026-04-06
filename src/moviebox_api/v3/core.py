@@ -20,8 +20,10 @@ from moviebox_api.v3.models.search import (
 )
 from moviebox_api.v3.urls import (
     MAIN_PAGE_PATH,
+    RESOURCE_PATH,
     SEARCH_PATH,
     SEARCH_PATH_V2,
+    SEASON_INFO_PATH,
     SUBJECT_GET_PATH,
 )
 
@@ -347,9 +349,10 @@ class SearchV2:
 
 
 class ItemDetails:
-    """Specific item details"""
+    """Specific item details including seasons info"""
 
     _path = SUBJECT_GET_PATH
+    _path_season_details = SEASON_INFO_PATH
 
     def __init__(
         self,
@@ -357,7 +360,20 @@ class ItemDetails:
     ):
         self.client_session = client_session
 
-    async def get_content(self, subject_id: str) -> dict:
+    async def _get_seasons_detail(self, subject_id: str) -> dict:
+        if not validate_subject_id(subject_id):
+            raise ValueError(f"Invalid subject id passed {subject_id!r}")
+
+        request_params = {"subjectId": subject_id}
+
+        contents = await self.client_session.get_from_api(
+            self._path_season_details, params=request_params
+        )
+        return contents
+
+    async def get_content(
+        self, subject_id: str, exclude_seasons: bool = False
+    ) -> dict:
         if not validate_subject_id(subject_id):
             raise ValueError(f"Invalid subject id passed {subject_id!r}")
 
@@ -367,10 +383,18 @@ class ItemDetails:
             self._path, params=request_params
         )
 
+        seasons = None
+
+        if not exclude_seasons:
+            seasons = await self._get_seasons_detail(subject_id)
+            contents["seasons"] = seasons
+
         return contents
 
-    async def get_content_model(self, subject_id: str) -> RootItemDetailsModel:
-        contents = await self.get_content(subject_id)
+    async def get_content_model(
+        self, subject_id: str, exclude_seasons: bool = False
+    ) -> RootItemDetailsModel:
+        contents = await self.get_content(subject_id, exclude_seasons)
 
         return RootItemDetailsModel.model_validate(contents)
 
@@ -378,15 +402,13 @@ class ItemDetails:
 class BaseDownloadableFilesDetail:
     """Fetches media and subtitle files metadata"""
 
-    _path = "/wefeed-mobile-bff/subject-api/season-info"
+    _path = RESOURCE_PATH
 
     def __init__(
         self,
         client_session: MovieBoxHttpClient,
     ):
         self.client_session = client_session
-
-    def _get_season_info(self, subject_id: str, season: int, episode: int): ...
 
     async def get_content(
         self, subject_id: str, season: int, episode: int

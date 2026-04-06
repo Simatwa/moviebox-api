@@ -107,6 +107,30 @@ class StyleModel(BaseModel):
     shape: str
 
 
+class ResolutionItemModel(BaseModel):
+    model_config = MODEL_CONFIG
+
+    resolution: int
+    ep_num: int = Field(alias="epNum")
+
+
+class SeasonItemModel(BaseModel):
+    model_config = MODEL_CONFIG
+
+    se: int
+    max_ep: int = Field(alias="maxEp")
+    all_ep: str = Field(alias="allEp")
+    resolutions: list[ResolutionItemModel]
+
+
+class SeasonsModel(BaseModel):
+    model_config = MODEL_CONFIG
+
+    subject_id: str = Field(alias="subjectId")
+    subject_type: int = Field(alias="subjectType")
+    seasons: list[SeasonItemModel]
+
+
 class RootItemDetailsModel(ResultsSubjectModel):
     model_config = MODEL_CONFIG
 
@@ -118,6 +142,7 @@ class RootItemDetailsModel(ResultsSubjectModel):
     dubs: list[DubModel]
     staff_list: list[StaffModel] = Field(alias="staffList")
     ops: OpsModel | None
+    seasons: SeasonsModel | None
 
     @field_validator("ops", mode="before")
     def validate_ops(value):
