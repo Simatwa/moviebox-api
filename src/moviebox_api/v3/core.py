@@ -1,3 +1,5 @@
+from collections.abc import AsyncIterator
+
 from moviebox_api.v3._bases import BaseContentProviderAndHelper
 from moviebox_api.v3.constants import (
     RESULTS_PER_PAGE_AMOUNT,
@@ -19,7 +21,7 @@ from moviebox_api.v3.helpers import (
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
 from moviebox_api.v3.models.details import RootItemDetailsModel
-from moviebox_api.v3.models.downloadables import RootDownloadFilesModel
+from moviebox_api.v3.models.downloadables import RootDownloadFilesDetailModel
 from moviebox_api.v3.models.homepage import RootHomepageModel
 from moviebox_api.v3.models.search import (
     RootSearchResultsModel,
@@ -453,7 +455,7 @@ class ItemDetails(BaseContentProviderAndHelper):
         return RootItemDetailsModel.model_validate(contents)
 
 
-class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
+class DownloadableFilesDetail(BaseContentProviderAndHelper):
     """Fetches media and subtitle files metadata"""
 
     _path = RESOURCE_PATH
@@ -517,27 +519,29 @@ class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
         )
         return contents
 
-    async def get_content_model(self, subject_id: str) -> RootDownloadFilesModel:
+    async def get_content_model(
+        self, subject_id: str
+    ) -> RootDownloadFilesDetailModel:
         contents = await self.get_content(subject_id)
 
-        modelled_contents = RootDownloadFilesModel.model_validate(contents)
+        modelled_contents = RootDownloadFilesDetailModel.model_validate(contents)
         return modelled_contents
 
     def next_page(
-        self, content: RootDownloadFilesModel
-    ) -> "BaseDownloadableFilesDetail":
+        self, content: RootDownloadFilesDetailModel
+    ) -> "DownloadableFilesDetail":
         """Navigate to the search results of the next page.
 
         Args:
-            content (RootDownloadFilesModel): Modelled version of search results
+            content (RootDownloadFilesDetailModel): Modelled version of search results
 
         Returns:
-            BaseDownloadableFilesDetail
+            DownloadableFilesDetail
         """
-        assert_instance(content, RootDownloadFilesModel, "content")
+        assert_instance(content, RootDownloadFilesDetailModel, "content")
 
         if content.pager.has_more:
-            return BaseDownloadableFilesDetail(
+            return DownloadableFilesDetail(
                 client_session=self.client_session,
                 page=content.pager.next_page,
                 per_page=self.per_page,
@@ -550,22 +554,23 @@ class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
             )
 
     def previous_page(
-        self, content: RootDownloadFilesModel
-    ) -> "BaseDownloadableFilesDetail":
+        self, content: RootDownloadFilesDetailModel
+    ) -> "DownloadableFilesDetail":
         """Navigate to the search results of the previous page.
 
         - Useful when the currrent page is greater than  1.
 
         Args:
-            content (RootDownloadFilesModel): Modelled version of search results
+            content (RootDownloadFilesDetailModel): Modelled version of search
+              results
 
         Returns:
-            BaseDownloadableFilesDetail
+            DownloadableFilesDetail
         """
-        assert_instance(content, RootDownloadFilesModel, "content")
+        assert_instance(content, RootDownloadFilesDetailModel, "content")
 
         if content.pager.page >= 2:
-            return BaseDownloadableFilesDetail(
+            return DownloadableFilesDetail(
                 client_session=self.client_session,
                 page=content.pager.page - 1,
                 per_page=self.per_page,
@@ -578,3 +583,22 @@ class BaseDownloadableFilesDetail(BaseContentProviderAndHelper):
                 "Current page is the first one, try navigating to the next "
                 "one instead."
             )
+
+    async def get_content_model_all(
+        self, subject_id: str
+    ) -> AsyncIterator[RootDownloadFilesDetailModel]:
+
+        navigating = True
+
+        cursor = self
+
+        while navigating:
+            content_model = await cursor.get_content_model(subject_id)
+
+            yield content_model
+
+            if content_model.pager.has_more:
+                cursor = cursor.next_page(content_model)
+
+            else:
+                navigating = False

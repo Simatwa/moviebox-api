@@ -39,7 +39,7 @@ class CollectionResolutionModel(BaseModel):
     member_icon: str = Field(alias="memberIcon")
 
 
-class RootDownloadFilesModel(BaseModel):
+class RootDownloadFilesDetailModel(BaseModel):
     model_config = MODEL_CONFIG
 
     pager: PagerModel

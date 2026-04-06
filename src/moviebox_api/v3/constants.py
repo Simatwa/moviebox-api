@@ -162,3 +162,4 @@ class ResolutionType(IntEnum):
     _1440P = 1440
     _2160P = 2160
     _4320P = 4320
+    UNSPECIFIED = 0
