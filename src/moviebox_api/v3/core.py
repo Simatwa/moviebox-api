@@ -143,7 +143,7 @@ class Search(BaseContentProviderAndHelper):
             dict: Fetched results
         """
         contents = await self.client_session.post_to_api(
-            self._path, json=self._create_payload()
+            self._path, json=self._create_payload(), include_play_mode=True
         )
 
         if self._subject_type is not SubjectType.ALL:
@@ -163,10 +163,10 @@ class Search(BaseContentProviderAndHelper):
 
             contents["items"] = target_items
 
-        if not target_items:
-            raise ZeroSearchResultsError(
-                "Search yielded empty results. Try a different keyword."
-            )
+            if not target_items:
+                raise ZeroSearchResultsError(
+                    "Search yielded empty results. Try a different keyword."
+                )
 
         return contents
 
@@ -454,7 +454,7 @@ class ItemDetails(BaseContentProviderAndHelper):
 
             case "include_seasons":
                 assert type(value) is bool, (
-                    f"value for include_seasons must of {type(bool)} not " 
+                    f"value for include_seasons must of {type(bool)} not "
                     f"{type(value)}"
                 )
 
@@ -464,7 +464,8 @@ class ItemDetails(BaseContentProviderAndHelper):
         super().__setattr__(name, value)
 
     async def get_content(
-        self, subject_id: str,
+        self,
+        subject_id: str,
     ) -> dict:
         if not validate_subject_id(subject_id):
             raise ValueError(f"Invalid subject id passed {subject_id!r}")
@@ -485,7 +486,8 @@ class ItemDetails(BaseContentProviderAndHelper):
         return contents
 
     async def get_content_model(
-        self, subject_id: str,
+        self,
+        subject_id: str,
     ) -> RootItemDetailsModel:
         contents = await self.get_content(subject_id)
 
@@ -570,7 +572,8 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
         """Navigate to the search results of the next page.
 
         Args:
-            content (RootDownloadFilesDetailModel): Modelled version of search results
+            content (RootDownloadFilesDetailModel): Modelled version of search
+                results
 
         Returns:
             DownloadableFilesDetail
