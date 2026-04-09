@@ -79,11 +79,11 @@ def resolve_media_file_to_be_downloaded(
                 if target_metadata is None:
                     raise RuntimeError(
                         f"Media file for quality {quality} does not exists. "
-                        f"Try other qualities from {target_metadata.keys()}"
+                        f"Try other qualities from {quality_downloads_map.keys()}"
                     )
             else:
                 raise ValueError(
-                    "Unknown media file quality passed '{quality}'. Choose from "
+                    f"Unknown media file quality passed '{quality}'. Choose from "
                     f"{DOWNLOAD_QUALITIES}"
                 )
     return target_metadata

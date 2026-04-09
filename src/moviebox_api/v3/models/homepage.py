@@ -4,6 +4,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
+from moviebox_api.v3.constants import SubjectType
 from moviebox_api.v3.models.common import MODEL_CONFIG
 
 
@@ -51,7 +52,7 @@ class MiniSubjectModel(BaseModel):
     release_date: datetime = Field(alias="releaseDate")
     genre: list[str]
     cover: Image
-    subject_type: int = Field(alias="subjectType")
+    subject_type: SubjectType = Field(alias="subjectType")
     detail_url: HttpUrl | None = Field(alias="detailUrl")
     play_url: PlayUrl = Field(alias="playUrl")
     restrict_kid: int = Field(alias="restrictKid")

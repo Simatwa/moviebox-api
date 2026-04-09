@@ -8,7 +8,17 @@ import re
 import uuid
 from enum import IntEnum, StrEnum
 
-from moviebox_api.v1.constants import SubjectType
+from moviebox_api.v1.constants import (
+    CURRENT_WORKING_DIR,
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_READ_TIMEOUT_ATTEMPTS,
+    DEFAULT_TASKS,
+    DOWNLOAD_PART_EXTENSION,
+    DOWNLOAD_QUALITIES,
+    DOWNLOAD_REQUEST_HEADERS,
+    DownloadMode,
+    SubjectType,
+)
 
 SECRET_KEY_DEFAULT: str = (
     os.getenv("MOVIEBOX_SECRET_KEY_DEFAULT", "").strip()
@@ -163,3 +173,17 @@ class ResolutionType(IntEnum):
     _2160P = 2160
     _4320P = 4320
     UNSPECIFIED = 0
+
+
+class CustomResolutionType(StrEnum):
+    _240P = "240P"
+    _360P = "360P"
+    _480P = "480P"
+    _720P = "720P"
+    _1080P = "1080P"
+    # below are currently not supported
+    # _1440P = "1440p"
+    # _2160P = "2160p"
+    # _4320P = "4320p"
+    BEST = "best"
+    WORST = "worst"

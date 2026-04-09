@@ -21,7 +21,7 @@ from moviebox_api.v3.helpers import (
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
 from moviebox_api.v3.models.details import RootItemDetailsModel, SeasonsModel
-from moviebox_api.v3.models.downloadables import RootDownloadFilesDetailModel
+from moviebox_api.v3.models.downloadables import RootDownloadableFilesDetailModel
 from moviebox_api.v3.models.homepage import RootHomepageModel
 from moviebox_api.v3.models.search import (
     RootSearchResultsModel,
@@ -560,25 +560,27 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
 
     async def get_content_model(
         self, subject_id: str
-    ) -> RootDownloadFilesDetailModel:
+    ) -> RootDownloadableFilesDetailModel:
         contents = await self.get_content(subject_id)
 
-        modelled_contents = RootDownloadFilesDetailModel.model_validate(contents)
+        modelled_contents = RootDownloadableFilesDetailModel.model_validate(
+            contents
+        )
         return modelled_contents
 
     def next_page(
-        self, content: RootDownloadFilesDetailModel
+        self, content: RootDownloadableFilesDetailModel
     ) -> "DownloadableFilesDetail":
         """Navigate to the search results of the next page.
 
         Args:
-            content (RootDownloadFilesDetailModel): Modelled version of search
+            content (RootDownloadableFilesDetailModel): Modelled version of search
                 results
 
         Returns:
             DownloadableFilesDetail
         """
-        assert_instance(content, RootDownloadFilesDetailModel, "content")
+        assert_instance(content, RootDownloadableFilesDetailModel, "content")
 
         if content.pager.has_more:
             return DownloadableFilesDetail(
@@ -594,20 +596,20 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
             )
 
     def previous_page(
-        self, content: RootDownloadFilesDetailModel
+        self, content: RootDownloadableFilesDetailModel
     ) -> "DownloadableFilesDetail":
         """Navigate to the search results of the previous page.
 
         - Useful when the currrent page is greater than  1.
 
         Args:
-            content (RootDownloadFilesDetailModel): Modelled version of search
+            content (RootDownloadableFilesDetailModel): Modelled version of search
               results
 
         Returns:
             DownloadableFilesDetail
         """
-        assert_instance(content, RootDownloadFilesDetailModel, "content")
+        assert_instance(content, RootDownloadableFilesDetailModel, "content")
 
         if content.pager.page >= 2:
             return DownloadableFilesDetail(
@@ -626,7 +628,7 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
 
     async def get_content_model_all(
         self, subject_id: str
-    ) -> AsyncIterator[RootDownloadFilesDetailModel]:
+    ) -> AsyncIterator[RootDownloadableFilesDetailModel]:
 
         navigating = True
 

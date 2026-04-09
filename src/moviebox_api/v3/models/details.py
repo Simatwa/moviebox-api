@@ -3,7 +3,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
-from moviebox_api.v3.constants import ResolutionType
+from moviebox_api.v3.constants import ResolutionType, SubjectType
 from moviebox_api.v3.models.common import MODEL_CONFIG
 from moviebox_api.v3.models.homepage import Image
 from moviebox_api.v3.models.search import OpsModel, ResultsSubjectModel
@@ -128,7 +128,7 @@ class SeasonsModel(BaseModel):
     model_config = MODEL_CONFIG
 
     subject_id: str = Field(alias="subjectId")
-    subject_type: int = Field(alias="subjectType")
+    subject_type: SubjectType = Field(alias="subjectType")
     seasons: list[SeasonItemModel]
 
 
