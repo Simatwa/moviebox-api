@@ -131,6 +131,17 @@ class SeasonsModel(BaseModel):
     subject_type: SubjectType = Field(alias="subjectType")
     seasons: list[SeasonItemModel]
 
+    @property
+    def total_seasons(self) -> int:
+        return len(self.seasons)
+
+    def get_season_by_number(self, number: int) -> SeasonItemModel:
+        for season in self.seasons:
+            if season.se == number:
+                return season
+
+        raise ValueError(f"The item does not have that season number {number}")
+
 
 class RootItemDetailsModel(ResultsSubjectModel):
     model_config = MODEL_CONFIG

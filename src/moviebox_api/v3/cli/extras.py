@@ -4,21 +4,20 @@ import click
 import rich
 from rich.table import Table
 
-from moviebox_api.v1.cli.helpers import (
+from moviebox_api.v3.cli.helpers import (
     command_context_settings,
     perform_search_and_get_item,
     prepare_start,
 )
-from moviebox_api.v1.constants import MIRROR_HOSTS, SubjectType
-from moviebox_api.v1.core import (
+from moviebox_api.v3.constants import SubjectType
+from moviebox_api.v3.core import (
     Homepage,
-    MovieDetails,
-    PopularSearch,
-    TVSeriesDetails,
+    ItemDetails,
 )
-from moviebox_api.v1.extractor import JsonDetailsExtractor
-from moviebox_api.v1.helpers import get_event_loop
-from moviebox_api.v1.requests import Session
+from moviebox_api.v3.helpers import get_event_loop
+from moviebox_api.v3.http_client import MovieBoxHttpClient
+from moviebox_api.v3.models.details import RootItemDetailsModel
+from moviebox_api.v3.models.homepage import RootHomepageModel
 
 
 @click.command(context_settings=command_context_settings)
@@ -94,37 +93,33 @@ def homepage_content_command(
     # TODO: Add automated test for this command
     prepare_start(**start_kwargs)
 
-    session = Session()
-    homepage = Homepage(session)
-    homepage_contents = get_event_loop().run_until_complete(
-        homepage.get_content_model()
-    )
-
+    homepage = Homepage(MovieBoxHttpClient())
+    homepage_contents: RootHomepageModel = homepage.get_content_model_sync()
     banners: dict[str, list[list[str]]] = {}
     items: dict[str, list[list[str]]] = {}
 
-    for operating in homepage_contents.operatingList:
+    for operating in homepage_contents.items:
         if operating.type == "BANNER":
             banners[operating.title] = [
                 [
-                    item.subjectType.name,
-                    item.title,
+                    item.subject.subject_type.name,
+                    item.subject.title,
                     ", ".join(item.subject.genre),
-                    str(item.subject.releaseDate),
+                    str(item.subject.release_date),
                 ]
-                for item in operating.banner.items
+                for item in operating.banner.banners
                 if item.subject is not None
             ]
 
         elif operating.type == "SUBJECTS_MOVIE":
             items[operating.title] = (
                 [
-                    subject.subjectType.name,
+                    subject.subject_type.name,
                     subject.title,
                     ", ".join(subject.genre),
-                    str(subject.imdbRatingValue),
-                    subject.countryName,
-                    str(subject.releaseDate),
+                    str(subject.imdb_rating_value),
+                    subject.country_name,
+                    str(subject.release_date),
                 ]
                 for subject in operating.subjects
             )
@@ -209,36 +204,6 @@ def homepage_content_command(
 
 
 @click.command(context_settings=command_context_settings)
-@click.option(
-    "-J",
-    "--json",
-    is_flag=True,
-    help="Output details in json format : False",
-)
-def popular_search_command(json: bool):
-    """Movies/tv-series many people are searching now"""
-    prepare_start()
-
-    search = PopularSearch(Session())
-    items = get_event_loop().run_until_complete(search.get_content_model())
-
-    if json:
-        processed_items = [item.title for item in items]
-        rich.print_json(data=dict(popular=processed_items), indent=4)
-
-    else:
-        table = Table(title="Popular Searches Now", show_lines=True)
-
-        table.add_column("Pos")
-        table.add_column("Title")
-
-        for pos, item in enumerate(items, start=1):
-            table.add_row(str(pos), item.title)
-
-        rich.print(table)
-
-
-@click.command(context_settings=command_context_settings)
 @click.argument("title")
 @click.option(
     "-y",
@@ -268,7 +233,6 @@ def popular_search_command(json: bool):
     is_flag=True,
     help="Output details in json format instead of tabulated",
 )
-@click.option("-F", "--full", is_flag=True, help="Show all details of the item")
 @click.option(
     "-V",
     "--verbose",
@@ -282,60 +246,41 @@ def popular_search_command(json: bool):
     is_flag=True,
     help="Disable showing interactive texts on the progress (logs)",
 )
-def item_details_command(
-    json: bool, full: bool, verbose: int, quiet: bool, **item_kwargs
-):
+def item_details_command(json: bool, verbose: int, quiet: bool, **item_kwargs):
     """Show details of a particular movie/tv-series"""
     prepare_start(quiet=quiet, verbose=verbose)
 
     item_kwargs["subject_type"] = getattr(
         SubjectType, item_kwargs.get("subject_type").upper()
     )
-    session = Session()
+    client_session = MovieBoxHttpClient()
 
     target_item = get_event_loop().run_until_complete(
-        perform_search_and_get_item(session=session, **item_kwargs)
+        perform_search_and_get_item(client_session, **item_kwargs)
     )
 
-    subject_type_item_details_map = {
-        SubjectType.MOVIES: MovieDetails,
-        SubjectType.TV_SERIES: TVSeriesDetails,
-    }
+    is_tv_series = target_item.subject_type is SubjectType.TV_SERIES
 
-    ItemDetails: MovieDetails | TVSeriesDetails = (
-        subject_type_item_details_map.get(target_item.subjectType)
+    item_details = ItemDetails(
+        client_session,
+        include_seasons=is_tv_series,
     )
 
-    assert ItemDetails, (
-        f"The selected item type - {target_item.subjectType.name} - is not "
-        "yet supported. "
-        "Choose items of subject types "
-        f"{
-            ' or '.join(
-                [key.name for key in list(subject_type_item_details_map.keys())]
-            )
-        }"
-    )
-
-    item_details = ItemDetails(target_item, session=session)
-
-    extractor = JsonDetailsExtractor(item_details.get_html_content_sync())
-
-    details = target_item.model_dump() if full else {}
-
-    details.update(extractor.metadata)
+    modelled_details: RootItemDetailsModel = item_details.get_content_model_sync()
+    details = modelled_details.model_dump(mode="json", by_alias=False)
 
     season_items = []
 
-    for season in extractor.seasons:
-        season_string = (
-            f"Season: {season['se']}, "
-            f"Episodes: {season['maxEp']}, "
-            f"Resolutions: {[res['resolution'] for res in season['resolutions']]}"
-        )
-        season_items.append(season_string)
+    if is_tv_series:
+        for season in details["seasons"]:
+            season_string = (
+                f"Season: {season['se']}, "
+                f"Episodes: {season['max_ep']}, "
+                f"Resolutions: {[res['resolution'] for res in season['resolutions']]}"
+            )
+            season_items.append(season_string)
 
-    details["seasons"] = season_items
+        details["seasons"] = season_items
 
     if json:
         rich.print_json(data=details, indent=4)

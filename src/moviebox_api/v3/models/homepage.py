@@ -76,7 +76,7 @@ class MiniSubjectModel(BaseModel):
 class SubjectModel(MiniSubjectModel):
     rate: int
     imdb_rate: str = Field(alias="imdbRate")
-    subject_type: int = Field(alias="subjectType")
+    subject_type: SubjectType = Field(alias="subjectType")
     seconds: int
     description: str
     country_name: str = Field(alias="countryName")

@@ -498,6 +498,9 @@ class ItemDetails(BaseContentProviderAndHelper):
 class DownloadableFilesDetail(BaseContentProviderAndHelper):
     """Fetches media and subtitle files metadata"""
 
+    # TODO: current api doesn't provide subtitles - consider
+    # doing more recon on it
+
     _path = RESOURCE_PATH
 
     def __init__(
@@ -505,7 +508,8 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
         client_session: MovieBoxHttpClient,
         page: int = 1,
         per_page: int = RESULTS_PER_PAGE_AMOUNT,
-        resolution: ResolutionType | CustomResolutionType = ResolutionType._1080P,
+        resolution: ResolutionType
+        | CustomResolutionType = CustomResolutionType.BEST,
     ):
         self.client_session = client_session
         self.page = page

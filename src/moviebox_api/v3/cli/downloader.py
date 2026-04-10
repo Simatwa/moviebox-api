@@ -12,43 +12,34 @@ import httpx
 from throttlebuster import DownloadedFile
 from throttlebuster.constants import DOWNLOAD_PART_EXTENSION
 
-from moviebox_api.v1.cli.helpers import (
+from moviebox_api.v3.cli.helpers import (
     get_caption_file_or_raise,
     media_player_name_func_map,
     perform_search_and_get_item,
 )
-from moviebox_api.v1.constants import (
+from moviebox_api.v3.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CAPTION_LANGUAGE,
     DEFAULT_CHUNK_SIZE,
     DEFAULT_TASKS,
-    DOWNLOAD_QUALITIES,
-    DownloadQualitiesType,
+    CustomResolutionType,
     SubjectType,
 )
-from moviebox_api.v1.core import TVSeriesDetails
-from moviebox_api.v1.download import (
+from moviebox_api.v3.core import DownloadableFilesDetail, SeasonDetails
+from moviebox_api.v3.download import (
     CaptionFileDownloader,
-    DownloadableMovieFilesDetail,
-    DownloadableTVSeriesFilesDetail,
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
-from moviebox_api.v1.exceptions import ZeroCaptionFileError
-from moviebox_api.v1.helpers import (
+from moviebox_api.v3.exceptions import ZeroCaptionFileError
+from moviebox_api.v3.helpers import (
     assert_instance,
-    assert_membership,
     get_event_loop,
-)
-from moviebox_api.v1.models import SearchResultsItem
-from moviebox_api.v2.core import TVSeriesDetails as TVSeriesDetailsV2
-from moviebox_api.v2.download import (
-    DownloadableSingleFilesDetail,
-    DownloadableTVSeriesFilesDetail as DownloadableTVSeriesFilesDetailV2,
 )
 
 # ## v3
 from moviebox_api.v3.http_client import MovieBoxHttpClient
+from moviebox_api.v3.models.search import ResultsSubjectModel
 
 __all__ = ["Downloader"]
 
@@ -80,7 +71,7 @@ class Downloader:
                 assert_instance(
                     self.client_session, MovieBoxHttpClient, "client_session"
                 )
-                
+
         super().__setattr__()
 
     async def download_movie(
@@ -90,7 +81,7 @@ class Downloader:
         yes: bool = False,
         dir: Path | str = CURRENT_WORKING_DIR,
         caption_dir: Path | str = CURRENT_WORKING_DIR,
-        quality: DownloadQualitiesType = "BEST",
+        quality: CustomResolutionType = CustomResolutionType.BEST,
         movie_filename_tmpl: str = MediaFileDownloader.movie_filename_template,
         caption_filename_tmpl: str = CaptionFileDownloader.movie_filename_template,  # noqa: E501
         language: tuple[str] = (DEFAULT_CAPTION_LANGUAGE,),
@@ -128,7 +119,7 @@ class Downloader:
                 file to. Defaults to CURRENT_WORKING_DIR.
 
             quality (DownloadQualitiesType, optional): Such as `720p` or simply
-                `BEST` etc. Defaults to 'BEST'.
+                `BEST` etc. Defaults to CustomResolutionType.BEST.
 
             movie_filename_tmpl (str, optional): Template for generating movie
                 filename. Defaults to MediaFileDownloader.movie_filename_template.
@@ -151,7 +142,7 @@ class Downloader:
                 Defaults to None.
 
             search_function (callable, optional): Accepts `session`, `title`,
-                `year`, `subject_type` & `yes` and returns `SearchResultsItem`.
+                `year`, `subject_type` & `yes` and returns `ResultsSubjectModel`.
 
             chunk_size (int, optional): Streaming download chunk size in
                 kilobytes. Defaults to DEFAULT_CHUNK_SIZE.
@@ -176,7 +167,7 @@ class Downloader:
               caption files.
         """
 
-        assert_membership(quality, DOWNLOAD_QUALITIES)
+        assert_instance(quality, CustomResolutionType, "quality")
 
         assert callable(search_function), (
             "Value for search_function must be callable not"
@@ -192,29 +183,23 @@ class Downloader:
             year=year,
             subject_type=subject_type,
             yes=yes,
-            search=self._Search(
-                session=self.client_session,
-                query=title,
-                subject_type=subject_type,
-            ),
         )
 
-        assert isinstance(target_movie, SearchResultsItem), (
+        assert isinstance(target_movie, ResultsSubjectModel), (
             f"Search function {search_function.__name__} must return an instance "
-            f"of {SearchResultsItem} not {type(target_movie)}"
+            f"of {ResultsSubjectModel} not {type(target_movie)}"
         )
 
-        downloadable_details_inst = (
-            DownloadableSingleFilesDetail(self.client_session, target_movie)
-            if self._api_v2
-            else DownloadableMovieFilesDetail(self.client_session, target_movie)
-        )
+        downloadable_details_inst = DownloadableFilesDetail(self.client_session)
 
-        downloadable_details = await downloadable_details_inst.get_content_model()
+        downloadable_files_detail = (
+            await downloadable_details_inst.get_content_model()
+        )
 
         target_media_file = resolve_media_file_to_be_downloaded(
-            quality, downloadable_details
+            quality, downloadable_files_detail
         )
+        # TODO: feature missing caption file processing implementation for v3
 
         subtitle_details_items: list[DownloadedFile] = []
 
@@ -224,7 +209,7 @@ class Downloader:
             for lang in language:
                 try:
                     target_caption_file = get_caption_file_or_raise(
-                        downloadable_details, lang
+                        downloadable_files_detail, lang
                     )
 
                 except (ZeroCaptionFileError, ValueError):
@@ -268,7 +253,9 @@ class Downloader:
         )
 
         movie_details = await movie_downloader.run(
-            media_file=target_media_file, filename=target_movie, **run_kwargs
+            media_file=target_media_file,
+            filename=downloadable_files_detail,
+            **run_kwargs,
         )
         return (movie_details, subtitle_details_items)
 
@@ -281,7 +268,7 @@ class Downloader:
         yes: bool = False,
         dir: Path | str = CURRENT_WORKING_DIR,
         caption_dir: Path | str = CURRENT_WORKING_DIR,
-        quality: DownloadQualitiesType = "BEST",
+        quality: CustomResolutionType = CustomResolutionType.BEST,
         episode_filename_tmpl: str = MediaFileDownloader.series_filename_template,
         caption_filename_tmpl: str = CaptionFileDownloader.series_filename_template,  # noqa: E501
         language: tuple = (DEFAULT_CAPTION_LANGUAGE,),
@@ -334,7 +321,8 @@ class Downloader:
                 files to. Defaults to CURRENT_WORKING_DIR.
 
             quality (DownloadQualitiesType, optional): Episode quality such as
-                `720p` or simply `BEST` etc. Defaults to 'BEST'.
+                `720p` or simply `BEST` etc. Defaults to
+                CustomResolutionType.BEST.
 
             episode_filename_tmpl (str, optional): Template for generating episode
                 filename. Defaults to
@@ -397,7 +385,7 @@ class Downloader:
              downloaded episode file details and caption files.
         """
 
-        assert_membership(quality, DOWNLOAD_QUALITIES)
+        assert_instance(quality, CustomResolutionType, "quality")
 
         assert callable(search_function), (
             "Value for search_function must be callable "
@@ -426,26 +414,15 @@ class Downloader:
             year=year,
             subject_type=SubjectType.TV_SERIES,
             yes=yes,
-            search=self._Search(
-                session=self.client_session,
-                query=title,
-                subject_type=SubjectType.TV_SERIES,
-            ),
         )
-        assert isinstance(target_tv_series, SearchResultsItem), (
+        assert isinstance(target_tv_series, ResultsSubjectModel), (
             f"Search function {search_function.__name__} must return an "
             "instance of "
-            f"{SearchResultsItem} not {type(target_tv_series)}"
+            f"{ResultsSubjectModel} not {type(target_tv_series)}"
         )
 
-        downloadable_files: DownloadableTVSeriesFilesDetail = (
-            DownloadableTVSeriesFilesDetailV2(
-                self.client_session, target_tv_series
-            )
-            if self._api_v2
-            else DownloadableTVSeriesFilesDetail(
-                self.client_session, target_tv_series
-            )
+        downloadable_files_detail_inst = DownloadableFilesDetail(
+            self.client_session, resolution=quality
         )
 
         subtitles_dir = tempfile.mkdtemp() if stream_via else caption_dir
@@ -472,25 +449,10 @@ class Downloader:
             group_series=group,
         )
 
-        if self._api_v2:
-            core_tv_series_details_inst = TVSeriesDetailsV2(self.client_session)
-
-            core_tv_series_details = (
-                await core_tv_series_details_inst.get_content_model(
-                    target_tv_series
-                )
-            )
-            series_resource = core_tv_series_details.resource
-
-        else:
-            core_tv_series_details = TVSeriesDetails(
-                target_tv_series, self.client_session
-            )
-
-            tv_series_details_model = (
-                await core_tv_series_details.get_json_details_extractor_model()
-            )
-            series_resource = tv_series_details_model.resource
+        season_details_inst = SeasonDetails(self.client_session)
+        series_resource = await season_details_inst.get_content_model(
+            target_tv_series.subject_id
+        )
 
         async def download_episodes_per_season(
             season_number: int,
@@ -502,7 +464,7 @@ class Downloader:
                 current_episode = first_episode_number + episode_count
 
                 downloadable_files_detail = (
-                    await downloadable_files.get_content_model(
+                    await downloadable_files_detail_inst.get_content_model(
                         season=season_number, episode=current_episode
                     )
                 )
@@ -580,16 +542,16 @@ class Downloader:
             target_seasons = series_resource.seasons[season - 1 :]
 
             for index, series_season in enumerate(target_seasons):
-                new_episodes_count = series_season.maxEp
+                new_episodes_count = series_season.max_ep
 
                 if index == 0:
                     # episode offset
-                    if series_season.maxEp < episode:
+                    if series_season.max_ep < episode:
                         raise RuntimeError(
                             f"The target episode offset {episode} for season "
                             f"{series_season.se}"
                             " is greater than the available episodes "
-                            f"{series_season.maxEp}"
+                            f"{series_season.max_ep}"
                         )
 
                     else:
@@ -620,7 +582,7 @@ class Downloader:
             for index, target_season in enumerate(target_seasons):
                 if index == 0:
                     first_episode_number = episode  # declared by user
-                    episodes_limit = target_season.maxEp - (
+                    episodes_limit = target_season.max_ep - (
                         episode - 1
                     )  # 1 = index 0
 
@@ -632,11 +594,11 @@ class Downloader:
 
                     remaining_episodes_amount = limit - downloaded_episodes_count
 
-                    if target_season.maxEp > remaining_episodes_amount:
+                    if target_season.max_ep > remaining_episodes_amount:
                         episodes_limit = remaining_episodes_amount
 
                     else:
-                        episodes_limit = target_season.maxEp
+                        episodes_limit = target_season.max_ep
 
                 downloaded_episodes_details = await download_episodes_per_season(
                     season_number=target_season.se,
@@ -652,12 +614,12 @@ class Downloader:
         else:
             target_season = series_resource.get_season_by_number(season)
 
-            assert episode <= target_season.maxEp, (
+            assert episode <= target_season.max_ep, (
                 f"The chosen episode offset {episode} exceeds the available"
-                f" episodes {target_season.maxEp}"
+                f" episodes {target_season.max_ep}"
             )
 
-            available_episodes = target_season.maxEp - (episode - 1)  # offset
+            available_episodes = target_season.max_ep - (episode - 1)  # offset
 
             if limit > available_episodes:
                 logging.warning(
@@ -671,7 +633,7 @@ class Downloader:
 
             logging.info(
                 f"Season {target_season.se} details - Total episodes: "
-                f"{target_season.maxEp}, "
+                f"{target_season.max_ep}, "
                 f"episodes download limit: {limit}"
             )
 

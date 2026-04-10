@@ -3,6 +3,7 @@ from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from moviebox_api.v1.helpers import (
     assert_instance,
+    get_event_loop,
     get_file_extension,
     is_valid_search_item,
     process_api_response,

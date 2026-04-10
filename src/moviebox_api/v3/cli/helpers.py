@@ -10,44 +10,40 @@ from pydantic import ValidationError
 from throttlebuster import DownloadedFile, DownloadMode
 
 from moviebox_api import __repo__
-from moviebox_api.v1 import logger
-from moviebox_api.v1.constants import (
+from moviebox_api.v3 import logger
+from moviebox_api.v3.constants import (
     DOWNLOAD_REQUEST_HEADERS,
-    ENVIRONMENT_HOST_KEY,
-    HOST_URL,
-    MIRROR_HOSTS,
     SubjectType,
 )
-from moviebox_api.v1.core import Search, Session
-from moviebox_api.v1.exceptions import (
+from moviebox_api.v3.core import Search
+from moviebox_api.v3.exceptions import (
+    MovieboxApiException,
     ZeroCaptionFileError,
     ZeroSearchResultsError,
 )
-from moviebox_api.v1.models import (
-    CaptionFileMetadata,
-    DownloadableFilesMetadata,
-    SearchResultsItem,
-)
+from moviebox_api.v3.http_client import MovieBoxHttpClient
+from moviebox_api.v3.models.downloadables import RootDownloadableFilesDetailModel
+from moviebox_api.v3.models.search import ResultsSubjectModel
 
 command_context_settings = dict(auto_envvar_prefix="MOVIEBOX")
 
 
 async def perform_search_and_get_item(
-    session: Session,
+    client_session: MovieBoxHttpClient,
     title: str,
     year: int,
     subject_type: SubjectType,
     yes: bool,
     search: Search = None,
     message: str = "Select",
-) -> SearchResultsItem:
+) -> ResultsSubjectModel:
     """Search movie/tv-series etc and return target search results item
 
     Args:
-        session (Session): MovieboxAPI requests session.
+        client_session (MovieBoxHttpClient): MovieboxAPI http client session.
         title (str): Partial or complete name of the movie/tv-series.
         year (int): `ReleaseDate.year` filter of the search result items.
-        subject_type (SubjectType): Movie or tv-series.
+        subject_type (SubjectType): Movie, tv-series etc
         yes (bool): Proceed with the first item instead of prompting confirmation.
         search (Search, optional): Search object. Defaults to None.
         message (str, optional): Prefix message for the prompt.
@@ -57,22 +53,27 @@ async def perform_search_and_get_item(
         RuntimeError: When all items are exhausted without a match.
 
     Returns:
-        SearchResultsItem: Targeted movie/tv-series
+        ResultsSubjectModel: Target movie/tv-series
     """
-    search = search or Search(session, title, subject_type)
+    # NOTE: V3 got better way of iterating over all results item but 
+    # v1 implementation still works and that matters the most.
+    # If you got some extra time then consider implementing using 
+    # `.get_content_all()`
+
+    search = search or Search(client_session, title, subject_type)
 
     search_results = await search.get_content_model()
     subject_type_name = " ".join(subject_type.name.lower().split("_"))
 
     logger.info(
         f"Query '{title}' yielded {
-            'over ' if search_results.pager.hasMore else ''
+            'over ' if search_results.pager.has_more else ''
         }"
         f"{len(search_results.items)} {subject_type_name}."
     )
     items = (
         filter(
-            lambda item: item.releaseDate.year == year,
+            lambda item: item.release_date.year == year,
             search_results.items,
         )
         if bool(year)
@@ -90,15 +91,15 @@ async def perform_search_and_get_item(
             if click.confirm(
                 f"> {message} ({pos}/{len(items)}) : "
                 f"{
-                    '[' + item.subjectType.name + '] '
+                    '[' + item.subject_type.name + '] '
                     if subject_type is SubjectType.ALL
                     else ''
                 }{item.title}"
-                f" {item.releaseDate.year, item.imdbRatingValue}"
+                f" {item.release_date.year, item.imdb_rating_value}"
             ):
                 return item
 
-    if search_results.pager.hasMore:
+    if search_results.pager.has_more:
         next_search: Search = search.next_page(search_results)
         print(f" Loading next page ({next_search._page}) ...", end="\r")
 
@@ -106,7 +107,7 @@ async def perform_search_and_get_item(
             f"Navigating to the search results of page number {next_search._page}"
         )
         return await perform_search_and_get_item(
-            session=session,
+            client_session=client_session,
             title=title,
             year=year,
             subject_type=subject_type,
@@ -122,9 +123,11 @@ async def perform_search_and_get_item(
     )
 
 
+# NOTE: v3 lacks subtitle files
+
 def get_caption_file_or_raise(
-    downloadable_details: DownloadableFilesMetadata, language: str
-) -> CaptionFileMetadata:
+    downloadable_details: RootDownloadableFilesDetailModel, language: str
+):  # -> "CaptionFileMetadata":
     """Get caption-file based on desired language or raise ValueError if
     it doesn't exist.
 
@@ -139,6 +142,11 @@ def get_caption_file_or_raise(
     Returns:
         CaptionFileMetadata: Target caption file details
     """
+    raise MovieboxApiException(
+        "V3 lacks subtitle access capabilities. "
+        "Check later versions for support or consider using "
+        "ealier versions - v1 & v2"
+    )
     target_caption_file = downloadable_details.get_subtitle_by_language(language)
 
     if target_caption_file is None:
@@ -167,7 +175,7 @@ def get_caption_file_or_raise(
 
 
 def prepare_start(
-    quiet: bool = False, verbose: int = 0, host_url: str = HOST_URL
+    quiet: bool = False, verbose: int = 0,
 ) -> None:
     """Set up some stuff for better CLI usage such as:
 
@@ -196,7 +204,7 @@ def prepare_start(
             else logging.INFO
         ),
     )
-    logging.info(f"Using host url - {host_url}")
+    # logging.info(f"Using host url - {host_url}")
 
     packages = ("httpx",)
 
@@ -253,26 +261,13 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
             f"Report this issue at {__repo__}/issues/new"
         )
 
-    if "404 Domain" in exception_msg:
-        example_host = random.choice(MIRROR_HOSTS)
-        logging.info(
-            'Run "moviebox-v1 mirror-hosts" command to check available mirror'
-            " hosts"
-            " and "
-            "then export it to the environment using name "
-            f'{ENVIRONMENT_HOST_KEY}".\n'
-            "For instance: In *nix systems you might run export "
-            f'{ENVIRONMENT_HOST_KEY}="{example_host}"'
-            f' while in Windows : "set MOVIEBOX_API_HOST={example_host}'
-        )
-
     if not isinstance(
         exception,
         (
             ValueError,
             AssertionError,
             RuntimeError,
-            ZeroCaptionFileError,
+            # ZeroCaptionFileError,
             ZeroSearchResultsError,
         ),
     ):
