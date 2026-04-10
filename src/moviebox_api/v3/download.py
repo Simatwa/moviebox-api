@@ -15,7 +15,6 @@ from moviebox_api.v3.constants import (
     DEFAULT_READ_TIMEOUT_ATTEMPTS,
     DEFAULT_TASKS,
     DOWNLOAD_PART_EXTENSION,
-    DOWNLOAD_QUALITIES,
     DOWNLOAD_REQUEST_HEADERS,
     CustomResolutionType,
     DownloadMode,

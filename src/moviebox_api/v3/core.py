@@ -3,6 +3,7 @@ from collections.abc import AsyncIterator
 from moviebox_api.v3._bases import BaseContentProviderAndHelper
 from moviebox_api.v3.constants import (
     RESULTS_PER_PAGE_AMOUNT,
+    CustomResolutionType,
     ResolutionType,
     SubjectType,
     TabID,
@@ -504,7 +505,7 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
         client_session: MovieBoxHttpClient,
         page: int = 1,
         per_page: int = RESULTS_PER_PAGE_AMOUNT,
-        resolution: ResolutionType = ResolutionType._1080P,
+        resolution: ResolutionType | CustomResolutionType = ResolutionType._1080P,
     ):
         self.client_session = client_session
         self.page = page
@@ -520,7 +521,13 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
                 validate_per_page_and_raise(value)
 
             case "resolution":
-                assert_instance(value, ResolutionType, "resolution")
+                assert_instance(
+                    value, (ResolutionType, CustomResolutionType), "resolution"
+                )
+                if isinstance(value, CustomResolutionType):
+                    value = CustomResolutionType.convert_to_default_resolution(
+                        value
+                    )
 
             case _:
                 pass

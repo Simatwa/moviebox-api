@@ -20,7 +20,7 @@ class MediaFileMetadata(BaseModel):
     title: str
     resource_link: HttpUrl = Field(alias="resourceLink")
     link_type: int = Field(alias="linkType")
-    size: str
+    size: int
     upload_by: str = Field(alias="uploadBy")
     resource_id: str = Field(alias="resourceId")
     post_id: str = Field(alias="postId")
@@ -116,6 +116,11 @@ class RootDownloadableFilesDetailModel(BaseModel):
             bool: Downloadable media file(s) exist.
         """
         if bool(self.list):
+            if self.subject_type is SubjectType.TV_SERIES:
+                raise ValueError(
+                    "media_file shortcuts are only reserved for non-series "
+                    "downloadable files detail such as movies, music etc"
+                )
             return True
 
         raise ZeroMediaFileError(

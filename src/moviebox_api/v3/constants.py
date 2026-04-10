@@ -14,7 +14,6 @@ from moviebox_api.v1.constants import (
     DEFAULT_READ_TIMEOUT_ATTEMPTS,
     DEFAULT_TASKS,
     DOWNLOAD_PART_EXTENSION,
-    DOWNLOAD_QUALITIES,
     DOWNLOAD_REQUEST_HEADERS,
     DownloadMode,
     SubjectType,
@@ -164,26 +163,43 @@ class TopicType(StrEnum):
 
 
 class ResolutionType(IntEnum):
-    _240P = 240
     _360P = 360
     _480P = 480
     _720P = 720
     _1080P = 1080
-    _1440P = 1440
-    _2160P = 2160
-    _4320P = 4320
     UNSPECIFIED = 0
 
 
 class CustomResolutionType(StrEnum):
-    _240P = "240P"
     _360P = "360P"
     _480P = "480P"
     _720P = "720P"
     _1080P = "1080P"
-    # below are currently not supported
-    # _1440P = "1440p"
-    # _2160P = "2160p"
-    # _4320P = "4320p"
     BEST = "best"
     WORST = "worst"
+
+    @classmethod
+    def to_default_resolution_map(cls):
+        """Maps CustomResolutionTyoe to its ResolutionType equivalent"""
+        return {
+            cls._360P: ResolutionType._360P,
+            cls._480P: ResolutionType._480P,
+            cls._720P: ResolutionType._720P,
+            cls._1080P: ResolutionType._1080P,
+            cls.WORST: ResolutionType._360P,
+            cls.BEST: ResolutionType._1080P,
+        }
+
+    @classmethod
+    def convert_to_default_resolution(
+        cls, value: "CustomResolutionType"
+    ) -> ResolutionType:
+        """Given CustomResolutionType return its ResolutionType equivalent"""
+        map = cls.to_default_resolution_map()
+        try:
+            return map[value]
+        except KeyError as e:
+            raise ValueError(
+                f"Invalid value for {CustomResolutionType} {value!r} ",
+                f"Choose from {set(map.keys)}",
+            ) from e
