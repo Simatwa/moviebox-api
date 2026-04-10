@@ -8,6 +8,7 @@ from moviebox_api.utils import build_command_group
 from moviebox_api.v1.cli.helpers import show_any_help
 from moviebox_api.v1.cli.interface import get_commands_map
 from moviebox_api.v2.cli.interface import get_commands_map as get_commmands_map_2
+from moviebox_api.v3.cli.interface import get_commands_map as get_commmands_map_3
 
 
 @click.group()
@@ -27,8 +28,14 @@ def v2():
     """Search and download movies/tv-series etc using moviebox-API v2"""
 
 
+@_cli_entry.group()
+def v3():
+    """Search and download movies/tv-series etc using moviebox-API v3"""
+
+
 build_command_group(v1, get_commands_map())
 build_command_group(v2, get_commmands_map_2())
+build_command_group(v3, get_commmands_map_3())
 
 
 def cli_entry():

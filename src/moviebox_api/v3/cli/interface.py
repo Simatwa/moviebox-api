@@ -8,57 +8,67 @@ from pathlib import Path
 import click
 
 from moviebox_api import __version__
-from moviebox_api.v1.cli.downloader import Downloader
-from moviebox_api.v1.cli.extras import (
+from moviebox_api.v3.cli.downloader import Downloader
+from moviebox_api.v3.cli.extras import (
     homepage_content_command,
     item_details_command,
-    mirror_hosts_command,
-    popular_search_command,
 )
-from moviebox_api.v1.cli.helpers import (
+from moviebox_api.v3.cli.helpers import (
     command_context_settings,
     media_player_name_func_map,
     prepare_start,
     process_download_runner_params,
     show_any_help,
 )
-from moviebox_api.v1.constants import (
+from moviebox_api.v3.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CHUNK_SIZE,
     DEFAULT_READ_TIMEOUT_ATTEMPTS,
     DEFAULT_TASKS,
     DEFAULT_TASKS_LIMIT,
     DOWNLOAD_PART_EXTENSION,
-    DOWNLOAD_QUALITIES,
+    CustomResolutionType,
     DownloadMode,
+    SubjectType,
 )
-from moviebox_api.v1.download import (
+from moviebox_api.v3.download import (
     CaptionFileDownloader,
     MediaFileDownloader,
 )
-from moviebox_api.v1.helpers import get_event_loop
+from moviebox_api.v3.helpers import get_event_loop
+from moviebox_api.v3.http_client import MovieBoxHttpClient
 
 __all__ = [
     "download_movie_command",
     "download_tv_series_command",
-    "mirror_hosts_command",
     "homepage_content_command",
-    "popular_search_command",
     "item_details_command",
 ]
 
 DEBUG = os.getenv("DEBUG", "0") == "1"
 
+qualities_resolution_map = CustomResolutionType.qualities_resolution_map()
+
+suject_types_name_value_map = SubjectType.map(ignore_names={"ALL", "TV_SERIES"})
+
 
 @click.group()
 @click.version_option(version=__version__)
-def moviebox_v1():
-    """Search and download movies/tv-series and their subtitles (v1).
-    envvar-prefix : MOVIEBOX"""
+def moviebox_v3():
+    """Search and download movies/tv-series and their subtitles (v3).
+    envvar-prefix : MOVIEBOX_V3"""
 
 
 @click.command(context_settings=command_context_settings)
 @click.argument("title")
+@click.option(
+    "-s",
+    "--subject-type",
+    type=click.Choice(suject_types_name_value_map.keys(), case_sensitive=False),
+    default=SubjectType.MOVIES.name,
+    show_default=True,
+    help="Subject type filter for the items",
+)
 @click.option(
     "-y",
     "--year",
@@ -71,8 +81,8 @@ def moviebox_v1():
     "-q",
     "--quality",
     help="Media quality to be downloaded",
-    type=click.Choice(DOWNLOAD_QUALITIES, case_sensitive=False),
-    default="BEST",
+    type=click.Choice(qualities_resolution_map.keys(), case_sensitive=False),
+    default=CustomResolutionType.BEST.value,
     show_default=True,
 )
 @click.option(
@@ -256,6 +266,7 @@ def moviebox_v1():
 @click.help_option("-h", "--help")
 def download_movie_command(
     title: str,
+    subject_type: str,
     year: int,
     quality: str,
     dir: Path,
@@ -276,25 +287,30 @@ def download_movie_command(
 
     prepare_start(quiet, verbose=verbose)
 
-    downloader = Downloader()
-    get_event_loop().run_until_complete(
-        downloader.download_movie(
-            title,
-            year=year,
-            yes=yes,
-            dir=dir,
-            caption_dir=caption_dir,
-            quality=quality.upper(),
-            language=language,
-            download_caption=caption,
-            caption_only=caption_only,
-            movie_filename_tmpl=movie_filename_tmpl,
-            caption_filename_tmpl=caption_filename_tmpl,
-            stream_via=stream_via,
-            ignore_missing_caption=ignore_missing_caption,
-            **process_download_runner_params(download_runner_params),
-        )
-    )
+    async def run_download_movie():
+        async with MovieBoxHttpClient() as client_session:
+            downloader = Downloader(client_session)
+            return await downloader.download_movie(
+                title,
+                year=year,
+                yes=yes,
+                dir=dir,
+                caption_dir=caption_dir,
+                quality=CustomResolutionType(quality.lower()),
+                language=language,
+                download_caption=caption,
+                caption_only=caption_only,
+                movie_filename_tmpl=movie_filename_tmpl,
+                caption_filename_tmpl=caption_filename_tmpl,
+                stream_via=stream_via,
+                ignore_missing_caption=ignore_missing_caption,
+                subject_type=SubjectType(
+                    suject_types_name_value_map.get(subject_type.upper())
+                ),
+                **process_download_runner_params(download_runner_params),
+            )
+
+    get_event_loop().run_until_complete(run_download_movie())
 
 
 @click.command(context_settings=command_context_settings)
@@ -335,8 +351,8 @@ def download_movie_command(
     "-q",
     "--quality",
     help="Media quality to be downloaded",
-    type=click.Choice(DOWNLOAD_QUALITIES, case_sensitive=False),
-    default="BEST",
+    type=click.Choice(qualities_resolution_map.keys(), case_sensitive=False),
+    default=CustomResolutionType.BEST.value,
     show_default=True,
 )
 @click.option(
@@ -564,40 +580,40 @@ def download_tv_series_command(
 
     prepare_start(quiet, verbose=verbose)
 
-    downloader = Downloader()
-    get_event_loop().run_until_complete(
-        downloader.download_tv_series(
-            title,
-            year=year,
-            season=season,
-            episode=episode,
-            yes=yes,
-            dir=dir,
-            caption_dir=caption_dir,
-            quality=quality.upper(),
-            language=language,
-            download_caption=caption,
-            caption_only=caption_only,
-            limit=limit,
-            episode_filename_tmpl=episode_filename_tmpl,
-            caption_filename_tmpl=caption_filename_tmpl,
-            stream_via=stream_via,
-            ignore_missing_caption=ignore_missing_caption,
-            auto_mode=auto_mode,
-            format=format,
-            **process_download_runner_params(download_runner_params),
-        )
-    )
+    async def run_download_tv_series():
+        async with MovieBoxHttpClient() as client_session:
+            downloader = Downloader(client_session)
+            downloader.download_tv_series(
+                title,
+                year=year,
+                season=season,
+                episode=episode,
+                yes=yes,
+                dir=dir,
+                caption_dir=caption_dir,
+                quality=CustomResolutionType(quality.lower()),
+                language=language,
+                download_caption=caption,
+                caption_only=caption_only,
+                limit=limit,
+                episode_filename_tmpl=episode_filename_tmpl,
+                caption_filename_tmpl=caption_filename_tmpl,
+                stream_via=stream_via,
+                ignore_missing_caption=ignore_missing_caption,
+                auto_mode=auto_mode,
+                format=format,
+                **process_download_runner_params(download_runner_params),
+            )
+
+    get_event_loop().run_until_complete(run_download_tv_series())
 
 
 def get_commands_map():
     """Builds command"""
     commands_map = {
         download_movie_command: "download-movie",
-        download_tv_series_command: "download-series",
-        mirror_hosts_command: "mirror-hosts",
+        # download_tv_series_command: "download-series",
         homepage_content_command: "homepage-content",
-        popular_search_command: "popular-search",
         item_details_command: "item-details",
     }
     return commands_map
@@ -608,7 +624,7 @@ def main():
     try:
         from moviebox_api.utils import build_command_group
 
-        command = build_command_group(moviebox_v1, get_commands_map())
+        command = build_command_group(moviebox_v3, get_commands_map())
 
         return command()
 

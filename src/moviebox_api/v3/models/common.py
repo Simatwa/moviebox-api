@@ -7,4 +7,4 @@ MODEL_CONFIG = ConfigDict(
     extra="forbid",
 )
 
-DEFAULT_DATETIME = datetime(2000, 1, 1)
+DEFAULT_DATETIME = datetime(1, 1, 1)

@@ -10,10 +10,11 @@ from enum import IntEnum, StrEnum
 
 from moviebox_api.v1.constants import (
     CURRENT_WORKING_DIR,
+    DEFAULT_CAPTION_LANGUAGE,
     DEFAULT_CHUNK_SIZE,
     DEFAULT_READ_TIMEOUT_ATTEMPTS,
     DEFAULT_TASKS,
-    DEFAULT_CAPTION_LANGUAGE,
+    DEFAULT_TASKS_LIMIT,
     DOWNLOAD_PART_EXTENSION,
     DOWNLOAD_REQUEST_HEADERS,
     DownloadMode,
@@ -204,3 +205,9 @@ class CustomResolutionType(StrEnum):
                 f"Invalid value for {CustomResolutionType} {value!r} ",
                 f"Choose from {set(map.keys)}",
             ) from e
+
+    @classmethod
+    def qualities_resolution_map(cls):
+        return {
+            entry.value: entry for entry in cls
+        }

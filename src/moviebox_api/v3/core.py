@@ -49,7 +49,7 @@ class Homepage(BaseContentProviderAndHelper):
         """Constructor for `Homepage`"""
         self.client_session = client_session
         self._page_number: int = 1
-        self._tab_id: int = 0
+        self._tab_id: int | TabID = 0
         self._version: str = ""
 
     def __setattr__(self, name, value):
@@ -61,7 +61,7 @@ class Homepage(BaseContentProviderAndHelper):
                 validate_per_page_and_raise(value)
 
             case "_tab_id":
-                assert_instance(value, TabID, "tab_id")
+                assert_instance(value, (TabID, int), "tab_id")
 
             case _:
                 pass

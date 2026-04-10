@@ -5,7 +5,6 @@ import rich
 from rich.table import Table
 
 from moviebox_api.v3.cli.helpers import (
-    command_context_settings,
     perform_search_and_get_item,
     prepare_start,
 )
@@ -19,40 +18,7 @@ from moviebox_api.v3.http_client import MovieBoxHttpClient
 from moviebox_api.v3.models.details import RootItemDetailsModel
 from moviebox_api.v3.models.homepage import RootHomepageModel
 
-
-@click.command(context_settings=command_context_settings)
-@click.option("-J", "--json", is_flag=True, help="Output details in json format")
-@click.option(
-    "-V",
-    "--verbose",
-    count=True,
-    help="Show more detailed interactive texts",
-    default=0,
-)
-@click.option(
-    "-Q",
-    "--quiet",
-    is_flag=True,
-    help="Disable showing interactive texts on the progress (logs)",
-)
-def mirror_hosts_command(json: bool, **start_kwargs):
-    """Discover Moviebox mirror hosts [env: MOVIEBOX_API_HOST]"""
-    prepare_start(**start_kwargs)
-
-    if json:
-        rich.print_json(data=dict(details=MIRROR_HOSTS), indent=4)
-    else:
-        table = Table(
-            title="Moviebox mirror hosts",
-            show_lines=True,
-        )
-        table.add_column("No.", style="white", justify="center")
-        table.add_column("Mirror Host", style="cyan", justify="left")
-
-        for no, mirror_host in enumerate(MIRROR_HOSTS, 1):
-            table.add_row(str(no), mirror_host)
-
-        rich.print(table)
+command_context_settings = dict(auto_envvar_prefix="MOVIEBOX_V3")
 
 
 @click.command(context_settings=command_context_settings)
@@ -90,10 +56,13 @@ def homepage_content_command(
     json: bool, title: str, banner: bool, **start_kwargs
 ):
     """Show contents displayed at landing page"""
-    # TODO: Add automated test for this command
+
     prepare_start(**start_kwargs)
 
-    homepage = Homepage(MovieBoxHttpClient())
+    client_session = MovieBoxHttpClient()
+    get_event_loop().run_until_complete(client_session.__aenter__())
+
+    homepage = Homepage(client_session)
     homepage_contents: RootHomepageModel = homepage.get_content_model_sync()
     banners: dict[str, list[list[str]]] = {}
     items: dict[str, list[list[str]]] = {}
@@ -139,7 +108,7 @@ def homepage_content_command(
 
             if title is not None:
                 assert title in processed_items.keys(), (
-                    "Title filter '{title}' is not one of "
+                    f"Title filter {title!r} is not one of "
                     f"{list(processed_items.keys())}"
                 )
 
@@ -176,7 +145,7 @@ def homepage_content_command(
             if title is not None:
                 target_title = items.get(title)
                 assert target_title is not None, (
-                    f"Title filter '{title}' is not one of {list(items.keys())}"
+                    f"Title filter {title!r} is not one of {list(items.keys())}"
                 )
                 items = {title: target_title}
 
@@ -201,6 +170,8 @@ def homepage_content_command(
                     table.add_row(*item)
 
                 rich.print(table)
+
+    get_event_loop().run_until_complete(client_session.__aexit__())
 
 
 @click.command(context_settings=command_context_settings)
@@ -255,6 +226,8 @@ def item_details_command(json: bool, verbose: int, quiet: bool, **item_kwargs):
     )
     client_session = MovieBoxHttpClient()
 
+    get_event_loop().run_until_complete(client_session.__aenter__())
+
     target_item = get_event_loop().run_until_complete(
         perform_search_and_get_item(client_session, **item_kwargs)
     )
@@ -266,17 +239,21 @@ def item_details_command(json: bool, verbose: int, quiet: bool, **item_kwargs):
         include_seasons=is_tv_series,
     )
 
-    modelled_details: RootItemDetailsModel = item_details.get_content_model_sync()
+    modelled_details: RootItemDetailsModel = item_details.get_content_model_sync(
+        target_item.subject_id
+    )
     details = modelled_details.model_dump(mode="json", by_alias=False)
 
     season_items = []
 
     if is_tv_series:
-        for season in details["seasons"]:
+        for season in modelled_details.seasons.seasons:
+            s_resolutions = season.resolutions
+
             season_string = (
-                f"Season: {season['se']}, "
-                f"Episodes: {season['max_ep']}, "
-                f"Resolutions: {[res['resolution'] for res in season['resolutions']]}"
+                f"Season: {season.se}, "
+                f"Episodes: {season.max_ep}, "
+                f"Resolutions: {[res.resolution for res in s_resolutions]}"
             )
             season_items.append(season_string)
 
@@ -296,3 +273,5 @@ def item_details_command(json: bool, verbose: int, quiet: bool, **item_kwargs):
             )
 
         rich.print(table)
+
+    get_event_loop().run_until_complete(client_session.__aexit__())

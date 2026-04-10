@@ -109,7 +109,7 @@ class BannerItem(BaseModel):
     subject_id: str = Field(alias="subjectId")
     has_resource: bool = Field(alias="hasResource")
     seen_status: int = Field(alias="seenStatus")
-    subject: MiniSubjectModel | Any
+    subject: MiniSubjectModel | None
 
 
 class BannerModel(BaseModel):

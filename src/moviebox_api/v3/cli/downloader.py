@@ -36,8 +36,6 @@ from moviebox_api.v3.helpers import (
     assert_instance,
     get_event_loop,
 )
-
-# ## v3
 from moviebox_api.v3.http_client import MovieBoxHttpClient
 from moviebox_api.v3.models.search import ResultsSubjectModel
 
@@ -49,7 +47,7 @@ class Downloader:
 
     def __init__(
         self,
-        client_session: MovieBoxHttpClient = None,
+        client_session: MovieBoxHttpClient,
     ):
         """Constructor for `Downloader`
 
@@ -68,11 +66,9 @@ class Downloader:
     def __setattr__(self, name, value):
         match name:
             case "client_session":
-                assert_instance(
-                    self.client_session, MovieBoxHttpClient, "client_session"
-                )
+                assert_instance(value, MovieBoxHttpClient, "client_session")
 
-        super().__setattr__()
+        super().__setattr__(name, value)
 
     async def download_movie(
         self,
@@ -193,7 +189,9 @@ class Downloader:
         downloadable_details_inst = DownloadableFilesDetail(self.client_session)
 
         downloadable_files_detail = (
-            await downloadable_details_inst.get_content_model()
+            await downloadable_details_inst.get_content_model(
+                target_movie.subject_id
+            )
         )
 
         target_media_file = resolve_media_file_to_be_downloaded(

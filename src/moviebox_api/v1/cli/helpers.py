@@ -29,7 +29,7 @@ from moviebox_api.v1.models import (
     SearchResultsItem,
 )
 
-command_context_settings = dict(auto_envvar_prefix="MOVIEBOX")
+command_context_settings = dict(auto_envvar_prefix="MOVIEBOX_V1")
 
 
 async def perform_search_and_get_item(
