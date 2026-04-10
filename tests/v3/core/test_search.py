@@ -26,6 +26,9 @@ async def test_search_contents(query, subject_type):
         for item in modelled_contents.items:
             assert item.subject_type is subject_type
 
+        async for content in search.get_content_model_all():
+            assert isinstance(content, RootSearchResultsModel)
+
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
@@ -43,3 +46,9 @@ async def test_search_contents_v2(query, subject_type):
 
         for item in modelled_contents.items:
             assert item.subject_type is subject_type
+
+        async for content in search.get_content_model_all():
+            assert isinstance(content, RootSearchResultsModelV2)
+
+
+# TODO: test navigation

@@ -144,7 +144,7 @@ class Search(BaseContentProviderAndHelper):
             dict: Fetched results
         """
         contents = await self.client_session.post_to_api(
-            self._path, json=self._create_payload(), include_play_mode=True
+            self._path, json=self._create_payload()
         )
 
         if self._subject_type is not SubjectType.ALL:
@@ -233,6 +233,25 @@ class Search(BaseContentProviderAndHelper):
                 "Current page is the first one, try navigating to the next "
                 "one instead."
             )
+
+    async def get_content_model_all(
+        self,
+    ) -> AsyncIterator[RootSearchResultsModel]:
+
+        navigating = True
+
+        cursor = self
+
+        while navigating:
+            content_model = await cursor.get_content_model()
+
+            yield content_model
+
+            if content_model.pager.has_more:
+                cursor = cursor.next_page(content_model)
+
+            else:
+                navigating = False
 
 
 class SearchV2(BaseContentProviderAndHelper):
@@ -393,6 +412,25 @@ class SearchV2(BaseContentProviderAndHelper):
                 "Current page is the first one, try navigating to the next "
                 "one instead."
             )
+
+    async def get_content_model_all(
+        self,
+    ) -> AsyncIterator[RootSearchResultsModelV2]:
+
+        navigating = True
+
+        cursor = self
+
+        while navigating:
+            content_model = await cursor.get_content_model()
+
+            yield content_model
+
+            if content_model.pager.has_more:
+                cursor = cursor.next_page(content_model)
+
+            else:
+                navigating = False
 
 
 class SeasonDetails(BaseContentProviderAndHelper):
