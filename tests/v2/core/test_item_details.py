@@ -8,7 +8,7 @@ from moviebox_api.v2.requests import Session
 from tests.v2 import MOVIE_KEYWORD, TV_SERIES_KEYWORD
 
 
-@pytest.mark.asynciok
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     argnames=["path"],
     argvalues=(["goat-u1jZhR4CnV4"],),

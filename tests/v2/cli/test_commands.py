@@ -51,7 +51,7 @@ def test_help(command):
     argvalues=[
         ["download-movie avatar -YT"],
         # ["download-movie war -s education -YT"],
-        ["download-movie walker -s music -YT"],
+        ["download-movie walker -s music -YT  --no-caption"],
         # ["download-movie king -s anime -YT"],
         ["download-series merlin -s 1 -e 1 -YT"],
     ],
