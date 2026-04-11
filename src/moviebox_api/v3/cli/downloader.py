@@ -50,8 +50,7 @@ class Downloader:
         self,
         client_session: MovieBoxHttpClient,
     ):
-        """Constructor for `Downloader`
-        """
+        """Constructor for `Downloader`"""
         logging.warning(
             "V3 of moviebox-API lacks subtitles support. All options related to "
             "captions will be ignored. "
@@ -165,7 +164,7 @@ class Downloader:
         download_caption = False
         caption_only = False
         language = tuple()
-    
+
         assert callable(search_function), (
             "Value for search_function must be callable not"
             f"{type(search_function)}"
@@ -261,8 +260,8 @@ class Downloader:
     async def download_tv_series(
         self,
         title: str,
-        season_offset: int = 0,
-        episode_offset: int = 0,
+        season: int = 1,
+        episode: int = 1,
         year: int | None = None,
         yes: bool = False,
         dir: Path | str = CURRENT_WORKING_DIR,
@@ -432,6 +431,7 @@ class Downloader:
 
         subtitles_dir = tempfile.mkdtemp() if stream_via else caption_dir
 
+        """
         caption_downloader = CaptionFileDownloader(
             dir=(
                 subtitles_dir if stream_via else dir if group else subtitles_dir
@@ -443,6 +443,7 @@ class Downloader:
             merge_buffer_size=merge_buffer_size,
             group_series=group,
         )
+        """
 
         media_file_downloader = MediaFileDownloader(
             dir=dir,
@@ -461,8 +462,8 @@ class Downloader:
 
         download_request_params = get_download_tv_series_request_params(
             seasons=series_resource.seasons,
-            episode_offset=episode_offset,
-            season_offset=season_offset,
+            episode=episode,
+            season=season,
             limit=-1 if auto_mode else limit,
         )
 
@@ -482,7 +483,9 @@ class Downloader:
                 target_tv_series.subject_id
             )
 
-            for media_file in files_detail.list:
+            for media_file in files_detail.list[req_params.offset :][
+                : req_params.limit
+            ]:
                 if stream_via:
                     media_player_name_func_map[stream_via](
                         str(media_file.url), subtitle_details_items, subtitles_dir
@@ -498,11 +501,11 @@ class Downloader:
 
                 current_episode_details["movie"] = media_file_response
 
-                if not response_jar.get(media_file.se):
-                    response_jar[media_file.se] = []
+                if not response_jar.get(media_file.season):
+                    response_jar[media_file.season] = []
 
-                response_jar[media_file.se].append({
-                    media_file.ep: current_episode_details
+                response_jar[media_file.season].append({
+                    media_file.episode: current_episode_details
                 })
                 # TODO: add caption_file with key caption
 

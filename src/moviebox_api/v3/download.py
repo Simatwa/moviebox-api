@@ -186,8 +186,8 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         final_dir = self.create_final_dir(
             working_dir=self.throttle_buster.dir,
             downloadable_files_detail=downloadable_files_detail,
-            season=media_file.se,
-            episode=media_file.ep,
+            season=media_file.season,
+            episode=media_file.episode,
             test=test,
             group=self.group_series,
         )

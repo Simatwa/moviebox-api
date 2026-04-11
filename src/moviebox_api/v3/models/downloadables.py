@@ -16,7 +16,7 @@ from moviebox_api.v3.models.search import Image, PagerModel
 class MediaFileMetadata(BaseModel):
     model_config = MODEL_CONFIG
 
-    episode: int
+    season_episode: int = Field(alias="episode")
     title: str
     resource_link: HttpUrl = Field(alias="resourceLink")
     link_type: int = Field(alias="linkType")
@@ -25,8 +25,8 @@ class MediaFileMetadata(BaseModel):
     resource_id: str = Field(alias="resourceId")
     post_id: str = Field(alias="postId")
     ext_captions: list[Any] = Field(alias="extCaptions")
-    se: int
-    ep: int
+    season: int = Field(alias="se")
+    episode: int = Field(alias="ep")
     source_url: HttpUrl = Field(alias="sourceUrl")
     resolution: int
     codec_name: str = Field(alias="codecName")
@@ -37,14 +37,6 @@ class MediaFileMetadata(BaseModel):
     @property
     def url(self):
         return self.resource_link
-
-    @property
-    def season(self):
-        return self.se
-
-    @property
-    def episode(self):
-        return self.se
 
 
 class CollectionResolutionModel(BaseModel):

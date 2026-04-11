@@ -33,7 +33,7 @@ def test_version():
     ],
     argvalues=[
         ["download-movie --help"],
-        # ["download-series --help"],
+        ["download-series --help"],
         ["homepage-content --help"],
         ["item-details --help"],
     ],
@@ -48,11 +48,11 @@ def test_help(command):
         "command",
     ],
     argvalues=[
-        ["download-movie avatar -YT --no-caption"],
+        ["download-movie avatar -YT"],
         # ["download-movie war -s education -YT"],
-        ["download-movie walker -s music -YT --no-caption"],
+        ["download-movie walker -s music -YT"],
         # ["download-movie king -s anime -YT"],
-        ["download-series merlin -s 1 -e 1 -YT"],
+        ["download-series 'A Knight of the Seven Kingdoms' -s 1 -e 1 -YT"],
     ],
 )
 def test_download(command):

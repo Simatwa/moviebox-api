@@ -59,50 +59,41 @@ def get_episodes_amount(seasons: list[SeasonItemModel]) -> int:
 
 def get_download_tv_series_request_params(
     seasons: list[SeasonItemModel],
-    episode_offset: int = 0,
-    season_offset: int = 0,
-    per_page: int = SEARCH_PER_PAGE_LIMIT,
+    episode: int = 1,
+    season: int = 1,
+    per_page: int = 20,
     limit: int = -1,
 ) -> PaginationDetails:
+    params: list[RequestParams] = []
 
     season_numbers = [s.season_number for s in seasons]
 
-    if season_offset > 0 and season_offset not in season_numbers:
+    if season not in season_numbers:
         raise ValueError(
-            f"Season {season_offset} does not exist. Available "
-            f"seasons: {season_numbers}"
+            f"Season {season} does not exist. Available seasons: {season_numbers}"
         )
 
-    if season_offset > 0:
-        target_season = next(
-            s for s in seasons if s.season_number == season_offset
+    target_season = next(s for s in seasons if s.season_number == season)
+    if episode > target_season.total_episodes:
+        raise ValueError(
+            f"Episode {episode} exceeds season {season} "
+            f"total episodes ({target_season.total_episodes})."
         )
-        if episode_offset > target_season.total_episodes:
-            raise ValueError(
-                f"Episode offset {episode_offset} exceeds season {season_offset} "
-                f"total episodes ({target_season.total_episodes})."
-            )
 
     total_episodes = get_episodes_amount(seasons)
-    seasons_before_offset = (
-        [s for s in seasons if s.season_number < season_offset]
-        if season_offset > 0
-        else []
-    )
-    offset_episodes = get_episodes_amount(seasons_before_offset) + episode_offset
+    seasons_before = [s for s in seasons if s.season_number < season]
+    offset_episodes = get_episodes_amount(seasons_before) + (
+        episode - 1
+    )  # -1: episode is 1-based
     available_episodes = total_episodes - offset_episodes
 
     if limit != -1 and limit > available_episodes:
         raise ValueError(
             f"Limit {limit} exceeds available episodes ({available_episodes}) "
-            f"from season {season_offset}, episode {episode_offset}."
+            f"from season {season}, episode {episode}."
         )
 
-    params: list[RequestParams] = []
-
-    total_episodes = get_episodes_amount(seasons)
-
-    no_offset = episode_offset == 0 and season_offset == 0
+    no_offset = episode == 1 and season == season_numbers[0]
     no_limit = limit == -1
 
     if no_offset and no_limit:
@@ -119,22 +110,8 @@ def get_download_tv_series_request_params(
                     limit=page_limit,
                 )
             )
-
     else:
-        seasons_before_offset = (
-            [s for s in seasons if s.season_number < season_offset]
-            if season_offset > 0
-            else []
-        )
-
-        offset_episodes = (
-            get_episodes_amount(seasons_before_offset) + episode_offset
-        )
-
-        available_episodes = total_episodes - offset_episodes
-        wanted_episodes = (
-            available_episodes if no_limit else min(limit, available_episodes)
-        )
+        wanted_episodes = available_episodes if no_limit else limit
 
         offset_page = floor(offset_episodes / per_page)
         offset_in_page = offset_episodes % per_page

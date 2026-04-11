@@ -638,7 +638,7 @@ wheels = [
 
 [[package]]
 name = "moviebox-api"
-version = "0.4.0.post1"
+version = "0.5.0"
 source = { editable = "." }
 dependencies = [
     { name = "bs4" },

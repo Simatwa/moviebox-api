@@ -326,25 +326,27 @@ def download_movie_command(
 @click.option(
     "-s",
     "--season",
-    type=click.IntRange(0, 1000),
-    help="TV Series season offset",
-    default=0,
+    type=click.IntRange(1, 1000),
+    help="TV Series season number to start processing from",
+    default=1,
     show_default=True,
 )
 @click.option(
     "-e",
     "--episode",
-    type=click.IntRange(0, 1000),
-    help="Episode offset of the tv-series season",
+    type=click.IntRange(1, 1000),
+    help="Episode of the selected season to start processing from",
     show_default=True,
-    default=0,
+    default=1,
 )
 @click.option(
     "-l",
     "--limit",
     type=click.IntRange(-1, 1000),
-    help="Total number of episodes to download in the season",
-    default=-1,
+    help=(
+        "Total number of episodes to download in the season. Set -1 to disable it"
+    ),
+    default=1,
     show_default=True,
 )
 @click.option(
@@ -520,7 +522,8 @@ def download_movie_command(
     "-A",
     "--auto-mode",
     is_flag=True,
-    help="When limit is -1 (default), download entire remaining seasons.",
+    help="Download entire remaining episodes across entire remaining "
+    "seasons (shortcut for --limit -1)",
 )
 @click.option(
     "-S",
@@ -587,8 +590,8 @@ def download_tv_series_command(
             await downloader.download_tv_series(
                 title,
                 year=year,
-                season_offset=season,
-                episode_offset=episode,
+                season=season,
+                episode=episode,
                 yes=yes,
                 dir=dir,
                 caption_dir=caption_dir,
