@@ -137,6 +137,7 @@ moviebox v2 --help
 **Basic usage:**
 ```sh
 moviebox v2 download-movie "Avatar"
+moviebox-v3 download-movie "avengers endgame" 
 ```
 
 **Common options:**
@@ -208,6 +209,7 @@ Options:
 **Basic usage:**
 ```sh
 moviebox v2 download-series "Game of Thrones" -s 1 -e 1
+moviebox-v3 download-series "A Knight of the Seven Kingdoms"
 ```
 
 **Multiple episodes:**

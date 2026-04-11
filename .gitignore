@@ -220,3 +220,5 @@ commit-msg*
 *.part
 temp/
 research*.json
+movie.page
+tv_series.page
