@@ -64,7 +64,7 @@ class ResultsSubjectModel(BaseModel):
     post_title: str = Field(alias="postTitle")
     aka: str
     explains: list[Any]
-    se_num: int = Field(alias="seNum")
+    season_numbers: int = Field(alias="seNum")
     viewers: int
     category: str
     subtitles: list[str]
@@ -83,7 +83,7 @@ class ResultsSubjectModel(BaseModel):
     @property
     def total_seasons(self) -> int:
         "Total number of seasons"
-        return self.se_num
+        return self.season_numbers
 
     @property
     def is_accessible_from_website(self) -> bool:

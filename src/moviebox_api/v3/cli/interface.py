@@ -326,25 +326,25 @@ def download_movie_command(
 @click.option(
     "-s",
     "--season",
-    type=click.IntRange(1, 1000),
-    help="TV Series season filter",
-    required=True,
-    prompt="> Enter season number",
+    type=click.IntRange(0, 1000),
+    help="TV Series season offset",
+    default=0,
+    show_default=True,
 )
 @click.option(
     "-e",
     "--episode",
-    type=click.IntRange(1, 1000),
+    type=click.IntRange(0, 1000),
     help="Episode offset of the tv-series season",
-    required=True,
-    prompt="> Enter episode number",
+    show_default=True,
+    default=0,
 )
 @click.option(
     "-l",
     "--limit",
-    type=click.IntRange(1, 1000),
+    type=click.IntRange(-1, 1000),
     help="Total number of episodes to download in the season",
-    default=1,
+    default=-1,
     show_default=True,
 )
 @click.option(
@@ -423,7 +423,7 @@ def download_movie_command(
     "-f",
     "--format",
     type=click.Choice(["standard", "group", "struct"]),
-    default=None,
+    default="standard",
     help=(
         "Ways of formating filename and saving the episodes. "
         " group -> Organize episodes into separate folders based on seasons"
@@ -431,6 +431,7 @@ def download_movie_command(
         " struct -> Save episodes in a hierarchical directory structure "
         "e.g Merlin (2009)/S1/E1.mp4"
     ),
+    show_default=True,
 )
 @click.option(
     "-E",
@@ -519,7 +520,7 @@ def download_movie_command(
     "-A",
     "--auto-mode",
     is_flag=True,
-    help="When limit is 1 (default), download entire remaining seasons.",
+    help="When limit is -1 (default), download entire remaining seasons.",
 )
 @click.option(
     "-S",
@@ -583,11 +584,11 @@ def download_tv_series_command(
     async def run_download_tv_series():
         async with MovieBoxHttpClient() as client_session:
             downloader = Downloader(client_session)
-            downloader.download_tv_series(
+            await downloader.download_tv_series(
                 title,
                 year=year,
-                season=season,
-                episode=episode,
+                season_offset=season,
+                episode_offset=episode,
                 yes=yes,
                 dir=dir,
                 caption_dir=caption_dir,
@@ -612,7 +613,7 @@ def get_commands_map():
     """Builds command"""
     commands_map = {
         download_movie_command: "download-movie",
-        # download_tv_series_command: "download-series",
+        download_tv_series_command: "download-series",
         homepage_content_command: "homepage-content",
         item_details_command: "item-details",
     }

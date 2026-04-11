@@ -52,7 +52,7 @@ def test_help(command):
         # ["download-movie war -s education -YT"],
         ["download-movie walker -s music -YT --no-caption"],
         # ["download-movie king -s anime -YT"],
-      #  ["download-series merlin -s 1 -e 1 -YT"],
+        ["download-series merlin -s 1 -e 1 -YT"],
     ],
 )
 def test_download(command):
@@ -83,7 +83,7 @@ def test_homepage(command):
     ],
     argvalues=(
         ["item-details Merlin --yes --json"],
-        ["item-details Avatar -s MOVIES -Y -F"],
+        ["item-details Avatar -s MOVIES -Y"],
     ),
 )
 def test_item_details(command):

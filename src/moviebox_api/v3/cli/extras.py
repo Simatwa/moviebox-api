@@ -1,5 +1,7 @@
 """Contains non-essential cli-commands"""
 
+import json as j
+
 import click
 import rich
 from rich.table import Table
@@ -242,7 +244,29 @@ def item_details_command(json: bool, verbose: int, quiet: bool, **item_kwargs):
     modelled_details: RootItemDetailsModel = item_details.get_content_model_sync(
         target_item.subject_id
     )
-    details = modelled_details.model_dump(mode="json", by_alias=False)
+    details = modelled_details.model_dump(
+        mode="json",
+        by_alias=False,
+        include=[
+            "subject_id",
+            "subject_type",
+            "title",
+            "description",
+            "release_date",
+            "genre",
+            "country_name",
+            "language",
+            "imdb_rating_value",
+            "content_rating",
+            "season_numbers",
+            "viewers",
+            "subtitles",
+            "dubs"
+            "detail_url",
+            "is_cam",
+            "seasons",
+        ]
+    )
 
     season_items = []
 
@@ -269,7 +293,15 @@ def item_details_command(json: bool, verbose: int, quiet: bool, **item_kwargs):
 
         for key, value in details.items():
             table.add_row(
-                key, "\n".join(value) if type(value) is list else str(value)
+                key,
+                "\n".join([
+                    j.dumps(v, indent=2) if type(v) is dict else str(v)
+                    for v in value
+                ])
+                if type(value) is list
+                else j.dumps(value, indent=2)
+                if type(value) is dict
+                else str(value),
             )
 
         rich.print(table)

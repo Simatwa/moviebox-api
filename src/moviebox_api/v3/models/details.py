@@ -123,6 +123,22 @@ class SeasonItemModel(BaseModel):
     all_ep: str = Field(alias="allEp")
     resolutions: list[ResolutionItemModel]
 
+    @property
+    def total_episodes(self) -> int:
+        return self.max_ep
+
+    @property
+    def season_number(self) -> int:
+        return self.se
+
+    @property
+    def best_resolution(self) -> ResolutionItemModel:
+        return self.resolutions[-1]
+
+    @property
+    def worst_resolution(self) -> ResolutionItemModel:
+        return self.resolutions[1]
+
 
 class SeasonsModel(BaseModel):
     model_config = MODEL_CONFIG
