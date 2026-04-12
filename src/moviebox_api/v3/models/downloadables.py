@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
@@ -9,7 +9,7 @@ from moviebox_api.v3.constants import (
     SubjectType,
 )
 from moviebox_api.v3.exceptions import ZeroMediaFileError
-from moviebox_api.v3.models.common import DEFAULT_DATETIME, MODEL_CONFIG
+from moviebox_api.v3.models.common import DEFAULT_DATE, MODEL_CONFIG
 from moviebox_api.v3.models.search import Image, PagerModel
 
 
@@ -69,7 +69,7 @@ class RootDownloadableFilesDetailModel(BaseModel):
     genre: list[str]
     tags: list[Any]
     fav_info: Any = Field(alias="favInfo")
-    release_date: datetime = Field(alias="releaseDate")
+    release_date: date = Field(alias="releaseDate")
     country_name: str = Field(alias="countryName")
     duration_seconds: int = Field(alias="durationSeconds")
 
@@ -87,16 +87,16 @@ class RootDownloadableFilesDetailModel(BaseModel):
     @field_validator("release_date", mode="before")
     def validate_release_date(value: str):
         if not bool(value):
-            return DEFAULT_DATETIME
+            return DEFAULT_DATE
 
         try:
-            return datetime.strptime(value, "%Y-%m-%d")
+            return date.strptime(value, "%Y-%m-%d")
 
         except Exception:
             if value.isdigit():
-                return datetime(year=int(value), month=1, day=1)
+                return date(year=int(value), month=1, day=1)
 
-            return DEFAULT_DATETIME
+            return DEFAULT_DATE
 
     def _check_list(self) -> bool:
         """Checks whether there are downloadable media file.

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 from pydantic import ConfigDict
 
@@ -7,4 +7,4 @@ MODEL_CONFIG = ConfigDict(
     extra="forbid",
 )
 
-DEFAULT_DATETIME = datetime(1, 1, 1)
+DEFAULT_DATE = date(1, 1, 1)

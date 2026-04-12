@@ -595,8 +595,7 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
         }
 
     async def get_content(
-        self,
-        subject_id: str,
+        self, subject_id: str, release_date: str = None
     ) -> dict:
 
         request_params = self._create_params(subject_id)
@@ -605,12 +604,17 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
             self._path,
             params=request_params,
         )
+        if release_date:
+            # this field lacks valid value so we update it after encountered
+            #  from other core classes such as Search
+            contents["releaseDate"] = release_date
+
         return contents
 
     async def get_content_model(
-        self, subject_id: str
+        self, subject_id: str, release_date: str = None
     ) -> RootDownloadableFilesDetailModel:
-        contents = await self.get_content(subject_id)
+        contents = await self.get_content(subject_id, release_date)
 
         modelled_contents = RootDownloadableFilesDetailModel.model_validate(
             contents

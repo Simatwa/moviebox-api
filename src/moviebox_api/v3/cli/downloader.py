@@ -190,7 +190,8 @@ class Downloader:
 
         downloadable_files_detail = (
             await downloadable_details_inst.get_content_model(
-                target_movie.subject_id
+                target_movie.subject_id,
+                release_date=str(target_movie.release_date),
             )
         )
 
@@ -480,7 +481,8 @@ class Downloader:
                 resolution=quality,
             )
             files_detail = await downloadable_files_detail_inst.get_content_model(
-                target_tv_series.subject_id
+                target_tv_series.subject_id,
+                release_date=str(target_tv_series.release_date),
             )
 
             for media_file in files_detail.list[req_params.offset :][

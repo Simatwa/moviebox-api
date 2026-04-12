@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import date
 from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
@@ -36,7 +36,7 @@ class ResultsSubjectModel(BaseModel):
     subject_type: SubjectType = Field(alias="subjectType")
     title: str
     description: str
-    release_date: datetime = Field(alias="releaseDate")
+    release_date: date = Field(alias="releaseDate")
     duration: str
     genre: list[str]
     cover: Image | None
@@ -118,8 +118,8 @@ class ResultsSubjectModel(BaseModel):
         return float(value) if bool(value) else 0
 
     @field_validator("release_date", mode="before")
-    def validate_release_date(value) -> datetime:
-        return datetime.strptime(value, "%Y-%m-%d")
+    def validate_release_date(value) -> date:
+        return date.strptime(value, "%Y-%m-%d")
 
 
 class SearchResultsItem(BaseModel):

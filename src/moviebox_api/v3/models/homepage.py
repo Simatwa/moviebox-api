@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import date
 from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
@@ -49,7 +49,7 @@ class MiniSubjectModel(BaseModel):
 
     subject_id: str = Field(alias="subjectId")
     title: str
-    release_date: datetime = Field(alias="releaseDate")
+    release_date: date = Field(alias="releaseDate")
     genre: list[str]
     cover: Image
     subject_type: SubjectType = Field(alias="subjectType")
@@ -65,8 +65,8 @@ class MiniSubjectModel(BaseModel):
         return v
 
     @field_validator("release_date", mode="before")
-    def validate_release_date(value) -> datetime:
-        return datetime(year=int(value), month=1, day=1)
+    def validate_release_date(value) -> date:
+        return date(year=int(value), month=1, day=1)
 
     @field_validator("detail_url", mode="before")
     def validate_detail_url(value):
@@ -80,7 +80,7 @@ class SubjectModel(MiniSubjectModel):
     seconds: int
     description: str
     country_name: str = Field(alias="countryName")
-    release_date: datetime = Field(alias="releaseDate")
+    release_date: date = Field(alias="releaseDate")
     seen_status: int = Field(alias="seenStatus")
     viewers: int
     has_resource: bool = Field(alias="hasResource")
@@ -95,8 +95,8 @@ class SubjectModel(MiniSubjectModel):
     shorts_episode: int = Field(alias="shortsEpisode")
 
     @field_validator("release_date", mode="before")
-    def validate_release_date(value) -> datetime:
-        return datetime.strptime(value, "%Y-%m-%d")
+    def validate_release_date(value) -> date:
+        return date.strptime(value, "%Y-%m-%d")
 
 
 class BannerItem(BaseModel):
