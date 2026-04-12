@@ -20,6 +20,12 @@ nav:
         - Movies: v2/movies.md
         - TV-Series: v2/tv_series.md
         - Commandline: v2/cli.md
+
+      - V3:
+        - Introduction: v3/introduction.md
+        - Movies: v3/movies.md
+        - TV-Series: v3/tv_series.md
+        - Commandline: v3/cli.md
   
   - Misc: miscellaneous.md
 
