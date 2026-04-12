@@ -406,7 +406,7 @@ asyncio.run(main())
 
 ### Mirror Hosts
 
-Moviebox.ph has [multiple mirror hosts](https://github.com/Simatwa/moviebox-api/issues/27). To use a specific mirror:
+h5.aoneroom.com has ~~[multiple mirror hosts](https://github.com/Simatwa/moviebox-api/issues/27)~~. To use a specific mirror:
 
 ```sh
 # v1
