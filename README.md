@@ -452,8 +452,6 @@ asyncio.run(main())
 
 </details>
 
-## Advanced Configuration
-
 ## Mirror Hosts
 
 h5.aoneroom.com has ~~[multiple mirror hosts](https://github.com/Simatwa/moviebox-api/issues/27)~~. To use a specific mirror:
