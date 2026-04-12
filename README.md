@@ -450,6 +450,11 @@ async def main():
 asyncio.run(main())
 ```
 
+#### Further Examples
+
+- [V1 Examples](./docs/v1/examples/)
+- [v2 Examples](./docs/v2/examples/)
+
 </details>
 
 ## Mirror Hosts
@@ -470,10 +475,10 @@ Discover available mirrors:
 moviebox v1 mirror-hosts
 ```
 
-## Examples
+## Alternatives
 
-- [V1 Examples](./docs/v1/examples/)
-- [v2 Examples](./docs/v2/examples/)
+1. Movies - [fzmovies-api](https://github.com/Simatwa/fzmovies-api)
+2. TV-Series - [fzseries-api](https://github.com/Simatwa/fzseries-api)
 
 ## Contributors
 
