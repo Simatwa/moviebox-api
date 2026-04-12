@@ -120,9 +120,12 @@ async def main():
 asyncio.run(main())
 ```
 
-## Usage
+## [Usage](https://moviebox-api-docs.netlify.app/)
 
-### Command Line Interface
+This is just a brief usage information. For more details visit official docs - [https://moviebox-api-docs.netlify.app/](https://moviebox-api-docs.netlify.app/)
+
+<details open>
+<summary><h3>Command Line Interface</h3></summary>
 
 ```sh
 moviebox v2 --help
@@ -138,7 +141,7 @@ moviebox v2 --help
 
 
 
-### Downloading Movies
+#### Downloading Movies
 
 **Basic usage:**
 ```sh
@@ -210,7 +213,7 @@ Options:
 ```
 </details>
 
-### Downloading TV Series
+#### Downloading TV Series
 
 **Basic usage:**
 ```sh
@@ -294,7 +297,7 @@ Options:
 
 
 
-### Streaming via Media Players
+#### Streaming via Media Players
 
 Stream content directly without downloading (requires MPV or VLC):
 
@@ -313,114 +316,6 @@ moviebox v2 download-series "Breaking Bad" -s 1 -e 1 --stream-via vlc --quality 
 ```
 
 Streaming requires the `moviebox-api[cli]` installation and MPV or VLC installed on the system. Temporary files are cleaned up automatically.
-
-
-
-## Python API
-
-### Simple Auto-Download
-
-```python
-from moviebox_api.v1 import MovieAuto
-import asyncio
-
-async def main():
-    auto = MovieAuto()
-    movie_file, subtitle_file = await auto.run("Avatar")
-    print(f"Movie saved to: {movie_file.saved_to}")
-    print(f"Subtitle saved to: {subtitle_file.saved_to}")
-
-asyncio.run(main())
-```
-
-### Download with Progress Tracking
-
-```python
-from moviebox_api.v1 import DownloadTracker, MovieAuto
-import asyncio
-
-async def progress_callback(progress: DownloadTracker):
-    percent = (progress.downloaded_size / progress.expected_size) * 100
-    print(f"[{percent:.2f}%] Downloading {progress.saved_to.name}", end="\r")
-
-async def main():
-    auto = MovieAuto(tasks=1)
-    await auto.run("Avatar", progress_hook=progress_callback)
-
-asyncio.run(main())
-```
-
-### Download with Manual Confirmation
-
-```python
-from moviebox_api.v1.cli import Downloader
-import asyncio
-
-async def main():
-    downloader = Downloader()
-    movie_file, subtitle_files = await downloader.download_movie("Avatar")
-    print(f"Downloaded: {movie_file}")
-    print(f"Subtitles: {subtitle_files}")
-
-asyncio.run(main())
-```
-
-### Download TV Series Episodes
-
-```python
-from moviebox_api.v1.cli import Downloader
-import asyncio
-
-async def main():
-    downloader = Downloader()
-    episodes_map = await downloader.download_tv_series(
-        "Merlin",
-        season=1,
-        episode=1,
-        limit=2,
-        # auto_mode=True  # Download entire remaining seasons when limit=1
-    )
-    print(f"Downloaded episodes: {episodes_map}")
-
-asyncio.run(main())
-```
-
-### Custom Configuration
-
-```python
-from moviebox_api.v1 import MovieAuto
-import asyncio
-
-async def main():
-    auto = MovieAuto(
-        caption_language="Spanish",
-        quality="720p",
-        download_dir="~/Downloads"
-    )
-    movie_file, subtitle_file = await auto.run("Avatar")
-
-asyncio.run(main())
-```
-
-## Advanced Configuration
-
-### Mirror Hosts
-
-h5.aoneroom.com has ~~[multiple mirror hosts](https://github.com/Simatwa/moviebox-api/issues/27)~~. To use a specific mirror:
-
-```sh
-# v1
-export MOVIEBOX_API_HOST="h5.aoneroom.com"
-
-# v2
-export MOVIEBOX_API_HOST_V2="h5-api.aoneroom.com"
-```
-
-Discover available mirrors:
-
-```sh
-moviebox v1 mirror-hosts
-```
 
 ### Command Shortcuts
 
@@ -464,6 +359,117 @@ Merlin (2009)/
     E2.mp4
   S2/
     E1.mp4
+```
+
+</details>
+
+<details>
+<summary><h3>Python API</h3></summary>
+
+#### Simple Auto-Download
+
+```python
+from moviebox_api.v1 import MovieAuto
+import asyncio
+
+async def main():
+    auto = MovieAuto()
+    movie_file, subtitle_file = await auto.run("Avatar")
+    print(f"Movie saved to: {movie_file.saved_to}")
+    print(f"Subtitle saved to: {subtitle_file.saved_to}")
+
+asyncio.run(main())
+```
+
+#### Download with Progress Tracking
+
+```python
+from moviebox_api.v1 import DownloadTracker, MovieAuto
+import asyncio
+
+async def progress_callback(progress: DownloadTracker):
+    percent = (progress.downloaded_size / progress.expected_size) * 100
+    print(f"[{percent:.2f}%] Downloading {progress.saved_to.name}", end="\r")
+
+async def main():
+    auto = MovieAuto(tasks=1)
+    await auto.run("Avatar", progress_hook=progress_callback)
+
+asyncio.run(main())
+```
+
+#### Download with Manual Confirmation
+
+```python
+from moviebox_api.v1.cli import Downloader
+import asyncio
+
+async def main():
+    downloader = Downloader()
+    movie_file, subtitle_files = await downloader.download_movie("Avatar")
+    print(f"Downloaded: {movie_file}")
+    print(f"Subtitles: {subtitle_files}")
+
+asyncio.run(main())
+```
+
+#### Download TV Series Episodes
+
+```python
+from moviebox_api.v1.cli import Downloader
+import asyncio
+
+async def main():
+    downloader = Downloader()
+    episodes_map = await downloader.download_tv_series(
+        "Merlin",
+        season=1,
+        episode=1,
+        limit=2,
+        # auto_mode=True  # Download entire remaining seasons when limit=1
+    )
+    print(f"Downloaded episodes: {episodes_map}")
+
+asyncio.run(main())
+```
+
+#### Custom Configuration
+
+```python
+from moviebox_api.v1 import MovieAuto
+import asyncio
+
+async def main():
+    auto = MovieAuto(
+        caption_language="Spanish",
+        quality="720p",
+        download_dir="~/Downloads"
+    )
+    movie_file, subtitle_file = await auto.run("Avatar")
+
+asyncio.run(main())
+```
+
+</details>
+
+## Advanced Configuration
+
+## Mirror Hosts
+
+h5.aoneroom.com has ~~[multiple mirror hosts](https://github.com/Simatwa/moviebox-api/issues/27)~~. To use a specific mirror:
+
+```sh
+# v1
+export MOVIEBOX_API_HOST="h5.aoneroom.com"
+
+# v2
+export MOVIEBOX_API_HOST_V2="h5-api.aoneroom.com"
+```
+
+Discover available mirrors:
+
+```sh
+moviebox v1 mirror-hosts
 ```
 
 ## Examples
