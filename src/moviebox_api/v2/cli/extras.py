@@ -5,11 +5,11 @@ import rich
 from rich.table import Table
 
 from moviebox_api.v1.cli.helpers import (
-    command_context_settings,
     perform_search_and_get_item,
     prepare_start,
 )
 from moviebox_api.v1.helpers import get_event_loop
+from moviebox_api.v2.cli.helpers import command_context_settings
 from moviebox_api.v2.constants import HOST_URL, MIRROR_HOSTS, SubjectType
 from moviebox_api.v2.core import Homepage, ItemDetails, Search
 from moviebox_api.v2.models import SpecificItemDetailsModel

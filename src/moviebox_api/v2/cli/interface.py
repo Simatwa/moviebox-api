@@ -10,7 +10,6 @@ import click
 from moviebox_api import __version__
 from moviebox_api.v1.cli.downloader import Downloader
 from moviebox_api.v1.cli.helpers import (
-    command_context_settings,
     media_player_name_func_map,
     prepare_start,
     process_download_runner_params,
@@ -32,6 +31,7 @@ from moviebox_api.v2.cli.extras import (
     item_details_command,
     mirror_hosts_command,
 )
+from moviebox_api.v2.cli.helpers import command_context_settings
 from moviebox_api.v2.constants import HOST_URL, SubjectType
 from moviebox_api.v2.core import Search, Session
 from moviebox_api.v2.download import (
