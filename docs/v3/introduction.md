@@ -1,2 +1,2 @@
 ???+ tip "Coming Soon"
-    The contents of this file are yet to be updated. Kindly check again later.
+    The contents of this file are yet to be updated. Kindly check again later. In the meantime, you can go through [tests/v3](https://github.com/Simatwa/moviebox-api/tree/main/tests/v3) to better understand what will be coming.

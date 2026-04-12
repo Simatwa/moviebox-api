@@ -34,7 +34,7 @@ There are 3 versions currently supported, each targeting a distinct API surface 
 ### v1 — Web Scraper + Partial REST-API Client
 **Endpoint:** `h5.aoneroom.com`
 
-Operates against the H5 (mobile web) frontend of Moviebox. Combines HTML scraping with partial REST-API interaction, making it suitable for content discovery where structured API access is limited or inconsistent. Scraping logic handles page-rendered data not exposed via JSON endpoints.
+Operates against h5.aoneroom.com. Combines HTML scraping with partial REST-API interaction, making it suitable for content discovery where structured API access is limited or inconsistent. Scraping logic handles page-rendered data not exposed via JSON endpoints.
 
 - Approach: Hybrid (DOM scraping + REST)
 - Target surface: H5 mobile web interface
@@ -46,7 +46,7 @@ Operates against the H5 (mobile web) frontend of Moviebox. Combines HTML scrapin
 ### v2 — Pure REST-API Client
 **Endpoint:** `h5-api.aoneroom.com`
 
-Targets the dedicated REST-API backend powering the H5 web interface. Eliminates scraping entirely in favor of structured JSON request/response cycles. Provides more stable and predictable data access compared to v1.
+Targets the dedicated REST-API backend powering the H5 web interfaces - [moviebox.ph, moviebox.pk, videodownloader.site etc](https://github.com/Simatwa/moviebox-api/issues/27). Eliminates scraping entirely in favor of structured JSON request/response cycles. Provides more stable and predictable data access compared to v1.
 
 - Approach: Pure REST-API
 - Target surface: H5 API backend
@@ -75,5 +75,5 @@ Targets the API cluster used by the native Moviebox Android application. Operate
 
 <div align=center>
 
-**Long live Moviebox spirit.**
+<strong>Long live Moviebox spirit.</strong>
 </div>

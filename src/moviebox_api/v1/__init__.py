@@ -1,75 +1,17 @@
 """
-This package allows you to download movies
-and tv series from moviebox.ph and its mirror hosts.
+### v1 - Web Scraper + Partial REST-API Client
+**Endpoint:** `h5.aoneroom.com`
 
-Right from performing `search` query down to downloading
-it in your desired quality.
+Operates against the H5 frontend of Moviebox. 
+Combines HTML scraping with partial REST-API interaction, making it 
+suitable for content discovery where structured API access is limited or 
+inconsistent. Scraping logic handles page-rendered data not exposed via 
+JSON endpoints.
 
-For instance:
-
-```python
-from moviebox_api import MovieAuto
-
-async def main():
-    auto = MovieAuto()
-    movie_file, subtitle_file = await auto.run("Avatar")
-    print(movie_file.saved_to, subtitle_file.saved_to, sep="\n")
-    # Output
-    # /.../Avatar - 1080P.mp4
-    # /.../Avatar - English.srt
-
-if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
-```
-
-## More Control
-Prompt for confirmation prior to download
-
-### Movie
-
-```python
-# $ pip install 'moviebox-api[cli]'
-
-from moviebox_api.cli import Downloader
-
-async def main():
-    downloader = Downloader()
-    movie_file, subtitle_files = await downloader.download_movie(
-        "avatar",
-    )
-    print(movie_file, subtitle_files, sep="\n")
-
-
-if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
-```
-
-### TV-Series
-
-```python
-from moviebox_api.cli import Downloader
-
-async def main():
-    downloader = Downloader()
-    episodes_content_map = await downloader.download_tv_series(
-        "Merlin",
-        season=1,
-        episode=1,
-        limit=2,
-        # limit=13 # This will download entire 13 episodes of season 1
-    )
-
-    print(episodes_content_map)
-
-if __name__ == "__main__":
-    import asyncio
-
-    asyncio.run(main())
-```
+- Approach: Hybrid (DOM scraping + REST)
+- Target surface: H5 mobile web interface
+- Use case: Content listing, metadata extraction from web-rendered pages
+- Limitations: Susceptible to markup changes; partial API coverage only
 """
 
 import logging
