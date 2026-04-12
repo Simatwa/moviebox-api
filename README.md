@@ -26,9 +26,6 @@ Search, discover, download, and stream movies & TV series with subtitles
 - **Search & Discovery** : Find movies, trending content, and popular searches
 - **Developer-Friendly** : Python API with Pydantic models
 
-> [!IMPORTANT]
-> Some content is available on the Moviebox Android app but missing from their websites. [Efforts are underway to address this](https://github.com/Simatwa/moviebox-api/issues/81).
-
 ## Installation
 
 ### CLI (for end users)
