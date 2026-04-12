@@ -2,7 +2,7 @@
 
 # moviebox-api
 
-**Unofficial Python wrapper for moviebox.ph**  
+**Unofficial Python wrapper for Moviebox websites and Android app**  
 Search, discover, download, and stream movies & TV series with subtitles
 
 [![PyPI version](https://badge.fury.io/py/moviebox-api.svg)](https://pypi.org/project/moviebox-api)
@@ -18,13 +18,22 @@ Search, discover, download, and stream movies & TV series with subtitles
 
 ## Features
 
-- **Download Movies & TV Series** : High-quality downloads with multiple resolution options
-- **Subtitle Support** : Download subtitles in multiple languages
-- **Direct Streaming** : Stream via MPV or VLC without downloading (CLI only)
-- **Faster Downloads** : Over 5x faster than standard downloads
-- **Async & Sync Support** : Fully asynchronous with synchronous fallback
-- **Search & Discovery** : Find movies, trending content, and popular searches
-- **Developer-Friendly** : Python API with Pydantic models
+* **Multi-Version Support** : Access multiple API versions (`v1`, `v2`, `v3`) for different provider services
+* **Download Movies & TV Series** : High-quality downloads with multiple resolution options
+* **Subtitle Support** : Download subtitles in multiple languages
+* **Direct Streaming** : Stream via MPV or VLC without downloading (CLI only)
+* **Faster Downloads** : Up to 5× faster than standard downloads
+* **Async & Sync Support** : Fully asynchronous with synchronous fallback
+* **Search & Discovery** : Find movies, trending content, and popular searches
+* **Developer-Friendly** : Python API with Pydantic models
+
+## Versions Available
+
+There are currently three supported versions, each targeting a specific service of the provider (Moviebox):
+
+1. **v1** – Primarily a web scraper with partial REST API interaction for `h5.aoneroom.com`
+2. **v2** – A REST API client for `h5-api.aoneroom.com`
+3. **v3** – A REST API client for `api{3-6}.aoneroom.com` (Android app)
 
 ## Installation
 
@@ -473,11 +482,14 @@ Merlin (2009)/
 </div>
 
 
-## Disclaimer
+<h2 align="center"> Disclaimer </h2>
 
 > "All videos and pictures on MovieBox are from the Internet, and their copyrights belong to the original creators. We only provide webpage services and do not store, record, or upload any content."  
 > — *moviebox.ph*
 
+<div align=center>
 
+**Long live Moviebox spirit.**
+</div>
 
 <div align="center">Made with ❤️ </div>
