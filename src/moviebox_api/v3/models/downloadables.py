@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
@@ -90,7 +90,7 @@ class RootDownloadableFilesDetailModel(BaseModel):
             return DEFAULT_DATE
 
         try:
-            return date.strptime(value, "%Y-%m-%d")
+            return datetime.strptime(value, "%Y-%m-%d").date()
 
         except Exception:
             if value.isdigit():

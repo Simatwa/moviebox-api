@@ -1,5 +1,5 @@
 import json
-from datetime import date
+from datetime import date, datetime
 from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
@@ -96,7 +96,7 @@ class SubjectModel(MiniSubjectModel):
 
     @field_validator("release_date", mode="before")
     def validate_release_date(value) -> date:
-        return date.strptime(value, "%Y-%m-%d")
+        return datetime.strptime(value, "%Y-%m-%d").date()
 
 
 class BannerItem(BaseModel):
