@@ -335,7 +335,7 @@ async def progress_callback(progress: DownloadTracker):
     print(f"[{percent:.2f}%] Downloading {progress.saved_to.name}", end="\r")
 
 async def main():
-    auto = MovieAuto()
+    auto = MovieAuto(tasks=1)
     await auto.run("Avatar", progress_hook=progress_callback)
 
 asyncio.run(main())

@@ -172,7 +172,7 @@ moviebox-v3 download-series [OPTIONS] TITLE
 | `-A, --auto-mode` | flag | — | Download all remaining episodes across all remaining seasons (shortcut for `--limit -1`) |
 
 !!! note "v3 auto-mode behaviour"
-    In v3, `--auto-mode` is a true cross-season shortcut equivalent to `--limit -1`. It is not longer limited to a single season.
+    In v3, `--limit` is not limited to only episodes of the target season as in **v1** and **v2** but rather to all episodes across remaining seasons.
 
 #### Output Paths
 
