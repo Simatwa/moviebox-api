@@ -8,3 +8,6 @@ from moviebox_api.v1.exceptions import (
 
 
 class ResultsNavigationError(MovieboxApiException): ...
+
+
+class MissingDubError(MovieboxApiException): ...

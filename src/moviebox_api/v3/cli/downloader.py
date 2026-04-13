@@ -21,11 +21,16 @@ from moviebox_api.v3.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CAPTION_LANGUAGE,
     DEFAULT_CHUNK_SIZE,
+    DEFAULT_DUB_LANGUAGE_NAME_OR_CODE,
     DEFAULT_TASKS,
     CustomResolutionType,
     SubjectType,
 )
-from moviebox_api.v3.core import DownloadableFilesDetail, SeasonDetails
+from moviebox_api.v3.core import (
+    DownloadableFilesDetail,
+    ItemDetails,
+    SeasonDetails,
+)
 from moviebox_api.v3.download import (
     CaptionFileDownloader,
     MediaFileDownloader,
@@ -35,6 +40,7 @@ from moviebox_api.v3.exceptions import ZeroCaptionFileError
 from moviebox_api.v3.helpers import (
     assert_instance,
     get_download_tv_series_request_params,
+    get_dub_or_raise,
     get_event_loop,
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
@@ -87,6 +93,7 @@ class Downloader:
         merge_buffer_size: int | None = None,
         ignore_missing_caption: bool = False,
         subject_type: SubjectType = SubjectType.MOVIES,
+        dub: str = DEFAULT_DUB_LANGUAGE_NAME_OR_CODE,
         **run_kwargs,
     ) -> tuple[
         DownloadedFile | httpx.Response | None,
@@ -186,11 +193,25 @@ class Downloader:
             f"of {ResultsSubjectModel} not {type(target_movie)}"
         )
 
+        item_details_inst = ItemDetails(self.client_session)
+
+        item_details = await item_details_inst.get_content_model(
+            target_movie.subject_id
+        )
+
+        if item_details.dubs or subject_type is SubjectType.MOVIES:
+            # some subject-types like music lack dub
+            target_dub = get_dub_or_raise(item_details, dub)
+            target_subject_id = target_dub.subject_id
+
+        else:
+            target_subject_id = target_movie.subject_id
+
         downloadable_details_inst = DownloadableFilesDetail(self.client_session)
 
         downloadable_files_detail = (
             await downloadable_details_inst.get_content_model(
-                target_movie.subject_id,
+                target_subject_id,
                 release_date=str(target_movie.release_date),
             )
         )
@@ -284,6 +305,7 @@ class Downloader:
         ignore_missing_caption: bool = False,
         auto_mode: bool = False,
         format: Literal["group", "struct"] | None = None,
+        dub: str = DEFAULT_DUB_LANGUAGE_NAME_OR_CODE,
         **run_kwargs,
     ) -> dict[
         int,
@@ -424,6 +446,14 @@ class Downloader:
             f"{ResultsSubjectModel} not {type(target_tv_series)}"
         )
 
+        item_details_inst = ItemDetails(self.client_session)
+
+        item_details = await item_details_inst.get_content_model(
+            target_tv_series.subject_id
+        )
+
+        target_dub = get_dub_or_raise(item_details, dub)
+
         downloadable_files_detail_inst = DownloadableFilesDetail(
             self.client_session, resolution=quality
         )
@@ -458,7 +488,7 @@ class Downloader:
 
         season_details_inst = SeasonDetails(self.client_session)
         series_resource = await season_details_inst.get_content_model(
-            target_tv_series.subject_id
+            target_dub.subject_id
         )
 
         download_request_params = get_download_tv_series_request_params(
@@ -481,7 +511,7 @@ class Downloader:
                 resolution=quality,
             )
             files_detail = await downloadable_files_detail_inst.get_content_model(
-                target_tv_series.subject_id,
+                target_dub.subject_id,
                 release_date=str(target_tv_series.release_date),
             )
 

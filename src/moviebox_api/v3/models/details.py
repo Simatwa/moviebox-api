@@ -166,7 +166,7 @@ class RootItemDetailsModel(ResultsSubjectModel):
         alias="resourceDetectors"
     )
     style: StyleModel
-    trailer: TrailerModel
+    trailer: TrailerModel | None
     dubs: list[DubModel]
     staff_list: list[StaffModel] = Field(alias="staffList")
     ops: OpsModel | None

@@ -30,6 +30,7 @@ from moviebox_api.v3.constants import (
     CustomResolutionType,
     DownloadMode,
     SubjectType,
+    DEFAULT_DUB_LANGUAGE_NAME_OR_CODE,
 )
 from moviebox_api.v3.download import (
     CaptionFileDownloader,
@@ -83,6 +84,13 @@ def moviebox_v3():
     help="Media quality to be downloaded",
     type=click.Choice(qualities_resolution_map.keys(), case_sensitive=False),
     default=CustomResolutionType.BEST.value,
+    show_default=True,
+)
+@click.option(
+    "-u",
+    "--dub",
+    help="Dub language name or code",
+    default=DEFAULT_DUB_LANGUAGE_NAME_OR_CODE,
     show_default=True,
 )
 @click.option(
@@ -269,6 +277,7 @@ def download_movie_command(
     subject_type: str,
     year: int,
     quality: str,
+    dub: str,
     dir: Path,
     caption_dir: Path,
     language: list[str],
@@ -307,6 +316,7 @@ def download_movie_command(
                 subject_type=SubjectType(
                     suject_types_name_value_map.get(subject_type.upper())
                 ),
+                dub=dub,
                 **process_download_runner_params(download_runner_params),
             )
 
@@ -355,6 +365,13 @@ def download_movie_command(
     help="Media quality to be downloaded",
     type=click.Choice(qualities_resolution_map.keys(), case_sensitive=False),
     default=CustomResolutionType.BEST.value,
+    show_default=True,
+)
+@click.option(
+    "-u",
+    "--dub",
+    help="Dub language name or code",
+    default=DEFAULT_DUB_LANGUAGE_NAME_OR_CODE,
     show_default=True,
 )
 @click.option(
@@ -564,6 +581,7 @@ def download_tv_series_command(
     episode: int,
     limit: int,
     quality: str,
+    dub: str,
     language: list[str],
     dir: Path,
     episode_filename_tmpl: str,
@@ -606,6 +624,7 @@ def download_tv_series_command(
                 ignore_missing_caption=ignore_missing_caption,
                 auto_mode=auto_mode,
                 format=format,
+                dub=dub,
                 **process_download_runner_params(download_runner_params),
             )
 

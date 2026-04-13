@@ -12,10 +12,16 @@ from moviebox_api.v1.helpers import (
     sanitize_item_name,
 )
 from moviebox_api.v3.constants import (
+    DEFAULT_DUB_LANGUAGE_NAME_OR_CODE,
     SEARCH_PER_PAGE_LIMIT,
     VALID_SUBJECT_ID_PATTERN,
 )
-from moviebox_api.v3.models.details import SeasonItemModel
+from moviebox_api.v3.exceptions import MissingDubError
+from moviebox_api.v3.models.details import (
+    DubModel,
+    RootItemDetailsModel,
+    SeasonItemModel,
+)
 
 
 def combine_url_path_with_params(path: str, params: dict):
@@ -151,3 +157,28 @@ def get_download_tv_series_request_params(
         total_episodes = wanted_episodes
 
     return PaginationDetails(total_episodes=total_episodes, request_params=params)
+
+
+def get_dub_or_raise(
+    item_details: RootItemDetailsModel,
+    language_name_or_code: str = DEFAULT_DUB_LANGUAGE_NAME_OR_CODE,
+) -> DubModel:
+
+    lan_names = []
+    lan_codes = []
+
+    for dub in item_details.dubs:
+        if (
+            dub.lan_name == language_name_or_code
+            or dub.lan_code == language_name_or_code
+        ):
+            return dub
+        else:
+            lan_names.append(dub.lan_name)
+            lan_codes.append(dub.lan_code)
+
+    raise MissingDubError(
+        f"No dub matched that language name or language code "
+        f"{language_name_or_code!r}. Availables ones include - "
+        f"language_names : {lan_names}, language_codes : {lan_codes}"
+    )

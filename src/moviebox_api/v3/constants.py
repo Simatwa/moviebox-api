@@ -147,6 +147,8 @@ RESULTS_PER_PAGE_AMOUNT = SEARCH_PER_PAGE_LIMIT
 
 VALID_SUBJECT_ID_PATTERN = re.compile(r"^\d{18,20}$")
 
+DEFAULT_DUB_LANGUAGE_NAME_OR_CODE = "Original Audio"
+
 
 class TabID(StrEnum):
     ALL = "All"
@@ -208,6 +210,4 @@ class CustomResolutionType(StrEnum):
 
     @classmethod
     def qualities_resolution_map(cls):
-        return {
-            entry.value: entry for entry in cls
-        }
+        return {entry.value: entry for entry in cls}
