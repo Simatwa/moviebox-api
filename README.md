@@ -32,7 +32,7 @@ Search, discover, download, and stream movies & TV series with subtitles
 There are currently three supported versions, each targeting a specific service of the provider (Moviebox):
 
 1. **v1** – Primarily a web scraper with partial REST API interaction for `h5.aoneroom.com`
-2. **v2** – A REST API client for `h5-api.aoneroom.com` - consumed by *moviebox.* such as moviebox.ph
+2. **v2** – A REST API client for `h5-api.aoneroom.com` - consumed by `moviebox.*` such as moviebox.ph
 3. **v3** – A REST API client for `api{3-6}.aoneroom.com` (Android app)
 
 ## Installation
