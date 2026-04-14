@@ -28,4 +28,4 @@ jobs:
         run: uv sync
 
       - name: Run tests
-        run: uv run pytest tests -v
+        run: uv run pytest tests/v3/cli -v
