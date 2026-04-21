@@ -1,7 +1,7 @@
 import pytest
 
 from moviebox_api.v3.constants import CustomResolutionType
-from moviebox_api.v3.core import DownloadableFilesDetail
+from moviebox_api.v3.core import DownloadableVideoFilesDetail
 from moviebox_api.v3.download import (
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
@@ -19,7 +19,7 @@ from moviebox_api.v3.http_client import MovieBoxHttpClient
 )
 async def test_download_movie(subject_id: str, resolution: CustomResolutionType):
     async with MovieBoxHttpClient() as client_session:
-        details = DownloadableFilesDetail(
+        details = DownloadableVideoFilesDetail(
             client_session,
         )
 
@@ -49,7 +49,9 @@ async def test_download_tv_series(
     subject_id: str, resolution: CustomResolutionType
 ):
     async with MovieBoxHttpClient() as client_session:
-        details = DownloadableFilesDetail(client_session, resolution=resolution)
+        details = DownloadableVideoFilesDetail(
+            client_session, resolution=resolution
+        )
 
         downloadable_files_detail = await details.get_content_model(subject_id)
 

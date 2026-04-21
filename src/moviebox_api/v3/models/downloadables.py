@@ -13,7 +13,7 @@ from moviebox_api.v3.models.common import DEFAULT_DATE, MODEL_CONFIG
 from moviebox_api.v3.models.search import Image, PagerModel
 
 
-class MediaFileMetadata(BaseModel):
+class VideoFileMetadata(BaseModel):
     model_config = MODEL_CONFIG
 
     season_episode: int = Field(alias="episode")
@@ -39,6 +39,60 @@ class MediaFileMetadata(BaseModel):
         return self.resource_link
 
 
+class CaptionFileMetadata(BaseModel):
+    model_config = MODEL_CONFIG
+    id: str
+    lan: str
+    lan_name: str = Field(alias="lanName")
+    url: HttpUrl
+    size: int
+    delay: int
+
+
+class RootCaptionFileMetadata(BaseModel):
+    model_config = MODEL_CONFIG
+
+    external_captions: list[CaptionFileMetadata] = Field(alias="extCaptions")
+    subject_id: str = Field(alias="subjectId")
+
+    @property
+    def captions(self) -> list[CaptionFileMetadata]:
+        return self.external_captions
+
+    @property
+    def english_subtitle_file(self) -> CaptionFileMetadata | None:
+        """English subtitle file."""
+        for subtitle_file in self.captions:
+            if subtitle_file.lan == "en":
+                return subtitle_file
+
+    def get_language_subtitle_map(
+        self,
+    ) -> dict[str, CaptionFileMetadata]:
+        """Returns something like { English : CaptionFileMetadata }"""
+        language_subtitle_map = {}
+        for caption in self.captions:
+            language_subtitle_map[caption.lan_name] = caption
+        return language_subtitle_map
+
+    def get_language_short_subtitle_map(
+        self,
+    ) -> dict[str, CaptionFileMetadata]:
+        """Returns something like { en : CaptionFileMetadata }"""
+        language_subtitle_map = {}
+        for caption in self.captions:
+            language_subtitle_map[caption.lan] = caption
+        return language_subtitle_map
+
+    def get_subtitle_by_language(
+        self, language: str
+    ) -> CaptionFileMetadata | None:
+        """Both `English` and `en` will return same thing"""
+        if len(language) == 2:
+            return self.get_language_short_subtitle_map().get(language.lower())
+        return self.get_language_subtitle_map().get(language.capitalize())
+
+
 class CollectionResolutionModel(BaseModel):
     model_config = MODEL_CONFIG
 
@@ -53,7 +107,7 @@ class RootDownloadableFilesDetailModel(BaseModel):
     model_config = MODEL_CONFIG
 
     pager: PagerModel
-    list: list[MediaFileMetadata]
+    list: list[VideoFileMetadata]
     subject_id: str = Field(alias="subjectId")
     subject_type: SubjectType = Field(alias="subjectType")
     cover: Image
@@ -120,7 +174,7 @@ class RootDownloadableFilesDetailModel(BaseModel):
         )
 
     @property
-    def best_media_file(self) -> MediaFileMetadata:
+    def best_media_file(self) -> VideoFileMetadata:
         """Highest quality media file"""
         self._check_list()
         found = self.list[0]
@@ -131,7 +185,7 @@ class RootDownloadableFilesDetailModel(BaseModel):
         return found
 
     @property
-    def worst_media_file(self) -> MediaFileMetadata:
+    def worst_media_file(self) -> VideoFileMetadata:
         """Lowest quality media file"""
         self._check_list()
         found = self.list[0]
@@ -143,28 +197,28 @@ class RootDownloadableFilesDetailModel(BaseModel):
 
     def get_quality_downloads_map(
         self,
-    ) -> dict[CustomResolutionType, MediaFileMetadata]:
+    ) -> dict[CustomResolutionType, VideoFileMetadata]:
         """Maps media file qualities to their equivalent media file objects
 
         Returns:
-            dict[CustomResolutionType, MediaFileMetadata]
+            dict[CustomResolutionType, VideoFileMetadata]
         """
         resolution_list_map = {}
         for item in self.list:
-            resolution_list_map[
-                CustomResolutionType(f"{item.resolution}P")
-            ] = item
+            resolution_list_map[CustomResolutionType(f"{item.resolution}P")] = (
+                item
+            )
 
         return resolution_list_map
 
-    def get_media_file_by_resolution(self, resolution: int) -> MediaFileMetadata:
-        """Get specific MediaFileMetadata based on resolution.
+    def get_media_file_by_resolution(self, resolution: int) -> VideoFileMetadata:
+        """Get specific VideoFileMetadata based on resolution.
 
         Args:
             resolution (int): Media file resolution e.g 480, 720, 1080 etc
 
         Returns:
-            MediaFileMetadata: Media file matching that resolution.
+            VideoFileMetadata: Media file matching that resolution.
 
         Raises:
             ValueError: Incase no media_file matched the resolution.

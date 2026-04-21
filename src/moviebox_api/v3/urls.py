@@ -32,6 +32,7 @@ SUBJECT_GET_PATH: str = "/wefeed-mobile-bff/subject-api/get"  # item details
 SEASON_INFO_PATH: str = "/wefeed-mobile-bff/subject-api/season-info"  # seNum etc
 PLAY_INFO_PATH: str = "/wefeed-mobile-bff/subject-api/play-info"  # mpd url
 RESOURCE_PATH: str = "/wefeed-mobile-bff/subject-api/resource"
+EXT_CAPTIONS_PATH: str = "/wefeed-mobile-bff/subject-api/get-ext-captions"
 
 
 def main_page_url(base: str, page: int = 1, tab_id: int = 0) -> str:

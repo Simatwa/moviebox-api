@@ -1,4 +1,5 @@
 from collections.abc import AsyncIterator
+from typing import Any
 
 from moviebox_api.v3._bases import BaseContentProviderAndHelper
 from moviebox_api.v3.constants import (
@@ -22,13 +23,18 @@ from moviebox_api.v3.helpers import (
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
 from moviebox_api.v3.models.details import RootItemDetailsModel, SeasonsModel
-from moviebox_api.v3.models.downloadables import RootDownloadableFilesDetailModel
+from moviebox_api.v3.models.downloadables import (
+    RootCaptionFileMetadata,
+    RootDownloadableFilesDetailModel,
+    VideoFileMetadata,
+)
 from moviebox_api.v3.models.homepage import RootHomepageModel
 from moviebox_api.v3.models.search import (
     RootSearchResultsModel,
     RootSearchResultsModelV2,
 )
 from moviebox_api.v3.urls import (
+    EXT_CAPTIONS_PATH,
     MAIN_PAGE_PATH,
     RESOURCE_PATH,
     SEARCH_PATH,
@@ -533,11 +539,8 @@ class ItemDetails(BaseContentProviderAndHelper):
         return RootItemDetailsModel.model_validate(contents)
 
 
-class DownloadableFilesDetail(BaseContentProviderAndHelper):
-    """Fetches media and subtitle files metadata"""
-
-    # TODO: current api doesn't provide subtitles - consider
-    # doing more recon on it
+class DownloadableVideoFilesDetail(BaseContentProviderAndHelper):
+    """Fetches downloadable video files detail"""
 
     _path = RESOURCE_PATH
 
@@ -623,7 +626,7 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
 
     def next_page(
         self, content: RootDownloadableFilesDetailModel
-    ) -> "DownloadableFilesDetail":
+    ) -> "DownloadableVideoFilesDetail":
         """Navigate to the search results of the next page.
 
         Args:
@@ -631,12 +634,12 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
                 results
 
         Returns:
-            DownloadableFilesDetail
+            DownloadableVideoFilesDetail
         """
         assert_instance(content, RootDownloadableFilesDetailModel, "content")
 
         if content.pager.has_more:
-            return DownloadableFilesDetail(
+            return DownloadableVideoFilesDetail(
                 client_session=self.client_session,
                 page=content.pager.next_page,
                 per_page=self.per_page,
@@ -650,7 +653,7 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
 
     def previous_page(
         self, content: RootDownloadableFilesDetailModel
-    ) -> "DownloadableFilesDetail":
+    ) -> "DownloadableVideoFilesDetail":
         """Navigate to the search results of the previous page.
 
         - Useful when the currrent page is greater than  1.
@@ -660,12 +663,12 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
               results
 
         Returns:
-            DownloadableFilesDetail
+            DownloadableVideoFilesDetail
         """
         assert_instance(content, RootDownloadableFilesDetailModel, "content")
 
         if content.pager.page >= 2:
-            return DownloadableFilesDetail(
+            return DownloadableVideoFilesDetail(
                 client_session=self.client_session,
                 page=content.pager.page - 1,
                 per_page=self.per_page,
@@ -697,3 +700,64 @@ class DownloadableFilesDetail(BaseContentProviderAndHelper):
 
             else:
                 navigating = False
+
+
+class DownloadableCaptionFileDetails(BaseContentProviderAndHelper):
+    """Fetches available subtitle files detail for a particular video file"""
+
+    _PATH = EXT_CAPTIONS_PATH
+
+    def __init__(
+        self,
+        client_session: MovieBoxHttpClient,
+    ):
+        self.client_session = client_session
+
+    def __setattr__(self, name, value):
+        match name:
+            case "client_session":
+                assert_instance(value, MovieBoxHttpClient, "client_session")
+
+            case _:
+                pass
+
+        super().__setattr__(name, value)
+
+    def _create_params(
+        self,
+        subject_id: str,
+        resource: VideoFileMetadata | str,
+    ) -> dict[str, str]:
+
+        validate_subject_id(subject_id)
+
+        return {
+            "subjectId": subject_id,
+            "resourceId": (
+                resource.resource_id
+                if isinstance(resource, VideoFileMetadata)
+                else resource
+            ),
+        }
+
+    async def get_content(
+        self,
+        subject_id: str,
+        resource: VideoFileMetadata | str,
+    ) -> dict[str, Any]:
+
+        request_params = self._create_params(subject_id, resource)
+
+        resp = await self.client_session.get_from_api(
+            self._PATH, params=request_params
+        )
+
+        return resp
+
+    async def get_content_model(
+        self,
+        subject_id: str,
+        resource: VideoFileMetadata | str,
+    ) -> RootCaptionFileMetadata:
+        content = await self.get_content(subject_id, resource)
+        return RootCaptionFileMetadata.model_validate(content)

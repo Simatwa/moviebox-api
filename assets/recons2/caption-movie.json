@@ -1,0 +1,101 @@
+{
+    "extCaptions": [
+        {
+            "id": "4450709968790113000",
+            "lan": "en",
+            "lanName": "English",
+            "url": "https://cacdn.hakunaymatata.com/subtitle/76e37d26d6a7fdc163b1bc756bc44078.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9zdWJ0aXRsZS8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=3nqeiwNFdBAfDm6SAzKVCTJejFeFBlTaM6Jay3S70i6fK86hgHe78X67pwTbgPkrvyqs1W37BDfs3umZUcZfg3935C1xUBfZEmQ5A2OTfCLpE5W47dFPQx2lRPArQ7EM~jNcN85zDEUt6EGeuFxULVYTDqIW45sPwFCisjdqTJBsxTEU-iVWGbM9M3LjbW9dGjNiRX2VCYCcsCeMCSlCPcNai17Dv6ipLtrZfLOZZ9oumJFtDIlC-IrZYLg1OFaPVtwOIyU2TgVUU~xcKvL4QeQNoIb8wSV5QO-P~AE0TIu8jdxKyKknieLsmagjLK6bWKh6PSXOCATNLlBGk~hmPA__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "116641",
+            "delay": 0
+        },
+        {
+            "id": "626634640786423952",
+            "lan": "bn",
+            "lanName": "\u09ac\u09be\u0982\u09b2\u09be",
+            "url": "https://cacdn.hakunaymatata.com/msubt/419c564fe0295ff9affa3b6e23fca40a.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9tc3VidC8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=VMNGNt152Hh7vLsLwdTfsLL0Z-r7CeUW2I9OuNXwMfiQMwGmaZpHHXI1ZukEWHWU3aGInORJVZLO2BDCMzpxKnsPvfts7utpyww1j5gaG1TJPM6elNwGdfYCcYHl~jmT-d4gBvi11cYAMqIAlRqfwvK11Oo4Sk-s39UFi0ZjHbYSmth5iGiFxTInpxxMHKA1PzOVwAStn39F6gZCNwXOEXSrTFLghiP1bd2L6bJL1M-mvetdRiv3UXbP3Q-W~9jNZ-4CKc-gzZB4CJWbn~tv2NfjPuTSPGS7udS-BZxOH6LfnlmEA62vnYUt3iHcJb42xvwGsTmwXG-uT3bghtr0vQ__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "193227",
+            "delay": 0
+        },
+        {
+            "id": "1696797216746127808",
+            "lan": "ar",
+            "lanName": "\u0627\u064e\u0644\u0652\u0639\u064e\u0631\u064e\u0628\u0650\u064a\u064e\u0651\u0629\u064f",
+            "url": "https://cacdn.hakunaymatata.com/subtitle/0dad34485ffc5b085189283c3ec9623d.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9zdWJ0aXRsZS8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=3nqeiwNFdBAfDm6SAzKVCTJejFeFBlTaM6Jay3S70i6fK86hgHe78X67pwTbgPkrvyqs1W37BDfs3umZUcZfg3935C1xUBfZEmQ5A2OTfCLpE5W47dFPQx2lRPArQ7EM~jNcN85zDEUt6EGeuFxULVYTDqIW45sPwFCisjdqTJBsxTEU-iVWGbM9M3LjbW9dGjNiRX2VCYCcsCeMCSlCPcNai17Dv6ipLtrZfLOZZ9oumJFtDIlC-IrZYLg1OFaPVtwOIyU2TgVUU~xcKvL4QeQNoIb8wSV5QO-P~AE0TIu8jdxKyKknieLsmagjLK6bWKh6PSXOCATNLlBGk~hmPA__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "129448",
+            "delay": 0
+        },
+        {
+            "id": "4230058051182676712",
+            "lan": "fil",
+            "lanName": "Filipino",
+            "url": "https://cacdn.hakunaymatata.com/msubt/900cdf76abb924a2b2c3ecdafca84320.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9tc3VidC8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=VMNGNt152Hh7vLsLwdTfsLL0Z-r7CeUW2I9OuNXwMfiQMwGmaZpHHXI1ZukEWHWU3aGInORJVZLO2BDCMzpxKnsPvfts7utpyww1j5gaG1TJPM6elNwGdfYCcYHl~jmT-d4gBvi11cYAMqIAlRqfwvK11Oo4Sk-s39UFi0ZjHbYSmth5iGiFxTInpxxMHKA1PzOVwAStn39F6gZCNwXOEXSrTFLghiP1bd2L6bJL1M-mvetdRiv3UXbP3Q-W~9jNZ-4CKc-gzZB4CJWbn~tv2NfjPuTSPGS7udS-BZxOH6LfnlmEA62vnYUt3iHcJb42xvwGsTmwXG-uT3bghtr0vQ__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "121270",
+            "delay": 0
+        },
+        {
+            "id": "5209604926095196864",
+            "lan": "fr",
+            "lanName": "Fran\u00e7ais",
+            "url": "https://cacdn.hakunaymatata.com/subtitle/e7828f8636d95dd841b4a5276a11b12d.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9zdWJ0aXRsZS8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=3nqeiwNFdBAfDm6SAzKVCTJejFeFBlTaM6Jay3S70i6fK86hgHe78X67pwTbgPkrvyqs1W37BDfs3umZUcZfg3935C1xUBfZEmQ5A2OTfCLpE5W47dFPQx2lRPArQ7EM~jNcN85zDEUt6EGeuFxULVYTDqIW45sPwFCisjdqTJBsxTEU-iVWGbM9M3LjbW9dGjNiRX2VCYCcsCeMCSlCPcNai17Dv6ipLtrZfLOZZ9oumJFtDIlC-IrZYLg1OFaPVtwOIyU2TgVUU~xcKvL4QeQNoIb8wSV5QO-P~AE0TIu8jdxKyKknieLsmagjLK6bWKh6PSXOCATNLlBGk~hmPA__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "93840",
+            "delay": 0
+        },
+        {
+            "id": "3912568233412413616",
+            "lan": "in_id",
+            "lanName": "Indonesian",
+            "url": "https://cacdn.hakunaymatata.com/subtitle/bd535bdd5aac31d3517abfdc76433da7.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9zdWJ0aXRsZS8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=3nqeiwNFdBAfDm6SAzKVCTJejFeFBlTaM6Jay3S70i6fK86hgHe78X67pwTbgPkrvyqs1W37BDfs3umZUcZfg3935C1xUBfZEmQ5A2OTfCLpE5W47dFPQx2lRPArQ7EM~jNcN85zDEUt6EGeuFxULVYTDqIW45sPwFCisjdqTJBsxTEU-iVWGbM9M3LjbW9dGjNiRX2VCYCcsCeMCSlCPcNai17Dv6ipLtrZfLOZZ9oumJFtDIlC-IrZYLg1OFaPVtwOIyU2TgVUU~xcKvL4QeQNoIb8wSV5QO-P~AE0TIu8jdxKyKknieLsmagjLK6bWKh6PSXOCATNLlBGk~hmPA__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "99848",
+            "delay": 0
+        },
+        {
+            "id": "2497092554060090336",
+            "lan": "ms",
+            "lanName": "Malay",
+            "url": "https://cacdn.hakunaymatata.com/msubt/c0d2970f869a1f0b02048405d74ac97c.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9tc3VidC8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=VMNGNt152Hh7vLsLwdTfsLL0Z-r7CeUW2I9OuNXwMfiQMwGmaZpHHXI1ZukEWHWU3aGInORJVZLO2BDCMzpxKnsPvfts7utpyww1j5gaG1TJPM6elNwGdfYCcYHl~jmT-d4gBvi11cYAMqIAlRqfwvK11Oo4Sk-s39UFi0ZjHbYSmth5iGiFxTInpxxMHKA1PzOVwAStn39F6gZCNwXOEXSrTFLghiP1bd2L6bJL1M-mvetdRiv3UXbP3Q-W~9jNZ-4CKc-gzZB4CJWbn~tv2NfjPuTSPGS7udS-BZxOH6LfnlmEA62vnYUt3iHcJb42xvwGsTmwXG-uT3bghtr0vQ__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "120869",
+            "delay": 0
+        },
+        {
+            "id": "4910752505799263888",
+            "lan": "pa",
+            "lanName": "\u0a2a\u0a70\u0a1c\u0a3e\u0a2c\u0a40",
+            "url": "https://cacdn.hakunaymatata.com/msubt/fdb5e9612476a58fff8c942f7d7e4310.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9tc3VidC8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=VMNGNt152Hh7vLsLwdTfsLL0Z-r7CeUW2I9OuNXwMfiQMwGmaZpHHXI1ZukEWHWU3aGInORJVZLO2BDCMzpxKnsPvfts7utpyww1j5gaG1TJPM6elNwGdfYCcYHl~jmT-d4gBvi11cYAMqIAlRqfwvK11Oo4Sk-s39UFi0ZjHbYSmth5iGiFxTInpxxMHKA1PzOVwAStn39F6gZCNwXOEXSrTFLghiP1bd2L6bJL1M-mvetdRiv3UXbP3Q-W~9jNZ-4CKc-gzZB4CJWbn~tv2NfjPuTSPGS7udS-BZxOH6LfnlmEA62vnYUt3iHcJb42xvwGsTmwXG-uT3bghtr0vQ__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "197523",
+            "delay": 0
+        },
+        {
+            "id": "2471416352653935232",
+            "lan": "pt",
+            "lanName": "Portugu\u00eas",
+            "url": "https://cacdn.hakunaymatata.com/subtitle/f67b2730aca12992f8ed78e79c57effe.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9zdWJ0aXRsZS8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=3nqeiwNFdBAfDm6SAzKVCTJejFeFBlTaM6Jay3S70i6fK86hgHe78X67pwTbgPkrvyqs1W37BDfs3umZUcZfg3935C1xUBfZEmQ5A2OTfCLpE5W47dFPQx2lRPArQ7EM~jNcN85zDEUt6EGeuFxULVYTDqIW45sPwFCisjdqTJBsxTEU-iVWGbM9M3LjbW9dGjNiRX2VCYCcsCeMCSlCPcNai17Dv6ipLtrZfLOZZ9oumJFtDIlC-IrZYLg1OFaPVtwOIyU2TgVUU~xcKvL4QeQNoIb8wSV5QO-P~AE0TIu8jdxKyKknieLsmagjLK6bWKh6PSXOCATNLlBGk~hmPA__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "97098",
+            "delay": 0
+        },
+        {
+            "id": "2210844529190650168",
+            "lan": "ru",
+            "lanName": "\u0420\u0443\u0441\u0441\u043a\u0438\u0439",
+            "url": "https://cacdn.hakunaymatata.com/msubt/691a0e8be9f908f3079ca8be950a33cb.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9tc3VidC8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=VMNGNt152Hh7vLsLwdTfsLL0Z-r7CeUW2I9OuNXwMfiQMwGmaZpHHXI1ZukEWHWU3aGInORJVZLO2BDCMzpxKnsPvfts7utpyww1j5gaG1TJPM6elNwGdfYCcYHl~jmT-d4gBvi11cYAMqIAlRqfwvK11Oo4Sk-s39UFi0ZjHbYSmth5iGiFxTInpxxMHKA1PzOVwAStn39F6gZCNwXOEXSrTFLghiP1bd2L6bJL1M-mvetdRiv3UXbP3Q-W~9jNZ-4CKc-gzZB4CJWbn~tv2NfjPuTSPGS7udS-BZxOH6LfnlmEA62vnYUt3iHcJb42xvwGsTmwXG-uT3bghtr0vQ__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "148403",
+            "delay": 0
+        },
+        {
+            "id": "5915253633012102104",
+            "lan": "ur",
+            "lanName": "\u0627\u064f\u0631\u062f\u064f\u0648",
+            "url": "https://cacdn.hakunaymatata.com/msubt/a59f39298a80e9b998b0f5e7d3839959.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9tc3VidC8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=VMNGNt152Hh7vLsLwdTfsLL0Z-r7CeUW2I9OuNXwMfiQMwGmaZpHHXI1ZukEWHWU3aGInORJVZLO2BDCMzpxKnsPvfts7utpyww1j5gaG1TJPM6elNwGdfYCcYHl~jmT-d4gBvi11cYAMqIAlRqfwvK11Oo4Sk-s39UFi0ZjHbYSmth5iGiFxTInpxxMHKA1PzOVwAStn39F6gZCNwXOEXSrTFLghiP1bd2L6bJL1M-mvetdRiv3UXbP3Q-W~9jNZ-4CKc-gzZB4CJWbn~tv2NfjPuTSPGS7udS-BZxOH6LfnlmEA62vnYUt3iHcJb42xvwGsTmwXG-uT3bghtr0vQ__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "153159",
+            "delay": 0
+        },
+        {
+            "id": "1822898006312583832",
+            "lan": "zh",
+            "lanName": "\u4e2d\u6587",
+            "url": "https://cacdn.hakunaymatata.com/subtitle/bfdf21a3c0a7a6357ff1e80f01ee42a5.srt?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYWNkbi5oYWt1bmF5bWF0YXRhLmNvbS9zdWJ0aXRsZS8qIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzc3Mzg3NTkwfX19XX0_&Signature=3nqeiwNFdBAfDm6SAzKVCTJejFeFBlTaM6Jay3S70i6fK86hgHe78X67pwTbgPkrvyqs1W37BDfs3umZUcZfg3935C1xUBfZEmQ5A2OTfCLpE5W47dFPQx2lRPArQ7EM~jNcN85zDEUt6EGeuFxULVYTDqIW45sPwFCisjdqTJBsxTEU-iVWGbM9M3LjbW9dGjNiRX2VCYCcsCeMCSlCPcNai17Dv6ipLtrZfLOZZ9oumJFtDIlC-IrZYLg1OFaPVtwOIyU2TgVUU~xcKvL4QeQNoIb8wSV5QO-P~AE0TIu8jdxKyKknieLsmagjLK6bWKh6PSXOCATNLlBGk~hmPA__&Key-Pair-Id=KMHN1LQ1HEUPL",
+            "size": "105192",
+            "delay": 0
+        }
+    ],
+    "subjectId": "8906247916759695608"
+}
