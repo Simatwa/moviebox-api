@@ -111,8 +111,8 @@ theme:
     - content.code.annotate
     - content.tooltips
   # editing & viewing source
-    - content.action.edit
-    - content.action.view
+  #  - content.action.edit
+  #  - content.action.view
 
 extra:
   generator: true # made with mkdocs
