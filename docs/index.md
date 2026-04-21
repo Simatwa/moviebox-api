@@ -23,49 +23,6 @@ Search, discover, download, and stream movies & TV series with subtitles
 * **Search & Discovery** : Find movies, trending content, and popular searches
 * **Developer-Friendly** : Python API with Pydantic models
 
-
-
-## Versions Available
-
-There are 3 versions currently supported, each targeting a distinct API surface of the **Moviebox** provider. They differ in protocol approach, backend endpoint, authentication requirements, and data fidelity.
-
----
-
-### v1 — Web Scraper + Partial REST-API Client
-**Endpoint:** `h5.aoneroom.com`
-
-Operates against h5.aoneroom.com. Combines HTML scraping with partial REST-API interaction, making it suitable for content discovery where structured API access is limited or inconsistent. Scraping logic handles page-rendered data not exposed via JSON endpoints.
-
-- Approach: Hybrid (DOM scraping + REST)
-- Target surface: H5 mobile web interface
-- Use case: Content listing, metadata extraction from web-rendered pages
-- Limitations: Susceptible to markup changes; partial API coverage only
-
----
-
-### v2 — Pure REST-API Client
-**Endpoint:** `h5-api.aoneroom.com`
-
-Targets the dedicated REST-API backend powering the H5 web interfaces - [moviebox.ph, moviebox.pk, videodownloader.site etc](https://github.com/Simatwa/moviebox-api/issues/27). Eliminates scraping entirely in favor of structured JSON request/response cycles. Provides more stable and predictable data access compared to v1.
-
-- Approach: Pure REST-API
-- Target surface: H5 API backend
-- Use case: Structured content queries, metadata retrieval, stream resolution
-- Advantages over v1: No markup dependency; cleaner response parsing; more reliable
-
----
-
-### v3 — Android App REST-API Client
-**Endpoints:** `api3.aoneroom.com` through `api6.aoneroom.com`
-
-Targets the API cluster used by the native Moviebox Android application. Operates against multiple rotating API subdomains (`api3`–`api6`), reflecting the app's load-balanced backend. Typically exposes higher data fidelity, broader content coverage, and app-exclusive endpoints not available via the H5 surfaces.
-
-- Approach: Pure REST-API
-- Target surface: Android app backend (multi-host)
-- Use case: Full content catalog access, app-tier stream quality, extended metadata
-- Advantages over v1/v2: Wider endpoint coverage; app-grade API access; multi-host failover support
-
-
 ## [Get started](./installation.md)
 
 !!! quote "Disclaimer"

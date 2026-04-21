@@ -27,26 +27,18 @@ Search, discover, download, and stream movies & TV series with subtitles
 * **Search & Discovery** : Find movies, trending content, and popular searches
 * **Developer-Friendly** : Python API with Pydantic models
 
-## Versions Available
-
-There are currently three supported versions, each targeting a specific service of the provider (Moviebox):
-
-1. **v1** – Primarily a web scraper with partial REST API interaction for `h5.aoneroom.com`
-2. **v2** – A REST API client for `h5-api.aoneroom.com` - consumed by `moviebox.*` such as moviebox.ph
-3. **v3** – A REST API client for `api{3-6}.aoneroom.com` (Android app)
-
 ## Installation
 
 ### CLI (for end users)
 
 ```sh
-pip install "moviebox-api[cli]"
+uv tool install 'moviebox-api[cli]'
 ```
 
 ### Base package (for developers)
 
 ```sh
-pip install "moviebox-api"
+uv add moviebox-api
 ```
 
 ### Termux (Android)
@@ -331,7 +323,7 @@ movebox-v1 download-movie "Avatar"
 
 ### Episode Organization
 
-**Group format** — episodes organized into season subfolders:
+**Group format** - episodes organized into season subfolders:
 
 ```sh
 moviebox v2 download-series Merlin -s 1 -e 1 --auto-mode --format group
@@ -346,7 +338,7 @@ Merlin (2009)/
     Merlin S2E1.mp4
 ```
 
-**Struct format** — hierarchical directory structure using episode numbers as filenames:
+**Struct format** - hierarchical directory structure using episode numbers as filenames:
 
 ```sh
 moviebox v2 download-series Merlin -s 1 -e 1 --auto-mode --format struct
@@ -494,7 +486,7 @@ moviebox v1 mirror-hosts
 <h2 align="center"> Disclaimer </h2>
 
 > "All videos and pictures on MovieBox are from the Internet, and their copyrights belong to the original creators. We only provide webpage services and do not store, record, or upload any content."  
-> — *moviebox.ph*
+> - *moviebox.ph*
 
 <div align=center>
 
