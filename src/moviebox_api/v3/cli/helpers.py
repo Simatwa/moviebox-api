@@ -24,7 +24,10 @@ from moviebox_api.v3.exceptions import (
     ZeroSearchResultsError,
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
-from moviebox_api.v3.models.downloadables import RootDownloadableFilesDetailModel
+from moviebox_api.v3.models.downloadables import (
+    CaptionFileMetadata,
+    RootCaptionFileMetadata,
+)
 from moviebox_api.v3.models.search import ResultsSubjectModel
 
 command_context_settings = dict(auto_envvar_prefix="MOVIEBOX_V3")
@@ -129,13 +132,13 @@ async def perform_search_and_get_item(
 
 
 def get_caption_file_or_raise(
-    downloadable_details: RootDownloadableFilesDetailModel, language: str
-):  # -> "CaptionFileMetadata":
+    caption_files_detail: RootCaptionFileMetadata, language: str
+) -> CaptionFileMetadata:
     """Get caption-file based on desired language or raise ValueError if
     it doesn't exist.
 
     Args:
-        downloadable_details (DownloadableFilesMetadata)
+        caption_files_detail (RootCaptionFileMetadata)
         language (str): language filter such as `en` or `English`
 
     Raises:
@@ -145,20 +148,13 @@ def get_caption_file_or_raise(
     Returns:
         CaptionFileMetadata: Target caption file details
     """
-    raise MovieboxApiException(
-        "V3 lacks subtitle access capabilities. "
-        "Check later versions for support or consider using "
-        "ealier versions - v1 & v2. If you're using this in CLI pass "
-        " --no-caption "
-        "flag to suppress this error"
-    )
-    target_caption_file = downloadable_details.get_subtitle_by_language(language)
+    target_caption_file = caption_files_detail.get_subtitle_by_language(language)
 
     if target_caption_file is None:
         language_subtitle_map = (
-            downloadable_details.get_language_short_subtitle_map
+            caption_files_detail.get_language_short_subtitle_map
             if len(language) == 2
-            else downloadable_details.get_language_subtitle_map
+            else caption_files_detail.get_language_subtitle_map
         )
         subtitle_language_keys = list(language_subtitle_map().keys())
 

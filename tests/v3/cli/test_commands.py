@@ -49,6 +49,7 @@ def test_help(command):
     ],
     argvalues=[
         ["download-movie avatar -YT"],
+        ["download-movie avatar -YT -x en -x filipino"],
         ["download-movie avatar --dub hi -YT"],
         # ["download-movie war -s education -YT"],
         ["download-movie walker -s music -YT"],
@@ -58,6 +59,8 @@ def test_help(command):
             "download-series 'A Knight of the Seven Kingdoms' -s 1 -e 1 "
             "--dub 'Telugu dub' -YT"
         ],
+        ["download-series banshee -YT -x en -x filipino"],
+        ["download-series banshee -YT -x en -x filipino --dub en"],
     ],
 )
 def test_download(command):

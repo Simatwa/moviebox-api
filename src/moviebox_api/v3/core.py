@@ -702,6 +702,9 @@ class DownloadableVideoFilesDetail(BaseContentProviderAndHelper):
                 navigating = False
 
 
+DownloadableFilesDetail = DownloadableVideoFilesDetail
+
+
 class DownloadableCaptionFileDetails(BaseContentProviderAndHelper):
     """Fetches available subtitle files detail for a particular video file"""
 

@@ -23,6 +23,7 @@ from moviebox_api.v3.cli.helpers import (
 from moviebox_api.v3.constants import (
     CURRENT_WORKING_DIR,
     DEFAULT_CHUNK_SIZE,
+    DEFAULT_DUB_LANGUAGE_NAME_OR_CODE,
     DEFAULT_READ_TIMEOUT_ATTEMPTS,
     DEFAULT_TASKS,
     DEFAULT_TASKS_LIMIT,
@@ -30,7 +31,6 @@ from moviebox_api.v3.constants import (
     CustomResolutionType,
     DownloadMode,
     SubjectType,
-    DEFAULT_DUB_LANGUAGE_NAME_OR_CODE,
 )
 from moviebox_api.v3.download import (
     CaptionFileDownloader,

@@ -231,7 +231,7 @@ class Downloader:
                     )
 
                 except (ZeroCaptionFileError, ValueError):
-                    if ignore_missing_caption:
+                    if ignore_missing_caption and not caption_only:
                         continue
                     raise
 

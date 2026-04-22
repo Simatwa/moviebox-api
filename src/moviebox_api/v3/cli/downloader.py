@@ -27,6 +27,7 @@ from moviebox_api.v3.constants import (
     SubjectType,
 )
 from moviebox_api.v3.core import (
+    DownloadableCaptionFileDetails,
     DownloadableFilesDetail,
     ItemDetails,
     SeasonDetails,
@@ -44,6 +45,10 @@ from moviebox_api.v3.helpers import (
     get_event_loop,
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
+from moviebox_api.v3.models.downloadables import (
+    RootDownloadableFilesDetailModel,
+    VideoFileMetadata,
+)
 from moviebox_api.v3.models.search import ResultsSubjectModel
 
 __all__ = ["Downloader"]
@@ -57,11 +62,6 @@ class Downloader:
         client_session: MovieBoxHttpClient,
     ):
         """Constructor for `Downloader`"""
-        logging.warning(
-            "V3 of moviebox-API lacks subtitles support. All options related to "
-            "captions will be ignored. "
-            "You can find the report at https://github.com/Simatwa/moviebox-api/issues/85."
-        )
         self.client_session = client_session
 
     def __setattr__(self, name, value):
@@ -70,6 +70,49 @@ class Downloader:
                 assert_instance(value, MovieBoxHttpClient, "client_session")
 
         super().__setattr__(name, value)
+
+    async def download_caption_files(
+        self,
+        subject_id: str,
+        video_file: VideoFileMetadata,
+        downloadable_files_detail: RootDownloadableFilesDetailModel,
+        languages: list[str],
+        caption_downloader: CaptionFileDownloader,
+        ignore_missing_caption: bool = False,
+        caption_only: bool = True,
+        **run_kwargs,
+    ) -> list[DownloadedFile]:
+        downloadable_captions = DownloadableCaptionFileDetails(
+            self.client_session
+        )
+
+        caption_files_detail = await downloadable_captions.get_content_model(
+            subject_id, video_file
+        )
+
+        subtitle_details_items: list[DownloadedFile] = []
+
+        for lang in languages:
+            try:
+                target_caption_file = get_caption_file_or_raise(
+                    caption_files_detail, lang
+                )
+
+            except (ZeroCaptionFileError, ValueError):
+                if ignore_missing_caption and not caption_only:
+                    continue
+                raise
+
+            subtitle_details = await caption_downloader.run(
+                caption_file=target_caption_file,
+                video_file=video_file,
+                downloadable_files_detail=downloadable_files_detail,
+                **run_kwargs,
+            )
+
+            subtitle_details_items.append(subtitle_details)
+
+        return subtitle_details_items
 
     async def download_movie(
         self,
@@ -167,11 +210,6 @@ class Downloader:
 
         assert_instance(quality, CustomResolutionType, "quality")
 
-        # TODO: remove this when subtitles support will be available
-        download_caption = False
-        caption_only = False
-        language = tuple()
-
         assert callable(search_function), (
             "Value for search_function must be callable not"
             f"{type(search_function)}"
@@ -219,40 +257,29 @@ class Downloader:
         target_media_file = resolve_media_file_to_be_downloaded(
             quality, downloadable_files_detail
         )
-        # TODO: feature missing caption file processing implementation for v3
-
-        subtitle_details_items: list[DownloadedFile] = []
 
         subtitles_dir = tempfile.mkdtemp() if stream_via else caption_dir
 
         if download_caption or caption_only:
-            for lang in language:
-                try:
-                    target_caption_file = get_caption_file_or_raise(
-                        downloadable_files_detail, lang
-                    )
+            caption_downloader = CaptionFileDownloader(
+                dir=subtitles_dir,
+                chunk_size=chunk_size,
+                tasks=tasks,
+                part_dir=part_dir,
+                part_extension=part_extension,
+                merge_buffer_size=merge_buffer_size,
+            )
 
-                except (ZeroCaptionFileError, ValueError):
-                    if ignore_missing_caption:
-                        continue
-                    raise
-
-                caption_downloader = CaptionFileDownloader(
-                    dir=subtitles_dir,
-                    chunk_size=chunk_size,
-                    tasks=tasks,
-                    part_dir=part_dir,
-                    part_extension=part_extension,
-                    merge_buffer_size=merge_buffer_size,
-                )
-
-                subtitle_details = await caption_downloader.run(
-                    caption_file=target_caption_file,
-                    filename=target_movie,
-                    **run_kwargs,
-                )
-
-                subtitle_details_items.append(subtitle_details)
+            subtitle_details_items = await self.download_caption_files(
+                subject_id=target_subject_id,
+                video_file=target_media_file,
+                downloadable_files_detail=downloadable_files_detail,
+                languages=language,
+                caption_downloader=caption_downloader,
+                ignore_missing_caption=ignore_missing_caption,
+                caption_only=caption_only,
+                **run_kwargs,
+            )
 
             if caption_only and not stream_via:
                 # terminate
@@ -462,8 +489,7 @@ class Downloader:
 
         subtitles_dir = tempfile.mkdtemp() if stream_via else caption_dir
 
-        """
-        caption_downloader = CaptionFileDownloader(
+        caption_file_downloader = CaptionFileDownloader(
             dir=(
                 subtitles_dir if stream_via else dir if group else subtitles_dir
             ),
@@ -474,7 +500,6 @@ class Downloader:
             merge_buffer_size=merge_buffer_size,
             group_series=group,
         )
-        """
 
         media_file_downloader = MediaFileDownloader(
             dir=dir,
@@ -515,29 +540,46 @@ class Downloader:
                 release_date=str(target_tv_series.release_date),
             )
 
-            for media_file in files_detail.list[req_params.offset :][
+            for video_file in files_detail.list[req_params.offset :][
                 : req_params.limit
             ]:
+                subtitle_details_items: list[DownloadedFile] = []
+
+                if download_caption or caption_only:
+                    subtitle_details_items = await self.download_caption_files(
+                        subject_id=target_dub.subject_id,
+                        video_file=video_file,
+                        downloadable_files_detail=files_detail,
+                        languages=language,
+                        caption_downloader=caption_file_downloader,
+                        ignore_missing_caption=ignore_missing_caption,
+                        caption_only=caption_only,
+                        **run_kwargs,
+                    )
+
+                    if caption_only:
+                        continue
+
                 if stream_via:
                     media_player_name_func_map[stream_via](
-                        str(media_file.url), subtitle_details_items, subtitles_dir
+                        str(video_file.url), subtitle_details_items, subtitles_dir
                     )
                     continue
 
                 media_file_response = await media_file_downloader.run(
-                    media_file=media_file,
+                    media_file=video_file,
                     filename=files_detail,
                     **run_kwargs,
                 )
-                current_episode_details = {}
+                current_episode_details = {"captions": subtitle_details_items}
 
                 current_episode_details["movie"] = media_file_response
 
-                if not response_jar.get(media_file.season):
-                    response_jar[media_file.season] = []
+                if not response_jar.get(video_file.season):
+                    response_jar[video_file.season] = []
 
-                response_jar[media_file.season].append({
-                    media_file.episode: current_episode_details
+                response_jar[video_file.season].append({
+                    video_file.episode: current_episode_details
                 })
                 # TODO: add caption_file with key caption
 

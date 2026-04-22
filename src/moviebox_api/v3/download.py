@@ -241,7 +241,6 @@ class MediaFileDownloader(BaseFileDownloaderAndHelper):
         )
 
 
-# TODO: Complete this"""
 class CaptionFileDownloader(BaseFileDownloaderAndHelper):
     """Creates a local copy of a remote subtitle/caption file"""
 
@@ -290,7 +289,7 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
             id=caption_file.id,
             lan=caption_file.lan,
             lan_name=caption_file.lan_name,
-            season=downloadable_files_detail,
+            season=video_file.season,
             episode=video_file.episode,
             episode_title=video_file.title,
         )
@@ -316,7 +315,7 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
         self,
         caption_file: CaptionFileMetadata,
         video_file: VideoFileMetadata,
-        filename: str | RootDownloadableFilesDetailModel,
+        downloadable_files_detail: RootDownloadableFilesDetailModel,
         progress_hook: callable = None,
         mode: DownloadMode = DownloadMode.AUTO,
         disable_progress_bar: bool = None,
@@ -369,21 +368,13 @@ class CaptionFileDownloader(BaseFileDownloaderAndHelper):
 
         dir = None
 
-        if isinstance(filename, RootDownloadableFilesDetailModel):
-            filename, dir = self.generate_filename(
-                caption_file=caption_file,
-                video_file=video_file,
-                downloadable_files_detail=filename,
-                test=test,
-                **filename_kwargs,
-            )
-
-        elif self.group_series:
-            raise ValueError(
-                "Value for filename should be an instance of "
-                f"{RootDownloadableFilesDetailModel}"
-                " when group_series is activated"
-            )
+        filename, dir = self.generate_filename(
+            caption_file=caption_file,
+            video_file=video_file,
+            downloadable_files_detail=downloadable_files_detail,
+            test=test,
+            **filename_kwargs,
+        )
 
         return await self.throttle_buster.run(
             url=str(caption_file.url),
