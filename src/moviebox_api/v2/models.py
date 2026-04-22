@@ -25,7 +25,7 @@ from moviebox_api.v2.helpers import get_absolute_url
 class ContentModelV2(ContentModel):
     """`homepage.operatingList[0].banner.items[0]`"""
 
-    subject: "SearchResultsItem"
+    subject: "SearchResultsItem | None"
     detailPath: str
     url: HttpUrl | None = None
 

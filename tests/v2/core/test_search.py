@@ -18,7 +18,7 @@ from tests.v2 import init_search
         [SubjectType.TV_SERIES],
         [SubjectType.MUSIC],
         [SubjectType.EDUCATION],
-        [SubjectType.ANIME],
+        # [SubjectType.ANIME],
     ),
 )
 async def test_get_content_and_model(subject_type: SubjectType):

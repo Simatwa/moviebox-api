@@ -10,6 +10,10 @@ import moviebox_api.v1.core
 from moviebox_api.v1.helpers import assert_instance
 from moviebox_api.v2._bases import BaseItemDetails
 from moviebox_api.v2.constants import SINGLE_ITEM_SUBJECT_TYPES, SubjectType
+from moviebox_api.v2.exceptions import (
+    ExhaustedSearchResultsError,
+    MovieboxApiException,
+)
 from moviebox_api.v2.helpers import get_absolute_url
 from moviebox_api.v2.models import (
     HomepageContentModel,
@@ -48,6 +52,59 @@ class Search(moviebox_api.v1.core.Search):
     @deprecated("This method is only available in v1")
     def get_item_details(self, item: SearchResultsItem) -> None:
         raise NotImplementedError("Method is only available in v1")
+
+    def next_page(self, content: SearchResultsModel) -> "Search":
+        """Navigate to the search results of the next page.
+
+        Args:
+            content (SearchResultsModel): Modelled version of search results
+
+        Returns:
+            Search
+        """
+        assert_instance(content, SearchResultsModel, "content")
+
+        if content.pager.hasMore:
+            return Search(
+                session=self.session,
+                query=self._query,
+                subject_type=self._subject_type,
+                page=content.pager.nextPage,
+                per_page=self._per_page,
+            )
+        else:
+            raise ExhaustedSearchResultsError(
+                content.pager,
+                "You have already reached the last page of the search results.",
+            )
+
+    def previous_page(self, content: SearchResultsModel) -> "Search":
+        """Navigate to the search results of the previous page.
+
+        - Useful when the currrent page is greater than  1.
+
+        Args:
+            content (SearchResultsModel): Modelled version of search results
+
+        Returns:
+            Search
+        """
+        assert_instance(content, SearchResultsModel, "content")
+
+        if content.pager.page >= 2:
+            return Search(
+                session=self.session,
+                query=self._query,
+                subject_type=self._subject_type,
+                page=content.pager.page - 1,
+                per_page=self._per_page,
+            )
+        else:
+            raise MovieboxApiException(
+                "Unable to navigate to previous page. "
+                "Current page is the first one try navigating to the next "
+                "one instead."
+            )
 
 
 class ItemDetails(BaseItemDetails):
