@@ -285,7 +285,7 @@ class Downloader:
                 # terminate
                 return (None, subtitle_details_items)
 
-        if stream_via:
+        if stream_via and not run_kwargs["test"]:
             return media_player_name_func_map[stream_via](
                 str(target_media_file.url), subtitle_details_items, subtitles_dir
             )
@@ -560,7 +560,7 @@ class Downloader:
                     if caption_only:
                         continue
 
-                if stream_via:
+                if stream_via and not run_kwargs["test"]:
                     media_player_name_func_map[stream_via](
                         str(video_file.url), subtitle_details_items, subtitles_dir
                     )

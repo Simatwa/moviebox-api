@@ -14,23 +14,26 @@ from moviebox_api.v3.cli.interface import get_commands_map as get_commmands_map_
 @click.group()
 @click.version_option(package_name="moviebox-api")
 def _cli_entry():
-    """Search and download movies/tv-series and their subtitles.
-    envvar-prefix : MOVIEBOX"""
+    """Search and download movies/tv-series and their subtitles
+    (environment variable prefix : MOVIEBOX_{V1/V2/V3})"""
 
 
 @_cli_entry.group()
 def v1():
-    """Search and download movies/tv-series using moviebox-API v1"""
+    """Search and download movies/tv-series using moviebox-API v1
+    (environment variable prefix: MOVIEBOX_V1)"""
 
 
 @_cli_entry.group()
 def v2():
-    """Search and download movies/tv-series etc using moviebox-API v2"""
+    """Search and download movies/tv-series etc using moviebox-API v2
+    (environment variable prefix: MOVIEBOX_V2)"""
 
 
 @_cli_entry.group()
 def v3():
-    """Search and download movies/tv-series etc using moviebox-API v3"""
+    """Search and download movies/tv-series etc using moviebox-API v3
+    (environment variable prefix: MOVIEBOX_V3)"""
 
 
 build_command_group(v1, get_commands_map())

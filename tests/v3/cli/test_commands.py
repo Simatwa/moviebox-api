@@ -57,7 +57,7 @@ def test_help(command):
         ["download-series 'A Knight of the Seven Kingdoms' -s 1 -e 1 -YT"],
         [
             "download-series 'A Knight of the Seven Kingdoms' -s 1 -e 1 "
-            "--dub 'Telugu dub' -YT"
+            "--dub 'Telugu' -YT"
         ],
         ["download-series banshee -YT -x en -x filipino"],
         ["download-series banshee -YT -x en -x filipino --dub en"],

@@ -100,6 +100,13 @@ class DubModel(BaseModel):
     original: bool
     type: int
 
+    @field_validator("lan_name", mode="before")
+    def validate_lan_name(value: str):
+        if value.lower().startswith("original"):
+            return "Original"
+
+        return value.replace("dub", "").strip()
+
 
 class StyleModel(BaseModel):
     model_config = MODEL_CONFIG

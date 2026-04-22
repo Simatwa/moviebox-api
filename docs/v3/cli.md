@@ -5,10 +5,6 @@ Search, download, and stream movies, TV series, anime, music, and educational co
 !!! info "Environment Variable Prefix"
     All environment variable overrides use the prefix `MOVIEBOX_V3`.
 
-!!! warning "No Subtitle Support in v3"
-    V3 of moviebox-API lacks subtitle/caption support. All caption-related options are accepted by the CLI but will be **silently ignored** at runtime.
-    See [issue #85](https://github.com/Simatwa/moviebox-api/issues/85) for details and progress.
-
 ---
 
 ## Global Options
@@ -58,6 +54,7 @@ moviebox-v3 download-movie [OPTIONS] TITLE
 | `-s, --subject-type` | `movies\|education\|music\|anime\|unknown` | `movies` | Subject type filter |
 | `-y, --year` | `INTEGER` | `0` | Year filter for the movie |
 | `-q, --quality` | `360p\|480p\|720p\|1080p\|best\|worst` | `best` | Media quality to download |
+| `-u, --dub` | `TEXT` | `Original Audio` | Dub language name or code |
 | `-Y, --yes` | flag | — | Skip confirmation prompt |
 
 #### Output Paths
@@ -65,7 +62,7 @@ moviebox-v3 download-movie [OPTIONS] TITLE
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `-d, --dir` | `DIRECTORY` | `$PWD` | Directory to save the movie file |
-| `-D, --caption-dir` | `DIRECTORY` | `$PWD` | Directory to save the caption file *(ignored in v3)* |
+| `-D, --caption-dir` | `DIRECTORY` | `$PWD` | Directory to save the caption file |
 | `-P, --part-dir` | `DIRECTORY` | `$PWD` | Directory for temporary download part files |
 
 #### File Naming
@@ -73,17 +70,14 @@ moviebox-v3 download-movie [OPTIONS] TITLE
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `-M, --movie-filename-tmpl` | `TEXT` | `{title} ({release_year}).{ext}` | Template for the movie filename |
-| `-C, --caption-filename-tmpl` | `TEXT` | `{title} ({release_year}).{lan}.{ext}` | Template for the caption filename *(ignored in v3)* |
+| `-C, --caption-filename-tmpl` | `TEXT` | `{title} ({release_year}).{lan}.{ext}` | Template for the caption filename |
 | `-E, --part-extension` | `TEXT` | `.part` | File extension for download part files |
 
-#### Caption Options *(ignored in v3)*
-
-!!! warning "Caption options have no effect in v3"
-    The following options are parsed but produce no output. See [issue #85](https://github.com/Simatwa/moviebox-api/issues/85).
+#### Caption Options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `-x, --language` | `TEXT` | `English` | Caption language filter |
+| `-x, --language` | `TEXT` | `English` | Caption language filter. Pass multiple times to download multiple languages |
 | `--caption / --no-caption` | flag | `caption` | Enable or disable caption download |
 | `-O, --caption-only` | flag | — | Download caption file only; skip video |
 | `-I, --ignore-missing-caption` | flag | — | Proceed with download even if caption is missing |
@@ -125,17 +119,20 @@ moviebox-v3 download-movie [OPTIONS] TITLE
 ### Examples
 
 ```bash
-# Download a movie (best quality, auto-detect resume)
-moviebox-v3 download-movie "Avengers Endgame"
+# Download a movie (best quality, auto-detect resume), skip confirmation, test only
+moviebox-v3 download-movie avatar -YT
 
-# Test download without fetching
-moviebox-v3 download-movie "Avengers Endgame" -T
+# Download with multiple caption languages (English + Filipino)
+moviebox-v3 download-movie avatar -YT -x en -x filipino
 
-# Download anime at 1080p, skip confirmation
-moviebox-v3 download-movie "Demon Slayer" -s anime -q 1080p -Y
+# Download Hindi dub
+moviebox-v3 download-movie avatar --dub hi -YT
 
-# Download educational content, save to specific directory
-moviebox-v3 download-movie "Cosmos" -s education -d ~/Videos/Docs
+# Download music content
+moviebox-v3 download-movie walker -s music -YT
+
+# Download anime at 1080p, save to directory
+moviebox-v3 download-movie "Demon Slayer" -s anime -q 1080p -Y -d ~/Videos/Anime
 
 # Stream directly with mpv
 moviebox-v3 download-movie "Avengers Endgame" -X mpv
@@ -168,18 +165,16 @@ moviebox-v3 download-series [OPTIONS] TITLE
 | `-e, --episode` | `INTEGER (1–1000)` | `1` | Episode within the selected season to start from |
 | `-l, --limit` | `INTEGER (-1–1000)` | `1` | Total episodes to download; set `-1` to disable the limit |
 | `-q, --quality` | `360p\|480p\|720p\|1080p\|best\|worst` | `best` | Media quality to download |
+| `-u, --dub` | `TEXT` | `Original Audio` | Dub language name or code |
 | `-Y, --yes` | flag | — | Skip series confirmation prompt |
 | `-A, --auto-mode` | flag | — | Download all remaining episodes across all remaining seasons (shortcut for `--limit -1`) |
-
-!!! note "v3 auto-mode behaviour"
-    In v3, `--limit` is not limited to only episodes of the target season as in **v1** and **v2** but rather to all episodes across remaining seasons.
 
 #### Output Paths
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `-d, --dir` | `DIRECTORY` | `$PWD` | Directory to save the series files |
-| `-D, --caption-dir` | `DIRECTORY` | `$PWD` | Directory to save caption files *(ignored in v3)* |
+| `-D, --caption-dir` | `DIRECTORY` | `$PWD` | Directory to save caption files |
 | `-P, --part-dir` | `DIRECTORY` | `$PWD` | Directory for temporary download part files |
 
 #### File Naming & Structure
@@ -187,7 +182,7 @@ moviebox-v3 download-series [OPTIONS] TITLE
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
 | `-L, --episode-filename-tmpl` | `TEXT` | `{title} S{season}E{episode}.{ext}` | Template for episode filenames |
-| `-C, --caption-filename-tmpl` | `TEXT` | `{title} S{season}E{episode}.{lan}.{ext}` | Template for caption filenames *(ignored in v3)* |
+| `-C, --caption-filename-tmpl` | `TEXT` | `{title} S{season}E{episode}.{lan}.{ext}` | Template for caption filenames |
 | `-E, --part-extension` | `TEXT` | `.part` | File extension for download part files |
 | `-f, --format` | `standard\|group\|struct` | `standard` | Episode file organisation format (see below) |
 
@@ -230,14 +225,11 @@ Merlin (2009)/
     E1.mp4
 ```
 
-#### Caption Options *(ignored in v3)*
-
-!!! warning "Caption options have no effect in v3"
-    The following options are parsed but produce no output. See [issue #85](https://github.com/Simatwa/moviebox-api/issues/85).
+#### Caption Options
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `-x, --language` | `TEXT` | `English` | Caption language filter |
+| `-x, --language` | `TEXT` | `English` | Caption language filter. Pass multiple times to download multiple languages |
 | `--caption / --no-caption` | flag | `caption` | Enable or disable caption download |
 | `-O, --caption-only` | flag | — | Download caption files only; skip video |
 | `-I, --ignore-missing-caption` | flag | — | Proceed with episode download even if caption is missing |
@@ -279,8 +271,17 @@ Merlin (2009)/
 ### Examples
 
 ```bash
-# Download S1E1 of a series
-moviebox-v3 download-series "A Knight of the Seven Kingdoms"
+# Download S1E1, skip confirmation, test only
+moviebox-v3 download-series 'A Knight of the Seven Kingdoms' -s 1 -e 1 -YT
+
+# Download with a specific dub (Telugu)
+moviebox-v3 download-series 'A Knight of the Seven Kingdoms' -s 1 -e 1 --dub 'Telugu dub' -YT
+
+# Download with multiple caption languages (English + Filipino)
+moviebox-v3 download-series banshee -YT -x en -x filipino
+
+# Download with multiple caption languages and a specific dub
+moviebox-v3 download-series banshee -YT -x en -x filipino --dub en
 
 # Download all remaining episodes across all seasons from S1E1
 moviebox-v3 download-series "Merlin" -A
@@ -381,37 +382,49 @@ moviebox-v3 item-details "Demon Slayer" -s anime
 
 ## Filename Templates
 
-### Movie Templates (`-M`, `-C`)
+Both `download-movie` and `download-series` support customisable filename templates using placeholder variables.
 
-| Variable | Description |
-|----------|-------------|
-| `{title}` | Item title |
+### Video File Placeholders (`-M`, `-L`)
+
+| Placeholder | Description |
+|-------------|-------------|
+| `{title}` | Title of the movie or series |
 | `{release_year}` | Release year |
+| `{release_date}` | Full release date |
+| `{resolution}` | Video resolution (e.g. `1080p`) |
 | `{ext}` | File extension |
-| `{lan}` | Caption language *(caption template only — ignored in v3)* |
+| `{size_string}` | Human-readable file size |
+| `{season}` | Season number *(series only)* |
+| `{episode}` | Episode number *(series only)* |
+| `{episode_title}` | Episode title *(series only)* |
+| `{duration}` | Media duration |
+| `{codec_name}` | Video codec name |
 
-**Defaults:**
+### Caption File Placeholders (`-C`)
 
-```
-Movie:   {title} ({release_year}).{ext}
-Caption: {title} ({release_year}).{lan}.{ext}  ← ignored in v3
-```
-
-### Series Templates (`-L`, `-C`)
-
-| Variable | Description |
-|----------|-------------|
-| `{title}` | Series title |
-| `{season}` | Season number (zero-padded) |
-| `{episode}` | Episode number (zero-padded) |
+| Placeholder | Description |
+|-------------|-------------|
+| `{title}` | Title of the movie or series |
+| `{release_year}` | Release year |
+| `{release_date}` | Full release date |
 | `{ext}` | File extension |
-| `{lan}` | Caption language *(caption template only — ignored in v3)* |
+| `{size_string}` | Human-readable file size |
+| `{id}` | Caption track identifier |
+| `{lan}` | Caption language code (e.g. `en`) |
+| `{lan_name}` | Caption language full name (e.g. `English`) |
+| `{delay}` | Caption sync delay value |
+| `{season}` | Season number *(series only)* |
+| `{episode}` | Episode number *(series only)* |
+| `{episode_title}` | Episode title *(series only)* |
 
-**Defaults:**
+### Defaults
 
 ```
-Episode: {title} S{season}E{episode}.{ext}
-Caption: {title} S{season}E{episode}.{lan}.{ext}  ← ignored in v3
+Movie file:    {title} ({release_year}).{ext}
+Movie caption: {title} ({release_year}).{lan}.{ext}
+
+Episode file:    {title} S{season}E{episode}.{ext}
+Episode caption: {title} S{season}E{episode}.{lan}.{ext}
 ```
 
 ---
@@ -420,17 +433,16 @@ Caption: {title} S{season}E{episode}.{lan}.{ext}  ← ignored in v3
 
 | Feature | v1 | v2 | v3 |
 |---------|----|----|-----|
-| Subtitle/caption support | ✓ | ✓ | ✗ *(see [#85](https://github.com/Simatwa/moviebox-api/issues/85))* |
+| Subtitle/caption support | ✓ | ✓ | ✓ |
+| Dub language selection (`-u / --dub`) | ✗ | ✗ | ✓ |
 | Subject types (`download-movie`) | movies only | movies, anime, music, education | movies, anime, music, education, **unknown** |
 | Subject types (`item-details`) | all, movies, tv_series, education, music, anime | all, movies, tv_series, education, music, anime | all, movies, tv_series, education, music, anime, **unknown** |
 | `popular-search` command | ✓ | ✗ | ✗ |
 | `mirror-hosts` command | ✓ | ✓ | ✗ |
-| `--format` default (`download-series`) | none | none | `standard` |
 | `--season` / `--episode` defaults | required | required | `1` / `1` |
 | `--limit -1` (disable limit) | ✗ | ✗ | ✓ |
-| `--auto-mode` scope | single season | single season | **all remaining seasons** |
 | env var prefix | `MOVIEBOX` | `MOVIEBOX` | `MOVIEBOX_V3` |
-| API host env var | `MOVIEBOX_API_HOST` | `MOVIEBOX_API_HOST_V2` | *(prefix-based)* |
+| API host env var | `MOVIEBOX_API_HOST` | `MOVIEBOX_API_HOST_V2` | *(NOT REQUIRED)* |
 
 ---
 
@@ -444,5 +456,7 @@ Caption: {title} S{season}E{episode}.{lan}.{ext}  ← ignored in v3
 | `-Y, --yes` | download, item-details | Skip confirmation prompts |
 | `-T, --test` | download commands | Test without downloading |
 | `-X, --stream-via` | download commands | Stream via `mpv` or `vlc` |
-| `-O, --caption-only` | download commands | Fetch captions only *(ignored in v3)* |
-| `-I, --ignore-missing-caption` | download commands | Proceed even if caption is absent *(ignored in v3)* |
+| `-u, --dub` | download commands | Select dub language |
+| `-x, --language` | download commands | Caption language; repeatable for multiple languages |
+| `-O, --caption-only` | download commands | Fetch captions only |
+| `-I, --ignore-missing-caption` | download commands | Proceed even if caption is absent |

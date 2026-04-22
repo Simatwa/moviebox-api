@@ -55,8 +55,8 @@ DEBUG = os.getenv("DEBUG", "0") == "1"
 @click.group()
 @click.version_option(version=__version__)
 def moviebox_v2():
-    """Search and download movies/tv-series and their subtitles (v2).
-    envvar-prefix : MOVIEBOX_V2"""
+    """Search and download movies/tv-series and their subtitles
+    (environment variable prefix: MOVIEBOX_V2)"""
 
 
 @click.command(context_settings=command_context_settings)

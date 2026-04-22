@@ -1,13 +1,5 @@
-There are several ways of accessing commandline **version 2**:
+# moviebox-v2 CLI Reference
 
-```sh
-moviebox-v2--help
-moviebox v2--help
-python -m moviebox_api v2--help
-python -m moviebox_api.v2--help
-```
-
-For this tutorial we shall be sticking to `moviebox-v1`
 Search, download, and stream movies, TV series, anime, music, and educational content with subtitle support.
 
 !!! info "Environment Variable Prefix"
@@ -420,37 +412,47 @@ MOVIEBOX_API_HOST_V2=https://mirror.example.com moviebox-v2 mirror-hosts
 
 Both `download-movie` and `download-series` support customisable filename templates using placeholder variables.
 
-### Movie Templates (`-M`, `-C`)
+### Video File Placeholders (`-M`, `-L`)
 
-| Variable | Description |
-|----------|-------------|
-| `{title}` | Item title |
+| Placeholder | Description |
+|-------------|-------------|
+| `{title}` | Title of the movie or series |
 | `{release_year}` | Release year |
+| `{release_date}` | Full release date |
+| `{resolution}` | Video resolution (e.g. `1080p`) |
 | `{ext}` | File extension |
-| `{lan}` | Caption language *(caption template only)* |
+| `{size_string}` | Human-readable file size |
+| `{season}` | Season number *(series only)* |
+| `{episode}` | Episode number *(series only)* |
+| `{episode_title}` | Episode title *(series only)* |
+| `{duration}` | Media duration |
+| `{codec_name}` | Video codec name |
 
-**Defaults:**
+### Caption File Placeholders (`-C`)
 
-```
-Movie:   {title} ({release_year}).{ext}
-Caption: {title} ({release_year}).{lan}.{ext}
-```
-
-### Series Templates (`-L`, `-C`)
-
-| Variable | Description |
-|----------|-------------|
-| `{title}` | Series title |
-| `{season}` | Season number (zero-padded) |
-| `{episode}` | Episode number (zero-padded) |
+| Placeholder | Description |
+|-------------|-------------|
+| `{title}` | Title of the movie or series |
+| `{release_year}` | Release year |
+| `{release_date}` | Full release date |
 | `{ext}` | File extension |
-| `{lan}` | Caption language *(caption template only)* |
+| `{size_string}` | Human-readable file size |
+| `{id}` | Caption track identifier |
+| `{lan}` | Caption language code (e.g. `en`) |
+| `{lan_name}` | Caption language full name (e.g. `English`) |
+| `{delay}` | Caption sync delay value |
+| `{season}` | Season number *(series only)* |
+| `{episode}` | Episode number *(series only)* |
+| `{episode_title}` | Episode title *(series only)* |
 
-**Defaults:**
+### Defaults
 
 ```
-Episode: {title} S{season}E{episode}.{ext}
-Caption: {title} S{season}E{episode}.{lan}.{ext}
+Movie file:    {title} ({release_year}).{ext}
+Movie caption: {title} ({release_year}).{lan}.{ext}
+
+Episode file:    {title} S{season}E{episode}.{ext}
+Episode caption: {title} S{season}E{episode}.{lan}.{ext}
 ```
 
 ---

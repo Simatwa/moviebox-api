@@ -95,6 +95,9 @@ moviebox v2 download-series "Game of Thrones" -s 1 -e 1
 
 # Stream a movie (requires MPV)
 moviebox v2 download-movie "Avatar" --stream-via mpv
+
+# Stream with specific audio dub
+moviebox v3 download-series "Money Heist" --dub "English" -X vlc
 ```
 
 ### Python API
@@ -159,52 +162,6 @@ moviebox v2 download-movie "Avatar" --yes
 | `--no-caption` | Skip subtitle download |
 | `-Y, --yes` | Auto-confirm without prompts |
 
-<details>
-<summary>All options</summary>
-
-```text
-Usage: python -m moviebox_api v2 download-movie [OPTIONS] TITLE
-
-  Search, download or stream items under movie/anime/music/education subject-types.
-
-Options:
-  -s, --subject-type [movies|education|music|anime]
-                                  Subject type filter  [default: MOVIES]
-  -y, --year INTEGER              Year filter  [default: 0]
-  -q, --quality [worst|best|360p|480p|720p|1080p]
-                                  Media quality  [default: BEST]
-  -d, --dir DIRECTORY             Download directory
-  -D, --caption-dir DIRECTORY     Caption download directory
-  -m, --mode [start|resume|auto]  Download mode  [default: auto]
-  -x, --language TEXT             Caption language  [default: English]
-  -M, --movie-filename-tmpl TEXT  Movie filename template  [default: {title} ({release_year}).{ext}]
-  -C, --caption-filename-tmpl TEXT
-                                  Caption filename template  [default: {title} ({release_year}).{lan}.{ext}]
-  -t, --tasks INTEGER RANGE       Parallel download tasks  [default: 5; 1<=x<=1000]
-  -P, --part-dir DIRECTORY        Temporary parts directory
-  -E, --part-extension TEXT       Part file extension  [default: .part]
-  -N, --chunk-size INTEGER        Chunk size in kilobytes  [default: 256]
-  -R, --timeout-retry-attempts INTEGER
-                                  Retry attempts on timeout  [default: 10]
-  -B, --merge-buffer-size INTEGER RANGE
-                                  Merge buffer size in kilobytes  [1<=x<=102400]
-  -X, --stream-via [mpv|vlc]      Stream via media player instead of downloading
-  -c, --colour TEXT               Progress bar colour  [default: cyan]
-  -U, --ascii                     Use unicode blocks for progress bar
-  -z, --disable-progress-bar      Hide progress bar
-  -I, --ignore-missing-caption    Continue download when caption is missing
-  --leave / --no-leave            Keep progress bar leaves  [default: no-leave]
-  --caption / --no-caption        Download caption  [default: caption]
-  -O, --caption-only              Download caption only
-  -S, --simple                    Show percentage and bar only
-  -T, --test                      Test download without saving
-  -V, --verbose                   Show detailed output
-  -Q, --quiet                     Suppress interactive output
-  -Y, --yes                       Skip confirmation prompt
-  -h, --help                      Show this message and exit.
-```
-</details>
-
 #### Downloading TV Series
 
 **Basic usage:**
@@ -235,59 +192,6 @@ moviebox v2 download-series "Merlin" -s 1 -e 1 --auto-mode
 | `--no-caption` | Skip subtitles |
 | `-Y, --yes` | Auto-confirm |
 | `-A, --auto-mode` | Download all remaining seasons when `--limit` is 1 |
-
-<details>
-<summary>All options</summary>
-
-```text
-Usage: python -m moviebox_api v2 download-series [OPTIONS] TITLE
-
-  Search and download or stream tv series.
-
-Options:
-  -y, --year INTEGER              Year filter  [default: 0]
-  -s, --season INTEGER RANGE      Season number  [1<=x<=1000; required]
-  -e, --episode INTEGER RANGE     Starting episode  [1<=x<=1000; required]
-  -l, --limit INTEGER RANGE       Episodes to download  [default: 1; 1<=x<=1000]
-  -q, --quality [worst|best|360p|480p|720p|1080p]
-                                  Media quality  [default: BEST]
-  -x, --language TEXT             Caption language  [default: English]
-  -d, --dir DIRECTORY             Download directory
-  -D, --caption-dir DIRECTORY     Caption download directory
-  -m, --mode [start|resume|auto]  Download mode  [default: auto]
-  -L, --episode-filename-tmpl TEXT
-                                  Episode filename template  [default: {title} S{season}E{episode}.{ext}]
-  -C, --caption-filename-tmpl TEXT
-                                  Caption filename template  [default: {title} S{season}E{episode}.{lan}.{ext}]
-  -t, --tasks INTEGER RANGE       Parallel download tasks  [default: 5; 1<=x<=1000]
-  -P, --part-dir DIRECTORY        Temporary parts directory
-  -f, --format [standard|group|struct]
-                                  Episode organization format
-  -E, --part-extension TEXT       Part file extension  [default: .part]
-  -N, --chunk-size INTEGER        Chunk size in kilobytes  [default: 256]
-  -R, --timeout-retry-attempts INTEGER
-                                  Retry attempts on timeout  [default: 10]
-  -B, --merge-buffer-size INTEGER RANGE
-                                  Merge buffer size in kilobytes  [1<=x<=102400]
-  -X, --stream-via [mpv|vlc]      Stream via media player instead of downloading
-  -c, --colour TEXT               Progress bar colour  [default: cyan]
-  -U, --ascii                     Use unicode blocks for progress bar
-  -z, --disable-progress-bar      Hide progress bar
-  -I, --ignore-missing-caption    Continue download when caption is missing
-  --leave / --no-leave            Keep progress bar leaves  [default: no-leave]
-  --caption / --no-caption        Download caption  [default: caption]
-  -O, --caption-only              Download caption only
-  -A, --auto-mode                 Download all remaining seasons when limit=1
-  -S, --simple                    Show percentage and bar only
-  -T, --test                      Test download without saving
-  -V, --verbose                   Show detailed output
-  -Q, --quiet                     Suppress interactive output
-  -Y, --yes                       Skip confirmation prompt
-  -h, --help                      Show this message and exit.
-```
-</details>
-
-
 
 #### Streaming via Media Players
 

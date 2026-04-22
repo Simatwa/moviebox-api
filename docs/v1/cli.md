@@ -1,13 +1,6 @@
-There are several ways of accessing commandline **version 1**:
+# moviebox-v1 CLI Reference
 
-```sh
-moviebox-v1 --help
-moviebox v1 --help
-python -m moviebox_api v1 --help
-python -m moviebox_api.v1 --help
-```
-
-For this tutorial we shall be sticking to `moviebox-v1`
+Search, download, and stream movies and TV series with subtitle support.
 
 !!! info "Environment Variable Prefix"
     All environment variable overrides use the prefix `MOVIEBOX_`. For example, the API host can be set via `MOVIEBOX_API_HOST`.
@@ -199,39 +192,6 @@ moviebox-v1 download-series [OPTIONS] TITLE
     | `group` | Organise episodes into per-season subdirectories | `Merlin/S1/Merlin S1E2.mp4` |
     | `struct` | Hierarchical directory structure | `Merlin (2009)/S1/E1.mp4` |
 
-
-#### Episode Organization Details
-
-**Group format** — episodes organized into season subfolders:
-
-```sh
-moviebox-v1 download-series Merlin -s 1 -e 1 --auto-mode --format group
-```
-
-```
-Merlin (2009)/
-  S1/
-    Merlin S1E1.mp4
-    Merlin S1E2.mp4
-  S2/
-    Merlin S2E1.mp4
-```
-
-**Struct format** — hierarchical directory structure using episode numbers as filenames:
-
-```sh
-moviebox-v1 download-series Merlin -s 1 -e 1 --auto-mode --format struct
-```
-
-```
-Merlin (2009)/
-  S1/
-    E1.mp4
-    E2.mp4
-  S2/
-    E1.mp4
-```
-
 #### Caption Options
 
 | Option | Type | Default | Description |
@@ -408,7 +368,7 @@ moviebox-v1 mirror-hosts
 moviebox-v1 mirror-hosts -J
 
 # Set host via environment variable
-export MOVIEBOX_API_HOST="https://h5.aoneroom.com"
+MOVIEBOX_API_HOST=https://mirror.example.com moviebox-v1 mirror-hosts
 ```
 
 ---
@@ -443,37 +403,47 @@ moviebox-v1 popular-search -J
 
 Both `download-movie` and `download-series` support customisable filename templates using placeholder variables.
 
-### Movie Templates (`-M`, `-C`)
+### Video File Placeholders (`-M`, `-L`)
 
-| Variable | Description |
-|----------|-------------|
-| `{title}` | Movie title |
+| Placeholder | Description |
+|-------------|-------------|
+| `{title}` | Title of the movie or series |
 | `{release_year}` | Release year |
+| `{release_date}` | Full release date |
+| `{resolution}` | Video resolution (e.g. `1080p`) |
 | `{ext}` | File extension |
-| `{lan}` | Caption language *(caption template only)* |
+| `{size_string}` | Human-readable file size |
+| `{season}` | Season number *(series only)* |
+| `{episode}` | Episode number *(series only)* |
+| `{episode_title}` | Episode title *(series only)* |
+| `{duration}` | Media duration |
+| `{codec_name}` | Video codec name |
 
-**Defaults:**
+### Caption File Placeholders (`-C`)
 
-```
-Movie:   {title} ({release_year}).{ext}
-Caption: {title} ({release_year}).{lan}.{ext}
-```
-
-### Series Templates (`-L`, `-C`)
-
-| Variable | Description |
-|----------|-------------|
-| `{title}` | Series title |
-| `{season}` | Season number (zero-padded) |
-| `{episode}` | Episode number (zero-padded) |
+| Placeholder | Description |
+|-------------|-------------|
+| `{title}` | Title of the movie or series |
+| `{release_year}` | Release year |
+| `{release_date}` | Full release date |
 | `{ext}` | File extension |
-| `{lan}` | Caption language *(caption template only)* |
+| `{size_string}` | Human-readable file size |
+| `{id}` | Caption track identifier |
+| `{lan}` | Caption language code (e.g. `en`) |
+| `{lan_name}` | Caption language full name (e.g. `English`) |
+| `{delay}` | Caption sync delay value |
+| `{season}` | Season number *(series only)* |
+| `{episode}` | Episode number *(series only)* |
+| `{episode_title}` | Episode title *(series only)* |
 
-**Defaults:**
+### Defaults
 
 ```
-Episode: {title} S{season}E{episode}.{ext}
-Caption: {title} S{season}E{episode}.{lan}.{ext}
+Movie file:    {title} ({release_year}).{ext}
+Movie caption: {title} ({release_year}).{lan}.{ext}
+
+Episode file:    {title} S{season}E{episode}.{ext}
+Episode caption: {title} S{season}E{episode}.{lan}.{ext}
 ```
 
 ---
