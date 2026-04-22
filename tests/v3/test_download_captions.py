@@ -43,7 +43,7 @@ async def test_download_caption_file(subject_id: str, language: str):
         resp = await caption_downloader_inst.run(
             caption_file=target_caption,
             video_file=target_video,
-            filename=downloadable_videos,
+            downloadable_files_detail=downloadable_videos,
             test=True,
         )
 

@@ -199,7 +199,7 @@ class PostListItemModel(BaseModel):
     postId: str
     stat: PostListItemStatModel
     status: int
-    subject: PostListItemSubjectModel
+    subject: PostListItemSubjectModel 
     subjectId: str
     subjectRate: int
     title: str

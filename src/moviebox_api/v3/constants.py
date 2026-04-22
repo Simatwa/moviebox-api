@@ -159,6 +159,8 @@ class TabID(StrEnum):
     TV_SERIES = "TV"
     MOVIE_TV = "MovieTV"
     SHORT_TV = "ShortTV"
+    FIGHTZONE = "FightZone"
+    SPORTS = "Sports"
 
 
 class TopicType(StrEnum):
