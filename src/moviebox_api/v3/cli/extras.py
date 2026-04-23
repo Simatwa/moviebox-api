@@ -261,7 +261,7 @@ def item_details_command(json: bool, verbose: int, quiet: bool, **item_kwargs):
             "season_numbers",
             "viewers",
             "subtitles",
-            "dubs"
+            "dubs",
             "detail_url",
             "is_cam",
             "seasons",
@@ -277,7 +277,7 @@ def item_details_command(json: bool, verbose: int, quiet: bool, **item_kwargs):
             season_string = (
                 f"Season: {season.se}, "
                 f"Episodes: {season.max_ep}, "
-                f"Resolutions: {[res.resolution for res in s_resolutions]}"
+                f"Resolutions: {[res.resolution.value for res in s_resolutions]}"
             )
             season_items.append(season_string)
 
