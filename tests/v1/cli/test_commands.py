@@ -73,7 +73,7 @@ def test_mirror_hosts():
         ["homepage-content --json"],
         ["homepage-content --banner"],
         ["homepage-content --banner --json"],
-        ["homepage-content --title 'Bollywood'"],
+        ["homepage-content --title 'Top Anime'"],
     ],
 )
 def test_homepage(command):
