@@ -343,7 +343,7 @@ class SearchV2(BaseContentProviderAndHelper):
                         item["title"] = sanitize_item_name(item_name)
                         target_items.append(item)
         else:
-            target_items = search_results
+            target_items = search_results["subjects"]
 
         contents["items"] = target_items
 
