@@ -51,9 +51,6 @@ async def test_search_contents_v2(query, subject_type):
             assert isinstance(content, RootSearchResultsModelV2)
 
 
-# TODO: test navigation
-
-
 @pytest.mark.asyncio
 async def test_search_contents_v2_all_items_are_subjects():
     async with MovieBoxHttpClient() as client_session:
@@ -65,3 +62,6 @@ async def test_search_contents_v2_all_items_are_subjects():
         assert all(
             hasattr(item, "subject_id") for item in modelled_contents.items
         )
+
+
+# TODO: test navigation
