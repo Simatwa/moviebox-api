@@ -125,6 +125,9 @@ class SubjectType(IntEnum):
     ANIME = 7  # "ShortTV"
     """Anime contents only"""
 
+    OTHER = 8
+    """Other contents"""
+
     UNKNOWN = 9
 
     # TODO: Research and update UNKNOWNS
