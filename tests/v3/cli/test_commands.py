@@ -77,7 +77,7 @@ def test_download(command):
         ["homepage-content --json"],
         ["homepage-content --banner"],
         ["homepage-content --banner --json"],
-        ["homepage-content --title 'Trending Now'"],
+        ["homepage-content --title 'Bollywood'"],  # NOTE: Keeps on channging 
     ],
 )
 def test_homepage(command):

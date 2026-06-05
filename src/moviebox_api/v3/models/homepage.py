@@ -140,6 +140,7 @@ class CustomDataModel(BaseModel):
     row_count: int = Field(alias="rowCount")
     items: list[CustomDataItemModel] | None
     hidden_title: bool = Field(alias="hiddenTitle")
+    show_line: int = Field(alias="showLine")
 
 
 class ItemsModel(BaseModel):
