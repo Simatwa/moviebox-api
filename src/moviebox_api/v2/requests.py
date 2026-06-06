@@ -1,11 +1,7 @@
 """For server interaction"""
 
 from httpx._config import DEFAULT_TIMEOUT_CONFIG
-from httpx._types import (
-    CookieTypes,
-    ProxyTypes,
-    TimeoutTypes,
-)
+from httpx._types import CookieTypes, HeaderTypes, ProxyTypes, TimeoutTypes
 from typing_extensions import deprecated
 
 import moviebox_api.v1.requests
@@ -21,7 +17,7 @@ class Session(moviebox_api.v1.requests.Session):
 
     def __init__(
         self,
-        headers: ProxyTypes | None = DOWNLOAD_REQUEST_HEADERS,
+        headers: HeaderTypes | None = DOWNLOAD_REQUEST_HEADERS,
         cookies: CookieTypes | None = request_cookies,
         timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
         proxy: ProxyTypes | None = None,
@@ -30,7 +26,7 @@ class Session(moviebox_api.v1.requests.Session):
         """Constructor for `Session`
 
         Args:
-            headers (ProxyTypes | None, optional): Http request headers. Defaults to DOWNLOAD_REQUEST_HEADERS.
+            headers (HeaderTypes  | None, optional): Http request headers. Defaults to DOWNLOAD_REQUEST_HEADERS.
             cookies (CookieTypes | None , optional): Http request cookies. Defaults to request_cookies.
             timeout (TimeoutTypes, optional): Http request timeout in seconds. Defaults to DEFAULT_TIMEOUT_CONFIG.
             proxy (ProxyTypes | None, optional): Http requests proxy. Defaults to None.
@@ -47,11 +43,11 @@ class Session(moviebox_api.v1.requests.Session):
         )
 
     async def ensure_cookies_are_assigned(self) -> bool:
-        await self._fetch_user_info()
+        if not self.user_info:
+            await self._fetch_user_info()
+
         return True
 
-    @deprecated("This method is only available to to V1 of moviebox_api.requests")
+    @deprecated("This method is only available in V1")
     async def _fetch_app_info(self) -> None:
-        raise NotImplementedError(
-            "This functionality is only available to V1 of moviebox_api.requests"
-        )
+        raise NotImplementedError("This method is only available in v1")

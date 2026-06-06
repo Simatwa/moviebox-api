@@ -22,6 +22,15 @@ install-in-termux:
 test:
 	uv run coverage run -m pytest -v
 
+test-v1:
+	uv run pytest tests/v1 -v
+
+test-v2:
+	uv run pytest tests/v2 -v
+
+test-v3:
+	uv run pytest tests/v3 -v
+
 # Target to generate coverage-badge
 coverage-badge:
 	coverage-badge -o assets/coverage.svg -f
