@@ -35,11 +35,11 @@ Content-Type: application/json
 Referer: https://videodownloader.site/
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:148.0) Gecko/20100101 Firefox/148.0
 x-client-info: {"timezone":"Africa/Nairobi"}
-x-request-lang: en
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjU4NTYxMDQ0MTIzMjE2NjEwMDgsImF0cCI6MywiZXh0IjoiMTc3OTUzNjA5NSIsImV4cCI6MTc4NzMxMjA5NSwiaWF0IjoxNzc5NTM1Nzk1fQ.-b1B6qcwSQ4dhW-xhGIsTuij9dS5L8xqN5VOkDlZs8Q
 
 {
     "keyword":"The Warriors",
-    "page":1,"perPage":30,
+    "page":1,"perPage":1,
     "subjectType":5
 }
 ```

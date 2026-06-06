@@ -47,6 +47,7 @@ class Session(moviebox_api.v1.requests.Session):
         )
 
     async def ensure_cookies_are_assigned(self) -> bool:
+        await self._fetch_user_info()
         return True
 
     @deprecated("This method is only available to to V1 of moviebox_api.requests")

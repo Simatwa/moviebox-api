@@ -2,22 +2,20 @@
 Provide ways to interact with Moviebox using `httpx`
 """
 
+import json
+
 import httpx
 from httpx import Response
 from httpx._config import DEFAULT_TIMEOUT_CONFIG
-from httpx._types import (
-    CookieTypes,
-    ProxyTypes,
-    TimeoutTypes,
-)
+from httpx._types import CookieTypes, HeaderTypes, ProxyTypes, TimeoutTypes
 
 from moviebox_api.v1.constants import DOWNLOAD_REQUEST_HEADERS
-from moviebox_api.v1.exceptions import EmptyResponseError
+from moviebox_api.v1.exceptions import EmptyResponseError, MissingAuthError
 from moviebox_api.v1.helpers import (
     get_absolute_url,
     process_api_response,
 )
-from moviebox_api.v1.models import MovieboxAppInfo
+from moviebox_api.v1.models import MovieboxAppInfo, UserInfo
 
 request_cookies = {}
 
@@ -33,9 +31,15 @@ class Session:
         r"/wefeed-h5-bff/app/get-latest-app-pkgs?app_name=moviebox"
     )
 
+    _user_info_endpoint = (
+        "https://h5-api.aoneroom.com/wefeed-h5api-bff/subject/search-suggest"
+    )
+    """Search suggestion responses are attached with auth bearer value as both 
+    cookie and custom headers"""
+
     def __init__(
         self,
-        headers: ProxyTypes | None = DOWNLOAD_REQUEST_HEADERS,
+        headers: HeaderTypes | None = DOWNLOAD_REQUEST_HEADERS,
         cookies: CookieTypes | None = request_cookies,
         timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,
         proxy: ProxyTypes | None = None,
@@ -44,7 +48,7 @@ class Session:
         """Constructor for `Session`
 
         Args:
-            headers (ProxyTypes | None, optional): Http request headers. Defaults to DOWNLOAD_REQUEST_HEADERS.
+            headers (HeaderTypes  | None, optional): Http request headers. Defaults to DOWNLOAD_REQUEST_HEADERS.
             cookies (CookieTypes | None , optional): Http request cookies. Defaults to request_cookies.
             timeout (TimeoutTypes, optional): Http request timeout in seconds. Defaults to DEFAULT_TIMEOUT_CONFIG.
             proxy (ProxyTypes | None, optional): Http requests proxy. Defaults to None.
@@ -65,6 +69,7 @@ class Session:
         )
 
         self.moviebox_app_info: MovieboxAppInfo | None = None
+        self.user_info: UserInfo | None = None
         self.__moviebox_app_info_fetched: bool = False
         """Used to track cookies assignment status"""
 
@@ -176,10 +181,14 @@ class Session:
         """
         if not self.__moviebox_app_info_fetched:
             # First run probably
+            await self._fetch_user_info()
             await self._fetch_app_info()
             self.__moviebox_app_info_fetched = True
 
-        return self._client.cookies.get("account") is not None
+        return (
+            self._client.cookies.get("account") is not None
+            and self._client.cookies.get("token") is not None
+        )
 
     async def _fetch_app_info(self) -> MovieboxAppInfo:
         """Fetches the moviebox app info but the main goal is to get the essential
@@ -199,5 +208,32 @@ class Session:
         self.moviebox_app_info = MovieboxAppInfo(**moviebox_app_info)
 
         return self.moviebox_app_info
+
+    async def _fetch_user_info(self) -> UserInfo:
+        """Fetches the user info but the main goal is to get the essential
+          cookies required for requests such as search & download to go through.
+
+        Returns:
+            UserInfo: Details about latest moviebox app
+        """
+        response = await self._client.post(
+            url=self._user_info_endpoint, json={"keyword": "avatar", "perPage": 0}
+        )
+        response.raise_for_status()
+
+        user_info = response.headers.get("x-user")
+
+        if not user_info:
+            raise MissingAuthError(
+                "App-info response misses x-user key in headers"
+            )
+
+        self.user_info = UserInfo(**json.loads(user_info))
+
+        new_auth = {"Authorization": f"Bearer {self.user_info.token}"}
+
+        self._client.headers.update(new_auth)
+
+        return self.user_info
 
     update_session_cookies = _fetch_app_info

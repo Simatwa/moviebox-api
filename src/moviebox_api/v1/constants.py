@@ -53,8 +53,10 @@ DEFAULT_REQUEST_HEADERS = {
     # TODO: Set this value dynamically.
     "Accept-Language": "en-US,en;q=0.5",
     "Accept": "application/json",
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 "
-    "Firefox/137.0",
+    "User-Agent": (
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
+        "(KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Firefox/137.0"
+    ),
     "Referer": HOST_URL,  # "https://moviebox.ng/movies/titanic-kGoZgiDdff?id=
     # 206379412718240440&scene&page_from=search_detail&type=%2Fmovie%2Fdetail",
     "Host": SELECTED_HOST,
@@ -75,7 +77,7 @@ DOWNLOAD_REQUEST_HEADERS = {
 """For media and subtitle files download requests"""
 
 
-DownloadQualitiesType: t.TypeAlias = t.Literal[
+type DownloadQualitiesType = t.Literal[
     "WORST", "BEST", "360P", "480P", "720P", "1080P"
 ]  # TODO: Add more qualities
 

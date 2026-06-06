@@ -19,6 +19,14 @@ from moviebox_api.v1.helpers import get_file_extension
 
 
 @dataclass(frozen=True)
+class UserInfo:
+    token: str
+    userId: str
+    userType: int
+    appType: int
+
+
+@dataclass(frozen=True)
 class MovieboxAppInfo:
     """This data is fetched when requesting for cookies,
     so I just find it important that I expose it in the package
@@ -72,7 +80,7 @@ class ContentSubjectModel(BaseModel):
     releaseDate: date
     duration: int
     genre: list[str]
-    cover: ContentImageModel
+    cover: ContentImageModel | None
     countryName: str
     imdbRatingValue: float
     # subtitles : str

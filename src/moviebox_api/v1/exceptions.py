@@ -47,3 +47,7 @@ class ZeroCaptionFileError(BaseMovieboxException):
 class ZeroMediaFileError(BaseMovieboxException):
     """Raised when trying to access a downloadable media file but the list
     is empty"""
+
+
+class MissingAuthError(BaseMovieboxException):
+    """Raised when target response lacks x-user key in headers"""
