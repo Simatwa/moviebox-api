@@ -84,13 +84,13 @@ theme:
 
     - scheme: default
       toggle:
-        icon: material/lightbulb 
+        icon: material/weather-night 
         name: Switch to dark mode
       primary: teal
 
     - scheme: slate
       toggle:
-        icon: material/lightbulb-outline
+        icon: material/weather-sunny
         name: Switch to light mode
       primary: teal
 

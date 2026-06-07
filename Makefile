@@ -46,14 +46,14 @@ publish:
 
 
 serve-docs:
-	 mkdocs serve -w docs --livereload
+	zensical serve -a 127.0.0.1:8000
 
 netlify-build-docs:
-	pip install mkdocs-material
-	mkdocs build
+	pip install zensical
+	zensical build
 
 build-docs:
-	uv run mkdocs build
+	uv run zensical build
 
 serve-build-docs:
 	uv run python -m http.server -d site 8080
