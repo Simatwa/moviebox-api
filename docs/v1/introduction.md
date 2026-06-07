@@ -37,5 +37,3 @@ Behind the scenes, this script does the following:
     --8<-- "v1/examples/movie/download_with_progress_callback_sync.py"
     ```
 
-!!! question "Why TV series lack **Auto**magic"
-    This is a deliberate choice by the [developers](https://github.com/Simatwa). The current focus is more on implementing new features rather than adding miscellaneous ones. It may be implemented in the future, or you could **[submit a PR](https://github.com/Simatwa/moviebox-api/pulls)**.

@@ -54,10 +54,12 @@ packages = ["src/moviebox_api"]
 dev = [
     "coverage>=7.10.4",
     "coverage-badge>=1.1.2",
-    "mkdocs-material>=9.7.6",
     "pytest>=8.4.1",
     "pytest-asyncio>=1.0.0",
     "ruff>=0.12.8",
+]
+docs = [
+    "zensical>=0.0.44",
 ]
 
 [tool.ruff]
@@ -79,3 +81,8 @@ ignore = [
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
+
+[tool.uv.workspace]
+members = [
+    "test-1",
+]
