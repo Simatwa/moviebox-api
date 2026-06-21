@@ -4,11 +4,13 @@ Generate models from httpx request responses.
 Also provides object mapping support to specific extracted item details
 """
 
+from collections.abc import AsyncIterator
+
 from typing_extensions import deprecated
 
 import moviebox_api.v1.core
 from moviebox_api.v1.helpers import assert_instance
-from moviebox_api.v2._bases import BaseItemDetails
+from moviebox_api.v2._bases import BaseContentProviderAndHelper, BaseItemDetails
 from moviebox_api.v2.constants import SINGLE_ITEM_SUBJECT_TYPES, SubjectType
 from moviebox_api.v2.exceptions import (
     ExhaustedSearchResultsError,
@@ -22,6 +24,7 @@ from moviebox_api.v2.models import (
     SpecificItemDetailsModel,
 )
 from moviebox_api.v2.requests import Session
+from moviebox_api.v2.types import FilterParams
 
 
 class Homepage(moviebox_api.v1.core.Homepage):
@@ -105,6 +108,155 @@ class Search(moviebox_api.v1.core.Search):
                 "Current page is the first one try navigating to the next "
                 "one instead."
             )
+
+
+class SearchWithFilter(Search):
+    """Perform search using filters explicitly - no query string"""
+
+    _url = get_absolute_url("/wefeed-h5api-bff/subject/filter")
+
+    per_page_limit: int = 50
+
+    def __init__(
+        self,
+        subject_type: SubjectType.MOVIES | SubjectType.TV_SERIES,
+        session: Session | None = None,
+        filter_params: FilterParams | None = None,
+        page: int = 1,
+        per_page: int = 24,
+    ):
+        """Constructor for :class:`SearchWithFilter`
+
+        Args:
+            subject_type (SubjectType.MOVIES | SubjectType.TV_SERIES)
+            session (Session, optional): Moviebox-api httpx requests session
+            page (int, optional): Target page number. Defaults to 1.
+            per_page (int, optional): Maximum items per page. Defaults to 24.
+            filter_params (:class:`FilterParams`, optional): Defaults to 
+                FilterParams()
+        """
+        self.session = session or Session()
+        self._subject_type = subject_type
+        self._channel_id: int = None
+        self._filter_params = filter_params or FilterParams()
+        self._page = page
+        self._per_page = per_page
+        # for __repr__ consumption
+        self._query = filter_params
+
+    def __setattr__(self, name, value):
+        match name:
+            case "_subject_type":
+                assert value in (SubjectType.MOVIES, SubjectType.TV_SERIES)
+                self._channel_id = 1 if value is SubjectType.MOVIES else 2
+
+            case "_filter_params":
+                assert_instance(value, FilterParams)
+
+            case "session":
+                assert_instance(value, Session)
+
+            case "_per_page":
+                assert type(value) is int
+                assert value <= self.per_page_limit, (
+                    f"Items per page should not exceed {self.per_page_limit}"
+                )
+
+            case "_page":
+                assert type(value) is int
+
+            case _:
+                pass
+
+        return super().__setattr__(name, value)
+
+    def _create_payload(self) -> dict[str, str | int]:
+        """Creates payload from the parameters declared.
+
+        Returns:
+            dict[str, str|int]: Ready payload
+        """
+
+        filter_params = self._filter_params.model_dump(mode="json")
+
+        filter_params.update({
+            "page": self._page,
+            "perPage": self._per_page,
+            "channelId": self._channel_id,
+        })
+        return filter_params
+
+    def next_page(self, content: SearchResultsModel) -> "SearchWithFilter":
+        """Navigate to the search results of the next page.
+
+        Args:
+            content (SearchResultsModel): Modelled version of search results
+
+        Returns:
+            :class:`SearchWithFilter`
+        """
+        assert_instance(content, SearchResultsModel, "content")
+
+        if content.pager.hasMore:
+            return SearchWithFilter(
+                subject_type=self._subject_type,
+                session=self.session,
+                page=content.pager.nextPage,
+                per_page=self._per_page,
+                filter_params=self._filter_params,
+            )
+        else:
+            raise ExhaustedSearchResultsError(
+                content.pager,
+                "You have already reached the last page of the search results.",
+            )
+
+    def previous_page(self, content: SearchResultsModel) -> "SearchWithFilter":
+        """Navigate to the search results of the previous page.
+
+        - Useful when the currrent page is greater than  1.
+
+        Args:
+            content (SearchResultsModel): Modelled version of search results
+
+        Returns:
+            :class:`SearchWithFilter`
+        """
+        assert_instance(content, SearchResultsModel, "content")
+
+        if content.pager.page >= 2:
+            return SearchWithFilter(
+                subject_type=self._subject_type,
+                session=self.session,
+                filter_params=self._filter_params,
+                page=content.pager.page - 1,
+                per_page=self._per_page,
+            )
+        else:
+            raise MovieboxApiException(
+                "Unable to navigate to previous page. "
+                "Current page is the first one try navigating to the next "
+                "one instead."
+            )
+
+    async def get_content_model_all(
+        self,
+    ) -> AsyncIterator[SearchResultsModel]:
+
+        navigating = True
+
+        cursor = self
+
+        while navigating:
+            content_model = await cursor.get_content_model()
+
+            yield content_model
+
+            if content_model.pager.hasMore:
+                cursor = cursor.next_page(content_model)
+
+            else:
+                navigating = False
 
 
 class ItemDetails(BaseItemDetails):
