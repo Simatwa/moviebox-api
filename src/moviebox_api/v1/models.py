@@ -196,12 +196,15 @@ class SearchResultsItem(ContentSubjectModel):
     """Specific result info"""
 
     subtitles: list[str]
-    ops: OPS
+    ops: OPS | None = None
     hasResource: bool
     imdbRatingCount: int | None = None  # None for TrendingResults
 
     @field_validator("ops", mode="before")
     def validate_ops(value: str) -> dict:
+        if not bool(value):
+            return None
+
         return loads(value)
 
     @field_validator("subtitles", mode="before")

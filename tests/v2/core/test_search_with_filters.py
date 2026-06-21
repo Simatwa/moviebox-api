@@ -39,10 +39,41 @@ async def test_get_content_and_model(
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    argnames=["subject_type", "filter_params", "page_number", "per_page"],
+    argvalues=(
+        [SubjectType.ANIME, FilterParams(), 1, 2],
+        [SubjectType.ANIME, FilterParams(country="United Kingdom"), 2, 2],
+        [SubjectType.ANIME, FilterParams(sort="Hottest"), 3, 2],
+        [SubjectType.ANIME, FilterParams(genre="Documentary"), 6, 2],
+    ),
+)
+async def test_get_content_and_model_anime(
+    subject_type: SubjectType, filter_params: FilterParams, page_number, per_page
+):
+    search: SearchWithFilter = SearchWithFilter(
+        subject_type=subject_type,
+        filter_params=filter_params,
+        page=page_number,
+        per_page=per_page,
+    )
+
+    contents = await search.get_content()
+    assert type(contents) is dict
+    modelled_contents = await search.get_content_model()
+
+    assert isinstance(modelled_contents, SearchResultsModel)
+
+    for item in modelled_contents.items:
+        assert item.subjectType == subject_type
+
+
+@pytest.mark.asyncio
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     argnames=["subject_type", "filter_params", "page_number", "per_page"],
     argvalues=(
+        [SubjectType.ANIME, FilterParams(), 2, 2],
         [SubjectType.MOVIES, FilterParams(country="Kenya"), 2, 2],
         [SubjectType.TV_SERIES, FilterParams(sort="Latest"), 4, 2],
         [SubjectType.MOVIES, FilterParams(genre="Action"), 5, 2],
@@ -73,6 +104,7 @@ async def test_next_page_navigation(
 @pytest.mark.parametrize(
     argnames=["subject_type", "filter_params", "page_number", "per_page"],
     argvalues=(
+        [SubjectType.ANIME, FilterParams(), 3, 2],
         [SubjectType.MOVIES, FilterParams(sort="Rating"), 4, 2],
         [SubjectType.TV_SERIES, FilterParams(language="English dub"), 4, 2],
         [SubjectType.MOVIES, FilterParams(country="Germany"), 3, 2],
@@ -109,7 +141,7 @@ async def test_previous_page_navigation(
         [SubjectType.TV_SERIES, FilterParams(year="2020"), 5, 2],
     ),
 )
-async def test_endless_navigation(
+async def test_continous_navigation(
     subject_type: SubjectType, filter_params: FilterParams, page_number, per_page
 ):
     search: SearchWithFilter = SearchWithFilter(

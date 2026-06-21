@@ -59,12 +59,14 @@ class Homepage(BaseContentProviderAndHelper):
 
     _url = get_absolute_url(r"/wefeed-h5-bff/web/home")
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session = None):
         """Constructor `Homepage`
 
         Args:
             session (Session): MovieboxAPI request session
         """
+        session = session or Session()
+        
         assert_instance(session, Session, "session")
         self._session = session
 

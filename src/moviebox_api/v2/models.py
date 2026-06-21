@@ -18,6 +18,7 @@ from moviebox_api.v1.models import (
     PlatformsModel,
     SearchResultsItem as SearchResultsItemV1,
     SearchResultsModel as SearchResultsModelV1,
+    TrendingResultsModel,
 )
 from moviebox_api.v2.helpers import get_absolute_url
 
@@ -46,15 +47,23 @@ class ContentCategoryModelV2(ContentCategoryModel):
     banner: ContentCategoryBannerModelV2 | None = None
     filters: list[Any]
     customData: Any
-    genreTopId: str
+    genreTopId: str | None = None
     detailPath: str
+
+    @field_validator("genreTopId", mode="before")
+    def validate_genre_top_id(value):
+        return None if not bool(value) else value
 
 
 class HomepageContentModel(BaseModel):
     """homepage"""
 
-    platformList: list[PlatformsModel]
+    platformList: list[PlatformsModel] | None = None
     operatingList: list[ContentCategoryModelV2]
+
+
+class RealContentCategoryModel(TrendingResultsModel):
+    title: str
 
 
 class OPS(BaseModel):

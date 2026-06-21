@@ -57,3 +57,9 @@ SINGLE_ITEM_SUBJECT_TYPES = {
     SubjectType.ANIME,
     SubjectType.EDUCATION,
 }
+
+SUBJECT_TYPE_CHANNEL_ID_MAP = {
+    SubjectType.MOVIES: 1,
+    SubjectType.TV_SERIES: 2,
+    SubjectType.ANIME: 1006,
+}
