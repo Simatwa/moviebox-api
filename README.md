@@ -376,6 +376,11 @@ moviebox v1 mirror-hosts
 1. Movies - [fzmovies-api](https://github.com/Simatwa/fzmovies-api)
 2. TV-Series - [fzseries-api](https://github.com/Simatwa/fzseries-api)
 
+
+## Mirror Repositories
+
+- [Codeberg](https://codeberg.org/Simatwa/moviebox-api)
+
 ## Contributors
 
 <div align="center">
@@ -385,7 +390,6 @@ moviebox v1 mirror-hosts
 </a>
 
 </div>
-
 
 <h2 align="center"> Disclaimer </h2>
 

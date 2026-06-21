@@ -383,7 +383,6 @@ dev = [
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "ruff" },
-    { name = "zensical" },
 ]
 docs = [
     { name = "zensical" },
@@ -407,7 +406,6 @@ dev = [
     { name = "pytest", specifier = ">=8.4.1" },
     { name = "pytest-asyncio", specifier = ">=1.0.0" },
     { name = "ruff", specifier = ">=0.12.8" },
-    { name = "zensical", specifier = ">=0.0.44" },
 ]
 docs = [{ name = "zensical", specifier = ">=0.0.44" }]
 
