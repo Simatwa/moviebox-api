@@ -14,10 +14,12 @@ MOVIE_KEYWORD = query
 
 TV_SERIES_KEYWORD = "Merlin"
 
-TEST_MOVIE_PAGE_URL = "/detail/titanic-QOuOQeUejq8?id=7070560136179630776"
+TEST_MOVIE_PAGE_URL = (
+    "/detail/in-the-grey-wYwNECerQ67?id=5967767680059949152"
+)
 
 TEST_TV_SERIES_PAGE_URL = (
-    "/detail/28-years-later-the-bone-temple-elp7hxPnHE?id=550956010823997056"
+    "/detail/power-book-iii-raising-kanan-u5VE8tVK705?id=4198190468661924632"
 )
 
 
