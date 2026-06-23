@@ -1,7 +1,7 @@
 import typing as t
 
 from moviebox_api.v1._bases import BaseContentProviderAndHelper
-from moviebox_api.v1.helpers import assert_instance
+from moviebox_api.v1.helpers import assert_instance, sanitize_item_name
 from moviebox_api.v2.exceptions import InvalidDetailPathError
 from moviebox_api.v2.helpers import get_absolute_url, validate_detail_path
 from moviebox_api.v2.models import SpecificItemDetailsModel
@@ -35,6 +35,9 @@ class BaseItemDetails(BaseContentProviderAndHelper):
         content = await self._session.get_from_api(
             self.api_endpoint, params={"detailPath": detail_path}
         )
+        current_name = content["subject"]["title"]
+
+        content["subject"]["title"] = sanitize_item_name(current_name)
         return content
 
     async def get_content_model(

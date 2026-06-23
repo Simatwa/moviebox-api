@@ -66,7 +66,7 @@ class Homepage(BaseContentProviderAndHelper):
             session (Session): MovieboxAPI request session
         """
         session = session or Session()
-        
+
         assert_instance(session, Session, "session")
         self._session = session
 

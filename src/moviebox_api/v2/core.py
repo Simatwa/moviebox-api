@@ -59,7 +59,7 @@ class ContentCategory(BaseContentProviderAndHelper):
         page: int = 1,
         per_page=20,
     ):
-        self.session = session
+        self.session = session or Session()
         self._genre_top_id = genre_top_id
         self._page = page
         self._per_page = per_page
