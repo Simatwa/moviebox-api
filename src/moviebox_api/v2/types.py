@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 type Genre = Literal[
     "All",
@@ -116,6 +116,8 @@ type SortBy = Literal[
 
 
 class FilterParams(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     genre: Genre = "All"
     country: Country = "All"
     year: Year = "All"
