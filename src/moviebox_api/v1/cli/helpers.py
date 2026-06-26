@@ -10,7 +10,6 @@ from pydantic import ValidationError
 from throttlebuster import DownloadedFile, DownloadMode
 
 from moviebox_api import __repo__
-from moviebox_api.v1 import logger
 from moviebox_api.v1.constants import (
     DOWNLOAD_REQUEST_HEADERS,
     ENVIRONMENT_HOST_KEY,
@@ -23,6 +22,7 @@ from moviebox_api.v1.exceptions import (
     ZeroCaptionFileError,
     ZeroSearchResultsError,
 )
+from moviebox_api.v1.logger import logger
 from moviebox_api.v1.models import (
     CaptionFileMetadata,
     DownloadableFilesMetadata,
@@ -102,7 +102,7 @@ async def perform_search_and_get_item(
         next_search: Search = search.next_page(search_results)
         print(f" Loading next page ({next_search._page}) ...", end="\r")
 
-        logging.info(
+        logger.info(
             f"Navigating to the search results of page number {next_search._page}"
         )
         return await perform_search_and_get_item(
@@ -171,7 +171,7 @@ def prepare_start(
 ) -> None:
     """Set up some stuff for better CLI usage such as:
 
-    - Set higher logging level for some packages.
+    - Set higher logger level for some packages.
     ...
 
     """
@@ -232,7 +232,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
     exit_code = 1
 
     if isinstance(exception, ConnectTimeout):
-        logging.info(
+        logger.info(
             "Internet connection request has timed out. Check your connection"
             " and retry."
         )
@@ -240,7 +240,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
     elif isinstance(exception, HTTPStatusError):
         match exception.response.status_code:
             case 403:
-                logging.info(
+                logger.info(
                     "Looks like you're in a region that Moviebox doesn't offer"
                     " their services to. "
                     "Use a proxy or a VPN from a different geographical location"
@@ -248,14 +248,14 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
                 )
 
     elif isinstance(exception, ValidationError):
-        logging.info(
+        logger.info(
             "Looks like there are structural changes in the server response.\n"
             f"Report this issue at {__repo__}/issues/new"
         )
 
     if "404 Domain" in exception_msg:
         example_host = random.choice(MIRROR_HOSTS)
-        logging.info(
+        logger.info(
             'Run "moviebox-v1 mirror-hosts" command to check available mirror'
             " hosts"
             " and "
@@ -276,7 +276,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
             ZeroSearchResultsError,
         ),
     ):
-        logging.info(
+        logger.info(
             "Incase the error persist then feel free to submit the issue at"
             f" {__repo__}/issues/new"
         )
@@ -304,9 +304,9 @@ def stream_video_via_mpv(
 
         mpv_cmd.append(str(url))
 
-        logging.info("Launching MPV with required headers and subtitles...")
+        logger.info("Launching MPV with required headers and subtitles...")
 
-        logging.debug(f"MPV launch commands :  {' '.join(mpv_cmd)}")
+        logger.debug(f"MPV launch commands :  {' '.join(mpv_cmd)}")
 
         subprocess.run(mpv_cmd)
 
@@ -344,9 +344,9 @@ def stream_video_via_vlc(
 
         mpv_cmd.append(str(url))
 
-        logging.info("Launching VLC with required headers and subtitles...")
+        logger.info("Launching VLC with required headers and subtitles...")
 
-        logging.debug(f"VLC launch commands :  {' '.join(mpv_cmd)}")
+        logger.debug(f"VLC launch commands :  {' '.join(mpv_cmd)}")
 
         subprocess.run(mpv_cmd)
 

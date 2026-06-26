@@ -17,7 +17,3 @@ content coverage, and app-exclusive endpoints not available via the H5 surfaces.
 - Advantages over v1/v2: Wider endpoint coverage; app-grade API access;
 multi-host failover support
 """
-
-import logging
-
-logger = logging.getLogger(__name__)

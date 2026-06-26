@@ -14,24 +14,20 @@ JSON endpoints.
 - Limitations: Susceptible to markup changes; partial API coverage only
 """
 
-import logging
-
-logger = logging.getLogger(__name__)
-
-from throttlebuster import (  # noqa: E402
+from throttlebuster import (
     DownloadedFile,
     DownloadMode,
     DownloadTracker,
 )
 
-from moviebox_api.v1.constants import (  # noqa: E402
+from moviebox_api.v1.constants import (
     DOWNLOAD_QUALITIES,
     HOST_URL,
     MIRROR_HOSTS,
     SELECTED_HOST,
     SubjectType,
 )
-from moviebox_api.v1.core import (  # noqa: E402
+from moviebox_api.v1.core import (
     Homepage,
     HotMoviesAndTVSeries,
     MovieDetails,
@@ -42,15 +38,15 @@ from moviebox_api.v1.core import (  # noqa: E402
     Trending,
     TVSeriesDetails,
 )
-from moviebox_api.v1.download import (  # noqa: E402
+from moviebox_api.v1.download import (
     CaptionFileDownloader,
     DownloadableMovieFilesDetail,
     DownloadableTVSeriesFilesDetail,
     MediaFileDownloader,
     resolve_media_file_to_be_downloaded,
 )
-from moviebox_api.v1.extras.auto import MovieAuto  # noqa: E402
-from moviebox_api.v1.requests import Session  # noqa: E402
+from moviebox_api.v1.extras.auto import MovieAuto
+from moviebox_api.v1.requests import Session
 
 __all__ = [
     "Search",

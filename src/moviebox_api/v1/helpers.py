@@ -3,7 +3,6 @@ This module provide functions for performing common and frequently required task
 across the package.
 """
 
-import json
 import re
 import typing as t
 from urllib.parse import urljoin
@@ -11,9 +10,9 @@ from urllib.parse import urljoin
 import httpx
 
 from moviebox_api.utils import get_event_loop
-from moviebox_api.v1 import logger
 from moviebox_api.v1.constants import HOST_URL, ITEM_DETAILS_PATH
 from moviebox_api.v1.exceptions import UnsuccessfulResponseError
+from moviebox_api.v1.logger import logger
 
 FILE_EXT_PATTERN = re.compile(r".+\.(\w+)\?.+")
 

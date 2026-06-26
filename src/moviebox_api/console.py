@@ -10,6 +10,8 @@ from moviebox_api.v1.cli.interface import get_commands_map
 from moviebox_api.v2.cli.interface import get_commands_map as get_commmands_map_2
 from moviebox_api.v3.cli.interface import get_commands_map as get_commmands_map_3
 
+logger = logging.getLogger(__name__)
+
 
 @click.group()
 @click.version_option(package_name="moviebox-api")
@@ -51,10 +53,10 @@ def cli_entry():
         DEBUG = os.getenv("DEBUG", "0") == "1"
 
         if DEBUG:
-            logging.exception(e)
+            logger.exception(e)
         else:
             if bool(exception_msg):
-                logging.error(exception_msg)
+                logger.error(exception_msg)
             sys.exit(show_any_help(e, exception_msg))
 
     sys.exit(1)

@@ -13,7 +13,7 @@ from throttlebuster.constants import (
     DownloadMode,
 )
 
-from moviebox_api.v1 import logger
+from moviebox_api.v1.logger import logger
 
 """asyncio event loop"""
 

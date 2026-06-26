@@ -13,7 +13,6 @@ from moviebox_api.v1.cli.helpers import (
     stream_video_via_mpv,
     stream_video_via_vlc,
 )
-from moviebox_api.v3 import logger
 from moviebox_api.v3.constants import (
     SubjectType,
 )
@@ -24,6 +23,7 @@ from moviebox_api.v3.exceptions import (
     ZeroSearchResultsError,
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
+from moviebox_api.v3.logger import logger
 from moviebox_api.v3.models.downloadables import (
     CaptionFileMetadata,
     RootCaptionFileMetadata,
@@ -108,7 +108,7 @@ async def perform_search_and_get_item(
         next_search: Search = search.next_page(search_results)
         print(f" Loading next page ({next_search._page}) ...", end="\r")
 
-        logging.info(
+        logger.info(
             f"Navigating to the search results of page number {next_search._page}"
         )
         return await perform_search_and_get_item(
@@ -181,7 +181,7 @@ def prepare_start(
 ) -> None:
     """Set up some stuff for better CLI usage such as:
 
-    - Set higher logging level for some packages.
+    - Set higher logger level for some packages.
     ...
 
     """
@@ -206,7 +206,7 @@ def prepare_start(
             else logging.INFO
         ),
     )
-    # logging.info(f"Using host url - {host_url}")
+    # logger.info(f"Using host url - {host_url}")
 
     packages = ("httpx",)
 
@@ -242,7 +242,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
     exit_code = 1
 
     if isinstance(exception, ConnectTimeout):
-        logging.info(
+        logger.info(
             "Internet connection request has timed out. Check your connection"
             " and retry."
         )
@@ -250,7 +250,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
     elif isinstance(exception, HTTPStatusError):
         match exception.response.status_code:
             case 403:
-                logging.info(
+                logger.info(
                     "Looks like you're in a region that Moviebox doesn't offer"
                     " their services to. "
                     "Use a proxy or a VPN from a different geographical location"
@@ -258,7 +258,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
                 )
 
     elif isinstance(exception, ValidationError):
-        logging.info(
+        logger.info(
             "Looks like there are structural changes in the server response.\n"
             f"Report this issue at {__repo__}/issues/new"
         )
@@ -273,7 +273,7 @@ def show_any_help(exception: Exception, exception_msg: str) -> int:
             ZeroSearchResultsError,
         ),
     ):
-        logging.info(
+        logger.info(
             "Incase the error persist then feel free to submit the issue at"
             f" {__repo__}/issues/new"
         )

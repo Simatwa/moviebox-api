@@ -9,7 +9,6 @@ automatically.
 from __future__ import annotations
 
 import json
-import logging
 from json import dumps
 from typing import Any
 
@@ -26,9 +25,8 @@ from moviebox_api.v3.helpers import (
     combine_url_path_with_params,
     process_api_response,
 )
+from moviebox_api.v3.logger import logger
 from moviebox_api.v3.urls import DEFAULT_API_BASE, HOST_POOL
-
-logger = logging.getLogger(__name__)
 
 
 class MovieBoxHttpClient:

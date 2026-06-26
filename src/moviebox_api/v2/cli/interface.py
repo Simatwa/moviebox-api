@@ -1,6 +1,5 @@
 """Contains the actual console commands"""
 
-import logging
 import os
 import sys
 from pathlib import Path
@@ -38,6 +37,7 @@ from moviebox_api.v2.download import (
     CaptionFileDownloader,
     MediaFileDownloader,
 )
+from moviebox_api.v2.logger import logger
 
 __all__ = [
     "download_movie_command",
@@ -630,10 +630,10 @@ def main():
         exception_msg = str({e.args[1] if e.args and len(e.args) > 1 else e})
 
         if DEBUG:
-            logging.exception(e)
+            logger.exception(e)
         else:
             if bool(exception_msg):
-                logging.error(exception_msg)
+                logger.error(exception_msg)
             sys.exit(show_any_help(e, exception_msg))
 
     sys.exit(1)

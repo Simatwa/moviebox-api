@@ -3,7 +3,6 @@
 - Supports both API versions - v1, v2
 """
 
-import logging
 import tempfile
 from pathlib import Path
 from typing import Literal
@@ -45,6 +44,7 @@ from moviebox_api.v3.helpers import (
     get_event_loop,
 )
 from moviebox_api.v3.http_client import MovieBoxHttpClient
+from moviebox_api.v3.logger import logger
 from moviebox_api.v3.models.downloadables import (
     RootDownloadableFilesDetailModel,
     VideoFileMetadata,
@@ -523,7 +523,7 @@ class Downloader:
             limit=-1 if auto_mode else limit,
         )
 
-        logging.info(
+        logger.info(
             f"Process overview - total "
             f"episodes to be processed: {download_request_params.total_episodes}"
         )

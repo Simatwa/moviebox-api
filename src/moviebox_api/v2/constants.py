@@ -3,7 +3,7 @@
 import os
 
 from moviebox_api.v1.constants import SubjectType
-from moviebox_api.v2 import logger
+from moviebox_api.v2.logger import logger
 
 """asyncio event loop"""
 

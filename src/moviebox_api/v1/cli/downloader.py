@@ -2,8 +2,6 @@
 
 - Supports both API versions - v1, v2
 """
-
-import logging
 import tempfile
 from pathlib import Path
 from typing import Literal
@@ -40,6 +38,7 @@ from moviebox_api.v1.helpers import (
     assert_membership,
     get_event_loop,
 )
+from moviebox_api.v1.logger import logger
 from moviebox_api.v1.models import SearchResultsItem
 from moviebox_api.v2.core import TVSeriesDetails as TVSeriesDetailsV2
 from moviebox_api.v2.download import (
@@ -598,7 +597,7 @@ class Downloader:
 
             if limit != 1:
                 if limit > total_episodes:
-                    logging.warning(
+                    logger.warning(
                         f"You have set total episodes limit to {limit} but only "
                         f"{total_episodes} "
                         f"episodes are available starting from the offset "
@@ -610,7 +609,7 @@ class Downloader:
             else:
                 limit = total_episodes
 
-            logging.info(
+            logger.info(
                 f"Process overview - Seasons: {len(target_seasons)}, total "
                 f"episodes: {total_episodes}, "
                 f"episodes download limit: {limit} "
@@ -659,7 +658,7 @@ class Downloader:
             available_episodes = target_season.maxEp - (episode - 1)  # offset
 
             if limit > available_episodes:
-                logging.warning(
+                logger.warning(
                     f"You have set episodes limit to {limit} but only"
                     f"{available_episodes} "
                     f"episodes are available for season {season}, starting from "
@@ -668,7 +667,7 @@ class Downloader:
                 )
                 limit = available_episodes
 
-            logging.info(
+            logger.info(
                 f"Season {target_season.se} details - Total episodes: "
                 f"{target_season.maxEp}, "
                 f"episodes download limit: {limit}"
