@@ -2,10 +2,10 @@
 ### v1 - Web Scraper + Partial REST-API Client
 **Endpoint:** `h5.aoneroom.com`
 
-Operates against the H5 frontend of Moviebox. 
-Combines HTML scraping with partial REST-API interaction, making it 
-suitable for content discovery where structured API access is limited or 
-inconsistent. Scraping logic handles page-rendered data not exposed via 
+Operates against the H5 frontend of Moviebox.
+Combines HTML scraping with partial REST-API interaction, making it
+suitable for content discovery where structured API access is limited or
+inconsistent. Scraping logic handles page-rendered data not exposed via
 JSON endpoints.
 
 - Approach: Hybrid (DOM scraping + REST)

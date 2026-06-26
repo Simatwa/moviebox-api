@@ -18,7 +18,7 @@ from moviebox_api.v3.constants import (
 )
 
 # from moviebox_api.v3.models.downloadables import (
-# RootDownloadableFilesDetailModel 
+# RootDownloadableFilesDetailModel
 # )
 
 
@@ -61,19 +61,19 @@ class BaseFileDownloaderAndHelper(FileDownloaderHelper, BaseFileDownloader):
         """Constructor for `BaseFileDownloaderAndHelper`
 
         Args:
-            dir (Path | str, optional): Directory for saving downloaded files to. 
+            dir (Path | str, optional): Directory for saving downloaded files to.
                 Defaults to CURRENT_WORKING_DIR.
             chunk_size (int, optional): Streaming download chunk size in kilobytes
                 . Defaults to DEFAULT_CHUNK_SIZE.
-            tasks (int, optional): Number of tasks to carry out the download. 
+            tasks (int, optional): Number of tasks to carry out the download.
                 Defaults to DEFAULT_TASKS.
-            part_dir (Path | str, optional): Directory for temporarily saving 
+            part_dir (Path | str, optional): Directory for temporarily saving
                 downloaded file-parts to. Defaults to CURRENT_WORKING_DIR.
             part_extension (str, optional): Filename extension for download parts
                 . Defaults to DOWNLOAD_PART_EXTENSION.
             merge_buffer_size (int|None, optional). Buffer size for merging the
                  separated files in kilobytes. Defaults to chunk_size.
-            group_series(bool, optional): Create directory for a series & group 
+            group_series(bool, optional): Create directory for a series & group
                 episodes based on season number. Defaults to False.
 
         httpx_kwargs : Keyword arguments for `httpx.AsyncClient`

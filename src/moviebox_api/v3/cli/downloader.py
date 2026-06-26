@@ -578,9 +578,9 @@ class Downloader:
                 if not response_jar.get(video_file.season):
                     response_jar[video_file.season] = []
 
-                response_jar[video_file.season].append({
-                    video_file.episode: current_episode_details
-                })
+                response_jar[video_file.season].append(
+                    {video_file.episode: current_episode_details}
+                )
                 # TODO: add caption_file with key caption
 
         return response_jar

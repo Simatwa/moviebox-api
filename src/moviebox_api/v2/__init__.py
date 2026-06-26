@@ -2,12 +2,12 @@
 ### v2 - Pure REST-API Client
 **Endpoint:** `h5-api.aoneroom.com`
 
-Targets the dedicated REST-API backend powering the H5 web interfaces 
+Targets the dedicated REST-API backend powering the H5 web interfaces
 - moviebox.ph, moviebox.pk, videodownloader.site etc (https://github.com/Simatwa
-/moviebox-api/issues/27). 
+/moviebox-api/issues/27).
 
-Eliminates scraping entirely in favor of structured 
-JSON request/response cycles. 
+Eliminates scraping entirely in favor of structured
+JSON request/response cycles.
 
 Provides more stable and predictable data access compared to v1.
 
@@ -16,7 +16,6 @@ Provides more stable and predictable data access compared to v1.
 - Use case: Structured content queries, metadata retrieval, stream resolution
 - Advantages over v1: No markup dependency; cleaner response parsing; more reliable
 """
-
 
 from moviebox_api.v2.core import (
     AnimeDetails,

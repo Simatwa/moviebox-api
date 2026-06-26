@@ -73,7 +73,9 @@ def test_mirror_hosts():
         ["homepage-content --json"],
         ["homepage-content --banner"],
         ["homepage-content --banner --json"],
-        ["homepage-content --title 'Popular Movie'"],  # NOTE: Tends to change oftenly  # noqa: E501
+        [
+            "homepage-content --title 'Popular Movie'"
+        ],  # NOTE: Tends to change oftenly  # noqa: E501
     ],
 )
 def test_homepage(command):

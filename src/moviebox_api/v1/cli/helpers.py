@@ -112,7 +112,7 @@ async def perform_search_and_get_item(
             subject_type=subject_type,
             yes=yes,
             search=next_search,
-            message=message
+            message=message,
         )
 
     raise RuntimeError(

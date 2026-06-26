@@ -265,7 +265,7 @@ def item_details_command(json: bool, verbose: int, quiet: bool, **item_kwargs):
             "detail_url",
             "is_cam",
             "seasons",
-        ]
+        ],
     )
 
     season_items = []
@@ -294,10 +294,12 @@ def item_details_command(json: bool, verbose: int, quiet: bool, **item_kwargs):
         for key, value in details.items():
             table.add_row(
                 key,
-                "\n".join([
-                    j.dumps(v, indent=2) if type(v) is dict else str(v)
-                    for v in value
-                ])
+                "\n".join(
+                    [
+                        j.dumps(v, indent=2) if type(v) is dict else str(v)
+                        for v in value
+                    ]
+                )
                 if type(value) is list
                 else j.dumps(value, indent=2)
                 if type(value) is dict

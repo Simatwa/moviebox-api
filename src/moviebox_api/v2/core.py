@@ -327,11 +327,13 @@ class SearchWithFilter(Search):
 
         filter_params = self._filter_params.model_dump(mode="json")
 
-        filter_params.update({
-            "page": self._page,
-            "perPage": self._per_page,
-            "channelId": self._channel_id,
-        })
+        filter_params.update(
+            {
+                "page": self._page,
+                "perPage": self._per_page,
+                "channelId": self._channel_id,
+            }
+        )
         return filter_params
 
     def next_page(self, content: SearchResultsModel) -> "SearchWithFilter":
