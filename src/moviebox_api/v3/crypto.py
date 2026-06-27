@@ -8,13 +8,16 @@ import base64
 import hashlib
 import hmac
 import time
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlparse, urlsplit
 
 from moviebox_api.v3.constants import (
     SECRET_KEY_ALT,
     SECRET_KEY_DEFAULT,
     SIGNATURE_BODY_MAX_BYTES,
 )
+from moviebox_api.v3.urls import MAIN_PAGE_PATH
+
+AUTH_FREE_PATHS = set()  # [MAIN_PAGE_PATH])
 
 
 def md5_hex(data: bytes) -> str:
@@ -149,7 +152,11 @@ def build_signed_headers(
         "X-Client-Status": "0",
     }
     if auth_token:
-        headers["Authorization"] = f"Bearer {auth_token}"
+        url_component = urlsplit(url)
+
+        if url_component.path not in AUTH_FREE_PATHS:
+            headers["Authorization"] = f"Bearer {auth_token}"
+
     if include_play_mode:
         headers["X-Play-Mode"] = "2"
     return headers

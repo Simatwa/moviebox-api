@@ -6,7 +6,7 @@ import os
 import random
 import re
 import uuid
-from enum import IntEnum, StrEnum
+from enum import Enum, IntEnum, StrEnum
 
 from moviebox_api.v1.constants import (
     CURRENT_WORKING_DIR,
@@ -30,6 +30,8 @@ SECRET_KEY_ALT: str = (
     or "Xqn2nnO41/L92o1iuXhSLHTbXvY4Z5ZZ62m8mSLA"
 )
 AUTH_TOKEN: str | None = os.getenv("MOVIEBOX_AUTH_TOKEN", "").strip() or None
+
+DEFAULT_VERSION = ""
 
 
 def _random_hex(length: int) -> str:
@@ -152,7 +154,7 @@ VALID_SUBJECT_ID_PATTERN = re.compile(r"^\d{17,21}$")
 DEFAULT_DUB_LANGUAGE_NAME_OR_CODE = "Original"
 
 
-class TabID(StrEnum):
+class V2TabID(Enum):
     ALL = "All"
     MUSIC = "Music"
     PEOPLE = "People"
@@ -163,6 +165,21 @@ class TabID(StrEnum):
     SHORT_TV = "ShortTV"
     FIGHTZONE = "FightZone"
     SPORTS = "Sports"
+    ZERO = 0
+
+
+class TabID(Enum):
+    ALL = 0
+    # MUSIC = 0
+    # PEOPLE = 0
+    # EDUCATION = 0
+    MOVIE = 2
+    TV_SERIES = 5
+    # MOVIE_TV = 0
+    # SHORT_TV = 0
+    # FIGHTZONE = 0
+    # SPORTS = 0
+    ANIME = 8
 
 
 class TopicType(StrEnum):

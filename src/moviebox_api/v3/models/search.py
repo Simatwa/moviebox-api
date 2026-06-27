@@ -4,7 +4,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
-from moviebox_api.v3.constants import SubjectType, TabID, TopicType
+from moviebox_api.v3.constants import SubjectType, TabID, TopicType, V2TabID
 from moviebox_api.v3.models.common import MODEL_CONFIG
 from moviebox_api.v3.models.homepage import Image, PlayUrl
 
@@ -132,7 +132,7 @@ class SearchResultsItem(BaseModel):
     vertical_ranks: list[VerticalRankItem] = Field(alias="verticalRanks")
     title: str
     show_more: bool = Field(alias="showMore")
-    more_tab_id: TabID | None = Field(alias="moreTabId")
+    more_tab_id: V2TabID | None = Field(alias="moreTabId")
 
     @field_validator("more_tab_id", mode="before")
     def validate_more_tab_id(value):
@@ -154,7 +154,7 @@ class RootSearchResultsModelV2(BaseModel):
 
     pager: PagerModel
     results: list[SearchResultsItem]
-    tab_id: TabID = Field(alias="tabId")
+    tab_id: V2TabID = Field(alias="tabId")
     tabs: list[Any]
     items: list[ResultsSubjectModel]  # Script generated
 

@@ -17,8 +17,10 @@ import httpx
 from moviebox_api.v3.constants import (
     AUTH_TOKEN,
     CLIENT_INFO,
+    DEFAULT_VERSION,
     RETRY_STATUS_CODES,
     USER_AGENT,
+    TabID,
 )
 from moviebox_api.v3.crypto import build_signed_headers
 from moviebox_api.v3.helpers import (
@@ -26,7 +28,7 @@ from moviebox_api.v3.helpers import (
     process_api_response,
 )
 from moviebox_api.v3.logger import logger
-from moviebox_api.v3.urls import DEFAULT_API_BASE, HOST_POOL
+from moviebox_api.v3.urls import DEFAULT_API_BASE, HOST_POOL, MAIN_PAGE_PATH
 
 
 class MovieBoxHttpClient:
@@ -43,11 +45,12 @@ class MovieBoxHttpClient:
         host_pool: list[str] = HOST_POOL,
         timeout: float = 20.0,
         follow_redirects: bool = True,
+        auth_token: str | None = AUTH_TOKEN,
         **httpx_client_kwargs,
     ) -> None:
         self._host_pool = host_pool
         self._active_base: str = DEFAULT_API_BASE
-        self._runtime_token: str | None = None
+        self._runtime_token: str | None = auth_token
         self._client: httpx.AsyncClient | None = None
         self._timeout = timeout
         self._follow_redirects = follow_redirects
@@ -59,6 +62,8 @@ class MovieBoxHttpClient:
             follow_redirects=self._follow_redirects,
             **self._httpx_client_kwargs,
         )
+        await self._init_client(force=False)  # users might define their own
+
         return self
 
     async def __aexit__(self, *_: Any) -> None:
@@ -106,6 +111,24 @@ class MovieBoxHttpClient:
             user_agent=USER_AGENT,
         )
 
+    async def _init_client(self, force: bool = True):
+
+        if not force:
+            if self._runtime_token or AUTH_TOKEN:
+                return
+
+        self._runtime_token = None
+
+        _ = await self.get_from_api(
+            MAIN_PAGE_PATH,
+            params={
+                "page": 1,
+                "tabId": TabID.ALL.value,
+                "version": DEFAULT_VERSION,
+            },
+        )
+        assert self._runtime_token is not None, "Unable to fetch run-time token "
+
     async def _request(
         self,
         method: str,
@@ -124,7 +147,7 @@ class MovieBoxHttpClient:
         Returns ``(winning_base_url, response)``.
         """
         assert self._client is not None, (
-            "Client not started – use 'async with' context."
+            "Client not started - use 'async with' context."
         )
 
         last_response: httpx.Response | None = None

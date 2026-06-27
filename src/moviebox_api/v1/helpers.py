@@ -90,7 +90,7 @@ def process_api_response(response: httpx.Response) -> dict | list:
         return j["data"]
 
     error_msg = (
-        "Unsuccessful response received from server -"
+        "Unsuccessful response received from server - "
         f"STATUS {response.status_code} - BODY: {response.text!r}"
     )
 

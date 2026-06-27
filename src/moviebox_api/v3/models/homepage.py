@@ -167,6 +167,7 @@ class ItemsModel(BaseModel):
     version: str
     enable_dedup: int = Field(alias="enableDedup")
     current_page: int = Field(alias="currentPage")
+    style_template: str | None = Field(None, alias="styleTemplate")
 
 
 class OpsModel(BaseModel):

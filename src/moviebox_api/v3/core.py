@@ -3,11 +3,13 @@ from typing import Any
 
 from moviebox_api.v3._bases import BaseContentProviderAndHelper
 from moviebox_api.v3.constants import (
+    DEFAULT_VERSION,
     RESULTS_PER_PAGE_AMOUNT,
     CustomResolutionType,
     ResolutionType,
     SubjectType,
     TabID,
+    V2TabID,
 )
 from moviebox_api.v3.exceptions import (
     ExhaustedSearchResultsError,
@@ -51,23 +53,29 @@ class Homepage(BaseContentProviderAndHelper):
 
     _path = MAIN_PAGE_PATH
 
-    def __init__(self, client_session: MovieBoxHttpClient):
-        """Constructor for `Homepage`"""
+    def __init__(
+        self,
+        client_session: MovieBoxHttpClient,
+        page_number: int = 1,
+        tab_id: TabID = TabID.ALL,
+        version: str = DEFAULT_VERSION,
+    ):
+        """Constructor for :class:`Homepage`"""
         self.client_session = client_session
-        self._page_number: int = 1
-        self._tab_id: int | TabID = 0
-        self._version: str = ""
+        self._page_number: int = page_number
+        self._tab_id: int | TabID = tab_id
+        self._version: str = version
 
     def __setattr__(self, name, value):
         match name:
             case "client_session":
                 assert_instance(value, MovieBoxHttpClient, "client_session")
 
-            case "_per_page":
-                validate_per_page_and_raise(value)
-
             case "_tab_id":
-                assert_instance(value, (TabID, int), "tab_id")
+                assert_instance(value, TabID, "tab_id")
+
+            case "_page_number":
+                assert type(value) is int
 
             case _:
                 pass
@@ -77,7 +85,7 @@ class Homepage(BaseContentProviderAndHelper):
     def _create_params(self) -> dict:
         return {
             "page": self._page_number,
-            "tabId": self._tab_id,
+            "tabId": self._tab_id.value,
             "version": self._version,
         }
 
@@ -270,7 +278,7 @@ class SearchV2(BaseContentProviderAndHelper):
         client_session: MovieBoxHttpClient,
         query: str,
         subject_type: SubjectType = SubjectType.ALL,
-        tab_id: TabID = TabID.ALL,
+        tab_id: V2TabID = V2TabID.ALL,
         page: int = 1,
         per_page: int = RESULTS_PER_PAGE_AMOUNT,
     ):
@@ -291,7 +299,7 @@ class SearchV2(BaseContentProviderAndHelper):
                 validate_per_page_and_raise(value)
 
             case "_tab_id":
-                assert_instance(value, TabID, "tab_id")
+                assert_instance(value, V2TabID, "tab_id")
 
             case "_subject_type":
                 assert_instance(value, SubjectType, "subjct_type")
@@ -313,7 +321,7 @@ class SearchV2(BaseContentProviderAndHelper):
             "page": self._page,
             "perPage": self._per_page,
             "subjectType": self._subject_type.value,
-            "tabId": self._tab_id,
+            "tabId": self._tab_id.value,
         }
 
     async def get_content(self) -> dict:
