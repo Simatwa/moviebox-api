@@ -1,12 +1,13 @@
 import pytest
 
-from moviebox_api.v1.models import SuggestedItemsModel
+from moviebox_api.v1.models import SuggestedItemsModel, TrendingResultsModel
 from moviebox_api.v2.core import (
     ContentCategory,
     Homepage,
     MoviesOperatingList,
     SearchSuggestion,
     Session,
+    Trending,
 )
 from moviebox_api.v2.models import HomepageContentModel, RealContentCategoryModel
 from tests.v2 import MOVIE_KEYWORD
@@ -93,3 +94,24 @@ async def test_content_category_from_homepage():
 
         if ops_list_count == ops_list_limit:
             break
+
+
+@pytest.mark.asyncio
+async def test_trending():
+    trending = Trending(Session())
+
+    trending_items = await trending.get_content_model()
+    # assert isinstance(trending_items, TrendingResultsModel)
+    next_trends = trending.next_page(trending_items)
+
+    # assert isinstance(next_trends, Trending)
+    assert next_trends._page > trending._page
+    next_trending_items = await next_trends.get_content_model()
+
+    assert isinstance(next_trending_items, TrendingResultsModel)
+    previous_trends = next_trends.previous_page(next_trending_items)
+    # assert isinstance(previous_trends, Trending)
+
+    assert previous_trends._page == trending._page
+    previous_trending_items = await previous_trends.get_content_model()
+    assert isinstance(previous_trending_items, TrendingResultsModel)

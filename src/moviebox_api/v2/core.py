@@ -47,6 +47,10 @@ class MoviesOperatingList(Homepage):
     )
 
 
+class Trending(moviebox_api.v1.core.Trending):
+    _url = get_absolute_url("/wefeed-h5api-bff/subject/trending")
+
+
 class ContentCategory(BaseContentProviderAndHelper):
     _url = get_absolute_url("/wefeed-h5api-bff/ranking-list/content")
 
