@@ -380,6 +380,25 @@ class Trending(BaseSearch):
                 " instead."
             )
 
+    async def get_content_model_all(
+        self,
+    ) -> t.AsyncIterator[TrendingResultsModel]:
+
+        navigating = True
+
+        cursor = self
+
+        while navigating:
+            content_model = await cursor.get_content_model()
+
+            yield content_model
+
+            if content_model.pager.hasMore:
+                cursor = cursor.next_page(content_model)
+
+            else:
+                navigating = False
+
     def _create_payload(self) -> dict[str, str | int]:
         """Creates payload from the parameters declared.
 
